@@ -10,7 +10,7 @@ form.addEventListener("submit", (e) => {
         messages.push("Email is required")
 
     if(messages.length > 0)
-        e.preventDefault()
+        e.preventDefault() // evita che venga effettuata l'operazione di default quando si clicca submit
         error.innerText = messages.join()
         document.getElementById("error").style.color = '#d00'
 
