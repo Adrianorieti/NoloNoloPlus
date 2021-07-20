@@ -16,7 +16,7 @@
          //creo un evento listener cioè quando avviene il click del bottone
         document.getElementById("button").addEventListener("click", loadEvent);
 
-        function loadEvent()
+        function loadEvent()//funzione che viene chiamata al click
         {
             var xhr = new XMLHttpRequest(); // creo l'oggetto ajax
             xhr.open("GET", "sample.txt", true); //apro con richiesta GET e asincrona(il true)
