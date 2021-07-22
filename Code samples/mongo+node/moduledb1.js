@@ -1,7 +1,8 @@
+//WE CREATE THE SCHEMA FOR THE DATABASE
 const mongoose = require('mongoose');
-const schema = mongoose.schema;
+const Schema = mongoose.Schema;
 
-const UserSchema = new schema({
+const UserSchema = new Schema({
     name: String,
     surname: String,
     age: Number
