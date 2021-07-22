@@ -7,7 +7,7 @@ mongoose.connect("mongodb+srv://Adriano:123Alienware$!$@cluster0.5ajuv.mongodb.n
 app.use(express.json());
 
 app.get('/', function(req, res) {
-	res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client.html');
+	res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
 })
 
 app.post('/', function(req, res){
