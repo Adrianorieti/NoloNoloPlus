@@ -10,7 +10,7 @@
 </head>
 <body>
     
-    <form action="/" method="POST" class =container> Add to mongodb
+    <div> Add to mongodb
         <div class='form-group'>
             <label ><b>Name</b></label>
             <input id="name" class='form-control' >        
@@ -24,47 +24,39 @@
             <input id="age" class='form-control'></input>
         </div>
         <button id="button">Add to Mongodb</button>
-        
-    </form>
+    </div>
     
 
 
     <script>
 
-        const name = getElementById('name').value;
-        const surname = getElementById('surname').value;
-        const age = getElementById('age').value;
-
-        var obj = `{
-           "name" : "${name}" ,
-           "surname" : "${surname}",
-           "age" : "${age}",
-           }`;
-
+        
          //creo un evento listener cioè quando avviene il click del bottone
         document.getElementById("button").addEventListener("click", loadEvent);
 
         function loadEvent()//funzione che viene chiamata al click
         {
-            var xhr = new XMLHttpRequest(); // creo l'oggetto ajax
-            xhr.open("POST", "http://127.0.0.1:8000/", true); //apro con richiesta GET e asincrona(il true)
+            const name = document.getElementById('name').value;
+            const surname = document.getElementById('surname').value;
+            const age = document.getElementById('age').value;
 
+                            
+            var obj = `{
+		   "name": "${name}" ,
+		   "surname": "${surname}",
+		   "age": "${age}"
+	    }`;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/", true);
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() //funzione che prende la risposta !
-            {
+            xhr.onload = function() {
                 if (this.response == 200)
-                {
                     console.log(this.responseText);
-                }
             }
-
-            xhr.onerror = function()
-            {
+            xhr.onerror = function() {
                 console.log("Error ....");
             }
-
-            xhr.send(obj); // sends the actual request, this is the real trigger
-
+            xhr.send(obj);
         }
 
 
