@@ -37,12 +37,14 @@ app.put('/:id', function(req, res) {
     user.findByIdAndUpdate({_id: req.params.id}, req.body);
 });
 
+
 //find an object, in this case age > 40 , with this we can extract the id
-user.findOne({age: {$gte:40} }, function (err, docs) {
+user.findOne({_id: {$gte:40} }, function (err, docs) {
     if (err){
         console.log(err)
     }
     else{
+        //user.remove(); //dovrebbe cancellare tutti quelli che matchano
         //user.remove({name: docs.params.});
         //user.findByIdAndRemove({_id: docs.id});
         //user.findByIdAndRemove({_id: ObjectId(docs.id)});//perchè non lo elimina porcodio?
