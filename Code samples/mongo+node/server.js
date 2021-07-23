@@ -24,6 +24,26 @@ app.post('/', function(req, res){
     res.redirect('/');
 })
 
+
+app.delete('/:id', function(req, res) {
+    user.findByIdAndDelete({_id: req.params.id});
+});
+
+app.put('/:id', function(req, res) {
+    user.findByIdAndUpdate({_id: req.params.id}, req.body);
+});
+
+//find an object, in this case age > 40 , with this we can extract the id
+user.findOne({age: {$gte:40} }, function (err, docs) {
+    if (err){
+        console.log(err)
+    }
+    else{
+        console.log("Result : ", docs);
+        console.log(docs.id);
+    }
+});
+
 app.listen(8000, function(){
     console.log('Server is running on port 8000')
 })
