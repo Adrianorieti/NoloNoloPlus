@@ -2,7 +2,10 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const user = require('./moduledb1');
+var ObjectId = require('mongoose').Types.ObjectId;
 var url ='mongodb+srv://Adriano:<password>@cluster0.5ajuv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+
 
 mongoose.connect("mongodb+srv://Adriano:123Alienware$!$@cluster0.5ajuv.mongodb.net/Prova?retryWrites=true&w=majority", { useNewUrlParser: true ,  useUnifiedTopology: true  });
 app.use(express.json());
@@ -41,7 +44,7 @@ user.findOne({age: {$gte:40} }, function (err, docs) {
     }
     else{
         console.log("Result : ", docs);
-        user.findByIdAndDelete({_id: docs.id});
+        user.findByIdAndDelete({_id: ObjectId(docs.id)});//perchè non lo elimina porcodio?
     }
 });
 
