@@ -39,7 +39,7 @@ app.put('/:id', function(req, res) {
 
 
 //find an object, in this case age > 40 , with this we can extract the id
-user.findOne({_id: {$gte:40} }, function (err, docs) {
+user.findOne({age: {$gte:40} }, function (err, docs) {
     if (err){
         console.log(err)
     }
