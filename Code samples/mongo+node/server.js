@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const user = require('./moduledb1');
 var url ='mongodb+srv://Adriano:<password>@cluster0.5ajuv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
 mongoose.connect("mongodb+srv://Adriano:123Alienware$!$@cluster0.5ajuv.mongodb.net/Prova?retryWrites=true&w=majority", { useNewUrlParser: true ,  useUnifiedTopology: true  });
 app.use(express.json());
 
@@ -40,9 +41,10 @@ user.findOne({age: {$gte:40} }, function (err, docs) {
     }
     else{
         console.log("Result : ", docs);
-        console.log(docs.id);
+        user.findByIdAndDelete({_id: docs.id});
     }
 });
+
 
 app.listen(8000, function(){
     console.log('Server is running on port 8000')
