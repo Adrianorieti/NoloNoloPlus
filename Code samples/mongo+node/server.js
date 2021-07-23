@@ -30,7 +30,7 @@ app.post('/', function(req, res){
 
 
 app.delete('/:id', function(req, res) {
-    user.findByIdAndDelete({_id: req.params.id});
+    user.findByIdAndRemove({_id: req.params.id});
 });
 
 app.put('/:id', function(req, res) {
@@ -43,8 +43,11 @@ user.findOne({age: {$gte:40} }, function (err, docs) {
         console.log(err)
     }
     else{
+        //user.remove({name: docs.params.});
+        //user.findByIdAndRemove({_id: docs.id});
+        //user.findByIdAndRemove({_id: ObjectId(docs.id)});//perchè non lo elimina porcodio?
+        //user.findByIdAndRemove({_id: '60f9ba4a495d752b245ed8fc'});
         console.log("Result : ", docs);
-        user.findByIdAndDelete({_id: ObjectId(docs.id)});//perchè non lo elimina porcodio?
     }
 });
 
