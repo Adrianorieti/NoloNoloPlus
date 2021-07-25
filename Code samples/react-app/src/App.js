@@ -2,7 +2,64 @@ import React from 'react';
 import './App.css';
 import LoadEvent from './LoadEvent';
 
-function App() {
+class App extends React.Component { //uso una classe per le props per fare la ajax
+
+  state = {
+    name: "",
+    surname: "",
+    age: "",
+    nameError: "",
+    surnameError: "",
+    ageError: ""
+  }
+
+  validate = () => 
+  {
+    let count = 0;
+    let nameError = '';
+    let surnameError = '';
+    let ageError = '';
+    if(this.state.name == '')
+    {
+      nameError = 'Please fill out this space';
+      this.setState({nameError});
+      count++;
+    }
+    if(this.state.surname == '')
+    {
+      surnameError = 'Please fill out this space';
+      this.setState({surnameError});
+      count++;
+    }
+      //devo trovare un altro modo per capire se l'input è o no un numero
+    if( this.state.age == '')
+    {
+      ageError = "Please insert age correctly"
+      this.setState({ageError});
+      count++;
+    }
+
+    if(count > 0)
+      return false;
+    else
+      return true;
+  }
+
+  handleChange = event => {
+    console.log(event.target.name);
+    this.setState({ [event.target.name]: event.target.value });
+  };
+  
+  handleSubmit  = event => 
+  {
+    //event.preventDefault();
+    console.log("porcodio");
+    if(this.validate())
+      console.log("dai dio cane");
+  };
+
+  render()
+  {
   return (
     <>
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark justify-content-end">
@@ -23,7 +80,7 @@ function App() {
               <a className="nav-link" href="#">Pricing</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#" tabindex="-1" >Diocane</a>
+              <a className="nav-link" href="#" tabIndex="-1" >Diocane</a>
             </li>
           </ul>
         </div>
@@ -36,34 +93,39 @@ function App() {
         
       <div className="diocane">
                 <div className="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Name</label>
-                  <div id="error"></div>
-                  <input  className="form-control" id="name" aria-describedby="emailHelp" />
+                  <label htmlFor="exampleInputEmail1" className="form-label">Name</label>
+      
+                  <input onChange={this.handleChange} name="name" placeholder='John' className="form-control" id="name" aria-describedby="emailHelp" />
                 </div>
+                <div style={{fontSize: 12, color: 'red'}}>{this.state.nameError}</div>
                 <div className="mb-3">
-                  <label for="exampleInputPassword1" className="form-label">Surname</label>
-                  <input  className="form-control" id="surname" />
+                  <label htmlFor="exampleInputPassword1" className="form-label">Surname</label>
+                  <input onChange={this.handleChange} name="surname" placeholder='Doe' className="form-control" id="surname" />
                 </div>
+                <div style={{fontSize: 12, color: 'red'}}>{this.state.surnameError}</div>
                 <div className="mb-3">
-                    <label for="exampleInputPassword1" className="form-label">Age</label>
-                    <input  className="form-control" id="age" />
+                    <label htmlFor="exampleInputPassword1" className="form-label">Age</label>
+                    <input onChange={this.handleChange} name="age" placeholder='50'className="form-control" id="age" />
                   </div>
+                  <div style={{fontSize: 12, color: 'red'}}>{this.state.ageError}</div>
                 <div className="mb-3 form-check">
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                  <label className="form-check-label" for="exampleCheck1">I read and agree with <a id="privacy" href="#"> privacy terms</a> </label>
+                  <label className="form-check-label" htmlFor="exampleCheck1">I read and agree with <a id="privacy" href="#"> privacy terms</a> </label>
                 </div>
-                <LoadEvent></LoadEvent>
+                <button  onClick={this.handleSubmit} id="button" className="btn btn-primary">Register</button>
+
             </div>
       </div>
       
     </div>
     
-    <footer  classNameName="container-fluid  py-5 px-5 px-md-5 bg-primary mt-auto">
+    <footer  className="container-fluid  py-5 px-5 px-md-5 bg-primary mt-auto">
       
   
     </footer>
     </>
   );
+  }
 }
 
 export default App;
