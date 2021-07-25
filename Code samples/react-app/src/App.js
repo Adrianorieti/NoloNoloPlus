@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import LoadEvent from './LoadEvent';
 
 function App() {
   return (
@@ -51,7 +52,7 @@ function App() {
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                   <label className="form-check-label" for="exampleCheck1">I read and agree with <a id="privacy" href="#"> privacy terms</a> </label>
                 </div>
-                <button  id="button" className="btn btn-primary">Register</button>
+                <button  onclick={LoadEvent} id="button" className="btn btn-primary">Register</button>
             </div>
       </div>
       
