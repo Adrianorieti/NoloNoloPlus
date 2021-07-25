@@ -13,6 +13,28 @@ class App extends React.Component { //uso una classe per le props per fare la aj
     ageError: ""
   }
 
+  doAjax = () =>
+  {
+                        
+    var obj = `{
+      "name": "${this.state.name}" ,
+      "surname": "${this.state.surname}",
+      "age": "${this.state.age}"
+   }`;
+       var xhr = new XMLHttpRequest();
+       xhr.open("POST", "http://localhost:8000", true);
+       xhr.setRequestHeader('Content-Type', 'application/json');
+       xhr.onload = function() {
+           if (this.response == 200)
+               console.log(this.responseText);
+       }
+       xhr.onerror = function() {
+           console.log(this.response);
+           console.log("Error ....");
+       }
+       xhr.send(obj);
+  }
+
   validate = () => 
   {
     let count = 0;
@@ -56,6 +78,7 @@ class App extends React.Component { //uso una classe per le props per fare la aj
     console.log("porcodio");
     if(this.validate())
       console.log("dai dio cane");
+      this.doAjax();
   };
 
   render()
