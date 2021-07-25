@@ -2,11 +2,11 @@ import React from 'react';
 
 function LoadEvent ()
 {
-    
+    function event () {
            const name = document.getElementById('name').value;
            const surname = document.getElementById('surname').value;
            const age = document.getElementById('age').value;
-
+            console.log(name);
                            
            var obj = `{
           "name": "${name}" ,
@@ -25,7 +25,12 @@ function LoadEvent ()
            }
            xhr.send(obj);
        
+        }
 
+        return(
+
+            <button  onclick={event} id="button" className="btn btn-primary">Register</button>
+        );
 }
 
 

@@ -52,7 +52,7 @@ function App() {
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                   <label className="form-check-label" for="exampleCheck1">I read and agree with <a id="privacy" href="#"> privacy terms</a> </label>
                 </div>
-                <button  onclick={LoadEvent} id="button" className="btn btn-primary">Register</button>
+                <LoadEvent></LoadEvent>
             </div>
       </div>
       
