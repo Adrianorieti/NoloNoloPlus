@@ -7,7 +7,7 @@ var url ='mongodb+srv://Adriano:<password>@cluster0.5ajuv.mongodb.net/myFirstDat
 
 
 
-mongoose.connect("mongodb+srv://Adriano:123Alienware$!$@cluster0.5ajuv.mongodb.net/Prova?retryWrites=true&w=majority", { useNewUrlParser: true ,  useUnifiedTopology: true  });
+mongoose.connect("mongodb+srv://Adriano:<password>@cluster0.5ajuv.mongodb.net/Prova?retryWrites=true&w=majority", { useNewUrlParser: true ,  useUnifiedTopology: true  });
 app.use(express.json());
 
 app.get('/', function(req, res) {
