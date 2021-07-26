@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import treehd from './treehd.jpg'
 
 class App extends React.Component {
 
@@ -34,8 +35,9 @@ class App extends React.Component {
     </nav>
  
       <div className="bg-image" style={{
-          backgroundImage: "url('https://mdbootstrap.com/img/new/standard/city/041.jpg')",
+          backgroundImage: 'url('+ treehd+') ' ,
           height: "100vh",
+          backgroundSize: 'cover',
         }} >
 
       </div>
