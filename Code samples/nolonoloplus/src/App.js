@@ -33,7 +33,13 @@ class App extends React.Component {
       </div>
     </nav>
  
-  </>
+      <div className="bg-image" style={{
+          backgroundImage: "url('https://mdbootstrap.com/img/new/standard/city/041.jpg')",
+          height: "100vh",
+        }} >
+
+      </div>
+      </>
   );
 
   }
