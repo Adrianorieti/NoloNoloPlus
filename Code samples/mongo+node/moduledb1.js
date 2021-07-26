@@ -11,4 +11,4 @@ const UserSchema = new Schema({
 const user = mongoose.model('user', UserSchema); // crei uno user e sarà in questa collezione, questo sarà il modello e quello sarà lo schema
 module.exports = user;
 
-//ora posso fare var userRandom = new user({nome, congnome, età})
+//ora posso fare var newUser = new user({nome, congnome, età})

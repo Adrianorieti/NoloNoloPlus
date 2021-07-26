@@ -1,18 +1,20 @@
 const express = require('express');
-const app = express();
+const path = require('path');
 const mongoose = require('mongoose');
 const user = require('./moduledb1');
 var ObjectId = require('mongoose').Types.ObjectId;
-var url ='mongodb+srv://Adriano:<password>@cluster0.5ajuv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const app = express();
+var url ='mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Prova?retryWrites=true&w=majority';
 
+mongoose.connect(url, { useNewUrlParser: true ,  useUnifiedTopology: true  });
 
-
-mongoose.connect("mongodb+srv://Adriano:<password>@cluster0.5ajuv.mongodb.net/Prova?retryWrites=true&w=majority", { useNewUrlParser: true ,  useUnifiedTopology: true  });
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function(req, res) {
-	res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
-})
+	//res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.post('/', function(req, res){
 
@@ -21,12 +23,9 @@ app.post('/', function(req, res){
         surname: req.body.surname,
         age: req.body.age
     });
-    console.log(req.body.name);
-    console.log(req.body.surname);
-    console.log(req.body.age);
     newUser.save();
     res.redirect('/');
-})
+});
 
 
 app.delete('/:id', function(req, res) {
