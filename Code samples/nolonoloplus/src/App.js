@@ -44,8 +44,9 @@ class App extends React.Component {
         }} >
 
       </div>
-
-  
+      <div>
+        <CarouselContainer />
+      </div>
  
       </>
   );
