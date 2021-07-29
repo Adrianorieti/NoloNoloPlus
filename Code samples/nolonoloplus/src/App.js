@@ -42,7 +42,7 @@ class App extends React.Component {
           backgroundPosition: 'center center',
 
         }} >
-
+<center><h1><font face="Arial" color="white">Travelling with us you can smell the world</font></h1></center>
       </div>
       <div>
         <CarouselContainer />
