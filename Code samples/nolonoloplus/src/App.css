@@ -22,3 +22,27 @@ a
     max-height : 300px;
     width : 100%;
   }
+
+
+
+@media screen and (min-width: 480px) {
+
+.bg-image{
+    background-image: url('treehd.jpg')  ;
+    height: 50vh;
+    background-size: cover;
+    background-position: center center;
+      background-attachment: fixed;
+
+    }
+  }
+
+.bg-image
+{
+  background-image: url('treehd.jpg')  ;
+  height: 100vh;
+  background-size: cover;
+  background-position: center center;
+  /*background-attachment: fixed;*/
+
+}

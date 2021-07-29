@@ -9,7 +9,7 @@ class App extends React.Component {
   render (){
 
     return(
-     <> 
+     <div> 
       <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">NoloNolo</a>
@@ -34,21 +34,17 @@ class App extends React.Component {
         </div>
       </div>
     </nav>
- 
-      <div className="bg-image" style={{
-          backgroundImage: 'url('+ treehd+') ' ,
-          height: "100vh",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center center',
+      
+      <div className="bg-image" >
 
-        }} >
+
 <center><h1><font face="Arial" color="white">Travelling with us you can smell the world</font></h1></center>
       </div>
       <div>
         <CarouselContainer />
       </div>
  
-      </>
+      </div>
   );
 
   }
