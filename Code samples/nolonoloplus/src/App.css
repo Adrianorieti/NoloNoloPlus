@@ -46,3 +46,15 @@ a
   /*background-attachment: fixed;*/
 
 }
+
+.carousel{border:6px solid whitesmoke}
+
+.banner-image
+{
+  background-image: url('BANNER.png')  ;
+  height: 40vh;
+  background-size: cover;
+  background-position: center center;
+  /*background-attachment: fixed;*/
+
+}
