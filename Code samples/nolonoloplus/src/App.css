@@ -43,11 +43,13 @@ a
   height: 100vh;
   background-size: cover;
   background-position: center center;
-  /*background-attachment: fixed;*/
+  background-attachment: fixed;
 
 }
 
 .carousel{border:6px solid whitesmoke}
+@media  screen and (min-width: 1300px) {
+  
 
 .banner-image
 {
@@ -57,4 +59,5 @@ a
   background-position: center center;
   /*background-attachment: fixed;*/
 
+}
 }
