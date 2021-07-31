@@ -34,9 +34,11 @@ class App extends React.Component {
           </div>
         </div>
       </nav>
-      <div className="banner-image"></div>
+
+      <div className="img-responsive"></div>
 
       <div className="bg-image" >
+          
       </div>
       
 
