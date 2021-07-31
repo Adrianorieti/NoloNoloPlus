@@ -49,7 +49,7 @@ a
 
 .carousel{border:6px solid whitesmoke}
 
-.banner-image
+.img-responsive
 {
   background-image: url('BANNER.png')  ;
   height: 40vh;
