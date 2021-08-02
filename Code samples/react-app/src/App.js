@@ -22,7 +22,7 @@ class App extends React.Component { //uso una classe per le props per fare la aj
       "age": "${this.state.age}"
    }`;
        var xhr = new XMLHttpRequest();
-       xhr.open("POST", "/", true);
+       xhr.open("POST", "http://localhost:8000", true);
        xhr.setRequestHeader('Content-Type', 'application/json');
        xhr.onload = function() {
            if (this.response == 200)
