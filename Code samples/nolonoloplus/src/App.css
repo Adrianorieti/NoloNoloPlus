@@ -32,7 +32,8 @@ a
     height: 50vh;
     background-size: cover;
     background-position: center center;
-      background-attachment: fixed;
+    background-attachment: fixed;
+  
 
     }
   }
@@ -43,11 +44,18 @@ a
   height: 100vh;
   background-size: cover;
   background-position: center center;
-  /*background-attachment: fixed;*/
+ 
+
+  background-attachment: fixed;
 
 }
 
-.carousel{border:6px solid whitesmoke}
+.carousel
+{
+  border: 6px solid whitesmoke;
+
+
+}
 
 .img-responsive
 {

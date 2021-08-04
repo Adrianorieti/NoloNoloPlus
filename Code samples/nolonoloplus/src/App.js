@@ -20,8 +20,12 @@ class App extends React.Component {
 
       <Route path="/" exact>
       <Banner />
+      
 
-      <div className="bg-image" ></div>
+
+      <div className="bg-image" >
+      
+      </div>
 
       <div>
         <CarouselContainer />
