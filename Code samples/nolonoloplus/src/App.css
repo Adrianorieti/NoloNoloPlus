@@ -12,12 +12,14 @@ a
 
 
 
-.custom-toggler .navbar-toggler-icon {
+.custom-toggler .navbar-toggler-icon 
+  {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255 ,255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
   }
   
 
-  img{
+img 
+  {
     min-height : 300px;
     max-height : 300px;
     width : 100%;
@@ -27,7 +29,8 @@ a
 
 @media screen and (min-width: 480px) {
 
-.bg-image{
+.bg-image
+  {
     background-image: url('./images/treehd.jpg')  ;
     height: 50vh;
     background-size: cover;
@@ -37,8 +40,8 @@ a
 
   
 
-    }
   }
+}
 
 .bg-image
 {
@@ -54,34 +57,28 @@ a
 
 }
 
-.carousel
-{
-  border: 6px solid whitesmoke;
-
-
-}
 @media screen and(min-width: 720px)
 {
-.img-responsive
-{
-  background-image: url('./images/BANNER.png')  ;
-  height: 40vh;
-  background-size: cover;
-  background-position: center center;
-}
-.rentForm
-{
-  position: absolute;
-  width: 100%;
-  background-color: white;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  opacity: 0.9;
-  text-align: center;
+  .img-responsive
+  {
+    background-image: url('./images/BANNER.png')  ;
+    height: 40vh;
+    background-size: cover;
+    background-position: center center;
+  }
   
+  .rentForm
+  {
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0.9;
+    text-align: center;
+  }
 
-}
 }
 
 .rentForm
@@ -95,9 +92,17 @@ a
   opacity: 0.9;
   text-align: center;
   top: 50px;
-
+  
 }
+
 label
 {
   padding: 10px;
+}
+
+.carousel
+{
+  border: 6px solid whitesmoke;
+
+
 }

@@ -20,12 +20,16 @@ class App extends React.Component {
       <Switch>
 
       <Route path="/" exact>
-      <Banner />
       
 
 
       <div className="bg-image" >
+      
+      <Banner />
+  
+    
       <RentForm />
+     
       </div>
 
       <div>
