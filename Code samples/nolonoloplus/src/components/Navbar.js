@@ -23,7 +23,7 @@ function Navbar(props)
                 <Link className="nav-link" to="/login">Login/Register</Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" to="/contacts" tabIndex="-1" >Contacts</Link>
+                <Link className="nav-link" to="/contacts" tabIndex="-1" >Contacts</Link>
               </li>
             </ul>
           </div>
