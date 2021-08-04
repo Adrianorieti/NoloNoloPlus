@@ -69,6 +69,19 @@ a
   background-size: cover;
   background-position: center center;
 }
+.rentForm
+{
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0.9;
+  text-align: center;
+  
+
+}
 }
 
 .rentForm
@@ -81,6 +94,7 @@ a
   flex-direction: column;
   opacity: 0.9;
   text-align: center;
+  top: 50px;
 
 }
 label
