@@ -6,6 +6,8 @@ import Navbar from './components/Navbar';
 import Banner from './components/Banner';
 import {Route, Switch} from 'react-router-dom';
 import RentForm from './components/RentForm';
+import LoginPage from './pages/LoginPage';
+import RegisterForm from './components/Register';
 
 class App extends React.Component {
 
@@ -35,10 +37,13 @@ class App extends React.Component {
       <div>
         <CarouselContainer />
       </div>
+
       </Route>
 
       <Route path="/login">
-      <div className="bg-image" ></div>
+      <div className="bg-image loginpage" >
+        <LoginPage/>
+      </div>
 
       </Route>
 

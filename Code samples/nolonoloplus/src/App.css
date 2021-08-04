@@ -1,3 +1,6 @@
+body{
+  flex: 1;
+}
 
 a
 {
@@ -23,6 +26,7 @@ img
     min-height : 300px;
     max-height : 300px;
     width : 100%;
+    object-fit: cover;
   }
 
 
@@ -32,11 +36,10 @@ img
 .bg-image
   {
     background-image: url('./images/treehd.jpg')  ;
-    height: 50vh;
+    height: 100vh;
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
-    position: relative;
 
   
 
@@ -107,7 +110,32 @@ label
 
 }
 
-img
+
+
+.loginpage
 {
-  object-fit: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+  
+
 }
+
+.login
+{
+ 
+  display: flex;
+  flex-direction: column;
+  padding : 10px;
+  background-color: white;
+  opacity: 0.9;
+  
+  
+  
+}
+
+.tab-content{
+  /* height: 100 !important; */
+  margin: 30px;
+  }
