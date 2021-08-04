@@ -1,5 +1,9 @@
 import React from 'react';
 import {Carousel} from 'react-bootstrap';
+import bikeTravel1 from '../images/bikeTravel1.jpg'
+import bikeTravel2 from '../images/bikeTravel2.jpg'
+import bikeTravel3 from '../images/bikeTravel3.jpg'
+
 
 
 const CarouselContainer = () =>
@@ -8,8 +12,8 @@ const CarouselContainer = () =>
         <Carousel>
   <Carousel.Item>
     <img
-      className="d-block w-100"
-      src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/strada-viaggiare-1528810575.jpg?resize=480:*"
+      className="d-block w-100 img-responsive"
+      src={bikeTravel1} 
       alt="First slide"
     />
     <Carousel.Caption>
@@ -19,8 +23,8 @@ const CarouselContainer = () =>
   </Carousel.Item>
   <Carousel.Item>
     <img
-      className="d-block w-100"
-      src="https://i.redd.it/2o4r27jok2g41.jpg"
+      className="d-block w-100 img-responsive"
+      src={bikeTravel2}
       alt="Second slide"
     />
 
@@ -31,8 +35,8 @@ const CarouselContainer = () =>
   </Carousel.Item>
   <Carousel.Item>
     <img
-      className="d-block w-100"
-      src="https://www.gelestatic.it/thimg/oylBPO0HdAXlNmT0WxAomVhSx8c=/fit-in/960x540/https%3A//www.lastampa.it/image/contentid/policy%3A1.33824702%3A1560675768/191b5ef0-6681-11e8-8f8f-753ca73ba52f_WPNX-29290_sudafrica-kDBF-U104175853522304-1024x576%40LaStampa.it.jpg%3Ff%3Ddetail_558%26h%3D720%26w%3D1280%26%24p%24f%24h%24w%3Dfd59bc1"
+      className="d-block w-100 img-responsive"
+      src={bikeTravel3}
       alt="Third slide"
     />
 

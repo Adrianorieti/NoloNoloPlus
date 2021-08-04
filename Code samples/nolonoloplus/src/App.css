@@ -66,7 +66,7 @@ img
     background-size: cover;
     background-position: center center;
   }
-  
+
   .rentForm
   {
     position: absolute;
@@ -105,4 +105,9 @@ label
   border: 6px solid whitesmoke;
 
 
+}
+
+img
+{
+  object-fit: cover;
 }
