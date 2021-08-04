@@ -5,6 +5,7 @@ import CarouselContainer from './components/Carousel';
 import Navbar from './components/Navbar';
 import Banner from './components/Banner';
 import {Route, Switch} from 'react-router-dom';
+import RentForm from './components/RentForm';
 
 class App extends React.Component {
 
@@ -24,7 +25,7 @@ class App extends React.Component {
 
 
       <div className="bg-image" >
-      
+      <RentForm />
       </div>
 
       <div>
