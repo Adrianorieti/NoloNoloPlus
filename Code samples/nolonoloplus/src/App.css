@@ -78,8 +78,8 @@ a
   background-color: white;
   padding: 10px;
   display: flex;
-  
   flex-direction: column;
+  opacity: 0.9;
 
 }
 label
