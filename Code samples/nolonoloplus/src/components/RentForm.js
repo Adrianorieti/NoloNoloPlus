@@ -22,7 +22,7 @@ function RentForm()
                 <option value="electricBike" >ELectric Bike</option>
             </select>
           </div>
-        <button type="submit" className="btn btn-success">Submit</button>
+        <button type="submit" className="btn btn-success">Start Rent Now</button>
       </form>
     
     );
