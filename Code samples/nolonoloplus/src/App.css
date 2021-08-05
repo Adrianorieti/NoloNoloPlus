@@ -139,3 +139,13 @@ label
   /* height: 100 !important; */
   margin: 30px;
   }
+
+  footer {   
+    position: relative;
+    width: 100%;   
+    padding: 5%;   
+    height: 100%; 
+  }  
+  .bg-custom{   
+    background-color: rgb(167, 190, 147); 
+  }
