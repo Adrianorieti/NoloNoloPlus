@@ -111,7 +111,7 @@ class LoginPage extends React.Component
     event.preventDefault();
     if(this.validate())
       console.log("dai dio cane");
-      //this.doAjax();
+      this.doAjax();
   };
 
 
