@@ -149,3 +149,8 @@ label
   .bg-custom{   
     background-color: rgb(167, 190, 147); 
   }
+
+  #diocane
+  {
+    border-width: 0;
+  }
