@@ -12,6 +12,7 @@ app.use(express.json());
 //app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function(req, res) {
+    res.send('<p>Hello WOrld</p>');
 	//res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
     //res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
@@ -20,8 +21,9 @@ app.post('/', function(req, res){
 
     let newUser = new user({
         name: req.body.name,
-        email: req.body.email,
+        surname: req.body.surname,
         phone: req.body.phone,
+        email: req.body.email,
         password: req.body.password
     });
 
