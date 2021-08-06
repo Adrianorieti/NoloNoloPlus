@@ -4,9 +4,18 @@ const mongoose = require('mongoose');
 const user = require('./moduledb1');
 var ObjectId = require('mongoose').Types.ObjectId;
 const app = express();
+var cors = require('cors');
 var url ='mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
 
 mongoose.connect(url, { useNewUrlParser: true ,  useUnifiedTopology: true  });
+
+app.use(cors());
+/*
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+  });
+  */
 
 app.use(express.json());
 //app.use(express.static(path.join(__dirname, 'build')));
@@ -20,8 +29,8 @@ app.get('/', function(req, res) {
 app.post('/', function(req, res){
 
     let newUser = new user({
-        name: req.body.name,
-        surname: req.body.surname,
+        name: req.body.firstName,
+        surname: req.body.secondName,
         phone: req.body.phone,
         email: req.body.email,
         password: req.body.password
@@ -31,17 +40,19 @@ app.post('/', function(req, res){
     res.redirect('/');
 });
 
-
+/*
 app.delete('/:id', function(req, res) {
     user.findByIdAndRemove({_id: req.params.id});
 });
-
+*/
+/*
 app.put('/:id', function(req, res) {
     user.findByIdAndUpdate({_id: req.params.id}, req.body);
 });
-
+*/
 
 //find an object, in this case age > 40 , with this we can extract the id
+/*
 user.findOne({age: {$gte:40} }, function (err, docs) {
     if (err){
         console.log(err)
@@ -56,6 +67,7 @@ user.findOne({age: {$gte:40} }, function (err, docs) {
     }
 });
 
+ */
 
 app.listen(8000, function(){
     console.log('Server is running on port 8000')

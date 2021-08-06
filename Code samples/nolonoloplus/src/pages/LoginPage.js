@@ -58,35 +58,35 @@ class LoginPage extends React.Component
     let passwordError= '';
     let emailError = '';
     let repeatpassError= '';
-    var paswd=  /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/;
-    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    var paswd= '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
+    var mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
 
-    if(this.state.firstName == '')
+    if(this.state.firstName === '')
     {
       firstnameError = 'Please fill out this space';
       this.setState({firstnameError});
       count++;
     }
-    if(this.state.secondName == '')
+    if(this.state.secondName === '')
     {
       secondnameError = 'Please fill out this space';
       this.setState({secondnameError});
       count++;
     }
       //devo trovare un altro modo per capire se l'input è o no un numero
-    if( this.state.phone == '' || this.state.phone.length != 10)
+    if( this.state.phone === '' || this.state.phone.length != 10)
     {
       phoneError = "Please insert phone correctly";
       this.setState({phoneError});
       count++;
     }
-    if(this.state.password == '' || !(this.state.password.match(paswd)) )
+    if(this.state.password === '' || !(this.state.password.match(paswd)) )
     {
       passwordError = "Password must contain a number and a symbol and a length between 7 to 15 characters";
       this.setState({passwordError});
       count++;
     }
-    if(this.state.email == '' || !(this.state.email.match(mailformat)))
+    if(this.state.email === '' || !(this.state.email.match(mailformat)))
     {
       emailError = "Email syntax is not valid";
       this.setState({emailError});
