@@ -30,7 +30,11 @@ app.get('/', function(req, res) {
 
 app.post('/register', async (req, res) => {
 
-        //la password arriva in base64
+        const mail = req.body.email;
+        const source = await user.findOne({email: mail });
+        if (!(source))
+        {
+             //la password arriva in base64
         console.log(req.body.password);
         const password = req.body.password;
 
@@ -52,9 +56,14 @@ app.post('/register', async (req, res) => {
         //salviamo in mongodb
         newUser.save();
 
-        });
+        })
+         }else {
+           console.log(' Errore esiste già la mail');
+           res.status(500).send({error: 'Mail already exists'}); 
+        }
+    });
+       
     
-});
 
 /*
 app.post('/login', async (req, res) => 
@@ -86,12 +95,7 @@ user.findOne({age: {$gte:40} }, function (err, docs) {
         console.log(err)
     }
     else{
-        //user.remove(); //dovrebbe cancellare tutti quelli che matchano
-        //user.remove({name: docs.params.});
-        //user.findByIdAndRemove({_id: docs.id});
-        //user.findByIdAndRemove({_id: ObjectId(docs.id)});//perchè non lo elimina porcodio?
-        //user.findByIdAndRemove({_id: '60f9ba4a495d752b245ed8fc'});
-        console.log("Result : ", docs);
+       
     }
 });
 

@@ -25,10 +25,11 @@ class LoginPage extends React.Component
 
   doAjax = () =>
   {
-          //creo il json che rappresenta lo schema del database con i dati  
+    //faccio l'encoding della password in base64 perchè così non ho problemi con caratteri strani
     const buff = Buffer.from(this.state.password, 'utf-8');
     const encodedpass = buff.toString('base64'); 
-
+    
+    //creo il json che rappresenta lo schema del database con i dati  
     var obj = `{
       "name": "${this.state.firstName}" ,
       "surname": "${this.state.secondName}",
@@ -42,7 +43,17 @@ class LoginPage extends React.Component
        xhr.setRequestHeader('Content-Type', 'application/json');
        xhr.onload = function() {
            if (this.response == 200)
-               console.log(this.responseText);
+           {
+               //console.log(this.responseText);
+               console.log("daiiiiiiiiiiiiiiiiiiiiii");
+           }
+           else if(this.response == 500)
+            {
+              console.log("La mail esiste già");
+              let emailError='';
+              emailError = "Email already in use";
+              this.setState({emailError});
+            }
        }
        xhr.onerror = function() {
            console.log(this.response);
