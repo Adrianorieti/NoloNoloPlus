@@ -5,6 +5,8 @@ const user = require('./moduledb1');
 var ObjectId = require('mongoose').Types.ObjectId;
 const app = express();
 var cors = require('cors');
+const bcrypt = require('bcrypt');
+
 var url ='mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
 
 mongoose.connect(url, { useNewUrlParser: true ,  useUnifiedTopology: true  });
@@ -26,18 +28,42 @@ app.get('/', function(req, res) {
     //res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.post('/', function(req, res){
+app.post('/register', async (req, res) => {
+    try
+    {
+        const password = req.body.password;
+        const buff = Buffer.from(password, 'utf-8');
+        const decodedpass = buff.toString('base64');
+        //decode base 64
+        const hash = await bcrypt.hash(decodedpass, 10);
 
-    let newUser = new user({
-        name: req.body.firstName,
-        surname: req.body.secondName,
-        phone: req.body.phone,
-        email: req.body.email,
-        password: req.body.password
-    });
+        let newUser = new user({
+            name: req.body.firstName,
+            surname: req.body.secondName,
+            phone: req.body.phone,
+            email: req.body.email,
+            password: hash
+        });
+    
+        newUser.save();
+        res.redirect('/');
+        
+    } catch(e) {
+        console.log(e);
+        res.status(500).send('Something went wrong');
+    }
 
-    newUser.save();
-    res.redirect('/');
+    
+});
+
+app.post('/login', async (req, res) => 
+{
+    try
+    {
+        const email = req.body.email;
+        const password = req.body.password;
+    } catch(e)
+    {}
 });
 
 /*

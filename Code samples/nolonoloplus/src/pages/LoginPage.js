@@ -35,7 +35,7 @@ class LoginPage extends React.Component
    }`;
    //creo l'oggetto ajax per la post
        var xhr = new XMLHttpRequest();
-       xhr.open("POST", "http://localhost:8000/", true);
+       xhr.open("POST", "http://localhost:8000/register", true);
        xhr.setRequestHeader('Content-Type', 'application/json');
        xhr.onload = function() {
            if (this.response == 200)
