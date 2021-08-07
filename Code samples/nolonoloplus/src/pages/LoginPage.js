@@ -47,7 +47,6 @@ class LoginPage extends React.Component {
       }
       else if (xhr.status == 500) {
         console.log("La mail esiste già");
-        //let label = document.createElement('label');
         document.getElementById('mail-error').innerHTML = "Mail already in use BOOMER";
       }
     }
@@ -138,18 +137,18 @@ class LoginPage extends React.Component {
           <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div>
               <div className="mb-3">
-                <label for="exampleInputEmail1" className="form-label">Email address</label>
-                <input onChange={this.handleChange} type="email" className="form-control" id="loginemail" aria-describedby="emailHelp" />
+                <label for="loginemail" className="form-label">Email address</label>
+                <input onChange={this.handleChange} type="email" className="form-control" id="loginemail" aria-describedby="emailHelp" aria-required="true" />
               </div>
               <div className="mb-3">
-                <label for="exampleInputPassword1" className="form-label">Password</label>
-                <input onChange={this.handleChange} type="password" className="form-control" id="loginpassword" />
+                <label for="loginpassword" className="form-label">Password</label>
+                <input onChange={this.handleChange} type="password" className="form-control" id="loginpassword" aria-required="true" />
               </div>
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                 <label className="form-check-label" for="exampleCheck1">Remember me</label>
               </div>
-              <button onClick={this.handleLogin} type="submit" className="btn btn-primary">Login</button>
+              <input onClick={this.handleLogin} type="submit" className="btn btn-primary" value="Login"></input>
             </div>
 
 
@@ -160,50 +159,47 @@ class LoginPage extends React.Component {
             <div>
               <div className="mb-3">
                 <label for="firstName" className="form-label">First Name</label>
-                <input onChange={this.handleChange} type="text" className="form-control" name="firstName" aria-describedby="emailHelp" placeholder="John Doe" />
-              </div>
-              <div style={{ fontSize: 12, color: 'red' }}>{this.state.nameError}</div>
-              <div className="mb-3">
-                <label for="secondName" className="form-label">Second name</label>
-                <input onChange={this.handleChange} type="text" className="form-control" name="secondName" aria-describedby="emailHelp" placeholder="John Doe" />
+                <label for="firstName" style={{ fontSize: 12, color: 'red' }}>{this.state.firstnameError}</label>
+                <input onChange={this.handleChange} id="firstName" type="text" className="form-control" name="firstName" aria-describedby="emailHelp" placeholder="John" aria-required="true" />
               </div>
 
-              <div style={{ fontSize: 12, color: 'red' }}>{this.state.secondnameError}</div>
+              <div className="mb-3">
+                <label for="secondName" className="form-label">Second name</label>
+                <label for="secondName" style={{ fontSize: 12, color: 'red' }}>{this.state.secondnameError}</label>
+                <input onChange={this.handleChange} id="secondName" type="text" className="form-control" name="secondName" aria-describedby="emailHelp" placeholder="Doe" aria-required="true" />
+              </div>
 
               <div className="mb-3">
                 <label for="email" className="form-label">Email</label>
-                <input onChange={this.handleChange} type="email" className="form-control" name="email" placeholder="diocane@studio.unibo.it" />
+                <label id='mail-error' for="email" style={{ fontSize: 12, color: 'red' }}>{this.state.emailError}</label>
+                <input onChange={this.handleChange} id="email" type="email" className="form-control" name="email" placeholder="diocane@studio.unibo.it" aria-required="true" />
               </div>
-
-              <div id='mail-error' style={{ fontSize: 12, color: 'red' }}>{this.state.emailError}</div>
 
               <div className="mb-3">
                 <label for="phone" className="form-label">Phone Number</label>
-                <input onChange={this.handleChange} type="text" className="form-control" name="phone" />
+                <label for="phone" style={{ fontSize: 12, color: 'red' }}>{this.state.phoneError}</label>
+                <input onChange={this.handleChange} id="phone" type="text" className="form-control" name="phone" aria-required="true" />
               </div>
-
-              <div style={{ fontSize: 12, color: 'red' }}>{this.state.phoneError}</div>
 
               <div className="mb-3">
                 <label for="password" className="form-label">Password</label>
-                <input onChange={this.handleChange} type="password" className="form-control" name="password" />
+                <label for="password" style={{ fontSize: 12, color: 'red' }}>{this.state.passwordError}</label>
+                <input onChange={this.handleChange} id="password" type="password" className="form-control" name="password" aria-required="true" />
               </div>
-              <div style={{ fontSize: 12, color: 'red' }}>{this.state.passwordError}</div>
 
               <div className="mb-3">
                 <label for="repeatPassword" className="form-label">Repeat Password</label>
-                <input onChange={this.handleChange} type="password" className="form-control" name="repeatPassword" />
+                <label for="repeatPassword" style={{ fontSize: 12, color: 'red' }}>{this.state.repeatpassError}</label>
+                <input onChange={this.handleChange} id="repeatPassword" type="password" className="form-control" name="repeatPassword" aria-required="true" />
               </div>
-              <div style={{ fontSize: 12, color: 'red' }}>{this.state.repeatpassError}</div>
 
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                 <label className="form-check-label" for="exampleCheck1">Remember me</label>
               </div>
-              <button onClick={this.handleRegister} type="submit" className="btn btn-primary">Register</button>
+
+              <input onClick={this.handleRegister} type="submit" className="btn btn-primary" value="Register" ></input>
             </div>
-
-
           </div>
         </div>
 
