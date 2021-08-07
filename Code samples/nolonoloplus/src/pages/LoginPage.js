@@ -159,38 +159,38 @@ class LoginPage extends React.Component {
             <div>
               <div className="mb-3">
                 <label for="firstName" className="form-label">First Name</label>
-                <label for="firstName" style={{ fontSize: 12, color: 'red' }}>{this.state.firstnameError}</label>
                 <input onChange={this.handleChange} id="firstName" type="text" className="form-control" name="firstName" aria-describedby="emailHelp" placeholder="John" aria-required="true" />
+                <label for="firstName" style={{ fontSize: 12, color: 'red' }}>{this.state.firstnameError}</label>
               </div>
 
               <div className="mb-3">
                 <label for="secondName" className="form-label">Second name</label>
-                <label for="secondName" style={{ fontSize: 12, color: 'red' }}>{this.state.secondnameError}</label>
                 <input onChange={this.handleChange} id="secondName" type="text" className="form-control" name="secondName" aria-describedby="emailHelp" placeholder="Doe" aria-required="true" />
+                <label for="secondName" style={{ fontSize: 12, color: 'red' }}>{this.state.secondnameError}</label>
               </div>
 
               <div className="mb-3">
                 <label for="email" className="form-label">Email</label>
-                <label id='mail-error' for="email" style={{ fontSize: 12, color: 'red' }}>{this.state.emailError}</label>
                 <input onChange={this.handleChange} id="email" type="email" className="form-control" name="email" placeholder="diocane@studio.unibo.it" aria-required="true" />
+                <label id='mail-error' for="email" style={{ fontSize: 12, color: 'red' }}>{this.state.emailError}</label>
               </div>
 
               <div className="mb-3">
                 <label for="phone" className="form-label">Phone Number</label>
-                <label for="phone" style={{ fontSize: 12, color: 'red' }}>{this.state.phoneError}</label>
                 <input onChange={this.handleChange} id="phone" type="text" className="form-control" name="phone" aria-required="true" />
+                <label for="phone" style={{ fontSize: 12, color: 'red' }}>{this.state.phoneError}</label>
               </div>
 
               <div className="mb-3">
                 <label for="password" className="form-label">Password</label>
-                <label for="password" style={{ fontSize: 12, color: 'red' }}>{this.state.passwordError}</label>
                 <input onChange={this.handleChange} id="password" type="password" className="form-control" name="password" aria-required="true" />
+                <label for="password" style={{ fontSize: 12, color: 'red' }}>{this.state.passwordError}</label>
               </div>
 
               <div className="mb-3">
                 <label for="repeatPassword" className="form-label">Repeat Password</label>
-                <label for="repeatPassword" style={{ fontSize: 12, color: 'red' }}>{this.state.repeatpassError}</label>
                 <input onChange={this.handleChange} id="repeatPassword" type="password" className="form-control" name="repeatPassword" aria-required="true" />
+                <label for="repeatPassword" style={{ fontSize: 12, color: 'red' }}>{this.state.repeatpassError}</label>
               </div>
 
               <div className="mb-3 form-check">
