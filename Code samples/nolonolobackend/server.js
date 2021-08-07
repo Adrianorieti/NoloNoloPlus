@@ -12,12 +12,12 @@ var url ='mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/No
 mongoose.connect(url, { useNewUrlParser: true ,  useUnifiedTopology: true  });
 
 app.use(cors());
-/*
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    next();
-  });
-  */
+
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     next();
+//   });
+  
 
 app.use(express.json());
 //app.use(express.static(path.join(__dirname, 'build')));
@@ -29,33 +29,34 @@ app.get('/', function(req, res) {
 });
 
 app.post('/register', async (req, res) => {
-    try
-    {
-        const password = req.body.password;
-        const buff = Buffer.from(password, 'utf-8');
-        const decodedpass = buff.toString('base64');
-        //decode base 64
-        const hash = await bcrypt.hash(decodedpass, 10);
 
+        //la password arriva in base64
+        console.log(req.body.password);
+        const password = req.body.password;
+
+        //qui la decodifico
+        const buff = Buffer.from(password, 'base64');
+        const decodedpass = buff.toString('utf-8');
+        console.log(decodedpass);
+
+        //qui faccio l'hash della password con sale
+        const hash = await bcrypt.hash(decodedpass, 10, function(err, hash) {
+            
         let newUser = new user({
-            name: req.body.firstName,
-            surname: req.body.secondName,
+            name: req.body.name,
+            surname: req.body.surname,
             phone: req.body.phone,
             email: req.body.email,
             password: hash
         });
-    
+        //salviamo in mongodb
         newUser.save();
-        res.redirect('/');
-        
-    } catch(e) {
-        console.log(e);
-        res.status(500).send('Something went wrong');
-    }
 
+        });
     
 });
 
+/*
 app.post('/login', async (req, res) => 
 {
     try
@@ -65,6 +66,7 @@ app.post('/login', async (req, res) =>
     } catch(e)
     {}
 });
+*/
 
 /*
 app.delete('/:id', function(req, res) {

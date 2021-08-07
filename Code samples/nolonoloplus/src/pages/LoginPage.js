@@ -25,13 +25,16 @@ class LoginPage extends React.Component
 
   doAjax = () =>
   {
-          //creo il json che rappresenta lo schema del database con i dati              
+          //creo il json che rappresenta lo schema del database con i dati  
+    const buff = Buffer.from(this.state.password, 'utf-8');
+    const encodedpass = buff.toString('base64'); 
+
     var obj = `{
       "name": "${this.state.firstName}" ,
       "surname": "${this.state.secondName}",
       "phone": "${this.state.phone}",
       "email": "${this.state.email}",
-      "password": "${this.state.password}"
+      "password": "${encodedpass}"
    }`;
    //creo l'oggetto ajax per la post
        var xhr = new XMLHttpRequest();
@@ -80,13 +83,13 @@ class LoginPage extends React.Component
       this.setState({phoneError});
       count++;
     }
-    if(this.state.password === '' || !(this.state.password.match(paswd)) )
+    if(this.state.password === '' || this.state.password.match(paswd) )
     {
       passwordError = "Password must contain a number and a symbol and a length between 7 to 15 characters";
       this.setState({passwordError});
       count++;
     }
-    if(this.state.email === '' || !(this.state.email.match(mailformat)))
+    if(this.state.email === '' || this.state.email.match(mailformat))
     {
       emailError = "Email syntax is not valid";
       this.setState({emailError});
@@ -110,8 +113,10 @@ class LoginPage extends React.Component
   {
     event.preventDefault();
     if(this.validate())
-      console.log("dai dio cane");
+    {
+      console.log("Eseguito");
       this.doAjax();
+    }
   };
 
 
