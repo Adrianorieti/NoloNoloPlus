@@ -42,18 +42,16 @@ class LoginPage extends React.Component
        var xhr = new XMLHttpRequest();
        xhr.open("POST", "http://localhost:8000/register", true);
        xhr.setRequestHeader('Content-Type', 'application/json');
-       xhr.onload = function() {
-           if (this.response == 200)
+       xhr.onload =  function() {
+           if (xhr.status == 200)
            {
                //console.log(this.responseText);
                console.log("daiiiiiiiiiiiiiiiiiiiiii");
            }
-           else if(this.response == 500)
+           else if(xhr.status == 500)
             {
               console.log("La mail esiste già");
-              let emailError='';
-              emailError = "Email already in use";
-              this.setState({emailError});
+              document.getElementById('mail-error').innerHTML = "Mail already in use BOOMER";
             }
        }
        xhr.onerror = function() {
@@ -190,7 +188,7 @@ class LoginPage extends React.Component
               <input  onChange={this.handleChange} type="email" className="form-control" name="email" placeholder="diocane@studio.unibo.it" />
             </div>
 
-            <div style={{fontSize: 12, color: 'red'}}>{this.state.emailError}</div>
+            <div id='mail-error' style={{fontSize: 12, color: 'red'}}>{this.state.emailError}</div>
             
             <div className="mb-3">
               <label for="phone" className="form-label">Phone Number</label>

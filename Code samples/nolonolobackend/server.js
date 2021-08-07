@@ -31,10 +31,13 @@ app.get('/', function(req, res) {
 app.post('/register', async (req, res) => {
 
         const mail = req.body.email;
+        
+        //guardo se c'è già una mail registrata
         const source = await user.findOne({email: mail });
-        if (!(source))
+
+        if (!(source)) //se non c'è una copia della mail nel db
         {
-             //la password arriva in base64
+        //la password arriva in base64
         console.log(req.body.password);
         const password = req.body.password;
 
