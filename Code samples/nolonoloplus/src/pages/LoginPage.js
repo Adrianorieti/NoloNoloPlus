@@ -29,6 +29,7 @@ class LoginPage extends React.Component
     const buff = Buffer.from(this.state.password, 'utf-8');
     const encodedpass = buff.toString('base64'); 
     
+    
     //creo il json che rappresenta lo schema del database con i dati  
     var obj = `{
       "name": "${this.state.firstName}" ,
