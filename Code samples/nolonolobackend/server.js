@@ -72,25 +72,28 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const mail = req.body.email;
     const source = await user.findOne({ email: mail });
+    console.log(source);
     if (source) {
-        const password = req.body.password;
 
+        const password = req.body.password;
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
         console.log(decodedpass);
-        const hash = await bcrypt.hash(decodedpass, 10, (err, hash) => {
-            if (hash === source.password) {
-                console.log("correctly logged in!");
-            }
-            else {
-                console.log(' Password non corretta');
-                res.status(500).send({ error: 'Password not correct' });
-            }
-        });
+        console.log(source.password);
+        //utilizzo compare di bcrypt per comparare la password in plain text e il suo ipotetico hash
+        //ci riesce perchè ha uno schema di cifratura che glielo permette da quanto ho capito
+        if ( await bcrypt.compare(decodedpass, source.password) )
+        {
+            console.log("Success");
+        }
+        else
+        {
+            console.log("Password doesn't match");
+        }
     }
     else {
-        console.log(' Errore la mail non esiste');
+        console.log('Errore la mail non esiste');
         res.status(500).send({ error: 'Mail not exists' });
     }
 })

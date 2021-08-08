@@ -121,16 +121,18 @@ class LoginPage extends React.Component {
     const paswd = '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
     const mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
     if ((this.state.email === '' || this.state.email.match(mailformat)) && (this.state.password === '' || this.state.password.match(paswd))) {
-      //fare qualcosa per far capire che è un coglione.
-      console.log('basta fare il coglione e inserisci le cose');
-    }
-    else {
+      
+        console.log('basta fare il coglione e inserisci le cose');
+      
+      } else { 
+
       const buff = Buffer.from(this.state.password, 'utf-8');
       const encodedpass = buff.toString('base64');
       const obj = `{
         "email": "${this.state.email}",
         "password": "${encodedpass}"
       }`;
+
       var xhr = new XMLHttpRequest();
       xhr.open("POST", "http://localhost:8000/login", true);
       xhr.setRequestHeader('Content-Type', 'application/json');
@@ -140,8 +142,9 @@ class LoginPage extends React.Component {
           console.log("Logged in correctly");
         }
         else if (xhr.status == 500) {
-          console.log("hai sbagliato qualcosa frate.");
-          //fagli capire che è un coglione
+          
+          document.getElementById('loginmail-error').innerHTML = "Mail or password is wrong !";
+
         }
       }
       xhr.onerror = function () {
@@ -151,8 +154,8 @@ class LoginPage extends React.Component {
       xhr.send(obj);
     }
   }
-
-
+  
+  
 
 
   render() {
@@ -175,11 +178,13 @@ class LoginPage extends React.Component {
             <div>
               <div className="mb-3">
                 <label for="loginemail" className="form-label">Email address</label>
-                <input onChange={this.handleChange} type="email" className="form-control" id="loginemail" aria-describedby="emailHelp" aria-required="true" />
+                <input onChange={this.handleChange} type="email" className="form-control" name="email" id="loginemail" aria-describedby="emailHelp" aria-required="true" />
+                <label id='loginmail-error' for="loginemail" style={{ fontSize: 12, color: 'red' }}></label>
+
               </div>
               <div className="mb-3">
                 <label for="loginpassword" className="form-label">Password</label>
-                <input onChange={this.handleChange} type="password" className="form-control" id="loginpassword" aria-required="true" />
+                <input onChange={this.handleChange} type="password" className="form-control" name="password" id="loginpassword" aria-required="true" />
               </div>
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
