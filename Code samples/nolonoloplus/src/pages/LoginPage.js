@@ -66,8 +66,8 @@ class LoginPage extends React.Component {
     let passwordError = '';
     let emailError = '';
     let repeatpassError = '';
-    var paswd = '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
-    var mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
+    const paswd = '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
+    const mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
 
     if (this.state.firstName === '') {
       firstnameError = 'Please fill out this space';
@@ -116,6 +116,43 @@ class LoginPage extends React.Component {
     }
   };
 
+  handleLogin = event => {
+    event.preventDefault();
+    const paswd = '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
+    const mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
+    if ((this.state.email === '' || this.state.email.match(mailformat)) && (this.state.password === '' || this.state.password.match(paswd))) {
+      //fare qualcosa per far capire che è un coglione.
+      console.log('basta fare il coglione e inserisci le cose');
+    }
+    else {
+      const buff = Buffer.from(this.state.password, 'utf-8');
+      const encodedpass = buff.toString('base64');
+      const obj = `{
+        "email": "${this.state.email}",
+        "password": "${encodedpass}"
+      }`;
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://localhost:8000/login", true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onload = function () {
+        if (xhr.status == 200) {
+          //console.log(this.responseText);
+          console.log("Logged in correctly");
+        }
+        else if (xhr.status == 500) {
+          console.log("hai sbagliato qualcosa frate.");
+          //fagli capire che è un coglione
+        }
+      }
+      xhr.onerror = function () {
+        console.log(this.response);
+        console.log("Error ....");
+      }
+      xhr.send(obj);
+    }
+  }
+
+
 
 
   render() {
@@ -159,19 +196,22 @@ class LoginPage extends React.Component {
             <div>
               <div className="mb-3">
                 <label for="firstName" className="form-label">First Name</label>
-                <input onChange={this.handleChange} id="firstName" type="text" className="form-control" name="firstName" aria-describedby="emailHelp" placeholder="John" aria-required="true" />
+                <input onChange={this.handleChange} id="firstName" type="text" className="form-control" name="firstName"
+                  aria-describedby="emailHelp" placeholder="John" aria-required="true" />
                 <label for="firstName" style={{ fontSize: 12, color: 'red' }}>{this.state.firstnameError}</label>
               </div>
 
               <div className="mb-3">
                 <label for="secondName" className="form-label">Second name</label>
-                <input onChange={this.handleChange} id="secondName" type="text" className="form-control" name="secondName" aria-describedby="emailHelp" placeholder="Doe" aria-required="true" />
+                <input onChange={this.handleChange} id="secondName" type="text" className="form-control" name="secondName"
+                  aria-describedby="emailHelp" placeholder="Doe" aria-required="true" />
                 <label for="secondName" style={{ fontSize: 12, color: 'red' }}>{this.state.secondnameError}</label>
               </div>
 
               <div className="mb-3">
                 <label for="email" className="form-label">Email</label>
-                <input onChange={this.handleChange} id="email" type="email" className="form-control" name="email" placeholder="diocane@studio.unibo.it" aria-required="true" />
+                <input onChange={this.handleChange} id="email" type="email" className="form-control" name="email"
+                  placeholder="username@studio.unibo.it" aria-required="true" />
                 <label id='mail-error' for="email" style={{ fontSize: 12, color: 'red' }}>{this.state.emailError}</label>
               </div>
 
