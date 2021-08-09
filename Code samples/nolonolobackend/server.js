@@ -1,32 +1,61 @@
+//express requirements
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const user = require('./moduledb1');
-var ObjectId = require('mongoose').Types.ObjectId;
 const app = express();
+//cors
 var cors = require('cors');
+//bcrypt stuff for hashing password
 const bcrypt = require('bcrypt');
 const { PRIORITY_ABOVE_NORMAL } = require('constants');
+//cookies stuff
+const session = require('express-session');
+const MongoDBSession = require('connect-mongodb-session')(session);
 
+//database url
 var url = 'mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(cors());
 
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     next();
-//   });
-
-
 app.use(express.json());
-//app.use(express.static(path.join(__dirname, 'build')));
+
+///////////// cookies stuff
+
+const store = new MongoDBSession({
+    uri: url,
+    collection: 'sessions',
+});
+
+app.use(session({
+    secret: "secret key",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+}));
+
+const isAuth = (req, res, next) =>
+{
+    if(req.session.isAuth)
+    {
+        next();
+    }else
+    {
+        console.log("not logged in");
+    }
+}
+
+////////////
 
 app.get('/', function (req, res) {
-    res.send('<p>Hello WOrld</p>');
-    //res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
-    //res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    //req.session.isAuth = true;
+    res.send("Server is on");
+});
+app.get('/login', isAuth,  function (req, res) {
+    //req.session.isAuth = true;
+    res.send("Logged in");
 });
 
 app.post('/register', async (req, res) => {
@@ -79,13 +108,13 @@ app.post('/login', async (req, res) => {
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
-        console.log(decodedpass);
-        console.log(source.password);
+        
         //utilizzo compare di bcrypt per comparare la password in plain text e il suo ipotetico hash
         //ci riesce perchè ha uno schema di cifratura che glielo permette da quanto ho capito
         if ( await bcrypt.compare(decodedpass, source.password) )
         {
             console.log("Success");
+            req.session.isAuth= true;
         }
         else
         {
@@ -98,30 +127,6 @@ app.post('/login', async (req, res) => {
     }
 })
 
-
-/*
-app.delete('/:id', function(req, res) {
-    user.findByIdAndRemove({_id: req.params.id});
-});
-*/
-/*
-app.put('/:id', function(req, res) {
-    user.findByIdAndUpdate({_id: req.params.id}, req.body);
-});
-*/
-
-//find an object, in this case age > 40 , with this we can extract the id
-/*
-user.findOne({age: {$gte:40} }, function (err, docs) {
-    if (err){
-        console.log(err)
-    }
-    else{
-       
-    }
-});
-
- */
 app.listen(8000, function () {
     console.log('Server is running on port 8000')
 })

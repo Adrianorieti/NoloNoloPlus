@@ -115,6 +115,7 @@ class LoginPage extends React.Component {
       this.doAjax();
     }
   };
+  /* Handler che entra in gioco quando il pulsante di login è premuto*/
 
   handleLogin = event => {
     event.preventDefault();
@@ -141,6 +142,10 @@ class LoginPage extends React.Component {
         if (xhr.status == 200) {
           //console.log(this.responseText);
           console.log("Logged in correctly");
+          
+          //qui dobbiamo mandare l'utente dove stava andando, se stava semplicemente facendo login
+          //lo rimandiamo alla home, se stava prenotando ma non era loggato dobbiamo ricordare l'ultima pagina dove stava andando
+          //credo si possa fare con react
         }
         else if (xhr.status == 500) {
           
