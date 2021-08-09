@@ -25,12 +25,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-<<<<<<< HEAD
 app.get('/', function(req, res) {
-=======
-app.get('/', function (req, res) {
-    //res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
->>>>>>> 0d5d1518a960e656cd9169d280604c9c4c3875e8
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
@@ -51,31 +46,10 @@ app.use(session({
     store: store,
 }));
 
-<<<<<<< HEAD
 
 ////////////
 
 
-=======
-const isAuth = (req, res, next) => {
-    if (req.session.isAuth) {
-        next();
-    } else {
-        console.log("not logged in");
-    }
-}
-
-////////////
-
-app.get('/', function (req, res) {
-    //req.session.isAuth = true;
-    res.send("Server is on");
-});
-app.get('/login', isAuth, function (req, res) {
-    //req.session.isAuth = true;
-    res.send("Logged in");
-});
->>>>>>> 0d5d1518a960e656cd9169d280604c9c4c3875e8
 
 app.post('/register', async (req, res) => {
 
@@ -125,20 +99,18 @@ app.post('/login', async (req, res) => {
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
+        
         //utilizzo compare di bcrypt per comparare la password in plain text e il suo ipotetico hash
         //ci riesce perchè ha uno schema di cifratura che glielo permette da quanto ho capito
-        if (await bcrypt.compare(decodedpass, source.password)) {
+        if ( await bcrypt.compare(decodedpass, source.password) )
+        {
             console.log("Success");
-<<<<<<< HEAD
             req.session.isLogged= true;
-            res.status(200).send();
+            res.status(200);
            
-=======
-            res.status(200).send({ name: `${source.name}` })
->>>>>>> 0d5d1518a960e656cd9169d280604c9c4c3875e8
         }
-        else {
-            res.status(500).send({ error: "Password doesn't match" });
+        else
+        {
             console.log("Password doesn't match");
         }
     }

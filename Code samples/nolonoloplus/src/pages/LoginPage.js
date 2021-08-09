@@ -87,41 +87,6 @@ class LoginPage extends React.Component {
 
   handleLogin = event => {
     event.preventDefault();
-<<<<<<< HEAD
-    const paswd = '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
-    const mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
-    if ((this.state.email === '' || this.state.email.match(mailformat)) && (this.state.password === '' || this.state.password.match(paswd)))
-     {
-      
-        console.log('basta fare il coglione e inserisci le cose');
-      
-      } else { 
-
-      const buff = Buffer.from(this.state.password, 'utf-8');
-      const encodedpass = buff.toString('base64');
-      const obj = `{
-        "email": "${this.state.email}",
-        "password": "${encodedpass}"
-      }`;
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "http://localhost:8000/login", true);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.onload = function () {
-        if (xhr.status == 200) {
-          //console.log(this.responseText);
-          console.log("Logged in correctly");
-          console.log(xhr.responseText);
-          //qui dobbiamo mandare l'utente dove stava andando, se stava semplicemente facendo login
-          //lo rimandiamo alla home, se stava prenotando ma non era loggato dobbiamo ricordare l'ultima pagina dove stava andando
-          //credo si possa fare con react
-        }
-        else if (xhr.status == 500) {
-          
-          document.getElementById('loginmail-error').innerHTML = "Mail or password is wrong !";
-
-        }
-=======
     const obj = this.createObj('login');
 
     var xhr = new XMLHttpRequest();
@@ -132,7 +97,6 @@ class LoginPage extends React.Component {
         console.log("Logged in correctly");
         const name = (JSON.parse(xhr.responseText)).name;
         document.querySelector('#navLoginReg').textContent = name;
->>>>>>> 0d5d1518a960e656cd9169d280604c9c4c3875e8
       }
       else if (xhr.status == 500) {
 
