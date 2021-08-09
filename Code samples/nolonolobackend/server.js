@@ -24,8 +24,8 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/', function(req, res) {
-	//res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
+app.get('/', function (req, res) {
+    //res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
@@ -43,13 +43,10 @@ app.use(session({
     store: store,
 }));
 
-const isAuth = (req, res, next) =>
-{
-    if(req.session.isAuth)
-    {
+const isAuth = (req, res, next) => {
+    if (req.session.isAuth) {
         next();
-    }else
-    {
+    } else {
         console.log("not logged in");
     }
 }
@@ -60,7 +57,7 @@ app.get('/', function (req, res) {
     //req.session.isAuth = true;
     res.send("Server is on");
 });
-app.get('/login', isAuth,  function (req, res) {
+app.get('/login', isAuth, function (req, res) {
     //req.session.isAuth = true;
     res.send("Logged in");
 });
@@ -108,23 +105,20 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const mail = req.body.email;
     const source = await user.findOne({ email: mail });
-    console.log(source);
     if (source) {
 
         const password = req.body.password;
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
-        
         //utilizzo compare di bcrypt per comparare la password in plain text e il suo ipotetico hash
         //ci riesce perchè ha uno schema di cifratura che glielo permette da quanto ho capito
-        if ( await bcrypt.compare(decodedpass, source.password) )
-        {
+        if (await bcrypt.compare(decodedpass, source.password)) {
             console.log("Success");
-            req.session.isAuth= true;
+            res.status(200).send({ name: `${source.name}` })
         }
-        else
-        {
+        else {
+            res.status(500).send({ error: "Password doesn't match" });
             console.log("Password doesn't match");
         }
     }
