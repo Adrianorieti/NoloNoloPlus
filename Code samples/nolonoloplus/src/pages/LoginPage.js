@@ -95,8 +95,11 @@ class LoginPage extends React.Component {
     xhr.onload = function () {
       if (xhr.status == 200) {
         console.log("Logged in correctly");
-        const name = (JSON.parse(xhr.responseText)).name;
-        document.querySelector('#navLoginReg').textContent = name;
+        const username = (JSON.parse(xhr.responseText)).name;
+        //TO-DO
+        //window.location.href = '/';
+        //document.querySelector('#navLoginReg').textContent = name;
+       <Redirect to="/" />
       }
       else if (xhr.status == 500) {
 

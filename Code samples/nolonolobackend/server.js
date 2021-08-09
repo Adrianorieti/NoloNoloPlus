@@ -48,7 +48,11 @@ app.use(session({
 
 
 ////////////
+app.get('/login', function(req, res)
+{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 
+});
 
 
 app.post('/register', async (req, res) => {
@@ -106,8 +110,8 @@ app.post('/login', async (req, res) => {
         {
             console.log("Success");
             req.session.isLogged= true;
-            res.status(200);
-           
+            res.status(200).send({ name: `${source.name}`});
+    
         }
         else
         {

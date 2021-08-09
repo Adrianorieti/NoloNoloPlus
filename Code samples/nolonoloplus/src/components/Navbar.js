@@ -19,7 +19,7 @@ function Navbar(props) {
               <Link className="nav-link" to="/products">Products</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" id="navLoginReg" to="/login">Login/Register</Link>
+              <Link className="nav-link" id="navLoginReg" to="/login">{props.name}</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/contacts" tabIndex="-1" >Contacts</Link>

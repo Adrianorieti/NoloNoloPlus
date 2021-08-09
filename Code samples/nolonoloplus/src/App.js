@@ -18,7 +18,9 @@ class App extends React.Component {
     return (
       <div>
 
-        <Navbar logoName="NoloNoloPlus" />
+       
+                  
+          <Navbar logoName="NoloNoloPlus" name="Login/Register" />
 
         <Switch>
 
@@ -53,6 +55,7 @@ class App extends React.Component {
           locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
           copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
 
+      
       </div>
     );
 
