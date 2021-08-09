@@ -22,6 +22,13 @@ app.use(cors());
 
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/', function(req, res) {
+	//res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 ///////////// cookies stuff
 
 const store = new MongoDBSession({
