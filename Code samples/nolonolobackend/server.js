@@ -6,7 +6,6 @@ var ObjectId = require('mongoose').Types.ObjectId;
 const app = express();
 var cors = require('cors');
 const bcrypt = require('bcrypt');
-const { PRIORITY_ABOVE_NORMAL } = require('constants');
 
 var url = 'mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
 
@@ -72,23 +71,20 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const mail = req.body.email;
     const source = await user.findOne({ email: mail });
-    console.log(source);
     if (source) {
 
         const password = req.body.password;
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
-        console.log(decodedpass);
-        console.log(source.password);
         //utilizzo compare di bcrypt per comparare la password in plain text e il suo ipotetico hash
         //ci riesce perchè ha uno schema di cifratura che glielo permette da quanto ho capito
-        if ( await bcrypt.compare(decodedpass, source.password) )
-        {
+        if (await bcrypt.compare(decodedpass, source.password)) {
             console.log("Success");
+            res.status(200).send({ name: `${source.name}` })
         }
-        else
-        {
+        else {
+            res.status(500).send({ error: "Password doesn't match" });
             console.log("Password doesn't match");
         }
     }
