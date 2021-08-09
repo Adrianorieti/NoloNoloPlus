@@ -1,4 +1,5 @@
 import React from "react";
+import {Redirect} from 'react-router-dom';
 
 class LoginPage extends React.Component {
   state = {
@@ -142,7 +143,7 @@ class LoginPage extends React.Component {
         if (xhr.status == 200) {
           //console.log(this.responseText);
           console.log("Logged in correctly");
-          
+          console.log(xhr.responseText);
           //qui dobbiamo mandare l'utente dove stava andando, se stava semplicemente facendo login
           //lo rimandiamo alla home, se stava prenotando ma non era loggato dobbiamo ricordare l'ultima pagina dove stava andando
           //credo si possa fare con react

@@ -16,6 +16,8 @@ echo "### Building finished ###"
 
 echo "### Moving file inside nolonolobackend/  folder"
 
+rm -r ../nolonolobackend/build
+
 mv  build  ../nolonolobackend/
 
 if [ $? -eq 0 ]

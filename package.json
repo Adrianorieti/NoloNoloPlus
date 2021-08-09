@@ -3,6 +3,7 @@
     "axios": "^0.21.1",
     "connect-mongodb-session": "^3.0.0",
     "express-session": "^1.17.2",
-    "http-proxy": "^1.18.1"
+    "http-proxy": "^1.18.1",
+    "uuid": "^8.3.2"
   }
 }

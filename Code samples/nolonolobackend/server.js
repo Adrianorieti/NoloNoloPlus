@@ -12,6 +12,7 @@ const { PRIORITY_ABOVE_NORMAL } = require('constants');
 //cookies stuff
 const session = require('express-session');
 const MongoDBSession = require('connect-mongodb-session')(session);
+const {v4: uuidv4} = require('uuid');
 
 //database url
 var url = 'mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
@@ -25,7 +26,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function(req, res) {
-	//res.sendFile('/home/void/Desktop/Git_project/NoloNoloPlus/Code samples/mongo+node/client2.html');
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
@@ -34,36 +34,22 @@ app.get('/', function(req, res) {
 const store = new MongoDBSession({
     uri: url,
     collection: 'sessions',
+    isLogged: false,
 });
 
 app.use(session({
     secret: "secret key",
     resave: false,
     saveUninitialized: false,
+    cookie: {secure: false},
+    genid: () => uuidv4(),
     store: store,
 }));
 
-const isAuth = (req, res, next) =>
-{
-    if(req.session.isAuth)
-    {
-        next();
-    }else
-    {
-        console.log("not logged in");
-    }
-}
 
 ////////////
 
-app.get('/', function (req, res) {
-    //req.session.isAuth = true;
-    res.send("Server is on");
-});
-app.get('/login', isAuth,  function (req, res) {
-    //req.session.isAuth = true;
-    res.send("Logged in");
-});
+
 
 app.post('/register', async (req, res) => {
 
@@ -75,13 +61,12 @@ app.post('/register', async (req, res) => {
     if (!(source)) //se non c'è una copia della mail nel db
     {
         //la password arriva in base64
-        console.log(req.body.password);
         const password = req.body.password;
 
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
-        console.log(decodedpass);
+       
 
         //qui faccio l'hash della password con sale
         const hash = await bcrypt.hash(decodedpass, 10, function (err, hash) {
@@ -108,7 +93,6 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const mail = req.body.email;
     const source = await user.findOne({ email: mail });
-    console.log(source);
     if (source) {
 
         const password = req.body.password;
@@ -121,7 +105,9 @@ app.post('/login', async (req, res) => {
         if ( await bcrypt.compare(decodedpass, source.password) )
         {
             console.log("Success");
-            req.session.isAuth= true;
+            req.session.isLogged= true;
+            res.status(200).send();
+           
         }
         else
         {
