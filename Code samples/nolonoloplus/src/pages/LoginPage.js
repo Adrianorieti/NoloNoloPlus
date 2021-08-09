@@ -8,11 +8,6 @@ class LoginPage extends React.Component {
     email: "",
     password: "",
     repeatPassword: "",
-    firstnameError: "",
-    secondnameError: "",
-    phoneError: "",
-    emailError: "",
-    passwordError: "",
     repeatpassError: ""
   }
 
@@ -22,20 +17,31 @@ class LoginPage extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  doAjax = () => {
+  createObj = (operation) => {
     //faccio l'encoding della password in base64 perchè così non ho problemi con caratteri strani
     const buff = Buffer.from(this.state.password, 'utf-8');
     const encodedpass = buff.toString('base64');
 
-
-    //creo il json che rappresenta lo schema del database con i dati  
-    var obj = `{
+    //creo il json che rappresenta lo schema del database con i dati 
+    if (operation === 'register') {
+      return (`{
       "name": "${this.state.firstName}" ,
       "surname": "${this.state.secondName}",
       "phone": "${this.state.phone}",
       "email": "${this.state.email}",
       "password": "${encodedpass}"
-   }`;
+      }`);
+    }
+    else {
+      return `{
+        "email": "${this.state.email}",
+        "password": "${encodedpass}"
+        }`;
+    }
+  }
+
+  doAjax = () => {
+    const obj = this.createObj('register')
     //creo l'oggetto ajax per la post
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:8000/register", true);
@@ -57,111 +63,54 @@ class LoginPage extends React.Component {
     xhr.send(obj);
   };
 
-  /*Valida l'input per vedere se ci sono problemi,  BETA VERSION */
-  validate = () => {
-    let count = 0;
-    let firstnameError = '';
-    let secondnameError = '';
-    let phoneError = '';
-    let passwordError = '';
-    let emailError = '';
-    let repeatpassError = '';
-    const paswd = '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
-    const mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
-
-    if (this.state.firstName === '') {
-      firstnameError = 'Please fill out this space';
-      this.setState({ firstnameError });
-      count++;
-    }
-    if (this.state.secondName === '') {
-      secondnameError = 'Please fill out this space';
-      this.setState({ secondnameError });
-      count++;
-    }
-    //devo trovare un altro modo per capire se l'input è o no un numero
-    if (this.state.phone === '' || this.state.phone.length != 10) {
-      phoneError = "Please insert phone correctly";
-      this.setState({ phoneError });
-      count++;
-    }
-    if (this.state.password === '' || this.state.password.match(paswd)) {
-      passwordError = "Password must contain a number and a symbol and a length between 7 to 15 characters";
-      this.setState({ passwordError });
-      count++;
-    }
-    if (this.state.email === '' || this.state.email.match(mailformat)) {
-      emailError = "Email syntax is not valid";
-      this.setState({ emailError });
-      count++;
-    }
+  /*Confronta la password immessa e quella ripetuta.
+  Ritorna false se sono diferse, true se uguali. */
+  passValidate = () => {
     if (this.state.repeatPassword != this.state.password) {
-      repeatpassError = " Passwords don't matches";
+      let repeatpassError = " Passwords don't matches";
       this.setState({ repeatpassError });
-      count++;
-    }
-
-    if (count > 0)
+      // count++;
       return false;
-    else
-      return true;
+    }
+    return true;
   }
 
   /* Handler che entra in gioco quando il pulsante di register è premuto*/
   handleRegister = event => {
     event.preventDefault();
-    if (this.validate()) {
+    if (this.passValidate()) {
       console.log("Eseguito");
       this.doAjax();
     }
   };
-  /* Handler che entra in gioco quando il pulsante di login è premuto*/
 
   handleLogin = event => {
     event.preventDefault();
-    const paswd = '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/ ';
-    const mailformat = '/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ';
-    if ((this.state.email === '' || this.state.email.match(mailformat)) && (this.state.password === '' || this.state.password.match(paswd)))
-     {
-      
-        console.log('basta fare il coglione e inserisci le cose');
-      
-      } else { 
+    const obj = this.createObj('login');
 
-      const buff = Buffer.from(this.state.password, 'utf-8');
-      const encodedpass = buff.toString('base64');
-      const obj = `{
-        "email": "${this.state.email}",
-        "password": "${encodedpass}"
-      }`;
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "http://localhost:8000/login", true);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.onload = function () {
-        if (xhr.status == 200) {
-          //console.log(this.responseText);
-          console.log("Logged in correctly");
-          
-          //qui dobbiamo mandare l'utente dove stava andando, se stava semplicemente facendo login
-          //lo rimandiamo alla home, se stava prenotando ma non era loggato dobbiamo ricordare l'ultima pagina dove stava andando
-          //credo si possa fare con react
-        }
-        else if (xhr.status == 500) {
-          
-          document.getElementById('loginmail-error').innerHTML = "Mail or password is wrong !";
-
-        }
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://localhost:8000/login", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        console.log("Logged in correctly");
+        const name = (JSON.parse(xhr.responseText)).name;
+        document.querySelector('#navLoginReg').textContent = name;
       }
-      xhr.onerror = function () {
-        console.log(this.response);
-        console.log("Error ....");
+      else if (xhr.status == 500) {
+
+        document.getElementById('loginmail-error').innerHTML = "Mail or password is wrong !";
+
       }
-      xhr.send(obj);
     }
+    xhr.onerror = function () {
+      console.log(this.response);
+      console.log("Error ....");
+    }
+    xhr.send(obj);
   }
-  
-  
+
+
 
 
   render() {
@@ -181,66 +130,68 @@ class LoginPage extends React.Component {
         <div className="tab-content" id="myTabContent">
 
           <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <div>
+            <form onSubmit={this.handleLogin}>
               <div className="mb-3">
                 <label for="loginemail" className="form-label">Email address</label>
-                <input onChange={this.handleChange} type="email" className="form-control" name="email" id="loginemail" aria-describedby="emailHelp" aria-required="true" />
+                <input onChange={this.handleChange} type="email" className="form-control" name="email" id="loginemail" aria-describedby="emailHelp"
+                  required="required" placeholder="nomeutente@gmail.com" pattern="^[\w]{1,}[\w.+-]{0,}@[\w-]{2,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$" />
                 <label id='loginmail-error' for="loginemail" style={{ fontSize: 12, color: 'red' }}></label>
 
               </div>
               <div className="mb-3">
                 <label for="loginpassword" className="form-label">Password</label>
-                <input onChange={this.handleChange} type="password" className="form-control" name="password" id="loginpassword" aria-required="true" />
+                <input onChange={this.handleChange} type="password" className="form-control" name="password" id="loginpassword"
+                  required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
               </div>
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                 <label className="form-check-label" for="exampleCheck1">Remember me</label>
               </div>
-              <input onClick={this.handleLogin} type="submit" className="btn btn-primary" value="Login"></input>
-            </div>
+              <input type="submit" className="btn btn-primary" value="Login"></input>
+            </form>
 
 
           </div>
 
           <div className="tab-pane fade register" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
-            <div>
+            <form onSubmit={this.handleRegister}>
               <div className="mb-3">
                 <label for="firstName" className="form-label">First Name</label>
                 <input onChange={this.handleChange} id="firstName" type="text" className="form-control" name="firstName"
-                  aria-describedby="emailHelp" placeholder="John" aria-required="true" />
-                <label for="firstName" style={{ fontSize: 12, color: 'red' }}>{this.state.firstnameError}</label>
+                  aria-describedby="emailHelp" placeholder="John" required="required" />
               </div>
 
               <div className="mb-3">
                 <label for="secondName" className="form-label">Second name</label>
                 <input onChange={this.handleChange} id="secondName" type="text" className="form-control" name="secondName"
-                  aria-describedby="emailHelp" placeholder="Doe" aria-required="true" />
-                <label for="secondName" style={{ fontSize: 12, color: 'red' }}>{this.state.secondnameError}</label>
+                  aria-describedby="emailHelp" placeholder="Doe" required="required" />
               </div>
 
               <div className="mb-3">
                 <label for="email" className="form-label">Email</label>
                 <input onChange={this.handleChange} id="email" type="email" className="form-control" name="email"
-                  placeholder="username@studio.unibo.it" aria-required="true" />
-                <label id='mail-error' for="email" style={{ fontSize: 12, color: 'red' }}>{this.state.emailError}</label>
+                  placeholder="username@studio.unibo.it" required="required" pattern="^[\w]{1,}[\w.+-]{0,}@[\w-]{2,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$"
+                  title="not valid email format" />
               </div>
 
               <div className="mb-3">
                 <label for="phone" className="form-label">Phone Number</label>
-                <input onChange={this.handleChange} id="phone" type="text" className="form-control" name="phone" aria-required="true" />
-                <label for="phone" style={{ fontSize: 12, color: 'red' }}>{this.state.phoneError}</label>
+                <input onChange={this.handleChange} id="phone" type="tel" className="form-control" name="phone" required="required"
+                  pattern="[0-9]{10}" />
               </div>
 
               <div className="mb-3">
                 <label for="password" className="form-label">Password</label>
-                <input onChange={this.handleChange} id="password" type="password" className="form-control" name="password" aria-required="true" />
-                <label for="password" style={{ fontSize: 12, color: 'red' }}>{this.state.passwordError}</label>
+                <input onChange={this.handleChange} id="password" type="password" className="form-control" name="password" required="required"
+                  pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                  title="Password must contain a number, a capital letter and a length of at least 8 characters" />
               </div>
 
               <div className="mb-3">
                 <label for="repeatPassword" className="form-label">Repeat Password</label>
-                <input onChange={this.handleChange} id="repeatPassword" type="password" className="form-control" name="repeatPassword" aria-required="true" />
+                <input onChange={this.handleChange} id="repeatPassword" type="password" className="form-control" name="repeatPassword"
+                  required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
                 <label for="repeatPassword" style={{ fontSize: 12, color: 'red' }}>{this.state.repeatpassError}</label>
               </div>
 
@@ -249,8 +200,8 @@ class LoginPage extends React.Component {
                 <label className="form-check-label" for="exampleCheck1">Remember me</label>
               </div>
 
-              <input onClick={this.handleRegister} type="submit" className="btn btn-primary" value="Register" ></input>
-            </div>
+              <input type="submit" className="btn btn-primary" value="Register" ></input>
+            </form>
           </div>
         </div>
 
