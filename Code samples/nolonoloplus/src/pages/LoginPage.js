@@ -70,7 +70,7 @@ class LoginPage extends React.Component {
     if (this.state.repeatPassword != this.state.password) {
       let repeatpassError = " Passwords don't matches";
       this.setState({ repeatpassError });
-      // count++;
+      
       return false;
     }
     return true;
