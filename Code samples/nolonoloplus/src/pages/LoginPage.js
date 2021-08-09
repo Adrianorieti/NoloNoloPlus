@@ -1,7 +1,9 @@
 import React from "react";
 import {Redirect} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 class LoginPage extends React.Component {
+  
   state = {
     firstName: "",
     secondName: "",
@@ -86,6 +88,7 @@ class LoginPage extends React.Component {
   };
 
   handleLogin = event => {
+    
     event.preventDefault();
     const obj = this.createObj('login');
 
@@ -97,9 +100,10 @@ class LoginPage extends React.Component {
         console.log("Logged in correctly");
         const username = (JSON.parse(xhr.responseText)).name;
         //TO-DO
-        //window.location.href = '/';
+        //window.location.href = '/'; $this.useStory
         //document.querySelector('#navLoginReg').textContent = name;
-       <Redirect to="/" />
+
+        //history.push('https://www.google.com');
       }
       else if (xhr.status == 500) {
 
