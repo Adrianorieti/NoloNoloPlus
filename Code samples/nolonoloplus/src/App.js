@@ -7,7 +7,6 @@ import Banner from './components/Banner';
 import { Route, Switch } from 'react-router-dom';
 import RentForm from './components/RentForm';
 import LoginPage from './pages/LoginPage';
-import RegisterForm from './components/Register';
 import Footer from './components/Footer';
 import { useState } from 'react';
 
