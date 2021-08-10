@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 echo "### Starting building ###"
 
 npm run build &

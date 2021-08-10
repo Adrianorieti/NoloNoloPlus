@@ -9,11 +9,17 @@ import RentForm from './components/RentForm';
 import LoginPage from './pages/LoginPage';
 import RegisterForm from './components/Register';
 import Footer from './components/Footer';
+import { useState } from 'react';
 
-class App extends React.Component {
+function App () {
+//Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
+//   const [data, setData] = useState('');
 
+//   const childToParent = () => {
+   
+// }
 
-  render() {
+  
 
     return (
       <div>
@@ -51,6 +57,7 @@ class App extends React.Component {
           </Route>
 
         </Switch>
+        
         <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
           locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
           copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
@@ -60,6 +67,6 @@ class App extends React.Component {
     );
 
   }
-}
+
 
 export default App;
