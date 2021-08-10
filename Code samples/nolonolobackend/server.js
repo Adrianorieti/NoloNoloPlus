@@ -51,7 +51,7 @@ app.use(session({
 
 app.get('/login', function(req, res)
   {
-      
+
       res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
 
@@ -112,6 +112,7 @@ app.post('/login', async (req, res) => {
             console.log("Success");
             req.session.isLogged= true;
             res.send({ name: `${source.name}`});
+            
         }
         else
         {

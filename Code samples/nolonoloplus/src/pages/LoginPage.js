@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {Redirect} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { useHistory } from "react-router";
 
 
+function LoginPage ({childToParent}){
 
-
-
-function LoginPage (){
-  //TO-DO usare hooks come useState
+  let history = useHistory();
   const [firstName, setfirstName] = useState('');
   const [secondName, setsecondName] = useState('');
   const [phone, setphone] = useState('');
@@ -17,9 +17,8 @@ function LoginPage (){
 
   /* Handler dei cambiamenti del testo nell'input*/
 function handleChange(event){
-  console.log(event.target.name);
-  console.log(event.target.value);
-  //console.log(event.target.value);
+ 
+
   switch (event.target.name){
     case 'firstName':
       setfirstName(event.target.value);
@@ -70,25 +69,30 @@ function createObj (operation)  {
   
   
   function doAjax () {
+    
     const obj = createObj('register')
-    //creo l'oggetto ajax per la post
+
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:8000/register", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        //console.log(this.responseText);
-        console.log("daiiiiiiiiiiiiiiiiiiiiii");
+
+    xhr.onload = function ()
+    {
+      if (xhr.status == 200) 
+      {
+        console.log("Registrazione avvenuta con successo.");
       }
       else if (xhr.status == 500) {
         console.log("La mail esiste già");
         document.getElementById('mail-error').innerHTML = "Mail already in use BOOMER";
       }
     }
-    xhr.onerror = function () {
+    xhr.onerror = function ()
+    {
       console.log(this.response);
       console.log("Error ....");
     }
+
     xhr.send(obj);
 };
 
@@ -107,7 +111,9 @@ function passValidate()
 /* Handler che entra in gioco quando il pulsante di register è premuto*/
 function handleRegister (event) {
   event.preventDefault();
-  if (passValidate()) {
+
+  if (passValidate()) 
+  {
     console.log("Eseguito");
     doAjax();
   }
@@ -124,12 +130,11 @@ function handleRegister (event) {
     xhr.onload = function () {
       if (xhr.status == 200) {
         console.log("Logged in correctly");
+        //passiamo ad App.js il nome che metteremo nel navbar !
         const username = (JSON.parse(xhr.responseText)).name;
+        childToParent(username);
+        history.push('/');
         
-        //TO-DO
-        //<Redirect to='/' />
-        //document.querySelector('#navLoginReg').textContent = name;
-        //history.push('https://www.google.com');
       }
       else if (xhr.status == 500) {
 
@@ -149,7 +154,7 @@ function handleRegister (event) {
 
   
     return (
-
+      <div className="bg-image loginpage" >
       <div className="login" scrolling="auto">
         <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
@@ -240,8 +245,8 @@ function handleRegister (event) {
         </div>
 
       </div>
-
+      </div>
     );
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);
