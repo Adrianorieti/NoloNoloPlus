@@ -18,27 +18,28 @@ function LoginPage (){
   /* Handler dei cambiamenti del testo nell'input*/
 function handleChange(event){
   console.log(event.target.name);
-  
+  console.log(event.target.value);
+  //console.log(event.target.value);
   switch (event.target.name){
-    case firstName:
+    case 'firstName':
       setfirstName(event.target.value);
       break; 
-    case secondName:
+    case 'secondName':
       setsecondName(event.target.value);
       break; 
-    case phone:
+    case 'phone':
       setphone(event.target.value);
       break; 
-    case email:
+    case 'email':
       setemail(event.target.value);
       break; 
-    case password:
+    case 'password':
       setpassword(event.target.value);
       break; 
-    case repeatPassword:
+    case 'repeatPassword':
       setrepeatPassword(event.target.value);
       break; 
-    case repeatpassError:
+    case 'repeatpassError':
       setrepeatpassError(event.target.value);
   }
 };
@@ -114,7 +115,7 @@ function handleRegister (event) {
 
  function handleLogin(event){
     
-    
+    event.preventDefault();
     const obj = createObj('login');
 
     var xhr = new XMLHttpRequest();
