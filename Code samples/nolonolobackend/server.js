@@ -111,7 +111,7 @@ app.post('/login', async (req, res) => {
         {
             console.log("Success");
             req.session.isLogged= true;
-            res.send({ name: `${source.name}`});
+            res.send({ name: `${source.name}`, isLogged: `${req.session.isLogged}`});
             
         }
         else

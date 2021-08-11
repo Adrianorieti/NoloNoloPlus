@@ -132,7 +132,8 @@ function handleRegister (event) {
         console.log("Logged in correctly");
         //passiamo ad App.js il nome che metteremo nel navbar !
         const username = (JSON.parse(xhr.responseText)).name;
-        childToParent(username);
+        const isLogged = (JSON.parse(xhr.responseText)).isLogged;
+        childToParent(username, isLogged);
         history.push('/');
         
       }

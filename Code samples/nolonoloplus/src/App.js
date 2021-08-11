@@ -13,9 +13,11 @@ import { useState } from 'react';
 function App () {
 //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
 const [data, setData] = useState('');
+const [isLogged, setLog] = useState('');
 
-const childToParent = (childdata) => {
+const childToParent = (childdata, isLogged) => {
   setData(childdata);
+  setLog(isLogged);
 }
 
   
@@ -26,7 +28,7 @@ const childToParent = (childdata) => {
        
   {/* Potrei passare la variabile childdata nella props.name di Navbar per farla vedere
   però è evidente che dobbiamo fare un check di un booleano */}
-          <Navbar logoName="NoloNoloPlus" name="Login/Register" />
+          <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} />
 
         <Switch>
 
