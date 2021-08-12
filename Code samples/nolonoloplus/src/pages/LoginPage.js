@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { useHistory } from "react-router";
 
 
-function LoginPage ({childToParent}){
+function LoginPage({ childToParent }) {
 
   let history = useHistory();
   const [firstName, setfirstName] = useState('');
@@ -16,39 +16,39 @@ function LoginPage ({childToParent}){
   const [repeatpassError, setrepeatpassError] = useState('');
 
   /* Handler dei cambiamenti del testo nell'input*/
-function handleChange(event){
- 
-
-  switch (event.target.name){
-    case 'firstName':
-      setfirstName(event.target.value);
-      break; 
-    case 'secondName':
-      setsecondName(event.target.value);
-      break; 
-    case 'phone':
-      setphone(event.target.value);
-      break; 
-    case 'email':
-      setemail(event.target.value);
-      break; 
-    case 'password':
-      setpassword(event.target.value);
-      break; 
-    case 'repeatPassword':
-      setrepeatPassword(event.target.value);
-      break; 
-    case 'repeatpassError':
-      setrepeatpassError(event.target.value);
-  }
-};
+  function handleChange(event) {
 
 
-function createObj (operation)  {
+    switch (event.target.name) {
+      case 'firstName':
+        setfirstName(event.target.value);
+        break;
+      case 'secondName':
+        setsecondName(event.target.value);
+        break;
+      case 'phone':
+        setphone(event.target.value);
+        break;
+      case 'email':
+        setemail(event.target.value);
+        break;
+      case 'password':
+        setpassword(event.target.value);
+        break;
+      case 'repeatPassword':
+        setrepeatPassword(event.target.value);
+        break;
+      case 'repeatpassError':
+        setrepeatpassError(event.target.value);
+    }
+  };
+
+
+  function createObj(operation) {
     //faccio l'encoding della password in base64 perchè così non ho problemi con caratteri strani
     const buff = Buffer.from(password, 'utf-8');
     const encodedpass = buff.toString('base64');
-  
+
     //creo il json che rappresenta lo schema del database con i dati 
     if (operation === 'register') {
       return (`{
@@ -65,62 +65,58 @@ function createObj (operation)  {
         "password": "${encodedpass}"
         }`;
     }
-};
-  
-  
-  function doAjax () {
-    
+  };
+
+
+  function doRegister() {
+
     const obj = createObj('register')
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "http://localhost:8000/register", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    xhr.onload = function ()
-    {
-      if (xhr.status == 200) 
-      {
+    xhr.onload = function () {
+      if (xhr.status == 200) {
         console.log("Registrazione avvenuta con successo.");
+        //reindirizzare alla pagina utente. 
       }
       else if (xhr.status == 500) {
         console.log("La mail esiste già");
         document.getElementById('mail-error').innerHTML = "Mail already in use BOOMER";
       }
     }
-    xhr.onerror = function ()
-    {
+    xhr.onerror = function () {
       console.log(this.response);
       console.log("Error ....");
     }
 
     xhr.send(obj);
-};
+  };
 
-/*Confronta la password immessa e quella ripetuta.
-  Ritorna false se sono diferse, true se uguali. */
-function passValidate() 
-{
+  /*Confronta la password immessa e quella ripetuta.
+    Ritorna false se sono diferse, true se uguali. */
+  function passValidate() {
     if (repeatPassword != password) {
-      setrepeatpassError(" Passwords don't matches");  
+      setrepeatpassError(" Passwords don't matches");
       return false;
     }
     return true;
-};
+  };
 
-  
-/* Handler che entra in gioco quando il pulsante di register è premuto*/
-function handleRegister (event) {
-  event.preventDefault();
 
-  if (passValidate()) 
-  {
-    console.log("Eseguito");
-    doAjax();
-  }
-};
+  /* Handler che entra in gioco quando il pulsante di register è premuto*/
+  function handleRegister(event) {
+    event.preventDefault();
 
- function handleLogin(event){
-    
+    if (passValidate()) {
+      console.log("Eseguito");
+      doRegister();
+    }
+  };
+
+  function handleLogin(event) {
+
     event.preventDefault();
     const obj = createObj('login');
 
@@ -135,7 +131,7 @@ function handleRegister (event) {
         const isLogged = (JSON.parse(xhr.responseText)).isLogged;
         childToParent(username, isLogged);
         history.push('/');
-        
+
       }
       else if (xhr.status == 500) {
 
@@ -148,18 +144,18 @@ function handleRegister (event) {
       console.log("Error ....");
     }
     xhr.send(obj);
-};
+  };
 
 
 
 
-  
-    return (
-      <div className="bg-image loginpage" >
+
+  return (
+    <div className="bg-image loginpage" >
       <div className="login" scrolling="auto">
         <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
-            <button className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Login</button>
+            <button className="nav-link active" id="home-tab" e data-bs-toggl="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Login</button>
           </li>
           <li className="nav-item" role="presentation">
             <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Register</button>
@@ -246,8 +242,8 @@ function handleRegister (event) {
         </div>
 
       </div>
-      </div>
-    );
+    </div>
+  );
 }
 
 export default withRouter(LoginPage);
