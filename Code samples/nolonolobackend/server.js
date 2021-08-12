@@ -8,11 +8,11 @@ const app = express();
 var cors = require('cors');
 //bcrypt stuff for hashing password
 const bcrypt = require('bcrypt');
-const { PRIORITY_ABOVE_NORMAL } = require('constants');
+
 //cookies stuff
 const session = require('express-session');
 const MongoDBSession = require('connect-mongodb-session')(session);
-const {v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 //database url
 var url = 'mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
@@ -25,7 +25,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
@@ -41,7 +41,7 @@ app.use(session({
     secret: "secret key",
     resave: false,
     saveUninitialized: false,
-    cookie: {secure: false},
+    cookie: { secure: false },
     genid: () => uuidv4(),
     store: store,
 }));
@@ -49,11 +49,10 @@ app.use(session({
 
 ////////////
 
-app.get('/login', function(req, res)
-  {
+app.get('/login', function (req, res) {
 
-      res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 
 app.post('/register', async (req, res) => {
@@ -71,7 +70,7 @@ app.post('/register', async (req, res) => {
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
-       
+
 
         //qui faccio l'hash della password con sale
         const hash = await bcrypt.hash(decodedpass, 10, function (err, hash) {
@@ -104,18 +103,16 @@ app.post('/login', async (req, res) => {
         //qui la decodifico
         const buff = Buffer.from(password, 'base64');
         const decodedpass = buff.toString('utf-8');
-        
+
         //utilizzo compare di bcrypt per comparare la password in plain text e il suo ipotetico hash
         //ci riesce perchè ha uno schema di cifratura che glielo permette da quanto ho capito
-        if ( await bcrypt.compare(decodedpass, source.password) )
-        {
+        if (await bcrypt.compare(decodedpass, source.password)) {
             console.log("Success");
-            req.session.isLogged= true;
-            res.send({ name: `${source.name}`, isLogged: `${req.session.isLogged}`});
-            
+            req.session.isLogged = true;
+            res.send({ name: `${source.name}`, isLogged: `${req.session.isLogged}` });
+
         }
-        else
-        {
+        else {
             console.log("Password doesn't match");
         }
     }
