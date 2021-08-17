@@ -25,9 +25,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+
 
 ///////////// cookies stuff
 
@@ -35,19 +33,20 @@ const store = new MongoDBSession({
     uri: url,
     collection: 'sessions',
     isLogged: false,
+   
 });
 
 app.use(session({
     secret: "secret key",
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false },
+    saveUninitialized: true,
+    cookie: { secure: false , maxAge: 24 * 60 * 60 * 1000},
     genid: () => uuidv4(),
     store: store,
 }));
 
 
-const isAuth = (res, req, next) =>
+function isAuth(req, res, next) 
 {
     if(req.session.isLogged)
     {
@@ -59,6 +58,10 @@ const isAuth = (res, req, next) =>
 
 
 ////////////
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.get('/login', function (req, res) {
 
