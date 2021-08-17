@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import { useState } from 'react';
 
+
 function App () {
 //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
 const [data, setData] = useState('');
