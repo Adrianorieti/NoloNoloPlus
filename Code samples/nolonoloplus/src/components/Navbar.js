@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom';
 
 function Navbar(props) {
 
-  function checkAriaBurger()
-  {
+  function checkAriaBurger() {
     //cambiamo  l'aria attribute  ogni volta che viene cliccato il burger
     const burger = document.getElementById("burger");
     const burgerattr = burger.getAttribute("aria-expanded");
-    const newburgerattr = (burgerattr  === 'false') ? 'true' : 'false';
-    burger.setAttribute("aria-expanded",newburgerattr);
+    const newburgerattr = (burgerattr === 'false') ? 'true' : 'false';
+    burger.setAttribute("aria-expanded", newburgerattr);
   }
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end">
@@ -30,7 +29,7 @@ function Navbar(props) {
               <Link className="nav-link" id="navLoginReg" to="/login">{props.name}</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contacts" tabIndex="-1" >Contacts</Link>
+              <Link className="nav-link" to="#footer" >Contacts</Link>
             </li>
           </ul>
         </div>

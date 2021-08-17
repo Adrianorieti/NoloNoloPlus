@@ -1,31 +1,36 @@
 import React from "react";
 
-function RentForm()
-{
-    return(
-
-        <form className="rentForm">
-            <span><h3>Rent a Bike</h3></span>
-        <div className="mb-3">
-          <label for="startRent" className="form-label">Initial Rent Date</label>
-          <input type="date" className="form-control" id="startRent" aria-describedby="emailHelp"/>
-        </div>
-        <div className="mb-3">
-          <label for="endRent" className="form-label">Ending Rent Date</label>
-          <input type="date" className="form-control" id="endRent"/>
-        </div>
-        <div className="mb-3 form-check">
+function RentForm() {
+  return (
+    <main>
+      <form className="rentForm">
+        <fieldset>
+          <legend>Renting dates inputs</legend>
+          <section className="mb-3">
+            <label for="startRent" className="form-label">Initial Rent Date</label>
+            <input type="date" className="form-control" id="startRent" required="required" />
+          </section>
+          <section className="mb-3">
+            <label for="endRent" className="form-label">Ending Rent Date</label>
+            <input type="date" className="form-control" id="endRent" required="required" />
+          </section>
+        </fieldset>
+        <fieldset>
+          <legend>Bikes types</legend>
+          <section className="mb-3 form-check">
             <label for="products" className="form-label">Choose a product</label>
-            <select name="products" className="form-select" aria-label="Default select example">
-                <option value="mountainBike" selected>Mountain Bike</option>
-                <option value="cityBike" >City Bike</option>
-                <option value="electricBike" >ELectric Bike</option>
+            <select id="products" name="products" className="form-select" aria-label="Default select" required="required">
+              <option value="mountainBike" selected>Mountain Bike</option>
+              <option value="cityBike" >City Bike</option>
+              <option value="electricBike" >ELectric Bike</option>
             </select>
-          </div>
+          </section>
+        </fieldset>
         <button type="submit" className="btn btn-success">Start Rent Now</button>
       </form>
-    
-    );
+    </main>
+
+  );
 }
 
 export default RentForm;

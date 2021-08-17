@@ -10,95 +10,66 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
         body {
-            margin: 0px;
+            flex: 1;
         }
 
-        footer {
-            margin: 0px;
-            padding-top: 0px;
+        .rentForm {
+            position: absolute;
+            width: 100%;
+            background-color: white;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0.9;
+            text-align: center;
+            top: 50px;
+
+        }
+
+        .rentForm legend {
+            font-weight: bold;
+        }
+
+        .rentForm .format {
+            width: 100%;
+            text-align: left;
+        }
+
+        label {
+            padding: 10px;
         }
     </style>
 
 </head>
 
 <body>
-    <section>
-        <!-- Footer -->
-        <footer class="text-center bg-light text-muted">
-            <!-- Section: Links  -->
-            <section class="">
-                <div class="container text-center text-md-start mt-5">
-                    <!-- Grid row -->
-                    <div class="row mt-3">
-                        <!-- Grid column -->
-                        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                            <!-- Content -->
-                            <h6 class="text-uppercase fw-bold mb-4">
-                                <i class="fas fa-gem me-3"></i>Company name
-                            </h6>
-                            <p>
-                                Here you can use rows and columns to organize your footer content. Lorem ipsum
-                                dolor sit amet, consectetur adipisicing elit.
-                            </p>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                            <!-- Links -->
-                            <h6 class="text-uppercase fw-bold mb-4">
-                                Products
-                            </h6>
-                            <p>
-                                <a href="#!" class="text-reset">Angular</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-reset">React</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-reset">Vue</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-reset">Laravel</a>
-                            </p>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-
-
-                        <!-- Grid column -->
-                        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                            <!-- Links -->
-                            <h6 class="text-uppercase fw-bold mb-4">
-                                Contact
-                            </h6>
-                            <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
-                            <p>
-                                <i class="fas fa-envelope me-3"></i>
-                                info@example.com
-                            </p>
-                            <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
-                            <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
-                        </div>
-                        <!-- Grid column -->
-                    </div>
-                    <!-- Grid row -->
+    <main>
+        <form className="rentForm">
+            <fieldset>
+                <legend>Renting dates inputs</legend>
+                <div class="mb-3">
+                    <label for="startRent" class="form-label">Initial Rent Date</label>
+                    <input type="date" class="form-control" id="startRent" />
                 </div>
-            </section>
-            <!-- Section: Links  -->
-
-            <!-- Copyright -->
-            <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-                © 2021 Copyright: POLIZIA POSTALE UNIBO
-            </div>
-            <!-- Copyright -->
-        </footer>
-        <!-- Footer -->
-    </section>
+                <div className="mb-3">
+                    <label for="endRent" class="form-label">Ending Rent Date</label>
+                    <input type="date" class="form-control" id="endRent" />
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Bikes types</legend>
+                <div class="mb-3 form-check">
+                    <label for="products" class="form-label">Choose a product</label>
+                    <select id="products" name="products" class="form-select" aria-label="Default select">
+                        <option value="mountainBike" selected>Mountain Bike</option>
+                        <option value="cityBike">City Bike</option>
+                        <option value="electricBike">ELectric Bike</option>
+                    </select>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-success">Start Rent Now</button>
+        </form>
+    </main>
 </body>
 
 </html>
-
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, labore. Voluptate consectetur dolorem earum aperiam
-et aliquam eligendi nisi harum aliquid, ullam quasi rem eos nobis sit suscipit in doloremque.
