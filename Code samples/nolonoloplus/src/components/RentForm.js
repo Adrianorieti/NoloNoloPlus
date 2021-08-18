@@ -1,4 +1,8 @@
 import React from "react";
+import DatePicker from "react-datepicker";
+import { useState } from 'react';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 function RentForm() {
   return (
