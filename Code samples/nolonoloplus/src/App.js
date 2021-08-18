@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import { useState } from 'react';
 
+
 function App () {
 //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
 const [data, setData] = useState('');
@@ -26,9 +27,8 @@ const childToParent = (childdata, isLogged) => {
       <div>
 
        
-  {/* Potrei passare la variabile childdata nella props.name di Navbar per farla vedere
-  però è evidente che dobbiamo fare un check di un booleano */}
-          <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} />
+  {/* Devo passare più props perchè a seconda che lo user sia autenticato o meno ho un comportamento diverso */}
+          <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} display={isLogged ? true : false} />
 
         <Switch>
 
@@ -51,7 +51,10 @@ const childToParent = (childdata, isLogged) => {
 
           </Route>
 
-          <Route path="/login" component={() => <LoginPage childToParent={childToParent} />}>
+          <Route path="/login">  
+          {/* <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} display={isLogged ? true : false} /> */}
+
+          <LoginPage childToParent={childToParent} />
         
           
 

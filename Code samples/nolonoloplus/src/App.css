@@ -98,17 +98,6 @@ img
   
 }
 
-.rentForm legend 
-{
-  font-weight: bold;
-}
-
-.rentForm .format
-{
-  width: 100%;
-  text-align: left;
-}
-
 label
 {
   padding: 10px;
@@ -165,3 +154,6 @@ label
   {
     border-width: 0;
   }
+
+
+ 
