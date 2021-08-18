@@ -5,14 +5,19 @@ import { useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 
 function RentForm() {
+
+  const [startDate, setStartDate] = useState(new Date());
+
   return (
     <main>
       <form className="rentForm">
         <fieldset>
           <legend>Renting dates inputs</legend>
           <section className="mb-3">
-            <label for="startRent" className="form-label">Initial Rent Date</label>
-            <input type="date" className="form-control" id="startRent" required="required" />
+            <DatePicker
+              selected={startDate}
+              onChange={date => setStartDate(date)}
+            />
           </section>
           <section className="mb-3">
             <label for="endRent" className="form-label">Ending Rent Date</label>
