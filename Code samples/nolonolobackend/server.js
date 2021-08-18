@@ -25,9 +25,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+
 
 ///////////// cookies stuff
 
@@ -35,19 +33,35 @@ const store = new MongoDBSession({
     uri: url,
     collection: 'sessions',
     isLogged: false,
+   
 });
 
 app.use(session({
     secret: "secret key",
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false },
+    saveUninitialized: true,
+    cookie: { secure: false , maxAge: 24 * 60 * 60 * 1000},
     genid: () => uuidv4(),
     store: store,
 }));
 
 
+function isAuth(req, res, next) 
+{
+    if(req.session.isLogged)
+    {
+        next();
+    }else{
+        res.send("Non sei loggato bastardo");
+    }
+};
+
+
 ////////////
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.get('/login', function (req, res) {
 
@@ -121,6 +135,21 @@ app.post('/login', async (req, res) => {
         res.status(500).send({ error: 'Mail not exists' });
     }
 })
+
+app.get("/logout", (req, res) =>
+{
+    req.session.destroy((err) =>
+    {
+        if(err)
+            console.log(err);
+    })
+})
+
+app.get("/dashboard", isAuth, (res, req) =>
+{
+    res.send("Ok, sei loggato e puoi accedere");
+})
+
 
 app.listen(8000, function () {
     console.log('Server is running on port 8000')
