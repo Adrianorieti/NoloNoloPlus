@@ -3,6 +3,8 @@ import Datepicker from 'react-ada-keyboard-accessible-datepicker'
 //yarn add react-ada-keyboard-accessible-datepicker
 
 function RentForm() {
+  const customInputBox1 = <input id="Custom-Box-init" name="date-init"></input>
+  const customInputBox2 = <input id="Custom-Box-end" name="date-end"></input>
   return (
     <main>
       <form className="rentForm" >
@@ -13,11 +15,16 @@ function RentForm() {
               dateFormat={"mm dd, yyyy"}
               minDate={"today"}
               themeColor={"rgb(99, 218, 99)"}
+              customInputBox={customInputBox1}
             />
           </section>
           <section className="mb-3">
-            <label for="endRent" className="form-label">Ending Rent Date</label>
-            <input type="date" className="form-control" id="endRent" required="required" />
+            {/* <Datepicker
+              dateFormat={"mm dd, yyyy"}
+              minDate={"today"}
+              themeColor={"rgb(99, 218, 99)"}
+              customInputBox={customInputBox2}
+            /> */}
           </section>
         </fieldset>
         <fieldset>
