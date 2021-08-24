@@ -73,28 +73,33 @@ function RentForm() {
     button.addEventListener('click', toSubmit);
   }
 
+  window.onload = () => {
+    const button = document.querySelector("#rentFormButton");
+    button.addEventListener('click', toDate);
+  };
+
   const customInputBox = <input id="Custom-Box" ></input>
   return (
     <main>
       <form className="rentForm" >
-        <fieldset id="Bikes_Types">
+        <fieldset id="Bikes_Types" aria-required="true">
           <legend>Bikes types</legend>
           <section className="mb-3 form-check">
             <div>
-              <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" aria-required="true" ></input>
+              <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" ></input>
               <label for="Mountain-Bike" className="form-label">Mountain Bike</label>
             </div>
             <div>
-              <input id="City-Bike" name="products" className="form-select" type="radio" value="City Bike" aria-required="true" ></input>
+              <input id="City-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
               <label for="City-Bike" className="form-label">City Bike</label>
             </div>
             <div>
-              <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric Bike" aria-required="true"></input>
+              <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric Bike" ></input>
               <label for="Electric-Bike" className="form-label">Electric Bike</label>
             </div>
           </section>
         </fieldset>
-        <fieldset id="Renting_Dates" hidden='true'>
+        <fieldset id="Renting_Dates" hidden='true' aria-required="true">
           <legend>Renting dates inputs</legend>
           <section className="mb-3">
             <Datepicker
@@ -102,10 +107,11 @@ function RentForm() {
               minDate={"today"}
               themeColor={"rgb(99, 218, 99)"}
               customInputBox={customInputBox}
+              inputBoxLabel={"puttana la madonna"}
             />
           </section>
         </fieldset>
-        <button id="rentFormButton" type="button" className="btn btn-success" onClick={toDate} >Click to go choosing the starting date</button>
+        <button id="rentFormButton" type="button" className="btn btn-success">Click to go choosing the starting date</button>
       </form>
     </main>
 
