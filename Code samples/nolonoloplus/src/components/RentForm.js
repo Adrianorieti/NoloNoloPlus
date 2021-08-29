@@ -1,24 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import Datepicker from 'react-ada-keyboard-accessible-datepicker'
 //yarn add react-ada-keyboard-accessible-datepicker
 
 function RentForm() {
+  //inizializziamo constanti e states
+  const customInputBox = <input id="Custom-Box" ></input>
   let form_obj = ``;//questo è il json contente le informazioni del nostro form.
+  const [infoLabel, setinfoLabel] = useState('Starting Date'); //state che serve per cambiare il label al datePicker
+  let datePicker;
+  let rentFormButton;
 
-  function submit() {
-    const datePicker = document.querySelector("#Custom-Box");
+  window.onload = () => {
+    //Selezioniamo gli elementi che ci servono dall'html e aggiungiamo eventListener al bottone di rent
+    rentFormButton = document.querySelector("#rentFormButton");
+    rentFormButton.addEventListener('click', toDate);
+    datePicker = document.querySelector("#Custom-Box");
+  };
+
+  function toDate() {
+    //prendiamo l'elemento selezionato tra i vari radio button, e lo inseriamo nel json che manderemo al server.
+    const radioInput = document.querySelector("input[name='products']:checked");
+    let bikeType = 'all';
+    if (radioInput) {
+      bikeType = radioInput.value;
+    }
+    form_obj += `{
+      "type": "${bikeType}",`;
+    //ora prendiamo il form con i radio button, lo mettiamo hidden e sveliamo il form con il date picker
+    document.querySelector("#Bikes_Types").setAttribute("hidden", "true");
+    document.querySelector("#Renting_Dates").removeAttribute("hidden");
+    //infine cambiamo la funzione quando viene cliccato il bottone
+    rentFormButton.innerHTML = "Click to go choosing the ending date";
+    rentFormButton.removeEventListener('click', toDate);
+    rentFormButton.addEventListener('click', toSubmit);
+    datePicker.focus();
+  }
+
+  function toSubmit() {
+    //se è stata inserita una data valida nel datePicker la aggiungiamo al JSON
     if (datePicker.value) {
       form_obj += `
-      "endingDate": "${datePicker.value}"
-      }`;
+        "startingDate": "${datePicker.value}",`;
+      rentFormButton.removeEventListener("click", toSubmit);
+      rentFormButton.addEventListener('click', submit);
+      rentFormButton.innerHTML = 'click to submit!';
+      //cambiamo label al datePicker, perchè ora dobbiamo scegliere l'ending date.
+      setinfoLabel("Ending Date");
+      datePicker.focus();
+    }
+    else {
+      //Sennò creiamo un error-message label, built-in del datePicker.
+      document.querySelector("#error-message").innerHTML = "Please enter a date!";
+      alert("You didn't enter a valid data, please try again!");
+      datePicker.focus();
+
+    }
+  }
+
+  function submit() {
+    //se è stata inserita una data valida nel datePicker la aggiungiamo al JSON, e poi mandiamo il tutto
+    if (datePicker.value) {
+      form_obj += `
+        "endingDate": "${datePicker.value}"
+        }`;
+      alert(form_obj);
       var xhr = new XMLHttpRequest();
       xhr.open("POST", "http://localhost:8000/register", true);
       xhr.setRequestHeader('Content-Type', 'application/json');
       //DA CAMBIARE QUESTE COSE
       xhr.onload = function () {
         if (xhr.status == 200) {
-          console.log("Registrazione avvenuta con successo.");
-          //reindirizzare alla pagina utente. 
+          //in questo caso bisogna reindirizzare alla pagina con tutte le immagini dei prodotti scelti.
         }
         else if (xhr.status == 500) {
           console.log("La mail esiste già");
@@ -32,53 +84,12 @@ function RentForm() {
 
       xhr.send(form_obj);
     }
-  }
-
-  function toSubmit() {
-    const datePicker = document.querySelector("#Custom-Box");
-    if (datePicker.value) {
-      form_obj += `
-      "startingDate": "${datePicker.value}"`;
-      datePicker.value = "";
-      const button = document.querySelector("#rentFormButton");
-      button.removeEventListener("click", toSubmit);
-      button.addEventListener('click', submit);
-      button.innerHTML = 'click to submit!';
-    }
     else {
-      //fare qualcosa se non selezione una data!
+      //Sennò creiamo un error-message label, built-in del datePicker.
+      document.querySelector("#error-message").innerHTML = "Please enter a date!";
     }
   }
 
-  function toDate() {
-    //prendiamo l'elemento selezionato tra i vari radio button, e lo inseriamo nel json che manderemo al server.
-    const radioInput = document.querySelector("input[name='products']:checked");
-    let bikeType;
-    if (radioInput) {
-      bikeType = radioInput.value;
-    }
-    else {
-      bikeType = 'all'
-    }
-    form_obj += `{
-      "type": "${bikeType}"`;
-    //ora prendiamo il form con i radio button, lo mettiamo hidden e sveliamo il form con il date picker
-    document.querySelector("#Bikes_Types").setAttribute("hidden", "true");
-    document.querySelector("#Renting_Dates").removeAttribute("hidden");
-    //infine cambiamo la funzione quando viene cliccato il bottone
-    const button = document.querySelector("#rentFormButton");
-    button.innerHTML = "Click to go choosing the ending date";
-    //FIXARE
-    button.removeEventListener('click', toDate);//questo non rimuove le cose fatte. Da studiare la parte di Hooks!
-    button.addEventListener('click', toSubmit);
-  }
-
-  window.onload = () => {
-    const button = document.querySelector("#rentFormButton");
-    button.addEventListener('click', toDate);
-  };
-
-  const customInputBox = <input id="Custom-Box" ></input>
   return (
     <main>
       <form className="rentForm" >
@@ -87,27 +98,27 @@ function RentForm() {
           <section className="mb-3 form-check">
             <div>
               <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" ></input>
-              <label for="Mountain-Bike" className="form-label">Mountain Bike</label>
+              <label htmlFor="Mountain-Bike" className="form-label">Mountain Bike</label>
             </div>
             <div>
-              <input id="City-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
-              <label for="City-Bike" className="form-label">City Bike</label>
+              <input id="City-Bike" name="products" className="form-select" type="radio" value="City Bike"></input>
+              <label htmlFor="City-Bike" className="form-label">City Bike</label>
             </div>
             <div>
               <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric Bike" ></input>
-              <label for="Electric-Bike" className="form-label">Electric Bike</label>
+              <label htmlFor="Electric-Bike" className="form-label">Electric Bike</label>
             </div>
           </section>
         </fieldset>
         <fieldset id="Renting_Dates" hidden='true' aria-required="true">
           <legend>Renting dates inputs</legend>
-          <section className="mb-3">
+          <section className="mb-3" >
             <Datepicker
               dateFormat={"mm dd, yyyy"}
               minDate={"today"}
               themeColor={"rgb(99, 218, 99)"}
               customInputBox={customInputBox}
-              inputBoxLabel={"puttana la madonna"}
+              inputBoxLabel={infoLabel}
             />
           </section>
         </fieldset>
