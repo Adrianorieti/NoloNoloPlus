@@ -11,6 +11,7 @@
     "moment": "^2.29.1",
     "npm": "^7.20.3",
     "react": "^17.0.2",
+    "react-ada-keyboard-accessible-datepicker": "^1.2.13",
     "react-bootstrap-validation": "^0.1.11",
     "react-create-app": "^2.0.6",
     "react-datepicker": "^4.2.0",
