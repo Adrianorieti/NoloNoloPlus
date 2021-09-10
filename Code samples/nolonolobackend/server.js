@@ -1,18 +1,24 @@
+require('dotenv').config();
+
+const {localstorage} = require('node-localstorage');
 //express requirements
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const user = require('./moduledb1');
 const app = express();
+
+const jwt = require('jsonwebtoken');
+
 //cors
 var cors = require('cors');
 //bcrypt stuff for hashing password
 const bcrypt = require('bcrypt');
 
-//cookies stuff
-const session = require('express-session');
-const MongoDBSession = require('connect-mongodb-session')(session);
-const { v4: uuidv4 } = require('uuid');
+// //cookies stuff
+// const session = require('express-session');
+// const MongoDBSession = require('connect-mongodb-session')(session);
+// const { v4: uuidv4 } = require('uuid');
 
 //database url
 var url = 'mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
@@ -27,37 +33,26 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 
 
-///////////// cookies stuff
 
-const store = new MongoDBSession({
-    uri: url,
-    collection: 'sessions',
-    isLogged: false,
-   
-});
-
-app.use(session({
-    secret: "secret key",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false , maxAge: 24 * 60 * 60 * 1000},
-    genid: () => uuidv4(),
-    store: store,
-}));
-
-
-function isAuth(req, res, next) 
-{
-    if(req.session.isLogged)
+ function verifyToken(req, res, next)
+ {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log(token);
+    if(token == null) return res.sendStatus(401);
+    console.log("Sono qui dio caneeeeeeeee");
+    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, function(err)
     {
+        console.log("dentro anche qui");
+        if(err) return res.sendStatus(403);
+        console.log("qui no??");
+
+      
         next();
-    }else{
-        res.send("Non sei loggato bastardo");
-    }
-};
+    })
+ }
 
-
-////////////
+////////////////////////////////////////////
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -94,10 +89,13 @@ app.post('/register', async (req, res) => {
                 surname: req.body.surname,
                 phone: req.body.phone,
                 email: req.body.email,
-                password: hash
+                password: hash,
+                role: 'customer'
             });
             //salviamo in mongodb
             newUser.save();
+            res.status(200).send();
+            
 
         })
     } else {
@@ -120,10 +118,19 @@ app.post('/login', async (req, res) => {
 
         //utilizzo compare di bcrypt per comparare la password in plain text e il suo ipotetico hash
         //ci riesce perchè ha uno schema di cifratura che glielo permette da quanto ho capito
+
         if (await bcrypt.compare(decodedpass, source.password)) {
             console.log("Success");
-            req.session.isLogged = true;
-            res.send({ name: `${source.name}`, isLogged: `${req.session.isLogged}` });
+            // req.session.isLogged = true;
+            
+            //CREARE IL JWT
+            const user = { name: `${source.name}`};
+            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY);
+
+            
+            res.json({ accessToken: accessToken ,name: `${source.name}`});
+
+            // res.send({ name: `${source.name}`, isLogged: `${req.session.isLogged}` });
 
         }
         else {
@@ -136,19 +143,12 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.get("/logout", (req, res) =>
+app.get("/testami", verifyToken, (req, res) => 
 {
-    req.session.destroy((err) =>
-    {
-        if(err)
-            console.log(err);
-    })
-})
+    res.status(200).send();
+    
+});
 
-app.get("/dashboard", isAuth, (res, req) =>
-{
-    res.send("Ok, sei loggato e puoi accedere");
-})
 
 
 app.listen(8000, function () {

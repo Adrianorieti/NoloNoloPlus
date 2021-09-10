@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { useHistory } from "react-router";
 
 
-function LoginPage({ childToParent }) {
+function LoginPage({ nameToParent, checkLog }) {
 
   let history = useHistory();
   const [firstName, setfirstName] = useState('');
@@ -78,8 +78,10 @@ function LoginPage({ childToParent }) {
 
     xhr.onload = function () {
       if (xhr.status == 200) {
+
         console.log("Registrazione avvenuta con successo.");
-        //reindirizzare alla pagina utente. 
+
+        history.push('/login');
       }
       else if (xhr.status == 500) {
         console.log("La mail esiste già");
@@ -124,12 +126,23 @@ function LoginPage({ childToParent }) {
     xhr.open("POST", "http://localhost:8000/login", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
+
       if (xhr.status == 200) {
+
         console.log("Logged in correctly");
         //passiamo ad App.js il nome che metteremo nel navbar !
         const username = (JSON.parse(xhr.responseText)).name;
-        const isLogged = (JSON.parse(xhr.responseText)).isLogged;
-        childToParent(username, isLogged);
+        console.log(username);
+        const token = (JSON.parse(xhr.responseText)).accessToken;
+        console.log("il token arrivato " + token);
+        
+        sessionStorage.setItem("token", JSON.stringify(token));
+        sessionStorage.setItem("username", JSON.stringify(username));
+        sessionStorage.setItem("isLogged",'true');
+
+
+        nameToParent(username);
+        checkLog('true');
         history.push('/');
 
       }
@@ -246,4 +259,4 @@ function LoginPage({ childToParent }) {
   );
 }
 
-export default withRouter(LoginPage);
+export default LoginPage;

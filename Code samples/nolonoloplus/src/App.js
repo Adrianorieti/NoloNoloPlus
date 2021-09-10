@@ -9,26 +9,30 @@ import RentForm from './components/RentForm';
 import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import { useState } from 'react';
+import Test from './components/Test';
 
 
-function App () {
+function App (){
 //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
 const [data, setData] = useState('');
 const [isLogged, setLog] = useState('');
 
-const childToParent = (childdata, isLogged) => {
+const nameToParent = (childdata) => {
   setData(childdata);
+  // setData(JSON.parse(localStorage.getItem('username')));
+}
+const checkLog = (isLogged) => {
   setLog(isLogged);
+  //  setLog(JSON.parse(localStorage.getItem('isLogged')));
 }
 
   
 
-    return (
+    return(
       <div>
 
        
-  {/* Devo passare più props perchè a seconda che lo user sia autenticato o meno ho un comportamento diverso */}
-          <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} display={isLogged ? true : false} />
+          <Navbar logoName="NoloNoloPlus" name={ sessionStorage.getItem('username') ? JSON.parse(sessionStorage.getItem('username')) : "Login/Register"} display={ isLogged ? 'true' : 'false' } />
 
         <Switch>
 
@@ -38,9 +42,7 @@ const childToParent = (childdata, isLogged) => {
 
             <div className="bg-image" >
 
-              <Banner />
-
-
+            
               <RentForm />
 
             </div>
@@ -52,11 +54,12 @@ const childToParent = (childdata, isLogged) => {
           </Route>
 
           <Route path="/login">  
-          {/* <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} display={isLogged ? true : false} /> */}
+          <LoginPage nameToParent={nameToParent} checkLog={checkLog} />
+          </Route>
 
-          <LoginPage childToParent={childToParent} />
-        
-          
+          <Route path="/test">
+            
+            <Test />
 
           </Route>
 

@@ -5,11 +5,22 @@ import { useEffect } from 'react';
 function Navbar(props) {
 
 
-  
   useEffect(() => {
-    if(props.display === false)
-        document.getElementById("logout").style= 'display: none;';
-    
+
+    console.log(props.display);
+
+    const logout =  document.getElementById("logout");
+  
+    logout.addEventListener('click', function()
+    {
+      this.style = "display: none";
+    });
+
+    props.display = sessionStorage.getItem('isLogged');
+    console.log(props.display);
+   if(props.display === 'true')
+    document.getElementById("logout").style = "display: block";
+
   }, []);
 
   function checkAriaBurger()
@@ -19,6 +30,11 @@ function Navbar(props) {
     const burgerattr = burger.getAttribute("aria-expanded");
     const newburgerattr = (burgerattr  === 'false') ? 'true' : 'false';
     burger.setAttribute("aria-expanded",newburgerattr);
+  }
+
+  function setFalse()
+  {
+    sessionStorage.setItem('isLogged', 'false');
   }
 
 
@@ -35,7 +51,7 @@ function Navbar(props) {
               <Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/products">Products</Link>
+              <Link className="nav-link" to="/test">Products</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" id="navLoginReg" to="/login">{props.name}</Link>
@@ -44,7 +60,7 @@ function Navbar(props) {
               <Link className="nav-link" to="#footer" >Contacts</Link>
             </li>
             <li className="nav-item" id="logout" >
-              <Link className="nav-link" >Logout</Link>
+              <Link className="nav-link" onclick={setFalse()} >Logout</Link>
             </li>
             {/* Aggiungere Link per logout che fa richiesta get logout al server per eliminare la sessione
              e riceve isLogged=false dal server che fa
