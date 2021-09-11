@@ -41,13 +41,11 @@ app.use(express.static(path.join(__dirname, 'build')));
     console.log(token);
     if(token == null) return res.sendStatus(401);
     console.log("Sono qui dio caneeeeeeeee");
-    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, function(err)
+    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, function(err, user)
     {
-        console.log("dentro anche qui");
+        console.log(user);
         if(err) return res.sendStatus(403);
-        console.log("qui no??");
-
-      
+    
         next();
     })
  }
