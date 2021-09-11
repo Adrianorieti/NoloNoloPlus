@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Redirect } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router";
+import {AppContext} from '../store/Context';
 
 
 function LoginPage({ nameToParent, checkLog }) {
 
+  const {isLogged, setLog} = useContext(AppContext);
   let history = useHistory();
   const [firstName, setfirstName] = useState('');
   const [secondName, setsecondName] = useState('');
@@ -137,12 +137,13 @@ function LoginPage({ nameToParent, checkLog }) {
         console.log("il token arrivato " + token);
         
         sessionStorage.setItem("token", JSON.stringify(token));
-        sessionStorage.setItem("username", JSON.stringify(username));
-        sessionStorage.setItem("isLogged",'true');
-
+        
+        setLog(true);
+        sessionStorage.setItem('isLogged', true);
+        sessionStorage.setItem('username', JSON.stringify(username));
 
         nameToParent(username);
-        checkLog('true');
+        
         history.push('/');
 
       }

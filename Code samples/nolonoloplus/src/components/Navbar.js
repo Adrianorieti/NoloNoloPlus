@@ -1,27 +1,49 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
+import {AppContext} from '../store/Context';
+import { useHistory } from "react-router";
 
-function Navbar(props) {
 
 
-  useEffect(() => {
+function Navbar (props){
 
-    console.log(props.display);
+  let history = useHistory();
 
-    const logout =  document.getElementById("logout");
+  const {isLogged, setLog} = useContext(AppContext);
   
-    logout.addEventListener('click', function()
+  // useEffect(() => {
+
+  //   console.log(props.display);
+
+  //   const logout =  document.getElementById("logout");
+  
+  //   logout.addEventListener('click', function()
+  //   {
+  //     this.style = "display: none";
+  //   });
+
+  //   props.display = sessionStorage.getItem('isLogged');
+  //   console.log(props.display);
+  //  if(props.display === 'true')
+  //   document.getElementById("logout").style = "display: block";
+
+  // }, []);
+  useEffect(() =>
+  {
+    
+    const data = sessionStorage.getItem('isLogged');
+   
+    if(data)
     {
-      this.style = "display: none";
-    });
-
-    props.display = sessionStorage.getItem('isLogged');
-    console.log(props.display);
-   if(props.display === 'true')
-    document.getElementById("logout").style = "display: block";
-
-  }, []);
+      const logout =  document.getElementById("logout");
+      logout.style.display = "block";
+    
+    }else{
+      const logout =  document.getElementById("logout");
+      logout.style.display = "none";
+     }
+  }, [isLogged]);
 
   function checkAriaBurger()
   {
@@ -32,17 +54,26 @@ function Navbar(props) {
     burger.setAttribute("aria-expanded",newburgerattr);
   }
 
-  function setFalse()
-  {
-    sessionStorage.setItem('isLogged', 'false');
-  }
+  
+    function logout()
+    {
+      const logout =  document.getElementById("logout");
+      logout.style.display = "none";
+      setLog(false);
+      sessionStorage.setItem('isLogged', false);
+      sessionStorage.clear();
+      history.push('/');
+      console.log("sono qui");
+     
+
+    }
 
 
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">{props.logoName}</a>
-        <button id="burger" onclick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <a className="navbar-brand" href="#">NoloNoloPlus</a>
+        <button id="burger" onClick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon "></span>
         </button>
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
@@ -59,20 +90,18 @@ function Navbar(props) {
             <li className="nav-item">
               <Link className="nav-link" to="#footer" >Contacts</Link>
             </li>
-            <li className="nav-item" id="logout" >
-              <Link className="nav-link" onclick={setFalse()} >Logout</Link>
-            </li>
-            {/* Aggiungere Link per logout che fa richiesta get logout al server per eliminare la sessione
-             e riceve isLogged=false dal server che fa
-             const username = (JSON.parse(xhr.responseText)).name;
-            const isLogged = (JSON.parse(xhr.responseText)).isLogged;
-            childToParent(username, isLogged);
-            history.push('/') */}
+
+            <li className="nav-item" id="logout"  >
+              <Link className="nav-link"  onClick={logout}>Logout</Link>
+            </li> 
+          
           </ul>
         </div>
       </div>
     </nav>
   );
-}
+          }
+
+
 
 export default Navbar;

@@ -125,7 +125,7 @@ app.post('/login', async (req, res) => {
             
             //CREARE IL JWT
             const user = { name: `${source.name}`};
-            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY);
+            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '1h'});
 
             
             res.json({ accessToken: accessToken ,name: `${source.name}`});
