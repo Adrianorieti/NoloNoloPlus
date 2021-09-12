@@ -73,7 +73,7 @@ function LoginPage({ nameToParent, checkLog }) {
     const obj = createObj('register')
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8000/register", true);
+    xhr.open("POST", "http://localhost:8001/register", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onload = function () {
@@ -123,7 +123,7 @@ function LoginPage({ nameToParent, checkLog }) {
     const obj = createObj('login');
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8000/login", true);
+    xhr.open("POST", "http://localhost:8001/login", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
 

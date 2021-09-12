@@ -42,13 +42,47 @@ app.use(express.static(path.join(__dirname, 'build')));
     console.log(token);
     if(token == null) return res.sendStatus(401);
     console.log("Sono qui dio caneeeeeeeee");
-    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, function(err)
+    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
+    {
+        console.log("nome utente " + decoded.name);
+
+        if(err) 
+        {
+            console.log(err.name);
+            return res.status(403).send(` ${err.name} `);
+        }
+
+       
+    
+        next();
+    })
+ }
+
+ function verifyAdmin(req, res, next)
+ {
+    const authHeader = req.headers['authorization'];
+    console.log(authHeader);
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log(token);
+    if(token == null) return res.sendStatus(401);
+    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
         if(err) 
         {
             console.log(err.name);
-            return res.status(403).send("Forbidden 403");
+            return res.status(403).send(` ${err.name} `);
         }
+
+        console.log(decoded.name);
+
+        const source =  await user.findOne({ name: decoded.name });
+        console.log(source);
+        if(source.role !== 'admin')
+        {
+            return res.status(403).send(` Only an admin can access this page`);
+
+        }
+
     
         next();
     })
@@ -127,7 +161,7 @@ app.post('/login', async (req, res) => {
             
             //CREARE IL JWT
             const user = { name: `${source.name}`};
-            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '20'});
+            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '1h'});
 
             
             res.json({ accessToken: accessToken ,name: `${source.name}`});
@@ -145,7 +179,7 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.get("/testami", verifyToken, (req, res) => 
+app.get("/dashboard", verifyToken, verifyAdmin,  (req, res) => 
 {
     res.status(200).send();
     
@@ -153,6 +187,6 @@ app.get("/testami", verifyToken, (req, res) =>
 
 
 
-app.listen(8000, function () {
-    console.log('Server is running on port 8000')
+app.listen(8001, function () {
+    console.log('Server is running on port 8001')
 })

@@ -1,9 +1,7 @@
 import React, { Component, useEffect } from 'react';
 import './App.css';
-import treehd from './images/treehd.jpg'
 import CarouselContainer from './components/Carousel';
 import Navbar from './components/Navbar';
-import Banner from './components/Banner';
 import { Route, Switch } from 'react-router-dom';
 import RentForm from './components/RentForm';
 import LoginPage from './pages/LoginPage';
@@ -58,7 +56,7 @@ const nameToParent = (childdata) => {
           <LoginPage nameToParent={nameToParent} />
           </Route>
 
-          <Route path="/test">
+          <Route path="/dashboard">
             
             <Test />
 
