@@ -36,15 +36,19 @@ app.use(express.static(path.join(__dirname, 'build')));
 
  function verifyToken(req, res, next)
  {
-    const authHeader = req.headers['authorization'];
+    const authHeader = req.headers['Authorization'];
+    console.log(authHeader);
     const token = authHeader && authHeader.split(' ')[1];
     console.log(token);
     if(token == null) return res.sendStatus(401);
     console.log("Sono qui dio caneeeeeeeee");
-    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, function(err, user)
+    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, function(err)
     {
-        console.log(user);
-        if(err) return res.sendStatus(403);
+        if(err) 
+        {
+            console.log(err);
+            return res.sendStatus(403);
+        }
     
         next();
     })
@@ -123,7 +127,7 @@ app.post('/login', async (req, res) => {
             
             //CREARE IL JWT
             const user = { name: `${source.name}`};
-            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '1h'});
+            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '60'});
 
             
             res.json({ accessToken: accessToken ,name: `${source.name}`});

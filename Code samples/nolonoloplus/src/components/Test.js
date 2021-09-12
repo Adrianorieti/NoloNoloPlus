@@ -3,14 +3,15 @@ import React from "react";
 
 function Test(){
    
-    let data = '';
     function call()
     {
+        console.log(JSON.parse(sessionStorage.getItem("token")));
+        const token = JSON.parse(sessionStorage.getItem("token"));
+        console.log("Il token dentro test è "  + token);
         const xhr = new XMLHttpRequest();
-        let token = JSON.parse(localStorage.getItem("token"));
         xhr.open("GET", "http://localhost:8000/testami", true);
         // xhr.setRequestHeader("Content-type", 'application/json');
-        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        xhr.setRequestHeader("Authorization", 'Bearer ' + token );
 
         xhr.onload = function(){
         if(xhr.status == 200){
@@ -19,6 +20,7 @@ function Test(){
         }else
         {
             console.log("non puoi andare");
+            console.log(token);
         }
         
     };
@@ -28,7 +30,7 @@ function Test(){
 
    call();
     
-       return (<div><h1>Successo</h1></div>);
+   return (<div><h1>Successo</h1></div>);
      
     
 }

@@ -62,9 +62,7 @@ function Navbar (props){
       setLog(false);
       sessionStorage.setItem('isLogged', false);
       sessionStorage.clear();
-      history.push('/');
-      console.log("sono qui");
-     
+      history.push('/');     
 
     }
 
