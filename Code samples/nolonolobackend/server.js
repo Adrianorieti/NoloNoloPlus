@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 
  function verifyToken(req, res, next)
  {
-    const authHeader = req.headers['Authorization'];
+    const authHeader = req.headers['authorization'];
     console.log(authHeader);
     const token = authHeader && authHeader.split(' ')[1];
     console.log(token);
@@ -46,8 +46,8 @@ app.use(express.static(path.join(__dirname, 'build')));
     {
         if(err) 
         {
-            console.log(err);
-            return res.sendStatus(403);
+            console.log(err.name);
+            return res.status(403).send("Forbidden 403");
         }
     
         next();
@@ -127,7 +127,7 @@ app.post('/login', async (req, res) => {
             
             //CREARE IL JWT
             const user = { name: `${source.name}`};
-            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '60'});
+            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '20'});
 
             
             res.json({ accessToken: accessToken ,name: `${source.name}`});
