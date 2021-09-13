@@ -80,10 +80,10 @@ function Navbar (props){
               <Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/dashboard">Products</Link>
+              <Link className="nav-link" to={isLogged ? '/dashboard' : '/login'}>Products</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" id="navLoginReg" to="/login">{props.name}</Link>
+              <Link className="nav-link" id="navLoginReg" to={isLogged ? '/dashboard' : '/login'}>{props.name}</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="#footer" >Contacts</Link>
