@@ -31,11 +31,11 @@ const nameToParent = (childdata) => {
           <AppContext.Provider value={{ isLogged, setLog }}>
 
        
-          <Navbar name={isLogged ? data : "Login/Register"}/>
 
         <Switch>
 
           <Route path="/" exact>
+          <Navbar name={isLogged ? data : "Login/Register"}/>
 
 
 
@@ -49,11 +49,22 @@ const nameToParent = (childdata) => {
             <div>
               <CarouselContainer />
             </div>
+            <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
+          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
+          copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
+          
 
           </Route>
 
           <Route path="/login" exact>  
+          <Navbar name={isLogged ? data : "Login/Register"}/>
+
           <LoginPage nameToParent={nameToParent} />
+           
+        <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
+          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
+          copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
+
           </Route>
 
           <Route path="/dashboard" exact>
@@ -63,11 +74,8 @@ const nameToParent = (childdata) => {
           </Route>
 
         </Switch>
-        
-        <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
-          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
-          copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
   </AppContext.Provider>
+       
       
       
     );
