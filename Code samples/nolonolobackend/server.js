@@ -35,12 +35,14 @@ app.use(express.static(path.join(__dirname, 'build')));
 //Verify identity of user requesting url
  function verifyToken(req, res, next)
  {
+     //retrieve the token from request header
     const authHeader = req.headers['authorization'];
-    console.log(authHeader);
+
     const token = authHeader && authHeader.split(' ')[1];
     console.log(token);
+    
     if(token == null) return res.sendStatus(401);
-    console.log("Sono qui dio caneeeeeeeee");
+
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
         console.log("nome utente " + decoded.name);
