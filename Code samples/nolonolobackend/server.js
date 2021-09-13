@@ -92,12 +92,15 @@ app.use(express.static(path.join(__dirname, 'build')));
 //Server API
 
 app.get('/', function (req, res) {
+
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+
 });
 
 app.get('/login', function (req, res) {
 
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+
 });
 
 
@@ -144,7 +147,7 @@ app.post('/register', async (req, res) => {
 
 
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const mail = req.body.email;
     const source = await user.findOne({ email: mail });
     if (source) {
@@ -176,11 +179,19 @@ app.post('/login', async (req, res) => {
 })
 
 
-app.get("/dashboard",verifyToken, verifyAdmin, (req, res) => 
+app.get("/api/dashboard",verifyToken, verifyAdmin, (req, res) => 
 {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 
 });
+
+
+app.get("/dashboard",(req, res) => 
+{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+
+});
+
 
 
 app.listen(8001, function () {

@@ -123,22 +123,27 @@ function LoginPage({ nameToParent, checkLog }) {
     const obj = createObj('login');
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8001/login", true);
+    xhr.open("POST", "http://localhost:8001/api/login", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
 
       if (xhr.status == 200) {
 
         console.log("Logged in correctly");
+        
         //passiamo ad App.js il nome che metteremo nel navbar !
         const username = (JSON.parse(xhr.responseText)).name;
+
         console.log(username);
+
         const token = (JSON.parse(xhr.responseText)).accessToken;
+
         console.log("il token arrivato " + token);
         
         sessionStorage.setItem("token", JSON.stringify(token));
         
         setLog(true);
+
         sessionStorage.setItem('isLogged', true);
         sessionStorage.setItem('username', JSON.stringify(username));
 
