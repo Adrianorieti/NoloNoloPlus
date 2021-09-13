@@ -12,7 +12,7 @@ function Test(){
         const token = JSON.parse(sessionStorage.getItem("token"));
         console.log("Il token dentro test è "  + token);
         const xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://localhost:8001/dashboard", true);
+        xhr.open("GET", "http://localhost:8001/api/dashboard", true);
         // xhr.setRequestHeader("Content-type", 'application/json');
         xhr.setRequestHeader("Authorization", 'Bearer ' + token );
 

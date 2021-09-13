@@ -179,10 +179,17 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.get("/dashboard", verifyToken, verifyAdmin,  (req, res) => 
+//nel server
+app.get("/dashboard", (req, res) => 
 {
-    res.status(200).send();
-    
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+
+});
+
+app.get("/api/dashboard",verifyToken, verifyAdmin, (req, res) => 
+{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+
 });
 
 
@@ -190,3 +197,5 @@ app.get("/dashboard", verifyToken, verifyAdmin,  (req, res) =>
 app.listen(8001, function () {
     console.log('Server is running on port 8001')
 })
+
+//react-script start

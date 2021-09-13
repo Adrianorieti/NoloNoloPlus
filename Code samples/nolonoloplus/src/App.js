@@ -52,11 +52,11 @@ const nameToParent = (childdata) => {
 
           </Route>
 
-          <Route path="/login">  
+          <Route path="/login" exact>  
           <LoginPage nameToParent={nameToParent} />
           </Route>
 
-          <Route path="/dashboard">
+          <Route path="/dashboard" exact>
             
             <Test />
 
