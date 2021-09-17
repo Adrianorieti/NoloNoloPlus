@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import {AppContext} from '../store/Context';
 import { useHistory } from "react-router";
 
@@ -8,30 +8,46 @@ import { useHistory } from "react-router";
 
 function Navbar (props){
 
+  console.log("render");
+
   let history = useHistory();
 
   const {isLogged, setLog} = useContext(AppContext);
+
+
+  const [loggato, setloggato] = useState(false);
   
-  // useEffect(() => {
 
-  //   console.log(props.display);
+  function prova(token)
+  {
 
-  //   const logout =  document.getElementById("logout");
-  
-  //   logout.addEventListener('click', function()
-  //   {
-  //     this.style = "display: none";
-  //   });
+       console.log("dentro prova");
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "http://localhost:8001/api/authLog", true);
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      xhr.onload = () =>
+      {
+        if(xhr.status == 200)
+         { 
+           console.log("sei loggato");
+            setloggato(true);
+          console.log("loggato è" + loggato);
+        }
+        else
+          console.log("non sei loggato");
+      }
+      xhr.send();
+    
+  }
 
-  //   props.display = sessionStorage.getItem('isLogged');
-  //   console.log(props.display);
-  //  if(props.display === 'true')
-  //   document.getElementById("logout").style = "display: block";
-
-  // }, []);
   useEffect(() =>
   {
-    
+    console.log("Use Effect");
+    const token = JSON.parse(sessionStorage.getItem("token"));
+    if(token)
+    {
+      prova(token);
+    }
     const data = sessionStorage.getItem('isLogged');
    
     if(data)
@@ -43,7 +59,7 @@ function Navbar (props){
       const logout =  document.getElementById("logout");
       logout.style.display = "none";
      }
-  }, [isLogged]);
+  });
 
   function checkAriaBurger()
   {
@@ -59,7 +75,7 @@ function Navbar (props){
     {
       const logout =  document.getElementById("logout");
       logout.style.display = "none";
-      setLog(false);
+      setloggato(false);
       sessionStorage.setItem('isLogged', false);
       sessionStorage.clear();
       history.push('/');     
@@ -80,10 +96,10 @@ function Navbar (props){
               <Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={isLogged ? '/dashboard' : '/login'}>Products</Link>
+              <Link className="nav-link" to={loggato ? '/dashboard' : '/login'}>Products</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" id="navLoginReg" to={isLogged ? '/dashboard' : '/login'}>{props.name}</Link>
+              <Link className="nav-link" id="navLoginReg" to={loggato ? '/dashboard' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="#footer" >Contacts</Link>

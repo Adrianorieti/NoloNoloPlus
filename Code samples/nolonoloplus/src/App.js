@@ -35,7 +35,7 @@ const nameToParent = (childdata) => {
         <Switch>
 
           <Route path="/" exact>
-          <Navbar name={isLogged ? data : "Login/Register"}/>
+          <Navbar name={data}/>
 
 
 
@@ -57,7 +57,7 @@ const nameToParent = (childdata) => {
           </Route>
 
           <Route path="/login" exact>  
-          <Navbar name={isLogged ? data : "Login/Register"}/>
+          <Navbar name={data}/>
 
           <LoginPage nameToParent={nameToParent} />
            

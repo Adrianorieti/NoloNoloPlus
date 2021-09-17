@@ -192,7 +192,10 @@ app.get("/dashboard",(req, res) =>
 
 });
 
-
+app.get("/api/authLog",verifyToken, (req, res) =>
+{
+    res.sendStatus(200);
+});
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001')
