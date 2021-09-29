@@ -5,25 +5,24 @@ import { useEffect } from 'react';
 function Navbar(props) {
 
 
-  
+
   useEffect(() => {
-    if(props.display === false)
-        document.getElementById("logout").style= 'display: none;';
-    
+    if (props.display === false)
+      document.getElementById("logout").style = 'display: none;';
+
   }, []);
 
-  function checkAriaBurger()
-  {
+  function checkAriaBurger() {
     //cambiamo  l'aria attribute  ogni volta che viene cliccato il burger
     const burger = document.getElementById("burger");
     const burgerattr = burger.getAttribute("aria-expanded");
-    const newburgerattr = (burgerattr  === 'false') ? 'true' : 'false';
-    burger.setAttribute("aria-expanded",newburgerattr);
+    const newburgerattr = (burgerattr === 'false') ? 'true' : 'false';
+    burger.setAttribute("aria-expanded", newburgerattr);
   }
 
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
+    <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" aria-label="primary navigation">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">{props.logoName}</a>
         <button id="burger" onclick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
