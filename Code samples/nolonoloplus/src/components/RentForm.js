@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Datepicker from 'react-ada-keyboard-accessible-datepicker'
 //yarn add react-ada-keyboard-accessible-datepicker
 
+import RangeDaysPicker from "./RangeDaysPicker"
+
+
 function RentForm() {
   //inizializziamo constanti e states
   const customInputBox = <input id="Custom-Box" ></input>
@@ -9,6 +12,7 @@ function RentForm() {
   const [infoLabel, setinfoLabel] = useState('Starting Date'); //state che serve per cambiare il label al datePicker
   let datePicker;
   let rentFormButton;
+
 
   window.onload = () => {
     //Selezioniamo gli elementi che ci servono dall'html e aggiungiamo eventListener al bottone di rent
@@ -120,6 +124,12 @@ function RentForm() {
               customInputBox={customInputBox}
               inputBoxLabel={infoLabel}
             />
+          </section>
+        </fieldset>
+        <fieldset aria-required="true">
+          <legend>Renting dates inputs</legend>
+          <section className="mb-3">
+            <RangeDaysPicker />
           </section>
         </fieldset>
         <button id="rentFormButton" type="button" className="btn btn-success">Click to go choosing the starting date</button>
