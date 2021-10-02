@@ -19,6 +19,7 @@ verifyToken: function(req, res, next)
 
    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
    {
+       console.log("sono qui");
        console.log("nome utente " + decoded.name);
 
        if(err) 

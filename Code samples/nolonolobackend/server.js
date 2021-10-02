@@ -6,6 +6,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const user = require('./moduleUser');
+const product = require('./moduleProduct');
 const app = express();
 
 // Json web token 
@@ -148,6 +149,37 @@ app.get("/api/authLog",auth.verifyToken, (req, res) =>
 });
 
 
+////// PRODUCT TESTING
+
+let newProduct = new product({
+    name: "Bike2000",
+    type: "Electric bike",
+    price: "300$",
+    image: "./images/electric_bike_1",
+    reservations: [
+        {
+            start: "03/04/2020",
+            end : "07/04/2020"
+        },
+        {
+            start: "09/04/2020",
+            end : "10/04/2020"
+        }
+    ]
+    
+});
+
+// newProduct.save();
+
+async function getProduct(){ 
+
+    const source = await product.findOne({name: "Bike2000"});
+
+    console.log(source.name);
+    console.log(source.reservations);
+};
+
+getProduct();
 
 
 

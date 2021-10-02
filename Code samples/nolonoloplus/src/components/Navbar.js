@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useEffect, useContext, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory } from "react-router";
 
 

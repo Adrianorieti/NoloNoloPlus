@@ -130,6 +130,7 @@ function handleLogin(event) {
       headers: new Headers({'Content-type': 'application/json'}),
       body: obj
     };
+    
     let url = 'http://localhost:8001/api/login';
 
     fetch(url, options)
