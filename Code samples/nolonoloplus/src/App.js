@@ -17,7 +17,6 @@ function App (){
   
 //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
 const [data, setData] = useState( JSON.parse(sessionStorage.getItem('username')) || '');
-const [isLogged, setLog] = useState(sessionStorage.getItem('isLogged') || false);
 
 
 const nameToParent = (childdata) => {
@@ -28,7 +27,7 @@ const nameToParent = (childdata) => {
 
     return(
     
-          <AppContext.Provider value={{ isLogged, setLog }}>
+          <AppContext.Provider>
 
        
 

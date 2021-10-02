@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Datepicker from 'react-ada-keyboard-accessible-datepicker'
+import DayPicker from './DayPicker';
 //yarn add react-ada-keyboard-accessible-datepicker
 
 function RentForm() {
@@ -110,16 +110,10 @@ function RentForm() {
             </div>
           </section>
         </fieldset>
-        <fieldset id="Renting_Dates" hidden='true' aria-required="true">
+        <fieldset id="Renting_Dates"  aria-required="true">
           <legend>Renting dates inputs</legend>
           <section className="mb-3" >
-            <Datepicker
-              dateFormat={"mm dd, yyyy"}
-              minDate={"today"}
-              themeColor={"rgb(99, 218, 99)"}
-              customInputBox={customInputBox}
-              inputBoxLabel={infoLabel}
-            />
+           <DayPicker />
           </section>
         </fieldset>
         <button id="rentFormButton" type="button" className="btn btn-success">Click to go choosing the starting date</button>

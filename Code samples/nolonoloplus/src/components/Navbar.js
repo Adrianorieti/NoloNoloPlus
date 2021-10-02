@@ -12,32 +12,28 @@ function Navbar (props){
 
   let history = useHistory();
 
-  const {isLogged, setLog} = useContext(AppContext);
-
-
   const [loggato, setloggato] = useState(false);
   
 
-  function prova(token)
+  function checkLog(token)
   {
 
        console.log("dentro prova");
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", "http://localhost:8001/api/authLog", true);
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-      xhr.onload = () =>
-      {
-        if(xhr.status == 200)
-         { 
+       fetch('http://localhost:8001/api/authLog',{
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+       }).then(response =>{
+         if(response.status == 200)
+         {
            console.log("sei loggato");
-            setloggato(true);
-          console.log("loggato è" + loggato);
-        }
-        else
-          console.log("non sei loggato");
-      }
-      xhr.send();
-    
+             setloggato(true);
+         }else{
+           console.log("Errore, login non effettuato correttamente");
+         }
+       }).catch(err =>{console.log(err)});
+
+     
   }
 
   useEffect(() =>
@@ -46,11 +42,10 @@ function Navbar (props){
     const token = JSON.parse(sessionStorage.getItem("token"));
     if(token)
     {
-      prova(token);
+      checkLog(token);
     }
-    const data = sessionStorage.getItem('isLogged');
    
-    if(data)
+    if(loggato)
     {
       const logout =  document.getElementById("logout");
       logout.style.display = "block";
@@ -76,7 +71,6 @@ function Navbar (props){
       const logout =  document.getElementById("logout");
       logout.style.display = "none";
       setloggato(false);
-      sessionStorage.setItem('isLogged', false);
       sessionStorage.clear();
       history.push('/');     
 

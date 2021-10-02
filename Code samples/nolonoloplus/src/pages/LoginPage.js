@@ -5,7 +5,6 @@ import {AppContext} from '../store/Context';
 
 function LoginPage({ nameToParent, checkLog }) {
 
-  const {isLogged, setLog} = useContext(AppContext);
   let history = useHistory();
   const [firstName, setfirstName] = useState('');
   const [secondName, setsecondName] = useState('');
@@ -45,11 +44,12 @@ function LoginPage({ nameToParent, checkLog }) {
 
 
   function createObj(operation) {
-    //faccio l'encoding della password in base64 perchè così non ho problemi con caratteri strani
+
+    // Password encoding to ensure escapes characters to be send without problems
     const buff = Buffer.from(password, 'utf-8');
     const encodedpass = buff.toString('base64');
 
-    //creo il json che rappresenta lo schema del database con i dati 
+    // Json schema creation
     if (operation === 'register') {
       return (`{
       "name": "${firstName}" ,
@@ -70,33 +70,35 @@ function LoginPage({ nameToParent, checkLog }) {
 
   function doRegister() {
 
-    const obj = createObj('register')
+    const obj = createObj('register');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8001/register", true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
+    const options = {
+      method: 'POST',
+      headers: new Headers({'Content-type': 'application/json'}),
+      body: obj
+    };
+    let url = 'http://localhost:8001/api/register';
 
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-
+    fetch(url, options)
+    .then(response => {
+       if(response.status == 200)
+       {
         console.log("Registrazione avvenuta con successo.");
-
         history.push('/login');
-      }
-      else if (xhr.status == 500) {
+       }
+       else if(response.status == 500){
         console.log("La mail esiste già");
-        document.getElementById('mail-error').innerHTML = "Mail already in use BOOMER";
-      }
-    }
-    xhr.onerror = function () {
+        document.getElementById('registermail-error').innerHTML = "Mail already in use";
+       }
+    })
+    .catch(error => {
       console.log(this.response);
       console.log("Error ....");
-    }
+    });
 
-    xhr.send(obj);
   };
 
-  /*Confronta la password immessa e quella ripetuta.
+  /* Confronta la password immessa e quella ripetuta.
     Ritorna false se sono diferse, true se uguali. */
   function passValidate() {
     if (repeatPassword != password) {
@@ -107,7 +109,7 @@ function LoginPage({ nameToParent, checkLog }) {
   };
 
 
-  /* Handler che entra in gioco quando il pulsante di register è premuto*/
+  /* Register Handler*/
   function handleRegister(event) {
     event.preventDefault();
 
@@ -117,52 +119,47 @@ function LoginPage({ nameToParent, checkLog }) {
     }
   };
 
-  function handleLogin(event) {
+  /* Login Handler */
+function handleLogin(event) {
 
     event.preventDefault();
+
     const obj = createObj('login');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8001/api/login", true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
+    const options = {
+      method: 'POST',
+      headers: new Headers({'Content-type': 'application/json'}),
+      body: obj
+    };
+    let url = 'http://localhost:8001/api/login';
 
-      if (xhr.status == 200) {
-
-        console.log("Logged in correctly");
+    fetch(url, options)
+      .then(response =>{
+        if(response.status == 200)
+          return response.json();
+        else
+          document.getElementById('loginmail-error').innerHTML= "Mail or password incorrect.";
+         }).then((data) =>
+        {
         
-        //passiamo ad App.js il nome che metteremo nel navbar !
-        const username = (JSON.parse(xhr.responseText)).name;
+        // Pass back to app.js the navbar 
+        console.log(data.name);
 
-        console.log(username);
-
-        const token = (JSON.parse(xhr.responseText)).accessToken;
-
-        console.log("il token arrivato " + token);
+        const username = data.name;
         
+        const token = data.accessToken;
+
         sessionStorage.setItem("token", JSON.stringify(token));
-        
-        setLog(true);
-
-        sessionStorage.setItem('isLogged', true);
+                
         sessionStorage.setItem('username', JSON.stringify(username));
 
         nameToParent(username);
         
         history.push('/');
 
-      }
-      else if (xhr.status == 500) {
-
-        document.getElementById('loginmail-error').innerHTML = "Mail or password is wrong !";
-
-      }
-    }
-    xhr.onerror = function () {
-      console.log(this.response);
-      console.log("Error ....");
-    }
-    xhr.send(obj);
+      }).catch(error => {
+      console.log(error);
+    });
   };
 
 
@@ -228,6 +225,8 @@ function LoginPage({ nameToParent, checkLog }) {
                 <input onChange={handleChange} id="email" type="email" className="form-control" name="email"
                   placeholder="username@studio.unibo.it" required="required" pattern="^[\w]{1,}[\w.+-]{0,}@[\w-]{2,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$"
                   title="not valid email format" />
+                  <label id='registermail-error' for="email" style={{ fontSize: 12, color: 'red' }}></label>
+
               </div>
 
               <div className="mb-3">

@@ -1,25 +1,25 @@
+// Authentication module
+const auth = require('./auth');
 
-const {localstorage} = require('node-localstorage');
-
-//Express requirements
+// Express requirements
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const user = require('./moduledb1');
 const app = express();
 
-//Json web token 
+// Json web token 
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-//Cross-Origin-Resource-Sharing
+// Cross-Origin-Resource-Sharing
 var cors = require('cors');
 
 //Bcrypt stuff 
 const bcrypt = require('bcrypt');
 
 //Database url
-var url = 'mongodb+srv://Adriano:123Armadiopieno$!$@cluster0.5ajuv.mongodb.net/Nolo?retryWrites=true&w=majority';
+var url = process.env.URL;
 
 //Connect and start express services
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -31,65 +31,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 
-
-//Verify identity of user requesting url
- function verifyToken(req, res, next)
- {
-     //retrieve the token from request header
-    const authHeader = req.headers['authorization'];
-
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log(token);
-    
-    if(token == null) return res.sendStatus(401);
-
-    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
-    {
-        console.log("nome utente " + decoded.name);
-
-        if(err) 
-        {
-            console.log(err.name);
-            return res.status(403).send(` ${err.name} `);
-        }
-
-       
-    
-        next();
-    })
- }
-
- function verifyAdmin(req, res, next)
- {
-    const authHeader = req.headers['authorization'];
-    console.log(authHeader);
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log(token);
-    if(token == null) return res.sendStatus(401);
-    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
-    {
-        if(err) 
-        {
-            console.log(err.name);
-            return res.status(403).send(` ${err.name} `);
-        }
-
-        console.log(decoded.name);
-
-        const source =  await user.findOne({ name: decoded.name });
-        console.log(source);
-        if(source.role !== 'admin')
-        {
-            return res.status(403).send(` Only an admin can access this page`);
-
-        }
-
-    
-        next();
-    })
- }
-
-//Server API
+// These API's answer an url query with static files
+// This is required so the client can use React routes
 
 app.get('/', function (req, res) {
 
@@ -103,8 +46,16 @@ app.get('/login', function (req, res) {
 
 });
 
+app.get("/dashboard",(req, res) => 
+{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 
-app.post('/register', async (req, res) => {
+});
+
+
+//Server API's
+
+app.post('/api/register', async (req, res) => {
 
     const mail = req.body.email;
 
@@ -148,25 +99,30 @@ app.post('/register', async (req, res) => {
 
 
 app.post('/api/login', async (req, res) => {
+
     const mail = req.body.email;
+
+    //We check if user exists in database
     const source = await user.findOne({ email: mail });
+
     if (source) {
 
         const password = req.body.password;
         
         const buff = Buffer.from(password, 'base64');
+
         const decodedpass = buff.toString('utf-8');
 
-
+        // If user exists we compare the password
         if (await bcrypt.compare(decodedpass, source.password)) {
 
             console.log("Success");
-
+            
             //CREATE  JWT
             const user = { name: `${source.name}`};
             const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, {expiresIn: '1h'});
 
-            //Send token back to client toghether with user name
+            //Send token back to client 
             res.json({ accessToken: accessToken ,name: `${source.name}`});
 
         } else {
@@ -179,24 +135,26 @@ app.post('/api/login', async (req, res) => {
 })
 
 
-app.get("/api/dashboard",verifyToken, verifyAdmin, (req, res) => 
+app.get("/api/dashboard",auth.verifyToken, auth.verifyAdmin, (req, res) => 
 {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 
 });
 
 
-app.get("/dashboard",(req, res) => 
-{
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-
-});
-
-app.get("/api/authLog",verifyToken, (req, res) =>
+app.get("/api/authLog",auth.verifyToken, (req, res) =>
 {
     res.sendStatus(200);
 });
 
+
+
+
+
+
 app.listen(8001, function () {
     console.log('Server is running on port 8001')
 })
+
+
+//webpack-dev-server --inline --content-base . --history-api-fallback
