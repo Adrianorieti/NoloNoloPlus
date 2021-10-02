@@ -6,11 +6,11 @@ const Schema = mongoose.Schema;
 const reserveSchema = new Schema({
 
     start: {
-        type: 'String',
+        type: Date,
         required: true
     },
     end: {
-        type: 'String',
+        type: Date,
         required: true
     }
 })

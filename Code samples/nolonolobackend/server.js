@@ -158,8 +158,8 @@ let newProduct = new product({
     image: "./images/electric_bike_1",
     reservations: [
         {
-            start: "03/04/2020",
-            end : "07/04/2020"
+            start: "04/10/2020",
+            end : "04/16/2020"
         },
         {
             start: "09/04/2020",
@@ -168,18 +168,36 @@ let newProduct = new product({
     ]
     
 });
+// MESI-GIORNI-ANNI PORCODIO
+const myReservation = [new Date("04/14/2020"), new Date("/04/08/2020")];
+// ATTENZIONE, CONSOLE.LOG STAMPA LA DATA IN FORMATO ANNI-MESI-GIORNI
+console.log("myReservation : " , myReservation[0])
+// if(myReservation[0].getTime() > myReservation[1].getTime())
+//     console.log("La prima è più grande")
+// else
+//     console.log("la seconda è più grande")
 
 // newProduct.save();
 
-async function getProduct(){ 
+async function getProduct(myReservation){ 
 
     const source = await product.findOne({name: "Bike2000"});
 
-    console.log(source.name);
-    console.log(source.reservations);
+    //provvedere a testare l'efficienza della ricerca sull'array di reservations
+
+    const reservations = source.reservations;
+    for(let i in reservations)
+    {
+        console.log(reservations[i].start)
+        if(myReservation[0] > reservations[i].start.getTime() && myReservation[0] < reservations[i].end.getTime() )
+            console.log("Non puoi prenotare in questa data");
+        else
+            console.log("Puoi prenotare")
+    }
+
 };
 
-getProduct();
+getProduct(myReservation);
 
 
 
