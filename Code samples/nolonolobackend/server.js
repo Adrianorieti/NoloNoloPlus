@@ -5,7 +5,7 @@ const auth = require('./auth');
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const user = require('./moduledb1');
+const user = require('./moduleUser');
 const app = express();
 
 // Json web token 

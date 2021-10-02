@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router";
-import {AppContext} from '../store/Context';
 
 
-function LoginPage({ nameToParent, checkLog }) {
+function LoginPage({ nameToParent }) {
 
   let history = useHistory();
   const [firstName, setfirstName] = useState('');
@@ -42,14 +41,14 @@ function LoginPage({ nameToParent, checkLog }) {
     }
   };
 
-
+ /* Creates the json object to send */
   function createObj(operation) {
 
     // Password encoding to ensure escapes characters to be send without problems
     const buff = Buffer.from(password, 'utf-8');
     const encodedpass = buff.toString('base64');
 
-    // Json schema creation
+  
     if (operation === 'register') {
       return (`{
       "name": "${firstName}" ,

@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const user = require('./moduledb1');
+const user = require('./moduleUser');
 
 
 module.exports = {
