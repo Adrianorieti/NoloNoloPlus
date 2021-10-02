@@ -8,7 +8,6 @@ import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import { useState } from 'react';
 import Test from './components/Test';
-import {AppContext} from './store/Context';
 
 
 
@@ -27,7 +26,7 @@ const nameToParent = (childdata) => {
 
     return(
     
-          <AppContext.Provider>
+         
 
        
 
@@ -73,7 +72,6 @@ const nameToParent = (childdata) => {
           </Route>
 
         </Switch>
-  </AppContext.Provider>
        
       
       

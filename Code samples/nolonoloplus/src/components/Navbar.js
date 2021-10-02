@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useEffect, useContext, useState } from 'react';
-import {AppContext} from '../store/Context';
 import { useHistory } from "react-router";
 
 

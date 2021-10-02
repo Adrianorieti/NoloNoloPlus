@@ -1,4 +1,4 @@
-//WE CREATE THE SCHEMA FOR THE DATABASE
+/* Creates user schema for database */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
