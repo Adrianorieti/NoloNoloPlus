@@ -50,6 +50,14 @@ export default class Example extends React.Component {
                             Reset
                         </button>
                     )}
+                    <p id="fromDate" hidden="true">
+                        {!from && `${from}`}
+                        {from && `${from.toLocaleDateString()}`}
+                    </p>
+                    <p id="toDate" hidden="true">
+                        {!to && `${to}`}
+                        {to &&   `${to.toLocaleDateString()}`}
+                    </p>
                 </p>
                 <DayPicker
                     className="Selectable"

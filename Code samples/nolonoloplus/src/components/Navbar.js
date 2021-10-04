@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 
 
 
-function Navbar (props){
+function Navbar (props, { queryToParent }){
 
   console.log("render");
 
@@ -16,7 +16,6 @@ function Navbar (props){
 
   function checkLog(token)
   {
-
        console.log("dentro prova");
        fetch('http://localhost:8001/api/authLog',{
           headers: {
@@ -75,6 +74,10 @@ function Navbar (props){
 
     }
 
+    function queryParent()
+    {
+      queryToParent(null);
+    }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
@@ -89,7 +92,7 @@ function Navbar (props){
               <Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={loggato ? '/dashboard' : '/login'}>Products</Link>
+              <Link className="nav-link" to={'/products'} onclick={queryParent}>Products</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" id="navLoginReg" to={loggato ? '/dashboard' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>

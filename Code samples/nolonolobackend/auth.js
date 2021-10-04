@@ -27,8 +27,6 @@ verifyToken: function(req, res, next)
            console.log(err.name);
            return res.status(403).send(` ${err.name} `);
        }
-
-      
    
        next();
    })

@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
 /* Sub Schema for product map */
 const reserveSchema = new Schema({
 
@@ -21,20 +22,21 @@ const ProductSchema = new Schema({
         type: String,
         required: true
     },
-    type: {
+    type : {
         type: String,
         required: true
     },
-    price: {
-        type: String,
+    quantity : {
+        type: Number,
         required: true
     },
-    image: {
+    status: {
         type: String,
         required: true
     },
     reservations: [reserveSchema],
 })
+
 
 const product = mongoose.model('product', ProductSchema); 
 module.exports = product;

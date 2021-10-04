@@ -8,7 +8,7 @@ import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import { useState } from 'react';
 import Test from './components/Test';
-
+import Products from './components/Products';
 
 
 
@@ -16,52 +16,42 @@ function App (){
   
 //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
 const [data, setData] = useState( JSON.parse(sessionStorage.getItem('username')) || '');
-
+const [query, setQuery] = useState(null);
 
 const nameToParent = (childdata) => {
   setData(childdata);
 }
 
+const queryToParent = (rentFormData) => {
+  setQuery(rentFormData);
+}
   
 
     return(
-    
-         
-
-       
-
+              
+<div>
         <Switch>
 
           <Route path="/" exact>
-          <Navbar name={data}/>
-
-
+          <Navbar name={data} queryToParent={queryToParent}/>
 
             <div className="bg-image" >
 
             
-              <RentForm />
+              <RentForm queryToParent={queryToParent} />
 
             </div>
 
-            <div>
+            {/* <div>
               <CarouselContainer />
-            </div>
-            <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
-          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
-          copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
-          
+            </div> */}
 
           </Route>
 
           <Route path="/login" exact>  
-          <Navbar name={data}/>
+          <Navbar name={data} queryToParent={queryToParent}/>
 
           <LoginPage nameToParent={nameToParent} />
-           
-        <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
-          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
-          copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
 
           </Route>
 
@@ -71,10 +61,22 @@ const nameToParent = (childdata) => {
 
           </Route>
 
+          <Route path='/products' exact>
+            
+          <Navbar name={data} queryToParent={queryToParent}/>
+
+            <Products  query={query}/>
+
+          </Route>
+           
+
         </Switch>
        
-      
-      
+       {/* <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
+         locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
+         copyright="nolonoloplus" />
+       */}
+      </div>
     );
 
   }

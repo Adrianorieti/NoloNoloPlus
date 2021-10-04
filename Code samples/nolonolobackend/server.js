@@ -7,6 +7,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const user = require('./moduleUser');
 const product = require('./moduleProduct');
+const category = require('./moduleCategory');
 const app = express();
 
 // Json web token 
@@ -18,6 +19,7 @@ var cors = require('cors');
 
 //Bcrypt stuff 
 const bcrypt = require('bcrypt');
+const { debuglog } = require('util');
 
 //Database url
 var url = process.env.URL;
@@ -135,6 +137,10 @@ app.post('/api/login', async (req, res) => {
     }
 })
 
+app.get('/products', (req, res) =>
+{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.get("/api/dashboard",auth.verifyToken, auth.verifyAdmin, (req, res) => 
 {
@@ -149,58 +155,142 @@ app.get("/api/authLog",auth.verifyToken, (req, res) =>
 });
 
 
+app.post('/api/products', async(req, res) =>
+{
+   const authHeader = req.headers['authorization'];
+   const token = authHeader && authHeader.split(' ')[1];
+    console.log("Il token è", token);
+   const name = req.body.name;
+   const startDate = new Date(req.body.startingDate);
+   const endDate = new Date(req.body.endingDate);
+
+   if(startDate.getTime() > endDate.getTime())
+   {
+       let tmp = startDate;
+       startDate = endDate;
+       endDate = tmp;
+   }
+  
+   if(token == null)
+   {
+       //non siamo loggati
+            const prod =  await category.findOne({name: name});
+            if(prod)
+            {
+                //TO-DO capire il checkout ed il prezzo
+                let price = prod.price;
+                let period = endDate.getTime() - startDate.getTime();
+                period = period / (1000 *3600 * 24);
+                price = price * period;
+                res.status(200).json({prod: prod, finalPrice: price});
+            }
+   
+
+   }else{ // l'utente è loggato e quindi bisogna verificare il token per poi procedere 
+
+    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
+    {
+        if(err) res.status(500).send(err);
+
+        const category =  await category.findOne({name: name});
+        //il nome della categoria è il tipo dei prodotti
+        let typeToFind = category.name;
+
+        if(category)
+        {
+            //TO-DO capire il checkout ed il prezzo
+            let price = category.price;
+            let period = endDate.getTime() - startDate.getTime();
+            period = period / (1000 *3600 * 24);
+            price = price * period;
+            //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
+            let collision = false;
+
+        const prodList = await product.find({type: typeToFind}, function(err, db){
+        if(err) res.status(500).send(err);
+        for(i in db)
+        {
+            for(j in db[i].reservations)
+            {
+                let x = db[i].reservations[j];
+                // nei primi due if controlliamo che inizio o fine della prenotazione richiesta
+                //sia nel mezzo di un'altra, nell'ultimo se ne contiene un'altra già esistente
+                if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
+                {
+                    collision = true;
+
+                }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
+                {
+                    collision = true;
+                }else if(x.start.getTime() <= startDate.getTime() &&  x.end.getTime() <= endDate.getTime())
+                {
+                    collision = true
+                }
+            }   
+        }
+       
+        res.status(200).json({prod: prod, finalPrice: price, availability: collision});
+       
+        })
+    }
+})
+} 
+});
+
+
 ////// PRODUCT TESTING
 
-let newProduct = new product({
-    name: "Bike2000",
-    type: "Electric bike",
-    price: "300$",
-    image: "./images/electric_bike_1",
-    reservations: [
-        {
-            start: "04/10/2020",
-            end : "04/16/2020"
-        },
-        {
-            start: "09/04/2020",
-            end : "10/04/2020"
-        }
-    ]
-    
-});
-// MESI-GIORNI-ANNI PORCODIO
-const myReservation = [new Date("04/14/2020"), new Date("/04/08/2020")];
-// ATTENZIONE, CONSOLE.LOG STAMPA LA DATA IN FORMATO ANNI-MESI-GIORNI
-console.log("myReservation : " , myReservation[0])
-// if(myReservation[0].getTime() > myReservation[1].getTime())
-//     console.log("La prima è più grande")
-// else
-//     console.log("la seconda è più grande")
+// let newProduct = new product({
+//     name: "Bike2000",
+//     quantity: 1,
+//     status: "New",
+//     type: "Electric",
+//     reservations: [
+//         {
+//             start: "04/10/2020",
+//             end : "04/16/2020"
+//         },
+//         {
+//             start: "09/04/2020",
+//             end : "10/04/2020"
+//         }
+//     ]});
 
+//     let newProduct2 = new product({
+//         name: "Bike2000",
+//         quantity: 1,
+//         status: "New",
+//         type: "Electric",
+//         reservations: [
+//             {
+//                 start: "05/10/2020",
+//                 end : "05/16/2020"
+//             },
+//             {
+//                 start: "09/04/2020",
+//                 end : "10/04/2020"
+//             }
+//         ]});
+// let newProduct3 = new product({
+//     name: "Bike2000",
+//     quantity: 1,
+//     status: "New",
+//     type: "Electric",
+//     reservations: [
+//         {
+//             start: "02/10/2020",
+//             end : "03/16/2020"
+//         },
+//         {
+//             start: "06/24/2020",
+//             end : "07/04/2020"
+//         }
+//     ]});
+
+//newCategory.save();
 // newProduct.save();
-
-async function getProduct(myReservation){ 
-
-    const source = await product.findOne({name: "Bike2000"});
-
-    //provvedere a testare l'efficienza della ricerca sull'array di reservations
-
-    const reservations = source.reservations;
-    for(let i in reservations)
-    {
-        console.log(reservations[i].start)
-        if(myReservation[0] > reservations[i].start.getTime() && myReservation[0] < reservations[i].end.getTime() )
-            console.log("Non puoi prenotare in questa data");
-        else
-            console.log("Puoi prenotare")
-    }
-
-};
-
-getProduct(myReservation);
-
-
-
+// newProduct2.save();
+// newProduct3.save();
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001')
