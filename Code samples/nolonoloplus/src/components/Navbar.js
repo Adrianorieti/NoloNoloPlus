@@ -31,7 +31,6 @@ function Navbar (props, { queryToParent }){
          }
        }).catch(err =>{console.log(err)});
 
-     
   }
 
   useEffect(() =>

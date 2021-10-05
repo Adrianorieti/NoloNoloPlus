@@ -38,7 +38,6 @@ function Products(){
   useEffect(() =>
   {
     getProducts();
-   
   });
 
  //fare una richiesta al server per avere tutte le categorie mandandogli il token se siamo loggati
