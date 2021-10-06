@@ -2,7 +2,11 @@ import React from 'react';
 
 function Footer(props) {
     return (
+<<<<<<< HEAD
         <footer className="text-center text-lg-start bg-custom text-white" id="footer">
+=======
+        <footer className="text-center text-lg-start bg-custom text-white mt-5" id="footer">
+>>>>>>> Adrian
             <section>
                 <div className="container text-center text-md-start mt-5">
                     <div className="row mt-3">
@@ -46,7 +50,7 @@ function Footer(props) {
                 </div>
             </section>
             <div className="text-center p-4">
-            <a rel="license" id="diocane" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img className="img-fluid" alt="Licenza Creative Commons"  src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlnsDct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Nolo Nolo Plus</span> di<a xmlnsCc="http://creativecommons.org/ns#" href="http://" property="cc:attributionName" rel="cc:attributionURL">Corso Tecnologie Web Unibo prof. Vitali 2021</a> è distribuito con Licenza <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribuzione - Non commerciale - Condividi allo stesso modo 4.0 Internazionale</a>.
+            <a rel="license"  href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img id="commons" className="img-fluid" alt="Licenza Creative Commons"  src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlnsDct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Nolo Nolo Plus</span> di<a xmlnsCc="http://creativecommons.org/ns#" href="http://" property="cc:attributionName" rel="cc:attributionURL">Corso Tecnologie Web Unibo prof. Vitali 2021</a> è distribuito con Licenza <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribuzione - Non commerciale - Condividi allo stesso modo 4.0 Internazionale</a>.
                 
             </div>
         </footer>

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Redirect } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
 import { useHistory } from "react-router";
 
 
-function LoginPage({ childToParent }) {
+function LoginPage({ nameToParent }) {
 
   let history = useHistory();
   const [firstName, setfirstName] = useState('');
@@ -43,13 +41,14 @@ function LoginPage({ childToParent }) {
     }
   };
 
-
+ /* Creates the json object to send */
   function createObj(operation) {
-    //faccio l'encoding della password in base64 perchè così non ho problemi con caratteri strani
+
+    // Password encoding to ensure escapes characters to be send without problems
     const buff = Buffer.from(password, 'utf-8');
     const encodedpass = buff.toString('base64');
 
-    //creo il json che rappresenta lo schema del database con i dati 
+  
     if (operation === 'register') {
       return (`{
       "name": "${firstName}" ,
@@ -70,31 +69,35 @@ function LoginPage({ childToParent }) {
 
   function doRegister() {
 
-    const obj = createObj('register')
+    const obj = createObj('register');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8000/register", true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
+    const options = {
+      method: 'POST',
+      headers: new Headers({'Content-type': 'application/json'}),
+      body: obj
+    };
+    let url = 'http://localhost:8001/api/register';
 
-    xhr.onload = function () {
-      if (xhr.status == 200) {
+    fetch(url, options)
+    .then(response => {
+       if(response.status == 200)
+       {
         console.log("Registrazione avvenuta con successo.");
-        //reindirizzare alla pagina utente. 
-      }
-      else if (xhr.status == 500) {
+        history.push('/login');
+       }
+       else if(response.status == 500){
         console.log("La mail esiste già");
-        document.getElementById('mail-error').innerHTML = "Mail already in use BOOMER";
-      }
-    }
-    xhr.onerror = function () {
+        document.getElementById('registermail-error').innerHTML = "Mail already in use";
+       }
+    })
+    .catch(error => {
       console.log(this.response);
       console.log("Error ....");
-    }
+    });
 
-    xhr.send(obj);
   };
 
-  /*Confronta la password immessa e quella ripetuta.
+  /* Confronta la password immessa e quella ripetuta.
     Ritorna false se sono diferse, true se uguali. */
   function passValidate() {
     if (repeatPassword != password) {
@@ -105,7 +108,7 @@ function LoginPage({ childToParent }) {
   };
 
 
-  /* Handler che entra in gioco quando il pulsante di register è premuto*/
+  /* Register Handler*/
   function handleRegister(event) {
     event.preventDefault();
 
@@ -115,35 +118,48 @@ function LoginPage({ childToParent }) {
     }
   };
 
-  function handleLogin(event) {
+  /* Login Handler */
+function handleLogin(event) {
 
     event.preventDefault();
+
     const obj = createObj('login');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:8000/login", true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        console.log("Logged in correctly");
-        //passiamo ad App.js il nome che metteremo nel navbar !
-        const username = (JSON.parse(xhr.responseText)).name;
-        const isLogged = (JSON.parse(xhr.responseText)).isLogged;
-        childToParent(username, isLogged);
+    const options = {
+      method: 'POST',
+      headers: new Headers({'Content-type': 'application/json'}),
+      body: obj
+    };
+    
+    let url = 'http://localhost:8001/api/login';
+
+    fetch(url, options)
+      .then(response =>{
+        if(response.status == 200)
+          return response.json();
+        else
+          document.getElementById('loginmail-error').innerHTML= "Mail or password incorrect.";
+         }).then((data) =>
+        {
+        
+        // Pass back to app.js the navbar 
+        console.log(data.name);
+
+        const username = data.name;
+        
+        const token = data.accessToken;
+
+        sessionStorage.setItem("token", JSON.stringify(token));
+                
+        sessionStorage.setItem('username', JSON.stringify(username));
+
+        nameToParent(username);
+        
         history.push('/');
 
-      }
-      else if (xhr.status == 500) {
-
-        document.getElementById('loginmail-error').innerHTML = "Mail or password is wrong !";
-
-      }
-    }
-    xhr.onerror = function () {
-      console.log(this.response);
-      console.log("Error ....");
-    }
-    xhr.send(obj);
+      }).catch(error => {
+      console.log(error);
+    });
   };
 
 
@@ -209,6 +225,8 @@ function LoginPage({ childToParent }) {
                 <input onChange={handleChange} id="email" type="email" className="form-control" name="email"
                   placeholder="username@studio.unibo.it" required="required" pattern="^[\w]{1,}[\w.+-]{0,}@[\w-]{2,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$"
                   title="not valid email format" />
+                  <label id='registermail-error' for="email" style={{ fontSize: 12, color: 'red' }}></label>
+
               </div>
 
               <div className="mb-3">
@@ -246,4 +264,4 @@ function LoginPage({ childToParent }) {
   );
 }
 
-export default withRouter(LoginPage);
+export default LoginPage;

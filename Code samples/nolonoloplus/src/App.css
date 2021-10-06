@@ -150,10 +150,15 @@ label
     background-color: rgb(167, 190, 147); 
   }
 
-  #diocane
+  #commons
   {
-    border-width: 0;
+    object-fit: cover;
+    max-width: 1,5rem;
+    max-height: 1,5rem;
   }
 
 
- 
+#logout
+{
+  display: none;
+}

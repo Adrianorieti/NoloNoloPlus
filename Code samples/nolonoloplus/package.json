@@ -7,8 +7,10 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "bcrypt": "^5.0.1",
+    "date-range-picker": "^0.3.5",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
+    "node-localstorage": "^2.2.1",
     "npm": "^7.20.3",
     "react": "^17.0.2",
     "react-ada-keyboard-accessible-datepicker": "^1.2.13",
@@ -20,7 +22,8 @@
     "react-helmet": "^6.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^1.1.5",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "webpack": "^3.12.0"
   },
   "scripts": {
     "start": "react-scripts start",

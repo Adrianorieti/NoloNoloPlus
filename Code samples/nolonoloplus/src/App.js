@@ -1,72 +1,81 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import './App.css';
-import treehd from './images/treehd.jpg'
 import CarouselContainer from './components/Carousel';
 import Navbar from './components/Navbar';
-import Banner from './components/Banner';
 import { Route, Switch } from 'react-router-dom';
 import RentForm from './components/RentForm';
 import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import { useState } from 'react';
+import Test from './components/Test';
+import Products from './components/Products';
 
 
-function App () {
+
+function App (){
+  
 //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
-const [data, setData] = useState('');
-const [isLogged, setLog] = useState('');
+const [data, setData] = useState( JSON.parse(sessionStorage.getItem('username')) || '');
+const [query, setQuery] = useState(null);
 
-const childToParent = (childdata, isLogged) => {
+const nameToParent = (childdata) => {
   setData(childdata);
-  setLog(isLogged);
 }
 
+const queryToParent = (rentFormData) => {
+  setQuery(rentFormData);
+}
   
 
-    return (
-      <div>
-
-       
-  {/* Devo passare più props perchè a seconda che lo user sia autenticato o meno ho un comportamento diverso */}
-          <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} display={isLogged ? true : false} />
-
+    return(
+              
+<div>
         <Switch>
 
           <Route path="/" exact>
-
-
+          <Navbar name={data} queryToParent={queryToParent}/>
 
             <div className="bg-image" >
 
-              <Banner />
-
-
-              <RentForm />
+            
+              <RentForm queryToParent={queryToParent} />
 
             </div>
 
-            <div>
+            {/* <div>
               <CarouselContainer />
-            </div>
+            </div> */}
 
           </Route>
 
-          <Route path="/login">  
-          {/* <Navbar logoName="NoloNoloPlus" name={isLogged ? data : "Login/Register"} display={isLogged ? true : false} /> */}
+          <Route path="/login" exact>  
+          <Navbar name={data} queryToParent={queryToParent}/>
 
-          <LoginPage childToParent={childToParent} />
-        
-          
+          <LoginPage nameToParent={nameToParent} />
 
           </Route>
+
+          <Route path="/dashboard" exact>
+            
+            <Test />
+
+          </Route>
+
+          <Route path='/products' exact>
+            
+          <Navbar name={data} queryToParent={queryToParent}/>
+
+            <Products  query={query}/>
+
+          </Route>
+           
 
         </Switch>
-        
-        <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
-          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
-          copyright="NOLONOLOPLUS SRL INCAZZATISSIMI" />
-
-      
+       
+       {/* <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
+         locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
+         copyright="nolonoloplus" />
+       */}
       </div>
     );
 
