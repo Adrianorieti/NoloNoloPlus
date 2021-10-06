@@ -6,10 +6,19 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "bcrypt": "^5.0.1",
+    "jquery": "^3.6.0",
+    "moment": "^2.29.1",
     "npm": "^7.20.3",
     "react": "^17.0.2",
+    "react-ada-keyboard-accessible-datepicker": "^1.2.13",
     "react-bootstrap-validation": "^0.1.11",
+    "react-create-app": "^2.0.6",
+    "react-datepicker": "^4.2.0",
+    "react-day-picker": "^7.4.10",
     "react-dom": "^17.0.2",
+    "react-helmet": "^6.1.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^1.1.5",
     "web-vitals": "^1.1.2"
   },
@@ -28,7 +37,6 @@
   "browserslist": {
     "production": [
       ">0.2%",
-      "not dead",
       "not op_mini all"
     ],
     "development": [
