@@ -154,8 +154,15 @@ app.get("/api/authLog",auth.verifyToken, (req, res) =>
     res.sendStatus(200);
 });
 
+app.get('/api/products', async(req, res) =>
+{
+ //qui semplicemente prendiamo tutti i prodotti ( le categorie) dal database e le torniamo indietro
 
-app.post('/api/products', async(req, res) =>
+
+})
+
+
+app.post('/api/formProducts', async(req, res) =>
 {
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
@@ -171,10 +178,11 @@ app.post('/api/products', async(req, res) =>
        endDate = tmp;
    }
   
-   if(token == null)
+   if(token === null || token === undefined) // Non siamo loggati 
    {
-       //non siamo loggati
+           
             const prod =  await category.findOne({name: name});
+
             if(prod)
             {
                 //TO-DO capire il checkout ed il prezzo
@@ -191,19 +199,20 @@ app.post('/api/products', async(req, res) =>
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
         if(err) res.status(500).send(err);
-
-        const category =  await category.findOne({name: name});
+        //se usavo category per la variabile mi dava errore
+        const collection =  await category.findOne({name: name});
         //il nome della categoria è il tipo dei prodotti
-        let typeToFind = category.name;
+        let typeToFind = collection.name;
 
-        if(category)
+        if(collection)
         {
             //TO-DO capire il checkout ed il prezzo
-            let price = category.price;
+            let price = collection.price;
             let period = endDate.getTime() - startDate.getTime();
             period = period / (1000 *3600 * 24);
             price = price * period;
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
+            //l'utente loggato può sapere la disponibilità
             let collision = false;
 
         const prodList = await product.find({type: typeToFind}, function(err, db){

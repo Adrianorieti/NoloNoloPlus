@@ -9,8 +9,10 @@ function RentForm({queryToParent}) {
   function submit() {
     // prendiamo i dati che ci servono
     let form_obj = ``;
+    //TO-DO se qualcuno  dei campi non è selezionato allora c'è un errore da mostrare
+    //perchè sono richiesti 
     const radioInput = document.querySelector("input[name='products']:checked");
-    let bikeType;
+    let bikeType ;
     if (radioInput) {
       bikeType = radioInput.value;
     }
@@ -22,9 +24,14 @@ function RentForm({queryToParent}) {
       "endingDate": "${endingDate}"
      }`;
      sessionStorage.setItem('form_obj', form_obj);
+     //passiamo il testimone a Products
      history.push('/products');
-     //inizia la query al server
+ 
 
+    //  useEffect(() =>
+    //  {
+    //   sessionStorage.clear();
+    //  });
     // const options = {
     //   method: 'POST',
     //   headers: new Headers({ 'Content-type': 'application/json' , 'Authentication': `Bearer ${token}`}),
@@ -76,7 +83,7 @@ function RentForm({queryToParent}) {
         </fieldset>
         <button id="rentFormButton" type="button" className="btn btn-success" onClick={submit}>Click to submit</button>
       </form>
-    </main>
+    </main> 
 
   );
 }
