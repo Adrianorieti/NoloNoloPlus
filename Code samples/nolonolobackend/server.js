@@ -156,10 +156,16 @@ app.get("/api/authLog",auth.verifyToken, (req, res) =>
 
 app.get('/api/products', async(req, res) =>
 {
- //qui semplicemente prendiamo tutti i prodotti ( le categorie) dal database e le torniamo indietro
+    let prodList = [];
+    //questo ci aiuta ad iterare su tutti gli elementi della collezione
+ for await (const doc of category.find()) {
+    prodList.push(doc);
+    console.log(prodList);
+  }
 
-
-})
+  res.status(200).json({prodList: prodList});
+  
+})  
 
 
 app.post('/api/formProducts', async(req, res) =>

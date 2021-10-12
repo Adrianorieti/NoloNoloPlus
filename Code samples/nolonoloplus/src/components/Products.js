@@ -6,8 +6,8 @@ function Products(){
  //state per il booleano che servirà a dire se la data è disponibile o meno
  //però per avere il booleano devi per forza essere loggato altrimenti il server non 
  //te lo manda
-    const [toInsert, setToInsert] = useState(null);
-
+    const [toInsert, setToInsert] = useState([]);
+  let result = [];
     //funzione che gestisce i prodotti derivati dal form_obj
     function getFormProducts(){
       console.log("richiesta al server");
@@ -30,7 +30,7 @@ function Products(){
 
           console.log("EVVIVA");
           //qui toInsert prende il nome del prodotto
-          setToInsert(data.prod.name);
+          setToInsert(data.prod);
         })
         .catch(error => {
           console.log(error);
@@ -41,7 +41,7 @@ function Products(){
       // Creiamo il payload da mandare al server
     const options = {
         method: 'GET',
-        headers: new Headers({ 'Content-type': 'application/json' , 'Authentication': `Bearer ${token}`}),
+        headers: new Headers({ 'Content-type': 'application/json'}),
       };
       let url = 'http://localhost:8001/api/products';
       fetch(url, options)
@@ -49,31 +49,43 @@ function Products(){
           if (response.status == 200) {
             return response.json();
           }else{return(console.log(response.status))}
-        }).then((data) =>{
-          setToInsert(data);
+        }).then((data) => {
+         setToInsert([...data]);
+          //console.log(data.prodList[0].name);
+          // setToInsert(data.prodList);
         })
         .catch(error => {
           console.log(error);
         });
     }
 
-  useEffect(() =>
+   useEffect(() =>
   {
     //se form_obj è null allora stiamo accedendo alla product page dal navbar e quindi
     //la cosa è semplice, vogliamo tutti i prodotti senza filtri di genere
     const form_obj = sessionStorage.getItem('form_obj'); 
     if(form_obj)
+    {
+      console.log("FOrm obj c'è")
       getFormProducts();
+    }
     else
-      getAllProducts();
+    {
+      console.log("FOrm obj non c'è")
+
+     result =  getAllProducts();
+       console.log("result", result);
+       setToInsert(result);
+
+    }
 
     //bisogna creare un'altra funzione che richiama sempre la stessa api ma con un booleano diverso
     //a seconda che arriviamo su questa pagina da navbar o da rentform
     
-  });
+  },[]);
 
     
-     return(toInsert);
+     return(result);
 }
 
 export default Products;
