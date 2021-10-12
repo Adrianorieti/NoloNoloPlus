@@ -2,11 +2,7 @@ import React from 'react';
 
 function Footer(props) {
     return (
-<<<<<<< HEAD
-        <footer className="text-center text-lg-start bg-custom text-white" id="footer">
-=======
         <footer className="text-center text-lg-start bg-custom text-white mt-5" id="footer">
->>>>>>> Adrian
             <section>
                 <div className="container text-center text-md-start mt-5">
                     <div className="row mt-3">

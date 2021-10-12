@@ -1,11 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< HEAD
-import { useEffect } from 'react';
-=======
 import { useEffect, useState } from 'react';
 import { useHistory } from "react-router";
->>>>>>> Adrian
 
 
 
@@ -73,11 +69,6 @@ function Navbar (props, { queryToParent }){
     burger.setAttribute("aria-expanded", newburgerattr);
   }
 
-<<<<<<< HEAD
-
-  return (
-    <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" aria-label="primary navigation">
-=======
   
     function logout()
     {
@@ -96,7 +87,6 @@ function Navbar (props, { queryToParent }){
 
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
->>>>>>> Adrian
       <div className="container-fluid">
         <a className="navbar-brand" href="#">NoloNoloPlus</a>
         <button id="burger" onClick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -115,25 +105,12 @@ function Navbar (props, { queryToParent }){
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="#footer" >Contacts</Link>
-<<<<<<< HEAD
-            </li>
-            <li className="nav-item" id="logout" >
-              <Link className="nav-link" >Logout</Link>
-            </li>
-            {/* Aggiungere Link per logout che fa richiesta get logout al server per eliminare la sessione
-             e riceve isLogged=false dal server che fa
-             const username = (JSON.parse(xhr.responseText)).name;
-            const isLogged = (JSON.parse(xhr.responseText)).isLogged;
-            childToParent(username, isLogged);
-            history.push('/') */}
-=======
             </li>
 
             <li className="nav-item" id="logout"  >
               <Link className="nav-link"  onClick={logout}>Logout</Link>
             </li> 
           
->>>>>>> Adrian
           </ul>
         </div>
       </div>

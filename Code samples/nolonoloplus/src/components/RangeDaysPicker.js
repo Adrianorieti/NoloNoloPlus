@@ -56,11 +56,7 @@ export default class Example extends React.Component {
                     </p>
                     <p id="toDate" hidden="true">
                         {!to && `${to}`}
-<<<<<<< HEAD
-                        {to && `  ${to.toLocaleDateString()}`}
-=======
                         {to &&   `${to.toLocaleDateString()}`}
->>>>>>> Adrian
                     </p>
                 </p>
                 <DayPicker
@@ -92,8 +88,4 @@ export default class Example extends React.Component {
             </div>
         );
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> Adrian
