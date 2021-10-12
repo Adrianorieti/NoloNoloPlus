@@ -1,19 +1,28 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
-
+import electricBike from '../images/electricBike.jpg';
+import mountainBike from '../images/mountainBike.jpg';
+import scooter from '../images/scooter.jpg';
+import { useHistory } from "react-router";
 
 function Products(){
- //state per il booleano che servirà a dire se la data è disponibile o meno
- //però per avere il booleano devi per forza essere loggato altrimenti il server non 
- //te lo manda
+ 
+    const obj = sessionStorage.getItem('form_obj'); 
     const [toInsert, setToInsert] = useState([]);
-  let result = [];
+    const [formDataProduct, setformDataProduct] = useState('');
+    const [price, setPrice] = useState(0);
+    const [available, setAvailable] = useState(false);
+    let history = useHistory();
+
     //funzione che gestisce i prodotti derivati dal form_obj
     function getFormProducts(){
-      console.log("richiesta al server");
+
     const token = sessionStorage.getItem('token');
+
     const form_obj = sessionStorage.getItem('form_obj'); // si ripete e va cancellato
+
     console.log("form_obj è", form_obj);
+
     const options = {
       // Creiamo il payload da mandare al server
         method: 'POST',
@@ -28,9 +37,9 @@ function Products(){
           }else{return(console.log(response.status))}
         }).then((data) =>{
 
-          console.log("EVVIVA");
-          //qui toInsert prende il nome del prodotto
-          setToInsert(data.prod);
+          setformDataProduct(data.prod);
+          setPrice(data.finalPrice);
+          setAvailable(data.availability);
         })
         .catch(error => {
           console.log(error);
@@ -38,11 +47,13 @@ function Products(){
     }
 
     function getAllProducts(){
+
       // Creiamo il payload da mandare al server
     const options = {
-        method: 'GET',
-        headers: new Headers({ 'Content-type': 'application/json'}),
+        method: 'POST',
+        headers: new Headers({ 'Content-type': 'application/json', "Access-Control-Allow-Origin": "*"}),
       };
+
       let url = 'http://localhost:8001/api/products';
       fetch(url, options)
         .then(response => {
@@ -50,9 +61,10 @@ function Products(){
             return response.json();
           }else{return(console.log(response.status))}
         }).then((data) => {
-         setToInsert([...data]);
-          //console.log(data.prodList[0].name);
-          // setToInsert(data.prodList);
+
+         setToInsert(toInsert.concat(data.prodList));
+
+         //  setToInsert(data.prodList);
         })
         .catch(error => {
           console.log(error);
@@ -66,17 +78,15 @@ function Products(){
     const form_obj = sessionStorage.getItem('form_obj'); 
     if(form_obj)
     {
-      console.log("FOrm obj c'è")
+      console.log("Form obj c'è")
       getFormProducts();
     }
     else
     {
       console.log("FOrm obj non c'è")
 
-     result =  getAllProducts();
-       console.log("result", result);
-       setToInsert(result);
-
+      getAllProducts();
+       
     }
 
     //bisogna creare un'altra funzione che richiama sempre la stessa api ma con un booleano diverso
@@ -84,8 +94,69 @@ function Products(){
     
   },[]);
 
+  // useEffect(()=>{
+
+  //  console.log(formData);
+
+  // },[])
     
-     return(result);
+  return (obj ? (<div className="product">
+     <div className="card m-3" style={{width: "18rem"}}>
+
+{(() => {
+      if (formDataProduct.name === "Electric S_300") {
+        return (
+          <img src={electricBike} className="card-img-top" alt="Foto del prodotto" /> 
+          )
+      } else if (formDataProduct.name === "Mountain Bike X_300") {
+        return (
+          <img src={mountainBike} className="card-img-top" alt="Foto del prodotto" /> 
+        )
+      } else {
+        return (
+          <img src={scooter} className="card-img-top" alt="Foto del prodotto" /> 
+        )
+      }
+    })()}
+    
+<div className="card-body">
+  <h5 className="card-title">{formDataProduct.name}</h5>
+  <p className="card-text">{formDataProduct.description}</p>
+  <a href="#" className="btn btn-primary">Rent this product</a>
+</div>
+</div>
+<a href="#" className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); window.location.reload()})}>Disable Filters</a>
+  </div> ) : (<div className='product'>{toInsert.map((product) =>
+    
+    <div className="card m-3" style={{width: "18rem"}}>
+
+  {(() => {
+        if (product.name === "Electric S_300") {
+          return (
+            <img src={electricBike} className="card-img-top" alt="Foto del prodotto" /> 
+            )
+        } else if (product.name === "Mountain Bike X_300") {
+          return (
+            <img src={mountainBike} className="card-img-top" alt="Foto del prodotto" /> 
+          )
+        } else {
+          return (
+            <img src={scooter} className="card-img-top" alt="Foto del prodotto" /> 
+          )
+        }
+      })()}
+      
+  <div className="card-body">
+    <h5 className="card-title">{product.name}</h5>
+    <p className="card-text">{product.description}</p>
+    <a href="#" className="btn btn-primary">Rent this product</a>
+  </div>
+</div>
+  
+    )}
+    <a href="#" className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); history.push('/products')})}>Disable Filters</a>
+
+    </div>));
 }
 
 export default Products;

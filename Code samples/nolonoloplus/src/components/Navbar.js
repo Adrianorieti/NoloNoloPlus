@@ -98,7 +98,7 @@ function Navbar (props, { queryToParent }){
               <Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={'/products'} onclick={queryParent}>Products</Link>
+              <Link className="nav-link" to={'/products'} onClick={queryToParent}>Products</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" id="navLoginReg" to={loggato ? '/dashboard' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>

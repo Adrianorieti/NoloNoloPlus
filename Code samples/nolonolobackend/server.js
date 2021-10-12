@@ -19,7 +19,6 @@ var cors = require('cors');
 
 //Bcrypt stuff 
 const bcrypt = require('bcrypt');
-const { debuglog } = require('util');
 
 //Database url
 var url = process.env.URL;
@@ -27,7 +26,9 @@ var url = process.env.URL;
 //Connect and start express services
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
 
 app.use(express.json());
 
@@ -55,6 +56,10 @@ app.get("/dashboard",(req, res) =>
 
 });
 
+app.get('/products', (req, res) =>
+{
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 //Server API's
 
@@ -137,10 +142,7 @@ app.post('/api/login', async (req, res) => {
     }
 })
 
-app.get('/products', (req, res) =>
-{
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+
 
 app.get("/api/dashboard",auth.verifyToken, auth.verifyAdmin, (req, res) => 
 {
@@ -154,7 +156,7 @@ app.get("/api/authLog",auth.verifyToken, (req, res) =>
     res.sendStatus(200);
 });
 
-app.get('/api/products', async(req, res) =>
+app.post('/api/products', async(req, res) =>
 {
     let prodList = [];
     //questo ci aiuta ad iterare su tutti gli elementi della collezione
@@ -170,7 +172,7 @@ app.get('/api/products', async(req, res) =>
 
 app.post('/api/formProducts', async(req, res) =>
 {
-   const authHeader = req.headers['authorization'];
+   const authHeader = await req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
     console.log("Il token è", token);
    const name = req.body.name;
@@ -186,7 +188,7 @@ app.post('/api/formProducts', async(req, res) =>
   
    if(token === null || token === undefined) // Non siamo loggati 
    {
-           
+           console.log("siamo nella zona not logged");
             const prod =  await category.findOne({name: name});
 
             if(prod)
@@ -201,7 +203,7 @@ app.post('/api/formProducts', async(req, res) =>
    
 
    }else{ // l'utente è loggato e quindi bisogna verificare il token per poi procedere 
-
+    console.log("siamo nella zona logged");
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
         if(err) res.status(500).send(err);
