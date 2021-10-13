@@ -172,10 +172,11 @@ app.post('/api/products', async(req, res) =>
 
 app.post('/api/formProducts', async(req, res) =>
 {
-   const authHeader = await req.headers['authorization'];
+   const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
     console.log("Il token è", token);
    const name = req.body.name;
+   console.log("il nome  ",req.body.name);
    const startDate = new Date(req.body.startingDate);
    const endDate = new Date(req.body.endingDate);
 
@@ -188,9 +189,7 @@ app.post('/api/formProducts', async(req, res) =>
   
    if(token === null || token === undefined) // Non siamo loggati 
    {
-           console.log("siamo nella zona not logged");
             const prod =  await category.findOne({name: name});
-
             if(prod)
             {
                 //TO-DO capire il checkout ed il prezzo
@@ -198,7 +197,7 @@ app.post('/api/formProducts', async(req, res) =>
                 let period = endDate.getTime() - startDate.getTime();
                 period = period / (1000 *3600 * 24);
                 price = price * period;
-                res.status(200).json({prod: prod, finalPrice: price});
+                return(res.status(200).json({prod: prod, finalPrice: price}));
             }
    
 
@@ -206,14 +205,24 @@ app.post('/api/formProducts', async(req, res) =>
     console.log("siamo nella zona logged");
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
-        if(err) res.status(500).send(err);
+        console.log("siamo nella zona verify token");
+
+        if(err) 
+            console.log(err);
+
+        console.log("siamo nella zona dopo l'errore");
+
         //se usavo category per la variabile mi dava errore
         const collection =  await category.findOne({name: name});
+        console.log("prendo collection");
         //il nome della categoria è il tipo dei prodotti
+        //qui in verità basta mettere = name senza collection.name ma è per fare scena
         let typeToFind = collection.name;
-
+        console.log("name", name);
+        console.log("typeToFind ",typeToFind);
         if(collection)
         {
+            console.log("dentro l'if di collection");
             //TO-DO capire il checkout ed il prezzo
             let price = collection.price;
             let period = endDate.getTime() - startDate.getTime();
@@ -221,34 +230,47 @@ app.post('/api/formProducts', async(req, res) =>
             price = price * period;
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
             //l'utente loggato può sapere la disponibilità
-            let collision = false;
-
-        const prodList = await product.find({type: typeToFind}, function(err, db){
-        if(err) res.status(500).send(err);
+            let available = true;
+            console.log("Price è", price);
+            //ATTENZIONE notare che nei prodotti cerchiamo per tipo, e se si guarda il database
+            //si può notare che il nome della categoria (Electric S_300 )è poi il tipo dei prodotti
+            //che però possono avere dei nomi diversi perchè magari di marche diverse
+        await product.find({type: typeToFind},  function(err, db){
+            console.log("cercando prodList");
+        if(err) return(res.status(500).send(err));
+        console.log("superato l'errore di prodList")
         for(i in db)
         {
+            console.log(" for esterno ", i);
             for(j in db[i].reservations)
             {
+                console.log("for interno", j);
                 let x = db[i].reservations[j];
+                console.log("the reservation is",x);
                 // nei primi due if controlliamo che inizio o fine della prenotazione richiesta
                 //sia nel mezzo di un'altra, nell'ultimo se ne contiene un'altra già esistente
                 if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
                 {
-                    collision = true;
+                    available = false;
+                    console.log("l'inizio ècompreso in una prenotazione");
 
                 }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
                 {
-                    collision = true;
-                }else if(x.start.getTime() <= startDate.getTime() &&  x.end.getTime() <= endDate.getTime())
+                    available = false;
+                    console.log("la fine è compresa dentro una prenotazione");
+
+                }else if( startDate.getTime() >= x.start.getTime()  &&  endDate.getTime() <=  x.end.getTime())
                 {
-                    collision = true
+                    available = false;
+                    console.log("la prenotazione è compresa completamente ");
                 }
             }   
         }
-       
-        res.status(200).json({prod: prod, finalPrice: price, availability: collision});
-       
-        })
+        console.log("FUORI DAL FOR MA DENTRO VERIFY ANCORA");
+    })
+    console.log("available è", available);
+
+   res.status(200).json({prod: collection, finalPrice: price, availability: available});
     }
 })
 } 
@@ -258,18 +280,18 @@ app.post('/api/formProducts', async(req, res) =>
 ////// PRODUCT TESTING
 
 // let newProduct = new product({
-//     name: "Bike2000",
+//     name: "Electric S_300",
 //     quantity: 1,
 //     status: "New",
 //     type: "Electric",
 //     reservations: [
 //         {
-//             start: "04/10/2020",
-//             end : "04/16/2020"
+//             start: "06/10/2020",
+//             end : "08/16/2020"
 //         },
 //         {
-//             start: "09/04/2020",
-//             end : "10/04/2020"
+//             start: "10/04/2020",
+//             end : "11/04/2020"
 //         }
 //     ]});
 
@@ -305,7 +327,7 @@ app.post('/api/formProducts', async(req, res) =>
 //     ]});
 
 //newCategory.save();
-// newProduct.save();
+//  newProduct.save();
 // newProduct2.save();
 // newProduct3.save();
 
