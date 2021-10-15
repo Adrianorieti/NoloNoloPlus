@@ -325,7 +325,7 @@ app.post('/api/formProducts', async(req, res) =>
 //     ]});
 
 //newCategory.save();
-//  newProduct.save();
+//newProduct.save();
 // newProduct2.save();
 // newProduct3.save();
 
