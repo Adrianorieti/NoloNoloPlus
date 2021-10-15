@@ -164,9 +164,7 @@ app.post('/api/products', async(req, res) =>
     prodList.push(doc);
     console.log(prodList);
   }
-
   res.status(200).json({prodList: prodList});
-  
 })  
 
 

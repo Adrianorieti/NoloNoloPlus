@@ -6,6 +6,7 @@ import scooter from '../images/scooter.jpg';
 import { useHistory } from "react-router";
 
 function Products(){
+
     //ci serve per capire se siamo in un caso o nell'altro
     const obj = sessionStorage.getItem('form_obj'); 
 
@@ -16,26 +17,6 @@ function Products(){
     const [loggato, setloggato] = useState(false);
     
     let history = useHistory();
-
-  // per controllare che l'utente sia loggato o meno
-  // function checkLog(token)
-  // {
-  //      console.log("dentro prova");
-  //      fetch('http://localhost:8001/api/authLog',{
-  //         headers: {
-  //           "Authorization": `Bearer ${token}`
-  //         }
-  //      }).then(response =>{
-  //        if(response.status == 200)
-  //        {
-  //          console.log("sei loggato");
-  //            setloggato(true);
-  //        }else{
-  //          console.log("Errore, login non effettuato correttamente");
-  //        }
-  //      }).catch(err =>{console.log(err)});
-
-  // }
 
     //funzione che gestisce i prodotti derivati dal form_obj
     function getFormProducts(){
