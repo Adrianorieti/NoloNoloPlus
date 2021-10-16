@@ -6,6 +6,7 @@ import scooter from '../images/scooter.jpg';
 import specialBike from '../images/specialBike.jpeg';
 import cityBike from '../images/cityBike.jpg';
 import { useHistory } from "react-router";
+import RentModal from './RentModal';
 
 function Products(){
 
@@ -15,10 +16,11 @@ function Products(){
     const [toInsert, setToInsert] = useState([]);
     const [formDataProduct, setformDataProduct] = useState('');
     const [price, setPrice] = useState(0);
-    const [available, setAvailable] = useState(true);
+    const [available, setAvailable] = useState(false);
     const [loggato, setloggato] = useState(false);
-    
     let history = useHistory();
+
+
 
     //funzione che gestisce i prodotti derivati dal form_obj
     function getFormProducts(){
@@ -77,32 +79,46 @@ function Products(){
         });
     }
 
+    
    useEffect(() =>
   {
+    sessionStorage.removeItem('toRent');
     const form_obj = sessionStorage.getItem('form_obj'); 
     const token = JSON.parse(sessionStorage.getItem("token"));
-    if(token)
+    if(token) // sono loggato
       setloggato(true);
-    if(form_obj)
+    if(form_obj) //arrivo dalla home ma se sono loggato non voglio vedere altro semplcimente andare ad inserire i dati per la prenotazione
     {
       //se form_obj c'è allora stò arrivando dalla home dopo aver messo dei filtri
       console.log("Form obj c'è")
       getFormProducts();
     }
-    else
+    else // non arrivo dalla home
     {
       //se form_obj è null allora stiamo accedendo alla product page dal navbar e quindi
       //la cosa è semplice, vogliamo tutti i prodotti senza filtri di genere
-      console.log("Form obj non c'è");
       getAllProducts();
        
     }
 
     
   },[]);
-
-    // questo return è un if, SE C'È OBJ vuoldire che arrivo dalla home dopo aver compilato il form
-  return (obj ? (<div className="product">
+  //ATTENZIONE DEVO SPOSTARE LA FUNZIONE DIRETTAMENTE DOPO IL PUNTO INTERROGATIVO PER VEDERE SE SONO LOGGATO O MENO , PERCHÈ
+  //COSÌ POSSO REINDIRIZZARE IL CLIENTE LOGGATO
+  return (obj ? ( <div className="product"> {(() =>
+  {//se arrivo dalla home e sono loggato
+    if(loggato){
+      console.log("available è", available); // e il prodotto è disponibile per la data che ho scelto
+        if(available)//continuo con il noleggio
+          {
+            sessionStorage.removeItem('form_obj');
+            history.push("/rental");
+          }else {
+            sessionStorage.removeItem('form_obj');
+            return(<a className="btn btn-danger">Sorry the requested date is not available</a>);
+          }
+      }else{ // se arrivo dalla home ma non sono loggato
+        return(<div> 
      <div className="card m-3" style={{width: "18rem"}}>
 {/* questa funzione inline gestisce i diversi prodotti e gli dà l'immagine prestabilita */}
 {(() => {
@@ -110,11 +126,21 @@ function Products(){
         return (
           <img src={electricBike} className="card-img-top" alt="Foto del prodotto" /> 
           )
-      } else if (formDataProduct.name === "Mountain Bike X_300") {
+      } else if (formDataProduct.name === "Mountain Bike") {
         return (
           <img src={mountainBike} className="card-img-top" alt="Foto del prodotto" /> 
         )
-      } else {
+      } else if(formDataProduct.name == "City Bike"){
+        return (
+          <img src={cityBike} className="card-img-top" alt="Foto del prodotto" /> 
+        )
+      }
+      else if(formDataProduct.name == "Special Bike"){
+        return (
+          <img src={specialBike} className="card-img-top" alt="Foto del prodotto" /> 
+        )
+      }
+      else if(formDataProduct.name == "Scooter"){
         return (
           <img src={scooter} className="card-img-top" alt="Foto del prodotto" /> 
         )
@@ -124,30 +150,18 @@ function Products(){
 <div className="card-body">
   <h5 className="card-title">{formDataProduct.name}</h5>
   <p className="card-text">{formDataProduct.description}</p>
-  {/* Se l'utente non è loggato non deve vedere rent ma ipotesi */}
-  {(() =>{
-        if(loggato)
-        {//se il prodotto è disponibile ok altrimenti errore per l'utente loggato e basta
-          console.log("dentro l'if sono loggato");
-          if(available){
-            return(<a href="#" className="btn btn-primary">Rent this product</a>)
-          }
-          else{         
-            return(<a className="btn btn-danger">Sorry the requested date is not available</a>)
-          }       
-        }
-        else{return(<a href="#" className="btn btn-primary" id="rental">Make a rental hypothesis !</a>
-        )}
-      })()}
-  {/* <a href="#" className="btn btn-primary">Rent this product</a>
-  <a href="#" className="btn btn-primary" id="rental">Make a rental hypothesis !</a> */}
+  <p className="card-text">The price for the requested period is : {price}$</p>
+</div>
+</div>
+<a href="#" className="btn btn-primary m-3" onClick={(()=>{sessionStorage.removeItem('form_obj'); window.location.reload()})}>Disable Filters</a>
+  </div>)
 
-</div>
-</div>
-<a href="#" className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); window.location.reload()})}>Disable Filters</a>
-  </div> ) : (<div className='product'>{toInsert.map((product) =>
+      }
+  })()}
+   </div>) : (<div className='product'>{toInsert.map((product) =>
     
     <div className="card m-3" style={{width: "18rem"}}>
+
 {/* questa funzione inline gestisce i diversi prodotti e gli dà l'immagine prestabilita */}
   {(() => {
         if (product.name === "Electric S_300") {
@@ -178,31 +192,25 @@ function Products(){
   <div className="card-body">
     <h5 className="card-title">{product.name}</h5>
     <div className="card-text"><p>{product.description}</p>
-    {/* TO-DO insert here a dropdown menu for sizes */}
-    <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-    Size
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-    <li><a class="dropdown-item" href="#">adult</a></li>
-    <li><a class="dropdown-item" href="#">child</a></li>
-  </ul>
-</div>
+    <div className="card-text"><p>Price per day: {product.price}$</p>
+      </div>
     </div>
-      {/* Se l'utente non è loggato non deve vedere rent ma ipotesi */}
-      {(() =>{
-        if(loggato){return(<a href="#" className="btn btn-primary">Rent this product</a>)}
-        else{return(    <a href="#" className="btn btn-primary" id="rental">Make a rental hypothesis !</a>
-        )}
-      })()}
-   
 
+{(() =>
+{
+  if(loggato)
+   { return( 
+    <button className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj');  history.push('/')})}>Rent this product. </button>)
+  }else{return(<button className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); history.push('/')})}>Make a rental hypothesis ! </button>
+  )}
+})()}
+         
   </div>
 </div>
   
     )}
     {/* Questo pulsante lo usiamo per eliminare form_obj dal session storage perchè altrimenti rimarrebbe sempre */}
-    <a href="#" className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); history.push('/products')})}>Disable Filters</a>
+    <a  className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); history.push('/products')})}>Disable Filters</a>
 
     </div>));
 }

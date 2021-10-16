@@ -162,10 +162,10 @@ app.post('/api/products', async(req, res) =>
     //questo ci aiuta ad iterare su tutti gli elementi della collezione
  for await (const doc of category.find()) {
     prodList.push(doc);
-    console.log(prodList);
   }
   res.status(200).json({prodList: prodList});
 })  
+
 
 
 app.post('/api/formProducts', async(req, res) =>
@@ -174,7 +174,6 @@ app.post('/api/formProducts', async(req, res) =>
    const token = authHeader && authHeader.split(' ')[1];
     console.log("Il token è", token);
    const name = req.body.name;
-   console.log("il nome  ",req.body.name);
    const startDate = new Date(req.body.startingDate);
    const endDate = new Date(req.body.endingDate);
 
@@ -200,27 +199,19 @@ app.post('/api/formProducts', async(req, res) =>
    
 
    }else{ // l'utente è loggato e quindi bisogna verificare il token per poi procedere 
-    console.log("siamo nella zona logged");
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
-        console.log("siamo nella zona verify token");
 
         if(err) 
             console.log(err);
 
-        console.log("siamo nella zona dopo l'errore");
-
         //se usavo category per la variabile mi dava errore
         const collection =  await category.findOne({name: name});
-        console.log("prendo collection");
         //il nome della categoria è il tipo dei prodotti
         //qui in verità basta mettere = name senza collection.name ma è per fare scena
         let typeToFind = collection.name;
-        console.log("name", name);
-        console.log("typeToFind ",typeToFind);
         if(collection)
         {
-            console.log("dentro l'if di collection");
             //TO-DO capire il checkout ed il prezzo
             let price = collection.price;
             let period = endDate.getTime() - startDate.getTime();
@@ -229,45 +220,34 @@ app.post('/api/formProducts', async(req, res) =>
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
             //l'utente loggato può sapere la disponibilità
             let available = true;
-            console.log("Price è", price);
             //ATTENZIONE notare che nei prodotti cerchiamo per tipo, e se si guarda il database
             //si può notare che il nome della categoria (Electric S_300 )è poi il tipo dei prodotti
             //che però possono avere dei nomi diversi perchè magari di marche diverse
         await product.find({type: typeToFind},  function(err, db){
-            console.log("cercando prodList");
         if(err) return(res.status(500).send(err));
-        console.log("superato l'errore di prodList")
         for(i in db)
         {
-            console.log(" for esterno ", i);
             for(j in db[i].reservations)
             {
-                console.log("for interno", j);
                 let x = db[i].reservations[j];
-                console.log("the reservation is",x);
                 // nei primi due if controlliamo che inizio o fine della prenotazione richiesta
                 //sia nel mezzo di un'altra, nell'ultimo se ne contiene un'altra già esistente
                 if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
                 {
                     available = false;
-                    console.log("l'inizio ècompreso in una prenotazione");
 
                 }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
                 {
                     available = false;
-                    console.log("la fine è compresa dentro una prenotazione");
 
                 }else if( startDate.getTime() >= x.start.getTime()  &&  endDate.getTime() <=  x.end.getTime())
                 {
                     available = false;
-                    console.log("la prenotazione è compresa completamente ");
                 }
             }   
         }
-        console.log("FUORI DAL FOR MA DENTRO VERIFY ANCORA");
     })
-    console.log("available è", available);
-
+    console.log("available" , available);
    res.status(200).json({prod: collection, finalPrice: price, availability: available});
     }
 })

@@ -152,6 +152,7 @@ function handleLogin(event) {
         sessionStorage.setItem("token", JSON.stringify(token));
                 
         sessionStorage.setItem('username', JSON.stringify(username));
+        sessionStorage.removeItem('form_obj');
 
         nameToParent(username);
         

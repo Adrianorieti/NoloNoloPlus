@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 
 
 
-function Navbar (props, { queryToParent }){
+function Navbar (props){
 
   console.log("render");
 
@@ -80,11 +80,6 @@ function Navbar (props, { queryToParent }){
 
     }
 
-    function queryParent()
-    {
-      queryToParent(null);
-    }
-
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
@@ -98,7 +93,7 @@ function Navbar (props, { queryToParent }){
               <Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={'/products'} onClick={queryToParent}>Products</Link>
+              <Link className="nav-link" to={'/products'} >Products</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" id="navLoginReg" to={loggato ? '/dashboard' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>

@@ -1,6 +1,7 @@
 import React from "react";
 import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
+import {useEffect} from 'react';
 
 function RentForm({queryToParent}) {
 
@@ -8,6 +9,7 @@ function RentForm({queryToParent}) {
 
   function submit() {
     // prendiamo i dati che ci servono
+
     let form_obj = ``;
     //TO-DO se qualcuno  dei campi non è selezionato allora c'è un errore da mostrare
     //perchè sono richiesti 
@@ -31,6 +33,11 @@ function RentForm({queryToParent}) {
    alert("Please select a field");
     }
   }
+
+useEffect(() =>
+{
+  sessionStorage.removeItem('form_obj');
+})
 
   return (
     <main>
