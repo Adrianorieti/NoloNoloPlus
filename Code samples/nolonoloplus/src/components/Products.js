@@ -3,6 +3,8 @@ import {useEffect, useState} from 'react';
 import electricBike from '../images/electricBike.jpg';
 import mountainBike from '../images/mountainBike.jpg';
 import scooter from '../images/scooter.jpg';
+import specialBike from '../images/specialBike.jpeg';
+import cityBike from '../images/cityBike.jpg';
 import { useHistory } from "react-router";
 
 function Products(){
@@ -152,11 +154,21 @@ function Products(){
           return (
             <img src={electricBike} className="card-img-top" alt="Foto del prodotto" /> 
             )
-        } else if (product.name === "Mountain Bike X_300") {
+        } else if (product.name === "Mountain Bike") {
           return (
             <img src={mountainBike} className="card-img-top" alt="Foto del prodotto" /> 
           )
-        } else {
+        } else if(product.name == "City Bike"){
+          return (
+            <img src={cityBike} className="card-img-top" alt="Foto del prodotto" /> 
+          )
+        }
+        else if(product.name == "Special Bike"){
+          return (
+            <img src={specialBike} className="card-img-top" alt="Foto del prodotto" /> 
+          )
+        }
+        else if(product.name == "Scooter"){
           return (
             <img src={scooter} className="card-img-top" alt="Foto del prodotto" /> 
           )
@@ -165,7 +177,18 @@ function Products(){
       
   <div className="card-body">
     <h5 className="card-title">{product.name}</h5>
-    <p className="card-text">{product.description}</p>
+    <div className="card-text"><p>{product.description}</p>
+    {/* TO-DO insert here a dropdown menu for sizes */}
+    <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Size
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><a class="dropdown-item" href="#">adult</a></li>
+    <li><a class="dropdown-item" href="#">child</a></li>
+  </ul>
+</div>
+    </div>
       {/* Se l'utente non è loggato non deve vedere rent ma ipotesi */}
       {(() =>{
         if(loggato){return(<a href="#" className="btn btn-primary">Rent this product</a>)}
