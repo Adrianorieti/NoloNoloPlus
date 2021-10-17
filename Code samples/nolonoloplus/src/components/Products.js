@@ -11,8 +11,8 @@ import RentModal from './RentModal';
 function Products(){
 
     //ci serve per capire se siamo in un caso o nell'altro
-    const obj = sessionStorage.getItem('form_obj'); 
-
+    // let obj = sessionStorage.getItem('form_obj'); 
+    const [obj, setObj] = useState(JSON.parse(sessionStorage.getItem('form_obj')));
     const [toInsert, setToInsert] = useState([]);
     const [formDataProduct, setformDataProduct] = useState('');
     const [price, setPrice] = useState(0);
@@ -82,7 +82,6 @@ function Products(){
     
    useEffect(() =>
   {
-    sessionStorage.removeItem('toRent');
     const form_obj = sessionStorage.getItem('form_obj'); 
     const token = JSON.parse(sessionStorage.getItem("token"));
     if(token) // sono loggato
@@ -100,8 +99,6 @@ function Products(){
       getAllProducts();
        
     }
-
-    
   },[]);
   //ATTENZIONE DEVO SPOSTARE LA FUNZIONE DIRETTAMENTE DOPO IL PUNTO INTERROGATIVO PER VEDERE SE SONO LOGGATO O MENO , PERCHÈ
   //COSÌ POSSO REINDIRIZZARE IL CLIENTE LOGGATO

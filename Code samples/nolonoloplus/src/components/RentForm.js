@@ -25,6 +25,7 @@ function RentForm({queryToParent}) {
     "endingDate": "${endingDate}"
    }`;
    sessionStorage.setItem('form_obj', form_obj);
+   alert(form_obj);
    //passiamo il testimone a Products
    history.push('/products');
     }
@@ -34,10 +35,10 @@ function RentForm({queryToParent}) {
     }
   }
 
-useEffect(() =>
-{
-  sessionStorage.removeItem('form_obj');
-})
+// useEffect(() =>
+// {
+//   sessionStorage.removeItem('form_obj');
+// })
 
   return (
     <main>

@@ -16,7 +16,6 @@ function Navbar (props){
 
   function checkLog(token)
   {
-       console.log("dentro prova");
        fetch('http://localhost:8001/api/authLog',{
           headers: {
             "Authorization": `Bearer ${token}`
@@ -24,7 +23,6 @@ function Navbar (props){
        }).then(response =>{
          if(response.status == 200)
          {
-           console.log("sei loggato");
              setloggato(true);
          }else{
            console.log("Errore, login non effettuato correttamente");
@@ -35,7 +33,6 @@ function Navbar (props){
 
   useEffect(() =>
   {
-    console.log("Use Effect");
     const token = JSON.parse(sessionStorage.getItem("token"));
     if(token)
     {

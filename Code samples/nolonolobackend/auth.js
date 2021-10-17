@@ -16,7 +16,6 @@ verifyToken: function(req, res, next)
 
    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
    {
-       console.log("sono in auth");
        if(err) 
        {
            console.log(err.name);
