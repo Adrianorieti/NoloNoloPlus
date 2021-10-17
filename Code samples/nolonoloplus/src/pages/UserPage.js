@@ -102,7 +102,7 @@ export default function UserPage() {
                     <form>
                         <div className="form">
                             <label for="name-change-input">New Name</label>
-                            <input id="name-change-input" onChange={handleChange} required="required" type="text"></input>
+                            <input id="name-change-input" onChange={handleChange} required="required" type="text" name="name"></input>
                         </div>
                         <button type="submit" className="btn btn-warning btn-md gl-button">
                             Update Name
@@ -119,7 +119,7 @@ export default function UserPage() {
                     <form>
                         <div className="form">
                             <label for="surname-change-input">New Surname</label>
-                            <input id="surname-change-input" onChange={handleChange} required="required" type="text"></input>
+                            <input id="surname-change-input" onChange={handleChange} required="required" type="text" name="surname"></input>
                         </div>
                         <button type="submit" className="btn btn-warning btn-md gl-button">
                             Update Surname
@@ -127,7 +127,7 @@ export default function UserPage() {
                     </form>
                 </div>
             </div>
-            <div className="row gl-mt-3">{/* inizio email, DEVO SETTARE MEGLIO IL PATTERN*/}
+            <div className="row gl-mt-3">{/* inizio email*/}
                 <div className="col-lg-4 profile-settings-sidebar">
                     <h4 className="gl-mt-0 warning-title">Change email</h4>
                     <p>qui potrei scrivere qualcosa di carino</p>
@@ -136,7 +136,8 @@ export default function UserPage() {
                     <form>
                         <div className="form">
                             <label for="email-change-input">New email</label>
-                            <input id="email-change-input" onChange={handleChange} required="required" type="text"></input>
+                            <input id="email-change-input" onChange={handleChange} required="required" type="email" name="email"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="not valid email format"></input>
                         </div>
                         <button type="submit" className="btn btn-warning btn-md gl-button">
                             Update email
@@ -186,7 +187,7 @@ export default function UserPage() {
                     <form>
                         <div className="form">
                             <label for="phone-change-input">New Phone Number</label>
-                            <input id="phone-change-input" onChange={handleChange} required="required" type="tel" pattern="[0-9]{10}" ></input>
+                            <input id="phone-change-input" onChange={handleChange} required="required" type="tel" pattern="[0-9]{10}" name="phone"></input>
                         </div>
                         <button type="submit" className="btn btn-warning btn-md gl-button">
                             Update Phone Number

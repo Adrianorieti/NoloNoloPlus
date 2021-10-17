@@ -5,52 +5,47 @@ import { useHistory } from "react-router";
 
 
 
-function Navbar (props, { queryToParent }){
+function Navbar(props, { queryToParent }) {
 
   console.log("render");
 
   let history = useHistory();
 
   const [loggato, setloggato] = useState(false);
-  
 
-  function checkLog(token)
-  {
-       console.log("dentro prova");
-       fetch('http://localhost:8001/api/authLog',{
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-       }).then(response =>{
-         if(response.status == 200)
-         {
-           console.log("sei loggato");
-             setloggato(true);
-         }else{
-           console.log("Errore, login non effettuato correttamente");
-         }
-       }).catch(err =>{console.log(err)});
+
+  function checkLog(token) {
+    console.log("dentro prova");
+    fetch('http://localhost:8001/api/authLog', {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then(response => {
+      if (response.status == 200) {
+        console.log("sei loggato");
+        setloggato(true);
+      } else {
+        console.log("Errore, login non effettuato correttamente");
+      }
+    }).catch(err => { console.log(err) });
 
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     console.log("Use Effect");
     const token = JSON.parse(sessionStorage.getItem("token"));
-    if(token)
-    {
+    if (token) {
       checkLog(token);
     }
-   
-    if(loggato)
-    {
-      const logout =  document.getElementById("logout");
+
+    if (loggato) {
+      const logout = document.getElementById("logout");
       logout.style.display = "block";
-    
-    }else{
-      const logout =  document.getElementById("logout");
+
+    } else {
+      const logout = document.getElementById("logout");
       logout.style.display = "none";
-     }
+    }
   });
 
 
@@ -69,21 +64,19 @@ function Navbar (props, { queryToParent }){
     burger.setAttribute("aria-expanded", newburgerattr);
   }
 
-  
-    function logout()
-    {
-      const logout =  document.getElementById("logout");
-      logout.style.display = "none";
-      setloggato(false);
-      sessionStorage.clear();
-      history.push('/');     
 
-    }
+  function logout() {
+    const logout = document.getElementById("logout");
+    logout.style.display = "none";
+    setloggato(false);
+    sessionStorage.clear();
+    history.push('/');
 
-    function queryParent()
-    {
-      queryToParent(null);
-    }
+  }
+
+  function queryParent() {
+    queryToParent(null);
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
@@ -101,22 +94,22 @@ function Navbar (props, { queryToParent }){
               <Link className="nav-link" to={'/products'} onClick={queryToParent}>Products</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" id="navLoginReg" to={loggato ? '/dashboard' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
+              <Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="#footer" >Contacts</Link>
             </li>
 
             <li className="nav-item" id="logout"  >
-              <Link className="nav-link"  onClick={logout}>Logout</Link>
-            </li> 
-          
+              <Link className="nav-link" onClick={logout}>Logout</Link>
+            </li>
+
           </ul>
         </div>
       </div>
     </nav>
   );
-          }
+}
 
 
 

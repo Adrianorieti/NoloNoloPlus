@@ -9,77 +9,85 @@ import Footer from './components/Footer';
 import { useState } from 'react';
 import Test from './components/Test';
 import Products from './components/Products';
+import UserPage from './pages/UserPage';
 
 
 
-function App (){
-  
-//Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
-const [data, setData] = useState( JSON.parse(sessionStorage.getItem('username')) || '');
-const [query, setQuery] = useState(null);
+function App() {
 
-const nameToParent = (childdata) => {
-  setData(childdata);
-}
+  //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
+  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('username')) || '');
+  const [query, setQuery] = useState(null);
 
-const queryToParent = (rentFormData) => {
-  setQuery(rentFormData);
-}
-  
+  const nameToParent = (childdata) => {
+    setData(childdata);
+  }
 
-    return(
-              
-<div>
-        <Switch>
+  const queryToParent = (rentFormData) => {
+    setQuery(rentFormData);
+  }
 
-          <Route path="/" exact>
-          <Navbar name={data} queryToParent={queryToParent}/>
 
-            <div className="bg-image" >
+  return (
 
-            
-              <RentForm queryToParent={queryToParent} />
+    <div>
+      <Switch>
 
-            </div>
+        <Route path="/" exact>
+          <Navbar name={data} queryToParent={queryToParent} />
 
-            {/* <div>
+          <div className="bg-image" >
+
+
+            <RentForm queryToParent={queryToParent} />
+
+          </div>
+
+          {/* <div>
               <CarouselContainer />
             </div> */}
 
-          </Route>
+        </Route>
 
-          <Route path="/login" exact>  
-          <Navbar name={data} queryToParent={queryToParent}/>
+        <Route path="/login" exact>
+          <Navbar name={data} queryToParent={queryToParent} />
 
           <LoginPage nameToParent={nameToParent} />
 
-          </Route>
+        </Route>
 
-          <Route path="/dashboard" exact>
-            
-            <Test />
+        <Route path="/personalpage" exact>
 
-          </Route>
+          <Navbar name={data} queryToParent={queryToParent} />
+          <UserPage />
 
-          <Route path='/products' exact>
-            
-          <Navbar name={data} queryToParent={queryToParent}/>
+        </Route>
 
-            <Products  query={query}/>
+        <Route path="/dashboard" exact>
 
-          </Route>
-           
+          <Test />
 
-        </Switch>
-       
-       {/* <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
+        </Route>
+
+        <Route path='/products' exact>
+
+          <Navbar name={data} queryToParent={queryToParent} />
+
+          <Products query={query} />
+
+        </Route>
+
+
+      </Switch>
+
+      {/* <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
          copyright="nolonoloplus" />
        */}
-      </div>
-    );
+    </div>
+  );
 
-  }
+}
 
 
 export default App;

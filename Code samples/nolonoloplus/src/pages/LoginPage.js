@@ -41,14 +41,14 @@ function LoginPage({ nameToParent }) {
     }
   };
 
- /* Creates the json object to send */
+  /* Creates the json object to send */
   function createObj(operation) {
 
     // Password encoding to ensure escapes characters to be send without problems
     const buff = Buffer.from(password, 'utf-8');
     const encodedpass = buff.toString('base64');
 
-  
+
     if (operation === 'register') {
       return (`{
       "name": "${firstName}" ,
@@ -73,27 +73,26 @@ function LoginPage({ nameToParent }) {
 
     const options = {
       method: 'POST',
-      headers: new Headers({'Content-type': 'application/json'}),
+      headers: new Headers({ 'Content-type': 'application/json' }),
       body: obj
     };
     let url = 'http://localhost:8001/api/register';
 
     fetch(url, options)
-    .then(response => {
-       if(response.status == 200)
-       {
-        console.log("Registrazione avvenuta con successo.");
-        history.push('/login');
-       }
-       else if(response.status == 500){
-        console.log("La mail esiste già");
-        document.getElementById('registermail-error').innerHTML = "Mail already in use";
-       }
-    })
-    .catch(error => {
-      console.log(this.response);
-      console.log("Error ....");
-    });
+      .then(response => {
+        if (response.status == 200) {
+          console.log("Registrazione avvenuta con successo.");
+          history.push('/login');
+        }
+        else if (response.status == 500) {
+          console.log("La mail esiste già");
+          document.getElementById('registermail-error').innerHTML = "Mail already in use";
+        }
+      })
+      .catch(error => {
+        console.log(this.response);
+        console.log("Error ....");
+      });
 
   };
 
@@ -119,7 +118,7 @@ function LoginPage({ nameToParent }) {
   };
 
   /* Login Handler */
-function handleLogin(event) {
+  function handleLogin(event) {
 
     event.preventDefault();
 
@@ -127,39 +126,38 @@ function handleLogin(event) {
 
     const options = {
       method: 'POST',
-      headers: new Headers({'Content-type': 'application/json'}),
+      headers: new Headers({ 'Content-type': 'application/json' }),
       body: obj
     };
-    
+
     let url = 'http://localhost:8001/api/login';
 
     fetch(url, options)
-      .then(response =>{
-        if(response.status == 200)
+      .then(response => {
+        if (response.status == 200)
           return response.json();
         else
-          document.getElementById('loginmail-error').innerHTML= "Mail or password incorrect.";
-         }).then((data) =>
-        {
-        
+          document.getElementById('loginmail-error').innerHTML = "Mail or password incorrect.";
+      }).then((data) => {
+
         // Pass back to app.js the navbar 
         console.log(data.name);
 
         const username = data.name;
-        
+
         const token = data.accessToken;
 
         sessionStorage.setItem("token", JSON.stringify(token));
-                
+
         sessionStorage.setItem('username', JSON.stringify(username));
 
         nameToParent(username);
-        
+
         history.push('/');
 
       }).catch(error => {
-      console.log(error);
-    });
+        console.log(error);
+      });
   };
 
 
@@ -223,9 +221,9 @@ function handleLogin(event) {
               <div className="mb-3">
                 <label for="email" className="form-label">Email</label>
                 <input onChange={handleChange} id="email" type="email" className="form-control" name="email"
-                  placeholder="username@studio.unibo.it" required="required" pattern="^[\w]{1,}[\w.+-]{0,}@[\w-]{2,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$"
+                  placeholder="username@studio.unibo.it" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   title="not valid email format" />
-                  <label id='registermail-error' for="email" style={{ fontSize: 12, color: 'red' }}></label>
+                <label id='registermail-error' for="email" style={{ fontSize: 12, color: 'red' }}></label>
 
               </div>
 
