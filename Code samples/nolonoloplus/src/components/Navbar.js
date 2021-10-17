@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 
 
 
-function Navbar (props, { queryToParent }){
+function Navbar (props){
 
   console.log("render");
 
@@ -16,7 +16,6 @@ function Navbar (props, { queryToParent }){
 
   function checkLog(token)
   {
-       console.log("dentro prova");
        fetch('http://localhost:8001/api/authLog',{
           headers: {
             "Authorization": `Bearer ${token}`
@@ -24,7 +23,6 @@ function Navbar (props, { queryToParent }){
        }).then(response =>{
          if(response.status == 200)
          {
-           console.log("sei loggato");
              setloggato(true);
          }else{
            console.log("Errore, login non effettuato correttamente");
@@ -35,7 +33,6 @@ function Navbar (props, { queryToParent }){
 
   useEffect(() =>
   {
-    console.log("Use Effect");
     const token = JSON.parse(sessionStorage.getItem("token"));
     if(token)
     {
@@ -80,11 +77,6 @@ function Navbar (props, { queryToParent }){
 
     }
 
-    function queryParent()
-    {
-      queryToParent(null);
-    }
-
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
@@ -98,7 +90,7 @@ function Navbar (props, { queryToParent }){
               <Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={'/products'} onClick={queryToParent}>Products</Link>
+              <Link className="nav-link" to={'/products'} >Products</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" id="navLoginReg" to={loggato ? '/dashboard' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>

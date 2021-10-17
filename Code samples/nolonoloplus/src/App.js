@@ -64,8 +64,8 @@ const queryToParent = (rentFormData) => {
           <Route path='/products' exact>
             
           <Navbar name={data} queryToParent={queryToParent}/>
-
-            <Products  query={query}/>
+            
+            <Products />
 
           </Route>
            
