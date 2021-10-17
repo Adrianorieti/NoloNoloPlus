@@ -258,6 +258,8 @@ app.post('/api/formProducts', async(req, res) =>
        res.status(200).json({prod: collection, finalPrice: price, availability: available});
     })
     }
+})
+}
 });
 
 
@@ -316,8 +318,8 @@ app.post('/api/formProducts', async(req, res) =>
 // newProduct3.save();
 
 app.listen(8001, function () {
-    console.log('Server is running on port 8001')
-})
+    console.log('Server is running on port 8001');
+});
 
 
-//webpack-dev-server --inline --content-base . --history-api-fallback
+ 
