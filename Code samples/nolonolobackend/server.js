@@ -167,6 +167,9 @@ app.post('/api/products', async(req, res) =>
 })  
 
 
+app.post('/api/updateRent', async(req, res) =>{
+
+})
 
 app.post('/api/formProducts', async(req, res) =>
 {
@@ -219,15 +222,19 @@ app.post('/api/formProducts', async(req, res) =>
             price = price * period;
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
             //l'utente loggato può sapere la disponibilità
-            let available = true;
+            let available = false;
+            let totalAvailable = false;
+            let currentProd;
             //ATTENZIONE notare che nei prodotti cerchiamo per tipo, e se si guarda il database
             //si può notare che il nome della categoria (Electric S_300 )è poi il tipo dei prodotti
             //che però possono avere dei nomi diversi perchè magari di marche diverse
          product.find({type: typeToFind},  async function(err, db){
             // await new Promise(r => setTimeout(r, 2000));
         if(err) return(res.status(500).send(err));
-        for(i in db)
+        for(i in db) 
         {
+            available=true;
+
             for(j in db[i].reservations)
             {
                 let x = db[i].reservations[j];
@@ -239,7 +246,7 @@ app.post('/api/formProducts', async(req, res) =>
                 {
                     console.log("l'inizio è compreso");
                     available = false;
-                    break;
+                    break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
 
                 }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
                 {
@@ -254,10 +261,20 @@ app.post('/api/formProducts', async(req, res) =>
                     available = false;
                     break;
                 }
+
             }   
+
+           if(available)
+            {
+                currentProd = i.name;
+                console.log(i);
+                res.status(200).json({prod: collection, finalPrice: price, availability: available});
+                break;
+            }
+
         }
-        console.log("available" , available);
-       res.status(200).json({prod: collection, finalPrice: price, availability: available});
+        // console.log("available" , available);
+    //    res.status(200).json({prod: collection, finalPrice: price, availability: available});
     })
     }
 })

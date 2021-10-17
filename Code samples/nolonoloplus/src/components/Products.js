@@ -6,8 +6,7 @@ import scooter from '../images/scooter.jpg';
 import specialBike from '../images/specialBike.jpeg';
 import cityBike from '../images/cityBike.jpg';
 import { useHistory } from "react-router";
-import RentModal from './RentModal';
-
+import Rental from './Rental';
 function Products(){
 
     //ci serve per capire se siamo in un caso o nell'altro
@@ -108,8 +107,13 @@ function Products(){
       console.log("available è", available); // e il prodotto è disponibile per la data che ho scelto
         if(available)//continuo con il noleggio
           {
-            sessionStorage.removeItem('form_obj');
-            history.push("/rental");
+            // sessionStorage.removeItem('form_obj');
+            
+            return(
+              
+              <Rental prodName={formDataProduct.name} startDate={obj.startingDate} endDate={obj.endingDate} price={price} description={formDataProduct.description}/>
+
+            );
           }else {
             sessionStorage.removeItem('form_obj');
             return(<a className="btn btn-danger">Sorry the requested date is not available</a>);

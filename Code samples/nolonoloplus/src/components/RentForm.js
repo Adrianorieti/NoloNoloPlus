@@ -1,7 +1,6 @@
 import React from "react";
 import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
-import {useEffect} from 'react';
 
 function RentForm({queryToParent}) {
 
