@@ -15,17 +15,21 @@ function RentForm({queryToParent}) {
     let bikeType ;
     if (radioInput) {
       bikeType = radioInput.value;
+      let startingDate = document.querySelector("#fromDate").innerHTML;
+   let endingDate = document.querySelector("#toDate").innerHTML;
+   form_obj += `{
+    "name": "${bikeType}",
+    "startingDate": "${startingDate}",
+    "endingDate": "${endingDate}"
+   }`;
+   sessionStorage.setItem('form_obj', form_obj);
+   //passiamo il testimone a Products
+   history.push('/products');
     }
-    let startingDate = document.querySelector("#fromDate").innerHTML;
-    let endingDate = document.querySelector("#toDate").innerHTML;
-    form_obj += `{
-      "name": "${bikeType}",
-      "startingDate": "${startingDate}",
-      "endingDate": "${endingDate}"
-     }`;
-     sessionStorage.setItem('form_obj', form_obj);
-     //passiamo il testimone a Products
-     history.push('/products');
+    else
+    {    
+   alert("Please select a field");
+    }
   }
 
   return (
@@ -34,17 +38,25 @@ function RentForm({queryToParent}) {
         <fieldset id="Bikes_Types" aria-required="true">
           <legend>Bikes types</legend>
           <section className="mb-3 form-check">
+          <div>
+              <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
+              <label htmlFor="City-Bike" className="form-label">City Bike</label>
+            </div>
             <div>
               <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" ></input>
               <label htmlFor="Mountain-Bike" className="form-label">Mountain Bike</label>
             </div>
             <div>
-              <input id="City-Bike" name="products" className="form-select" type="radio" value="City Bike"></input>
-              <label htmlFor="City-Bike" className="form-label">City Bike</label>
+              <input id="City-Bike" name="products" className="form-select" type="radio" value="Scooter"></input>
+              <label htmlFor="Scooter" className="form-label">Scooter</label>
             </div>
             <div>
               <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric S_300" ></input>
               <label htmlFor="Electric-Bike" className="form-label">Electric Bike</label>
+            </div>
+            <div>
+              <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Special Bike" ></input>
+              <label htmlFor="Special-Bike" className="form-label">Special Bike</label>
             </div>
           </section>
         </fieldset>
