@@ -6,8 +6,7 @@ import scooter from '../images/scooter.jpg';
 import specialBike from '../images/specialBike.jpeg';
 import cityBike from '../images/cityBike.jpg';
 import { useHistory } from "react-router";
-import RentModal from './RentModal';
-
+import Rental from './Rental';
 function Products(){
 
     //ci serve per capire se siamo in un caso o nell'altro
@@ -18,6 +17,7 @@ function Products(){
     const [price, setPrice] = useState(0);
     const [available, setAvailable] = useState(false);
     const [loggato, setloggato] = useState(false);
+    const [prodName, setProdName] = useState('');
     let history = useHistory();
 
 
@@ -47,12 +47,11 @@ function Products(){
           setAvailable(data.availability);
           setformDataProduct(data.prod);
           setPrice(data.finalPrice);
+          setProdName(data.currProdName);
           //non è detto che ci sia a seconda che siamo loggati o meno 
           //per questo faccio questo controllo
-          
-                 })
-        .catch(error => {
-          console.log(error);
+                 }).catch(error => {
+          console.log("ERRORE : ", error);
         });
     }
 
@@ -84,12 +83,12 @@ function Products(){
   {
     const form_obj = sessionStorage.getItem('form_obj'); 
     const token = JSON.parse(sessionStorage.getItem("token"));
+    console.log("IL TOKEN" , token);
     if(token) // sono loggato
       setloggato(true);
     if(form_obj) //arrivo dalla home ma se sono loggato non voglio vedere altro semplcimente andare ad inserire i dati per la prenotazione
     {
       //se form_obj c'è allora stò arrivando dalla home dopo aver messo dei filtri
-      console.log("Form obj c'è")
       getFormProducts();
     }
     else // non arrivo dalla home
@@ -108,8 +107,13 @@ function Products(){
       console.log("available è", available); // e il prodotto è disponibile per la data che ho scelto
         if(available)//continuo con il noleggio
           {
-            sessionStorage.removeItem('form_obj');
-            history.push("/rental");
+            // sessionStorage.removeItem('form_obj');
+            console.log("CATEGORY NAME", formDataProduct.name );
+            console.log("PRODUCT NAME", prodName);
+            return(
+              <Rental categoryName={formDataProduct.name} productName={prodName} startDate={obj.startingDate} endDate={obj.endingDate} price={price} description={formDataProduct.description}/>
+
+            );
           }else {
             sessionStorage.removeItem('form_obj');
             return(<a className="btn btn-danger">Sorry the requested date is not available</a>);

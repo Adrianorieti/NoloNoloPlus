@@ -110,8 +110,6 @@ label
 
 }
 
-
-
 .loginpage
 {
   display: flex;
@@ -169,4 +167,20 @@ label
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.rental{
+  display: flex;
+  gap: 1.5rem;
+}
+
+.rentalContent{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.rentbuttons{
+  justify-content: space-between;
 }
