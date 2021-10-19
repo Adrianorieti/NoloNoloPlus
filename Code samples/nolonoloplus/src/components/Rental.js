@@ -15,38 +15,57 @@ function Rental(props)
 
     function sendRent(){
       
-            //checko se c'è disponibilità
+          
             let form_obj = `{
-                "name": "${props.prodName}", 
+                "name": "${props.productName}", 
                 "startingDate": "${props.startDate}",
                 "endingDate": "${props.endDate}"
                }`;
-        //faccio una fetch al server
-    }
+
+               const options = {
+                method: 'POST',
+                headers: new Headers({ 'Content-type': 'application/json', "Access-Control-Allow-Origin": "*"}),
+                body: form_obj
+              };
+
+        let url = 'http://localhost:8001/api/updateRent';
+        fetch(url, options)
+        .then(response => {
+          if (response.status == 200) {
+            return response.json();
+          }else{return(console.log(response.status))}
+        }).then((data) => {
+          console.log("è andato tutto bene ", data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    
+      }
 
     return(<div className="text-center m-3 rental">
 
         <div id="rentalPic">  
         {(() => { // image div
-      if (props.prodName === "Electric S_300") {
+      if (props.categoryName === "Electric S_300") {
         return (
           <img src={electricBike} className="card-img-top" alt="Foto del prodotto" /> 
           )
-      } else if (props.prodName === "Mountain Bike") {
+      } else if (props.categoryName === "Mountain Bike") {
         return (
           <img src={mountainBike} className="card-img-top" alt="Foto del prodotto" /> 
         )
-      } else if(props.prodName == "City Bike"){
+      } else if(props.categoryName == "City Bike"){
         return (
           <img src={cityBike} className="card-img-top" alt="Foto del prodotto" /> 
         )
       }
-      else if(props.prodName == "Special Bike"){
+      else if(props.categoryName == "Special Bike"){
         return (
           <img src={specialBike} className="card-img-top" alt="Foto del prodotto" /> 
         )
       }
-      else if(props.prodName == "Scooter"){
+      else if(props.categoryName == "Scooter"){
         return (
           <img src={scooter} className="card-img-top" alt="Foto del prodotto" /> 
         )
@@ -56,7 +75,7 @@ function Rental(props)
     <div className="text-center rentalContent"> 
     <div>
         <h3>Your rental summary:</h3>
-        <p>Product : {props.prodName}</p>
+        <p>Product : {props.categoryName}</p>
         <p>Total price : {props.price}</p>
         <p>{props.description}</p>
         <h4>Period :</h4>

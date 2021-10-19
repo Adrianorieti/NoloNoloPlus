@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const user = require('./moduleUser');
 const product = require('./moduleProduct');
 const category = require('./moduleCategory');
+const reservation = require('./moduleReservation');
 const app = express();
 
 // Json web token 
@@ -166,11 +167,31 @@ app.post('/api/products', async(req, res) =>
   res.status(200).json({prodList: prodList});
 })  
 
-
+// esegue l'update  su una reservation di un prodotto specifico
+//prende il nome di un prodotto, l'inizio della reservation e la fine
 app.post('/api/updateRent', async(req, res) =>{
 
-})
-
+    let productName = req.body.name;
+    let startDate = req.body.startingDate;
+    let endDate = req.body.endingDate;
+    console.log(productName)
+    console.log(startDate)
+    console.log(endDate)
+    let prod = await product.findOne({name: productName});
+    console.log(prod);
+    let newReserve = new reservation({
+        start: `${startDate}`,
+        end: `${endDate}`
+    })
+    console.log(newReserve);
+    //il giro dell'oca
+    let newReservations =  prod.reservations;
+    newReservations.push(newReserve);
+//vado a fare l'update dell'array di reservations
+     product.updateOne({ name: productName }, {
+        reservations: newReservations
+      });})
+      
 app.post('/api/formProducts', async(req, res) =>
 {
    const authHeader = req.headers['authorization'];
@@ -204,11 +225,12 @@ app.post('/api/formProducts', async(req, res) =>
    }else{ // l'utente è loggato e quindi bisogna verificare il token per poi procedere 
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
-        console.log("ENTRO QUIII");
+        console.log(decoded);
         if(err) 
             console.log(err);
 
         //se usavo category per la variabile mi dava errore
+        //PRENDO LA CATEGORIA DELL'OGGETTO
         const collection =  await category.findOne({name: name});
         //il nome della categoria è il tipo dei prodotti
         //qui in verità basta mettere = name senza collection.name ma è per fare scena
@@ -228,9 +250,10 @@ app.post('/api/formProducts', async(req, res) =>
             //ATTENZIONE notare che nei prodotti cerchiamo per tipo, e se si guarda il database
             //si può notare che il nome della categoria (Electric S_300 )è poi il tipo dei prodotti
             //che però possono avere dei nomi diversi perchè magari di marche diverse
-         product.find({type: typeToFind},  async function(err, db){
+          product.find({type: typeToFind},   function(err, db){
             // await new Promise(r => setTimeout(r, 2000));
         if(err) return(res.status(500).send(err));
+        console.log(db);
         for(i in db) 
         {
             available=true;
@@ -266,9 +289,9 @@ app.post('/api/formProducts', async(req, res) =>
 
            if(available)
             {
-                currentProd = i.name;
-                console.log(i);
-                res.status(200).json({prod: collection, finalPrice: price, availability: available});
+                currentProd = db[i].name;
+                console.log('currentProd', currentProd);
+                res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd});
                 break;
             }
 

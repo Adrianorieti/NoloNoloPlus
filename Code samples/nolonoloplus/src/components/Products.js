@@ -17,6 +17,7 @@ function Products(){
     const [price, setPrice] = useState(0);
     const [available, setAvailable] = useState(false);
     const [loggato, setloggato] = useState(false);
+    const [prodName, setProdName] = useState('');
     let history = useHistory();
 
 
@@ -46,12 +47,11 @@ function Products(){
           setAvailable(data.availability);
           setformDataProduct(data.prod);
           setPrice(data.finalPrice);
+          setProdName(data.currProdName);
           //non è detto che ci sia a seconda che siamo loggati o meno 
           //per questo faccio questo controllo
-          
-                 })
-        .catch(error => {
-          console.log(error);
+                 }).catch(error => {
+          console.log("ERRORE : ", error);
         });
     }
 
@@ -83,12 +83,12 @@ function Products(){
   {
     const form_obj = sessionStorage.getItem('form_obj'); 
     const token = JSON.parse(sessionStorage.getItem("token"));
+    console.log("IL TOKEN" , token);
     if(token) // sono loggato
       setloggato(true);
     if(form_obj) //arrivo dalla home ma se sono loggato non voglio vedere altro semplcimente andare ad inserire i dati per la prenotazione
     {
       //se form_obj c'è allora stò arrivando dalla home dopo aver messo dei filtri
-      console.log("Form obj c'è")
       getFormProducts();
     }
     else // non arrivo dalla home
@@ -108,10 +108,10 @@ function Products(){
         if(available)//continuo con il noleggio
           {
             // sessionStorage.removeItem('form_obj');
-            
+            console.log("CATEGORY NAME", formDataProduct.name );
+            console.log("PRODUCT NAME", prodName);
             return(
-              
-              <Rental prodName={formDataProduct.name} startDate={obj.startingDate} endDate={obj.endingDate} price={price} description={formDataProduct.description}/>
+              <Rental categoryName={formDataProduct.name} productName={prodName} startDate={obj.startingDate} endDate={obj.endingDate} price={price} description={formDataProduct.description}/>
 
             );
           }else {
