@@ -184,3 +184,10 @@ label
 .rentbuttons{
   justify-content: space-between;
 }
+
+
+#check
+{
+  background-color: rgb(177, 75, 75);
+  color: black;
+}

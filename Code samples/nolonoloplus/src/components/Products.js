@@ -152,6 +152,7 @@ function Products(){
   <h5 className="card-title">{formDataProduct.name}</h5>
   <p className="card-text">{formDataProduct.description}</p>
   <p className="card-text">The price for the requested period is : {price}$</p>
+  <p id="check">Login to check availability for this product.</p>
 </div>
 </div>
 <a href="#" className="btn btn-primary m-3" onClick={(()=>{sessionStorage.removeItem('form_obj'); window.location.reload()})}>Disable Filters</a>
