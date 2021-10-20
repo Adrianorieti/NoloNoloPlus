@@ -1,6 +1,7 @@
 import React from "react";
 import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
+import './RentForm.css';
 
 function RentForm({queryToParent}) {
 
@@ -59,13 +60,17 @@ function RentForm({queryToParent}) {
               <label htmlFor="Special-Bike" className="form-label">Special Bike</label>
             </div>
           </section>
+
         </fieldset>
+        
         <fieldset aria-required="true">
           <legend>Renting dates inputs</legend>
+
           <section className="mb-3">
             <RangeDaysPicker />
           </section>
         </fieldset>
+        
         <button id="rentFormButton" type="button" className="btn btn-success" onClick={submit}>Click to submit</button>
       </form>
     </main> 

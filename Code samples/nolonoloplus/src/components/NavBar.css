@@ -1,0 +1,83 @@
+.navbar
+{
+  background-color: #04AA6D;
+
+}
+
+.navbar-brand {
+  color: white;
+}
+
+.nav-link {
+  color: white;
+}
+
+.custom-toggler .navbar-toggler-icon 
+  {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255 ,255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+  }
+
+  .mobile-container {
+    max-width: 480px;
+    margin: auto;
+    background-color: #555;
+    height: 500px;
+    color: white;
+    border-radius: 10px;
+  }
+  
+  .topnav {
+    overflow: hidden;
+    background-color: #333;
+    position: relative;
+  }
+  
+  .topnav #myLinks {
+    display: none;
+  }
+  
+  .topnav a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+  }
+  
+  .topnav a.icon {
+    background: black;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+  
+  .active {
+    color: white;
+  }
+
+    /* unvisited link */
+   a:link {
+    color: rgb(41, 114, 45);
+  }
+  
+  /* visited link */
+  a:visited {
+    color: rgb(18, 92, 18);
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: rgb(38, 112, 75);
+  }
+  
+  /* selected link */
+  a:active {
+    color: rgb(4, 54, 25);
+  } 
+  

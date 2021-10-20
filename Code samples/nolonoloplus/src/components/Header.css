@@ -1,0 +1,31 @@
+.App-header {
+    background-color: #ffffff;
+    min-height: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: black;
+  }
+
+#logo {
+    max-width: 100%; 
+    /* margin-top: 20px; */
+    align-items: center;
+}
+
+#sponsor {
+    /* margin-top: 20px; */
+    vertical-align: bottom;
+    width: 200px; 
+}
+
+strong {
+    /* color: #307cb6; */
+    color: #84bf45;
+    font-size: 21px;
+    }
+
+p {
+    font-size: small;
+}

@@ -4,6 +4,7 @@ import electricBike from '../images/electricBike.jpg';
 import mountainBike from '../images/mountainBike.jpg';
 import scooter from '../images/scooter.jpg';
 import { useHistory } from "react-router";
+import './Products.css';
 
 function Products(){
 

@@ -9,7 +9,9 @@ import Footer from './components/Footer';
 import { useState } from 'react';
 import Test from './components/Test';
 import Products from './components/Products';
+import Header from './components/Header';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App (){
@@ -29,54 +31,52 @@ const queryToParent = (rentFormData) => {
 
     return(
               
-<div>
-        <Switch>
+   
+<div className="App">
+      <div className="container-fluid">
+        <div class="row">
+          <div>
+              <Header />
+          </div>
 
-          <Route path="/" exact>
-          <Navbar name={data} queryToParent={queryToParent}/>
+          <div>
+              <Switch>
+                <Route path="/" exact>
+                  <Navbar name={data} queryToParent={queryToParent}/>
+                  <div className="bg-image" >
+                    <RentForm queryToParent={queryToParent} />
+                  </div>
+                </Route>
 
-            <div className="bg-image" >
+                <Route path="/login" exact>  
+                  <Navbar name={data} queryToParent={queryToParent}/>
+                    <LoginPage nameToParent={nameToParent} />
+                </Route>
 
-            
-              <RentForm queryToParent={queryToParent} />
+                <Route path="/dashboard" exact>
+                  <Test />
+                </Route>
 
-            </div>
-
-            {/* <div>
-              <CarouselContainer />
-            </div> */}
-
-          </Route>
-
-          <Route path="/login" exact>  
-          <Navbar name={data} queryToParent={queryToParent}/>
-
-          <LoginPage nameToParent={nameToParent} />
-
-          </Route>
-
-          <Route path="/dashboard" exact>
-            
-            <Test />
-
-          </Route>
-
-          <Route path='/products' exact>
-            
-          <Navbar name={data} queryToParent={queryToParent}/>
-
-            <Products  query={query}/>
-
-          </Route>
+                <Route path='/products' exact>
+                  <Navbar name={data} queryToParent={queryToParent}/>
+                    <Products  query={query}/>
+                  </Route>
+              </Switch>
+          </div>
            
-
-        </Switch>
-       
-       {/* <Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
+           <div>
+           {/*<div> <CarouselContainer /> </div>*/}
+           </div>
+          <div>
+              {<Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini"
          locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80"
          copyright="nolonoloplus" />
-       */}
+              }
+          </div>
+        </div>
       </div>
+    </div>
+    
     );
 
   }

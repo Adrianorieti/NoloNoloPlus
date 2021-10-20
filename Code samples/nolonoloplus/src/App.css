@@ -1,116 +1,31 @@
+
 body{
   flex: 1;
 }
 
-a
-{
-    color: white;
-}
-
-
-.navbar
-{
-    background-color: rgb(99, 218, 99);
-}
-
-
-
-.custom-toggler .navbar-toggler-icon 
-  {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255 ,255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-  }
-  
-
-img 
-  {
-    min-height : 300px;
-    max-height : 300px;
-    width : 100%;
-    object-fit: cover;
-  }
-
-
-
 @media screen and (min-width: 480px) {
 
-.bg-image
+  .bg-image
+    {
+      background-image: url('./images/treehd.jpg')  ;
+      height: 100vh;
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+    }
+  }
+  
+  .bg-image
   {
     background-image: url('./images/treehd.jpg')  ;
     height: 100vh;
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
-
-  
-
-  }
-}
-
-.bg-image
-{
-  background-image: url('./images/treehd.jpg')  ;
-  height: 100vh;
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  position: relative;
-  display: flex;
-  align-items: center;
-  
-
-}
-
-@media screen and(min-width: 720px)
-{
-  .img-responsive
-  {
-    background-image: url('./images/BANNER.png')  ;
-    height: 40vh;
-    background-size: cover;
-    background-position: center center;
-  }
-
-  .rentForm
-  {
-    position: absolute;
-    width: 100%;
-    background-color: white;
-    padding: 10px;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    opacity: 0.9;
-    text-align: center;
+    align-items: center;
   }
-
-}
-
-.rentForm
-{
-  position: absolute;
-  width: 100%;
-  background-color: white;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  opacity: 0.9;
-  text-align: center;
-  top: 50px;
-  
-}
-
-label
-{
-  padding: 10px;
-}
-
-.carousel
-{
-  border: 6px solid whitesmoke;
-
-
-}
-
-
 
 .loginpage
 {
@@ -118,55 +33,21 @@ label
   justify-content: center;
   align-items: center;
   height: 100%; 
-  
-
 }
 
 .login
 {
- 
   display: flex;
   flex-direction: column;
   padding : 10px;
   background-color: white;
   opacity: 0.9;
-  
-  
-  
 }
 
-.tab-content{
-  /* height: 100 !important; */
-  margin: 30px;
-  }
-
-  footer {   
-    position: relative;
-    width: 100%;   
-    padding: 5%;   
-    height: 100%; 
-  }  
-  .bg-custom{   
-    background-color: rgb(167, 190, 147); 
-  }
-
-  #commons
-  {
-    object-fit: cover;
-    max-width: 1,5rem;
-    max-height: 1,5rem;
-  }
+ 
 
 
-#logout
-{
-  display: none;
-}
 
-.product
-{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+
+
+
