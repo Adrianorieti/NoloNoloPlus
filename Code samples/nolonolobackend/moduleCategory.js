@@ -8,7 +8,7 @@ const CategorySchema = new Schema({
         type: String,
         required: true
     },
-    price: {
+    price: { // prezzo medio indicativo
         type: Number,
         required: true
     },

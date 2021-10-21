@@ -194,7 +194,7 @@ app.post('/api/formProducts', async(req, res) =>
 {
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
-    // console.log("Il token è", token);
+    console.log("Il token è", token);
    const name = req.body.name;
    const startDate = new Date(req.body.startingDate);
    const endDate = new Date(req.body.endingDate);
@@ -206,44 +206,28 @@ app.post('/api/formProducts', async(req, res) =>
        endDate = tmp;
    }
   
-   if(token === null || token === undefined) // Non siamo loggati 
+   if(token) //  Siamo loggati 
    {
-            const prod =  await category.findOne({name: name});
-            if(prod)
-            {
-                //TO-DO capire il checkout ed il prezzo
-                let price = prod.price;
-                let period = endDate.getTime() - startDate.getTime();
-                period = period / (1000 *3600 * 24);
-                price = price * period;
-                return(res.status(200).json({prod: prod, finalPrice: price}));
-            }
-   
-
-   }else{ // l'utente è loggato e quindi bisogna verificare il token per poi procedere 
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
-        console.log(decoded);
         if(err) 
             console.log(err);
 
-        //se usavo category per la variabile mi dava errore
         //PRENDO LA CATEGORIA DELL'OGGETTO
         const collection =  await category.findOne({name: name});
         //il nome della categoria è il tipo dei prodotti
-        //qui in verità basta mettere = name senza collection.name ma è per fare scena
         let typeToFind = collection.name;
         if(collection)
         {
-            //TO-DO capire il checkout ed il prezzo
-            let price = prod.price;
+            //TO-DO capire il checkout ed il prezzo+
+            let price ;
             let period = endDate.getTime() - startDate.getTime();
-            period = period / (1000 * 3600 * 24);
-            price = price * period;
+            // let price = collection.price;
+            // period = period / (1000 * 3600 * 24);
+            // price = price * period;
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
             //l'utente loggato può sapere la disponibilità
             let available = false;
-            let totalAvailable = false;
             let currentProd;
             //ATTENZIONE notare che nei prodotti cerchiamo per tipo, e se si guarda il database
             //si può notare che il nome della categoria (Electric S_300 )è poi il tipo dei prodotti
@@ -259,8 +243,7 @@ app.post('/api/formProducts', async(req, res) =>
             for(j in db[i].reservations)
             {
                 let x = db[i].reservations[j];
-                // console.log(x.start.getTime());
-                // console.log(startDate.getTime());
+              
                 // nei primi due if controlliamo che inizio o fine della prenotazione richiesta
                 //sia nel mezzo di un'altra, nell'ultimo se ne contiene un'altra già esistente
                 if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
@@ -288,19 +271,35 @@ app.post('/api/formProducts', async(req, res) =>
            if(available)
             {
                 currentProd = db[i].name;
+                price = db[i].price;
+                period = period / (1000 * 3600 * 24);
+                price = price * period;
                 console.log('currentProd', currentProd);
                 res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd});
                 break;
             }
 
         }
-        // console.log("available" , available);
-    //    res.status(200).json({prod: collection, finalPrice: price, availability: available});
     })
     }
 })
+}else{ // l'utente non è loggato quindi calcoliamo la media del prezzo 
+    
+    const prod =  await category.findOne({name: name});
+
+    if(prod)
+    {
+        //TO-DO capire il checkout ed il prezzo
+        let price = prod.price;
+        let period = endDate.getTime() - startDate.getTime();
+        period = period / (1000 *3600 * 24);
+        price = price * period;
+        return(res.status(200).json({prod: prod, finalPrice: price}));
+    }
 }
 });
+
+
 
 
 ////// PRODUCT TESTING

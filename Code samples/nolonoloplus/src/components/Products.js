@@ -194,7 +194,7 @@ function Products(){
   <div className="card-body">
     <h5 className="card-title">{product.name}</h5>
     <div className="card-text"><p>{product.description}</p>
-    <div className="card-text"><p>Price per day: {product.price}$</p>
+    <div className="card-text"><p>Medium price per day: {product.price}$</p>
       </div>
     </div>
 
