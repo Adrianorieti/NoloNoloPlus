@@ -47,6 +47,7 @@ function Products(){
           setAvailable(data.availability);
           setformDataProduct(data.prod);
           setPrice(data.finalPrice);
+          //nome del PRODOTTO singolo in questione e NON LA CATEGORIA
           setProdName(data.currProdName);
           //non è detto che ci sia a seconda che siamo loggati o meno 
           //per questo faccio questo controllo

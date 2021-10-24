@@ -4,7 +4,6 @@ import mountainBike from '../images/mountainBike.jpg';
 import scooter from '../images/scooter.jpg';
 import specialBike from '../images/specialBike.jpeg';
 import cityBike from '../images/cityBike.jpg';
-import {useEffect} from 'react';
 import { useHistory } from "react-router";
 
 
@@ -28,7 +27,7 @@ function Rental(props)
                 body: form_obj
               };
 
-        let url = 'http://localhost:8001/api/updateRent';
+        let url = 'http://localhost:8001/api/addRent';
         fetch(url, options)
         .then(response => {
           if (response.status == 200) {

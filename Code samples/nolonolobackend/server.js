@@ -40,15 +40,11 @@ app.use(express.static(path.join(__dirname, 'build')));
 // This is required so the client can use React routes
 
 app.get('/', function (req, res) {
-
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-
 });
 
 app.get('/login', function (req, res) {
-
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-
 });
 
 app.get("/dashboard", (req, res) => {
@@ -167,7 +163,7 @@ app.post('/api/products', async (req, res) => {
 
 // esegue l'update  su una reservation di un prodotto specifico
 //prende il nome di un prodotto, l'inizio della reservation e la fine
-app.post('/api/updateRent', async(req, res) =>{
+app.post('/api/addRent', async(req, res) =>{
 
     let productName = req.body.name;
     let startDate = req.body.startingDate;
@@ -185,7 +181,7 @@ app.post('/api/updateRent', async(req, res) =>{
     //il giro dell'oca
     let newReservations =  prod.reservations;
     newReservations.push(newReserve);
-//vado a fare l'update dell'array di reservations
+//vado a fare l'update dell'array di reservations DEL PRODOTTO SINGOLO
      product.updateOne({ name: productName }, {
         reservations: newReservations
       });})
@@ -196,8 +192,14 @@ app.post('/api/formProducts', async(req, res) =>
    const token = authHeader && authHeader.split(' ')[1];
     console.log("Il token è", token);
    const name = req.body.name;
-   const startDate = new Date(req.body.startingDate);
-   const endDate = new Date(req.body.endingDate);
+   console.log("START DATE", req.body.startingDate)
+
+   let startDate = new Date(req.body.startingDate);
+   startDate.setDate(startDate.getDate() + 1);
+   console.log("START DATE", startDate);
+   let endDate = new Date(req.body.endingDate);
+   endDate.setDate(endDate.getDate() + 1);
+
 
    if(startDate.getTime() > endDate.getTime())
    {
@@ -219,22 +221,16 @@ app.post('/api/formProducts', async(req, res) =>
         let typeToFind = collection.name;
         if(collection)
         {
-            //TO-DO capire il checkout ed il prezzo+
             let price ;
             let period = endDate.getTime() - startDate.getTime();
-            // let price = collection.price;
-            // period = period / (1000 * 3600 * 24);
-            // price = price * period;
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
-            //l'utente loggato può sapere la disponibilità
             let available = false;
             let currentProd;
-            //ATTENZIONE notare che nei prodotti cerchiamo per tipo, e se si guarda il database
-            //si può notare che il nome della categoria (Electric S_300 )è poi il tipo dei prodotti
-            //che però possono avere dei nomi diversi perchè magari di marche diverse
+            let availableProductList = [];
+            let prices = [];
           product.find({type: typeToFind},   function(err, db){
-            // await new Promise(r => setTimeout(r, 2000));
-        if(err) return(res.status(500).send(err));
+
+            if(err) return(res.status(500).send(err));
         console.log(db);
         for(i in db) 
         {
@@ -270,16 +266,34 @@ app.post('/api/formProducts', async(req, res) =>
 
            if(available)
             {
-                currentProd = db[i].name;
-                price = db[i].price;
-                period = period / (1000 * 3600 * 24);
-                price = price * period;
-                console.log('currentProd', currentProd);
-                res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd});
-                break;
+                //IL PRODOTTO SINGOLO CORRENTE NON LA CATEGORIA
+                //dobbiamo fare in modo che sia il + economico
+                //productList è un array di elementi disponibili in una determinata data
+                availableProductList.push(db[i]);
+                //aggiungo il prezzo finale di questo prodotto nell'array
+                // prices.push(computePrice(db[i]))
+                console.log("IL PREZZO DI QUESTO È", db[i].price);
+                prices.push(db[i].price);
+                // currentProd = db[i].name;
+                // price = db[i].price;
+                // period = period / (1000 * 3600 * 24);
+                // price = price * period;
+                // res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd});
+                // break;
             }
 
         }
+    //     let best = [];
+    //    productList.forEach((element) => {
+    //        best.push(computePrice(element));
+    //    });
+    //calcolo il  prodotto più economico
+       price = Math.min(...prices);
+       console.log("TUTTI I PREZZI ",prices);
+       console.log("IL MINORE", price);
+       //le posizioni sono le stesse
+       currentProd = availableProductList[prices.indexOf(price)];
+        res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd});
     })
     }
 })
@@ -359,6 +373,5 @@ app.post('/api/formProducts', async(req, res) =>
 app.listen(8001, function () {
     console.log('Server is running on port 8001');
 });
-
 
  
