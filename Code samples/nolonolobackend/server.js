@@ -181,6 +181,10 @@ app.post('/api/addRent', async(req, res) =>{
     //il giro dell'oca
     let newReservations =  prod.reservations;
     newReservations.push(newReserve);
+    //TO-DO ORDINARE L'ARRAY IN MODO CHE SIA CRESCENTE 
+    //così abbiamo tutte le prenotazioni su un determinato prodotto in ordine
+    //nel caso il dipendente debba metterlo in manutenzione può facilmente capire quale sarebbe la prossima reservation
+    
 //vado a fare l'update dell'array di reservations DEL PRODOTTO SINGOLO
      product.updateOne({ name: productName }, {
         reservations: newReservations
