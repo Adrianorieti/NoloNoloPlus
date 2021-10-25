@@ -56,6 +56,10 @@ app.get("/personalpage", (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 })
 
+app.get("/updatepage", (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+})
+
 app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
@@ -67,6 +71,7 @@ app.post('/api/register', async (req, res) => {
     const mail = req.body.email;
 
     const source = await user.findOne({ email: mail });
+    console.log(source);
 
     if (!(source)) {
         //password arrives in base-64
@@ -102,8 +107,6 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-
-
 app.post('/api/login', async (req, res) => {
 
     const mail = req.body.email;
@@ -125,7 +128,7 @@ app.post('/api/login', async (req, res) => {
             console.log("Success");
 
             //CREATE  JWT
-            const user = { name: `${source.name}` };
+            const user = { email: `${source.email}` };
             const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '1h' });
 
             //Send token back to client 
@@ -140,7 +143,128 @@ app.post('/api/login', async (req, res) => {
     }
 })
 
+app.post('/api/email-validation', async (req, res) => {
+    const email = req.body.email;
+    let source = await user.findOne({ email: email });
+    if (!source) {
+        //nessuno è stato trovato con la mail che stiamo per inserire.
+        res.status(200).send();
+    }
+    else {
+        res.status(401).send();
+    }
+})
 
+app.post('/api/passw-validation', async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        //VA SETTATO PROB LO STATO DI ERRORE.
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            const email = decoded.email;
+            let source = await user.findOne({ email: email });
+            const password = req.body.oldPassword;
+            const buff = Buffer.from(password, 'base64');
+
+            const decodedpass = buff.toString('utf-8');
+            if (await bcrypt.compare(decodedpass, source.password)) {
+                //le due password coincidono, allora mando uno status 200
+                res.status(200).send();
+            } else {
+                res.status(401).send();
+            }
+        });
+    }
+})
+
+app.post('/api/update', async (req, res) => {
+    //VANNO SETTATI PER BENE GLI STATI DI ERRORE.
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            //devo handlare il fatto se c'è un errore.
+            const email = decoded.email;
+            console.log(email);
+            //diamo per scontato che lo user esista??
+            //in questo caso si perchè prendiamo dal token, ma se uno lo modifica?
+            let source = await user.findOne({ email: email });
+            console.log(source);
+
+            //adesso dobbiamo in un qualche modo leggere quello che vogliamo cambiare, e cambiarlo
+            const data = req.body;
+
+            switch (data.type) {
+                case 'name':
+                    source.name = data.name;
+                    break;
+                case 'surname':
+                    source.surname = data.surname;
+                    break;
+                case 'phone':
+                    source.phone = data.phone;
+                    break;
+                case 'email':
+                    source.email = data.email;
+                    break;
+                default:
+                    //SIAMO NELLA PARTE DELLE PASSWORD
+                    const password = req.body.newPassword;
+                    const buff = Buffer.from(password, 'base64');
+                    const decodedpass = buff.toString('utf-8');
+                    const hash = await bcrypt.hash(decodedpass, 10, function (err, hash) {
+                        source.password = hash;
+                        source.save();
+                        res.status(200).send();
+                    });
+                    break;
+            }
+            if (data.type !== 'password') {
+                source.save();
+                res.status(200).send();
+            }
+        });
+    }
+})
+
+app.post("/api/getInfo", async (req, res) => {
+    //fare cose 
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            const email = decoded.email;
+            let source = await user.findOne({ email: email });
+            if (source) {
+                let info = {
+                    name: source.name,
+                    surname: source.surname,
+                    phone: source.phone,
+                    email: source.email
+                }
+                res.json(JSON.stringify(info));
+            }
+            else {
+                res.status(500).send();
+            }
+        });
+    }
+})
 
 app.get("/api/dashboard", auth.verifyToken, auth.verifyAdmin, (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));

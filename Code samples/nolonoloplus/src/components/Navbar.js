@@ -34,20 +34,21 @@ function Navbar (props){
   useEffect(() =>
   {
     const token = JSON.parse(sessionStorage.getItem("token"));
-    if(token)
-    {
+    if (token) {
       checkLog(token);
     }
-   
-    if(loggato)
-    {
-      const logout =  document.getElementById("logout");
+    else {
+      setloggato(false);
+    }
+
+    if (loggato) {
+      const logout = document.getElementById("logout");
       logout.style.display = "block";
-    
-    }else{
-      const logout =  document.getElementById("logout");
+
+    } else {
+      const logout = document.getElementById("logout");
       logout.style.display = "none";
-     }
+    }
   });
 
 
@@ -66,17 +67,15 @@ function Navbar (props){
     burger.setAttribute("aria-expanded", newburgerattr);
   }
 
+
+  function logout() {
+    const logout = document.getElementById("logout");
+    logout.style.display = "none";
+    setloggato(false);
+    sessionStorage.clear();
+    history.push('/');
+  }
   
-    function logout()
-    {
-      const logout =  document.getElementById("logout");
-      logout.style.display = "none";
-      setloggato(false);
-      sessionStorage.clear();
-      history.push('/');     
-
-    }
-
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
@@ -93,22 +92,22 @@ function Navbar (props){
               <Link className="nav-link" to={'/products'} >Products</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" id="navLoginReg" to={loggato ? '/dashboard' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
+              <Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="#footer" >Contacts</Link>
             </li>
 
             <li className="nav-item" id="logout"  >
-              <Link className="nav-link"  onClick={logout}>Logout</Link>
-            </li> 
-          
+              <Link className="nav-link" onClick={logout}>Logout</Link>
+            </li>
+
           </ul>
         </div>
       </div>
     </nav>
   );
-          }
+}
 
 
 
