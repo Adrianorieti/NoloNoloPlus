@@ -2,6 +2,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+/* Sub Schema for product map */
+const reserveSchema = new Schema({
+
+    start: {
+        type: Date,
+        required: true
+    },
+    end: {
+        type: Date,
+        required: true
+    }
+})
+
 const UserSchema = new Schema({
     name: {
         type: String,
@@ -26,7 +39,17 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    role: String
+    paymentMethod: {
+        type: String,
+        required: true
+    },
+    role: String,
+    fidelityPoints: Number,
+    amountPaid: Number,
+    //prenotazioni future modificabili
+    futureReservations: [reserveSchema],
+    //prenotazioni completate
+    pastReservations: [reserveSchema]
 });
 
 const user = mongoose.model('user', UserSchema); // crei uno user e sarà in questa collezione, questo sarà il modello e quello sarà lo schema
