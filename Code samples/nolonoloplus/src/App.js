@@ -9,7 +9,8 @@ import Footer from './components/Footer';
 import { useState } from 'react';
 import Test from './components/Test';
 import Products from './components/Products';
-import UserPage from './pages/UserPage';
+import UpdatePage from './pages/UpdatePage';
+import PersonalPage from './pages/PersonalPage'
 
 
 
@@ -59,7 +60,14 @@ function App() {
         <Route path="/personalpage" exact>
 
           <Navbar name={data} queryToParent={queryToParent} />
-          <UserPage />
+          <PersonalPage />
+
+        </Route>
+
+        <Route path="/updatepage" exact>
+
+          <Navbar name={data} queryToParent={queryToParent} />
+          <UpdatePage nameToParent={nameToParent} />
 
         </Route>
 

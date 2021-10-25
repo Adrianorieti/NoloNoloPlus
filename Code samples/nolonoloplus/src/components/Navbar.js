@@ -27,7 +27,7 @@ function Navbar(props, { queryToParent }) {
       } else {
         console.log("Errore, login non effettuato correttamente");
       }
-    }).catch(err => { console.log(err) });
+    }).catch(err => { console.log(err); });
 
   }
 
@@ -36,6 +36,9 @@ function Navbar(props, { queryToParent }) {
     const token = JSON.parse(sessionStorage.getItem("token"));
     if (token) {
       checkLog(token);
+    }
+    else {
+      setloggato(false);
     }
 
     if (loggato) {

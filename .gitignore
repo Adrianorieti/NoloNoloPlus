@@ -1,4 +1,6 @@
 Code\ samples/nolonolobackend/build
 Code\ samples/nolonoloplus/node_modules
-Code\ samples/nolonoloplus/package.json
-Code\ samples/nolonoloplus/package-lock.json
+package.json
+package-lock.json
+node_modules/.bin/
+node_modules/

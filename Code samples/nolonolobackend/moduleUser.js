@@ -7,23 +7,23 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    surname: 
+    surname:
     {
         type: String,
         required: true
     },
-    phone: 
+    phone:
     {
         type: Number,
         required: true
     },
-    email: 
+    email:
     {
         type: String,
         required: true
     },
-    password: { 
-        type :String,
+    password: {
+        type: String,
         required: true
     },
     role: String

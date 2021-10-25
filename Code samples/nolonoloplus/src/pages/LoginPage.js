@@ -82,7 +82,7 @@ function LoginPage({ nameToParent }) {
       .then(response => {
         if (response.status == 200) {
           console.log("Registrazione avvenuta con successo.");
-          history.push('/login');
+          window.location.reload();
         }
         else if (response.status == 500) {
           console.log("La mail esiste già");
@@ -184,7 +184,7 @@ function LoginPage({ nameToParent }) {
               <div className="mb-3">
                 <label for="loginemail" className="form-label">Email address</label>
                 <input onChange={handleChange} type="email" className="form-control" name="email" id="loginemail" aria-describedby="emailHelp"
-                  required="required" placeholder="nomeutente@gmail.com" pattern="^[\w]{1,}[\w.+-]{0,}@[\w-]{2,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$" />
+                  required="required" placeholder="nomeutente@gmail.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
                 <label id='loginmail-error' for="loginemail" style={{ fontSize: 12, color: 'red' }}></label>
 
               </div>
