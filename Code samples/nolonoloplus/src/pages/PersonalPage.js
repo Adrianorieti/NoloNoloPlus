@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 
 export default function PersonalPage() {
@@ -8,7 +8,8 @@ export default function PersonalPage() {
     const [email, setEmail] = useState('');
 
     let history = useHistory();
-    window.onload = () => {
+    
+    useEffect(() =>  {
         const token = JSON.parse(sessionStorage.getItem('token'));
         const options = {
             method: 'POST',
@@ -29,7 +30,7 @@ export default function PersonalPage() {
             }).catch(error => {
                 console.log(error);
             })
-    };
+    });
 
     function leapToUpdate() {
         history.push('/updatepage');

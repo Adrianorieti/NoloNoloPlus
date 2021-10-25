@@ -285,8 +285,10 @@ app.post('/api/products', async (req, res) => {
   res.status(200).json({prodList: prodList});
 })  
 
-// esegue l'update  su una reservation di un prodotto specifico
-//prende il nome di un prodotto, l'inizio della reservation e la fine
+//Prende il nome dell'utente che ha fatto la prenotazione, il nome del prodotto, inizio e fine prenotazione
+// 1) Aggiunge la prenotazione al prodotto
+// 2) Aggiunge alla collezione di richieste pendenti dei dipendenti la prenotazione
+// Quando un qualsiasi dipendente accetterà la richiesta allora questa verrà messa nell'array dello user ( verde, rossa)
 app.post('/api/addRent', async(req, res) =>{
 
     let productName = req.body.name;

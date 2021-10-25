@@ -33,6 +33,7 @@ function Navbar (props){
 
   useEffect(() =>
   {
+    console.log("effect");
     const token = JSON.parse(sessionStorage.getItem("token"));
     if (token) {
       checkLog(token);
@@ -75,7 +76,7 @@ function Navbar (props){
     sessionStorage.clear();
     history.push('/');
   }
-  
+
   return (
     <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">

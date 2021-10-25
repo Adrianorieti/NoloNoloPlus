@@ -39,6 +39,14 @@ const ProductSchema = new Schema({
         required: true
     },
     reservations: [reserveSchema],
+    totalSales: {
+        type: Number,
+        required: true
+    },
+    numberOfRents: {
+        type: Number,
+        required: true
+    }
 })
 
 
