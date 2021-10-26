@@ -319,8 +319,13 @@ app.post('/api/addRent', async(req, res) =>{
 app.post('/api/formProducts', async(req, res) =>
 {
    const authHeader = req.headers['authorization'];
-   const token = authHeader && authHeader.split(' ')[1];
-    console.log("Il token è", token);
+   let token;
+   if(authHeader != null)
+    { 
+        token = authHeader && authHeader.split(' ')[1];
+        console.log("Il token è", token);
+    }
+
    const name = req.body.name;
    console.log("START DATE", req.body.startingDate)
 
@@ -338,8 +343,9 @@ app.post('/api/formProducts', async(req, res) =>
        endDate = tmp;
    }
   
-   if(token) //  Siamo loggati 
+   if(token != null) //  Siamo loggati 
    {
+       console.log("non dovrei essere qui");
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
         if(err) 
@@ -444,64 +450,41 @@ app.post('/api/formProducts', async(req, res) =>
 });
 
 
+// DISCOUNT DEBUG
 
+async function debugDiscount()
+{
+    let startDate = new Date('Nov 15, 2014');
+    let endDate = new Date('Nov 20, 2014');
+    let userMail = 'lorenzotozzi98@gmail.com';
+    let products ;
+    console.log('startDate: ' , startDate);
+    console.log('endDate: ' , endDate);
+    console.log('userMail :', userMail);
+    let collection = await category.findOne({name: 'Electric S_300'});
+    console.log(collection);
+    // .then(async (response) => {
+    //     console.log("la collezione è", response);
+    //     let typeToFind = response.name;
+    //      products =  await product.find({type: typeToFind});
+    //      console.log("i prodotti" ,products);
+    //      console.log("fine");
+    //     //  ,   function(err, db){
+    //     //     for(i in db)
+    //     //     {
+    //     //         console.log('ELEMENTO' , db[i]);
+    //     //          computePrice.computePrice(response, db[i], userMail, startDate, endDate);
+    
+    //     //     }
+    //     // })
+    // });
+   
 
-////// PRODUCT TESTING
+}
 
-// let newProduct = new product({
-//     name: "Electric S_300",
-//     quantity: 1,
-//     status: "New",
-//     type: "Electric",
-//     reservations: [
-//         {
-//             start: "06/10/2020",
-//             end : "08/16/2020"
-//         },
-//         {
-//             start: "10/04/2020",
-//             end : "11/04/2020"
-//         }
-//     ]});
-
-//     let newProduct2 = new product({
-//         name: "Bike2000",
-//         quantity: 1,
-//         status: "New",
-//         type: "Electric",
-//         reservations: [
-//             {
-//                 start: "05/10/2020",
-//                 end : "05/16/2020"
-//             },
-//             {
-//                 start: "09/04/2020",
-//                 end : "10/04/2020"
-//             }
-//         ]});
-// let newProduct3 = new product({
-//     name: "Bike2000",
-//     quantity: 1,
-//     status: "New",
-//     type: "Electric",
-//     reservations: [
-//         {
-//             start: "02/10/2020",
-//             end : "03/16/2020"
-//         },
-//         {
-//             start: "06/24/2020",
-//             end : "07/04/2020"
-//         }
-//     ]});
-
-//newCategory.save();
-//newProduct.save();
-// newProduct2.save();
-// newProduct3.save();
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001');
 });
 
- 
+//  debugDiscount();

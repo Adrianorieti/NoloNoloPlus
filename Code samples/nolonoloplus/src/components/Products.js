@@ -29,12 +29,23 @@ function Products(){
     // Prendiamo dal session storage la query del form della home
     const form_obj = sessionStorage.getItem('form_obj');
     console.log("form obj è", form_obj);
-    const options = {
-      // Creiamo il payload da mandare al server
-        method: 'POST',
-        headers: new Headers({ 'Content-type': 'application/json' , 'Authorization': `Bearer ${token}`}),
-        body: form_obj
-      };
+    let options;
+    if(token)
+    {
+       options = {
+        // Creiamo il payload da mandare al server
+          method: 'POST',
+          headers: new Headers({ 'Content-type': 'application/json' , 'Authorization': `Bearer ${token}`}),
+          body: form_obj
+        };
+    }else{
+       options = {
+        // Creiamo il payload da mandare al server
+          method: 'POST',
+          headers: new Headers({ 'Content-type': 'application/json'}),
+          body: form_obj
+        };
+    }
       //la api formProducts gestisce le richieste quando arriviamo dalla home
       let url = 'http://localhost:8001/api/formProducts'; 
       fetch(url, options)

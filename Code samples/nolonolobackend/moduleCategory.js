@@ -15,6 +15,10 @@ const CategorySchema = new Schema({
     description: {
         type: String,
         required: true
+    },
+    discountCode: {
+        type: String,
+        required: true
     }
 })
 
