@@ -8,10 +8,12 @@ function LoginPage({ nameToParent }) {
   const [firstName, setfirstName] = useState('');
   const [secondName, setsecondName] = useState('');
   const [phone, setphone] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
   const [repeatPassword, setrepeatPassword] = useState('');
   const [repeatpassError, setrepeatpassError] = useState('');
+
 
   /* Handler dei cambiamenti del testo nell'input*/
   function handleChange(event) {
@@ -38,6 +40,12 @@ function LoginPage({ nameToParent }) {
         break;
       case 'repeatpassError':
         setrepeatpassError(event.target.value);
+        break;
+      default:
+        //payment method
+        setPaymentMethod(event.target.value);
+        break;
+
     }
   };
 
@@ -55,7 +63,8 @@ function LoginPage({ nameToParent }) {
       "surname": "${secondName}",
       "phone": "${phone}",
       "email": "${email}",
-      "password": "${encodedpass}"
+      "password": "${encodedpass}",
+      "paymentMethod": "${paymentMethod}"
       }`);
     }
     else {
@@ -70,7 +79,6 @@ function LoginPage({ nameToParent }) {
   function doRegister() {
 
     const obj = createObj('register');
-
     const options = {
       method: 'POST',
       headers: new Headers({ 'Content-type': 'application/json' }),
@@ -183,20 +191,20 @@ function LoginPage({ nameToParent }) {
           <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <form onSubmit={handleLogin}>
               <div className="mb-3">
-                <label for="loginemail" className="form-label">Email address</label>
+                <label htmlFor="loginemail" className="form-label">Email address</label>
                 <input onChange={handleChange} type="email" className="form-control" name="email" id="loginemail" aria-describedby="emailHelp"
                   required="required" placeholder="nomeutente@gmail.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" />
-                <label id='loginmail-error' for="loginemail" style={{ fontSize: 12, color: 'red' }}></label>
+                <label id='loginmail-error' htmlFor="loginemail" style={{ fontSize: 12, color: 'red' }}></label>
 
               </div>
               <div className="mb-3">
-                <label for="loginpassword" className="form-label">Password</label>
+                <label htmlFor="loginpassword" className="form-label">Password</label>
                 <input onChange={handleChange} type="password" className="form-control" name="password" id="loginpassword"
                   required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
               </div>
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                <label className="form-check-label" for="exampleCheck1">Remember me</label>
+                <label className="form-check-label" htmlFor="exampleCheck1">Remember me</label>
               </div>
               <input type="submit" className="btn btn-primary" value="Login"></input>
             </form>
@@ -208,49 +216,61 @@ function LoginPage({ nameToParent }) {
 
             <form onSubmit={handleRegister}>
               <div className="mb-3">
-                <label for="firstName" className="form-label">First Name</label>
+                <label htmlFor="firstName" className="form-label">First Name</label>
                 <input onChange={handleChange} id="firstName" type="text" className="form-control" name="firstName"
                   aria-describedby="emailHelp" placeholder="John" required="required" />
               </div>
 
               <div className="mb-3">
-                <label for="secondName" className="form-label">Second name</label>
+                <label htmlFor="secondName" className="form-label">Second name</label>
                 <input onChange={handleChange} id="secondName" type="text" className="form-control" name="secondName"
                   aria-describedby="emailHelp" placeholder="Doe" required="required" />
               </div>
 
               <div className="mb-3">
-                <label for="email" className="form-label">Email</label>
+                <label htmlFor="email" className="form-label">Email</label>
                 <input onChange={handleChange} id="email" type="email" className="form-control" name="email"
                   placeholder="username@studio.unibo.it" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   title="not valid email format" />
-                <label id='registermail-error' for="email" style={{ fontSize: 12, color: 'red' }}></label>
+                <label id='registermail-error' htmlFor="email" style={{ fontSize: 12, color: 'red' }}></label>
 
               </div>
 
               <div className="mb-3">
-                <label for="phone" className="form-label">Phone Number</label>
+                <label htmlFor="phone" className="form-label">Phone Number</label>
                 <input onChange={handleChange} id="phone" type="tel" className="form-control" name="phone" required="required"
                   pattern="[0-9]{10}" />
               </div>
 
               <div className="mb-3">
-                <label for="password" className="form-label">Password</label>
+                <label htmlFor="paymentMethod" className="form-label">Payment method</label>
+                <select name="paymentMethod" id="paymentMethod" className="form-control" onChange={handleChange}>
+                  <option value="Assegno">Assegno</option>
+                  <option value="Bancomat">Bancomat</option>
+                  <option value="Contante">Contante</option>
+                  <option value="Mastercard">Mastercard</option>
+                  <option value="Paypal">Paypal</option>
+                  <option value="Visa" >Visa</option>
+                </select>
+              </div>
+
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">Password</label>
                 <input onChange={handleChange} id="password" type="password" className="form-control" name="password" required="required"
                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                   title="Password must contain a number, a capital letter and a length of at least 8 characters" />
               </div>
 
               <div className="mb-3">
-                <label for="repeatPassword" className="form-label">Repeat Password</label>
+                <label htmlFor="repeatPassword" className="form-label">Repeat Password</label>
                 <input onChange={handleChange} id="repeatPassword" type="password" className="form-control" name="repeatPassword"
                   required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
-                <label for="repeatPassword" style={{ fontSize: 12, color: 'red' }}>{repeatpassError}</label>
+                <label htmlFor="repeatPassword" style={{ fontSize: 12, color: 'red' }}>{repeatpassError}</label>
               </div>
 
               <div className="mb-3 form-check">
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                <label className="form-check-label" for="exampleCheck1">Remember me</label>
+                <label className="form-check-label" htmlFor="exampleCheck1">Remember me</label>
               </div>
 
               <input type="submit" className="btn btn-primary" value="Register" ></input>

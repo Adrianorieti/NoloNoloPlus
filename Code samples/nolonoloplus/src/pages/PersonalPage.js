@@ -6,10 +6,14 @@ export default function PersonalPage() {
     const [surname, setSurname] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('');
+    const [futureReservations, setFutureReservations] = useState('');
+    const [pastReservations, setPastReservations] = useState('');
+
 
     let history = useHistory();
-    
-    useEffect(() =>  {
+
+    useEffect(() => {
         const token = JSON.parse(sessionStorage.getItem('token'));
         const options = {
             method: 'POST',
@@ -22,19 +26,18 @@ export default function PersonalPage() {
                     return response.json();
                 }
             }).then(data => {
-                const parsedDate = JSON.parse(data);
-                setName(parsedDate.name);
-                setSurname(parsedDate.surname);
-                setPhone(parsedDate.phone);
-                setEmail(parsedDate.email);
+                const parsedData = JSON.parse(data);
+                setName(parsedData.name);
+                setSurname(parsedData.surname);
+                setPhone(parsedData.phone);
+                setEmail(parsedData.email);
+                setPaymentMethod(parsedData.paymentMethod);
+                setFutureReservations(parsedData.futureReservations);
+                setPastReservations(parsedData.pastReservations);
             }).catch(error => {
                 console.log(error);
             })
     });
-
-    function leapToUpdate() {
-        history.push('/updatepage');
-    }
 
     return (
         <div>
@@ -46,10 +49,11 @@ export default function PersonalPage() {
                     <li>Surname: {surname}</li>
                     <li>Phone: {phone}</li>
                     <li>Email: {email}</li>
+                    <li>Payment Method: {paymentMethod}</li>
                 </ul>
             </div>
             <div>
-                <button onClick={leapToUpdate}>Cambia le informazioni personali</button>
+                <button onClick={() => { history.push('/updatepage'); }}>Cambia le informazioni personali</button>
             </div>
         </div>
     );
