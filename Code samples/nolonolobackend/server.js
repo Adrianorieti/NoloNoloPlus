@@ -9,6 +9,7 @@ const user = require('./moduleUser');
 const product = require('./moduleProduct');
 const category = require('./moduleCategory');
 const reservation = require('./moduleReservation');
+const computePrice = require('./computePrice');
 const app = express();
 
 // Json web token 
@@ -345,9 +346,9 @@ app.post('/api/formProducts', async(req, res) =>
   
    if(token != null) //  Siamo loggati 
    {
-       console.log("non dovrei essere qui");
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
+        console.log("email dell'utente" ,decoded.email);
         if(err) 
             console.log(err);
 
@@ -364,7 +365,7 @@ app.post('/api/formProducts', async(req, res) =>
             let currentProd;
             let availableProductList = [];
             let prices = [];
-          product.find({type: typeToFind},   function(err, db){
+          product.find({type: typeToFind},  async function(err, db){
 
             if(err) return(res.status(500).send(err));
         console.log(db);
@@ -408,8 +409,11 @@ app.post('/api/formProducts', async(req, res) =>
                 availableProductList.push(db[i]);
                 //aggiungo il prezzo finale di questo prodotto nell'array
                 // prices.push(computePrice(db[i]))
-                console.log("IL PREZZO DI QUESTO È", db[i].price);
-                prices.push(db[i].price);
+                // console.log("PREZZO COMPUTATO", await computePrice.computePrice(collection, db[i], decoded.email, startDate, endDate));
+                console.log("//////////////////////////////////");
+                console.log("startDate", startDate);
+                console.log("endDate", endDate);
+                prices.push(await computePrice.computePrice(collection, db[i], decoded.email, startDate, endDate));
                 // currentProd = db[i].name;
                 // price = db[i].price;
                 // period = period / (1000 * 3600 * 24);
@@ -434,7 +438,8 @@ app.post('/api/formProducts', async(req, res) =>
     }
 })
 }else{ // l'utente non è loggato quindi calcoliamo la media del prezzo 
-    
+
+   
     const prod =  await category.findOne({name: name});
 
     if(prod)
@@ -444,6 +449,7 @@ app.post('/api/formProducts', async(req, res) =>
         let period = endDate.getTime() - startDate.getTime();
         period = period / (1000 *3600 * 24);
         price = price * period;
+
         return(res.status(200).json({prod: prod, finalPrice: price}));
     }
 }

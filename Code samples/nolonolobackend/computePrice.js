@@ -14,7 +14,8 @@ module.exports = {
         res.status(401).send();
          }
          else {
-             console.log("DENTRO L'ELSE");
+             console.log("giorno della settimana ", startDate.getDay());
+           
             const fidelityPoints = usr.fidelityPoints;
             const discountCode = category.discountCode;
             let dailyPrice = product.price;
@@ -28,36 +29,59 @@ module.exports = {
             const discountRate = discountElement.discountRate;
             // Il segno che mi dice se devo sommare o sottrarre
             const discountSign = discountElement.discountSign;
+            console.log("Daily price 1:" , dailyPrice);
 
             if(discountSign === '+')
             {
+                console.log("sign funziona");
                 dailyPrice += ((dailyPrice * discountRate) / 100) ;
                 totalDiscount += discountRate;
             }else
             {
+                console.log("sign funziona");
                 dailyPrice -= ((dailyPrice * discountRate) / 100) ;
                 totalDiscount += discountRate;
 
             }
-
+            console.log("Daily price 2 :" , dailyPrice);
             // Prezzo basico del periodo
             let period = endDate.getTime() - startDate.getTime();
             period = period / (1000 * 3600 * 24);
+            //così mi prende  anche il giorno finale altrimenti non me lo prende
+            period += 1;
+            console.log("giorni prenotati ", period);
             finalPrice = dailyPrice * period;
 
-             // Se inizio il venerdì e la prenotazione dura 3 o + giorni allora sconto
-             if(startDate.getDay() === '5' && ((startDate.getDate() + 3) <= endDate.getDate()))
-             {
-                finalPrice -= (((finalPrice * 2) / 100));
-                totalDiscount += 2;
+            console.log("final price 1: ", finalPrice);
 
-                //qui controllo se inizio dal lunedì e dura + di 3 giorni
-             }else if(startDate.getDay() === '1' && ((startDate.getDate() + 3) <= endDate.getDate()))
+             // Se inizio il venerdì e la prenotazione dura 3 o + giorni allora sconto
+             if(startDate.getDay() === 6)
              {
-                finalPrice -= (((finalPrice * 2) / 100));
-                totalDiscount += 2;
+                 console.log("primo step")
+                startDate.setDate(startDate.getDate() + 2);
+                console.log("startDate", startDate);
+                console.log("endDate", endDate);
+                if(startDate.getTime() <= endDate.getTime())
+                {  
+                    console.log("WEEKEND");
+                    finalPrice -= (((finalPrice * 2) / 100));
+                    totalDiscount += 2;
+                }
+
+                //qui controllo se inizio dal lunedì e dura + di 3 giorni in totale
+             }else if(startDate.getDay() === 1)
+             {
+                startDate.setDate(startDate.getDate() + 2);
+                if(startDate.getDate() <= endDate.getDate())
+                {    
+                     console.log("INFRASETTIMANALE");
+                    finalPrice -= (((finalPrice * 2) / 100));
+                    totalDiscount += 2;
+                }
              }
-             
+             startDate.setDate(startDate.getDate() - 2);
+             console.log("final price 2: ", finalPrice);
+
 
             if(fidelityPoints > 50 && fidelityPoints <= 90)
             { // siamo nella prima fascia di sconto quindi tipo 2%
@@ -78,6 +102,7 @@ module.exports = {
                 finalPrice += ((finalPrice * 6) / 100);
                 totalDiscount += 6;
             }
+            console.log("final price 3: ", finalPrice);
 
             return(finalPrice);
         }
