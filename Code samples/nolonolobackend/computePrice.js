@@ -44,7 +44,7 @@ module.exports = {
 
             }
             console.log("Daily price 2 :" , dailyPrice);
-            // Prezzo basico del periodo
+            // Prezzo basico del periodo (quindi di alta o bassa stagione ecc)
             let period = endDate.getTime() - startDate.getTime();
             period = period / (1000 * 3600 * 24);
             //così mi prende  anche il giorno finale altrimenti non me lo prende

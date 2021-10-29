@@ -301,25 +301,27 @@ app.post('/api/addRent', async(req, res) =>{
     if(authHeader != null)
      { 
          token = authHeader && authHeader.split(' ')[1];
-         console.log("Il token è", token);
      }
      jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
         let userMail = decoded.email;
         let productName = req.body.name;
-        let startDate = req.body.startingDate;
-        let endDate = req.body.endingDate;
+        let startDate = new Date(req.body.startingDate);
+        let endDate = new Date(req.body.endingDate);
+        startDate.setDate(startDate.getDate() + 1);
+        endDate.setDate(endDate.getDate() + 1);
+       
        //cerco il prodotto
     let prod = await product.findOne({name: productName});
     console.log(prod);
     //creo una nuova reservation
     let newReserve = new reservation({
         usermail: userMail,
-        product: prod,
+        product: prod.name,
         start: `${startDate}`,
         end: `${endDate}`
     })
-    console.log(newReserve);
+    console.log(" NEW RESERVE", newReserve);
     //prendo l'array di reservation del prodotto, inserisco ed ordino
     let newReservations =  prod.reservations;
     newReservations.push(newReserve);
@@ -336,10 +338,14 @@ product.updateOne({ name: productName }, {
 // così i dipendenti avranno la richiesta pendente
 let newPendingReq = new pendingRequest({
     usermail: userMail,
-    product: prod,
+    product: prod.name,
     start: `${startDate}`,
     end: `${endDate}`
 })
+console.log("QUAAA", newPendingReq);
+
+//ATTENZIONE NON CONTROLLA SE ESISTE GIÀ UNA PRENOTAZIONE UGUALE
+//magari usare findone prima per vedere se già esiste una entry completamente uguale con gli stessi campi, in quel caso non vado ad inserire
 
 newPendingReq.save();
 
@@ -462,7 +468,7 @@ app.post('/api/formProducts', async(req, res) =>
        console.log("IL MINORE", price);
        //le posizioni sono le stesse
        currentProd = availableProductList[prices.indexOf(price)];
-        res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd});
+        res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd.name});
     })
     }
 })

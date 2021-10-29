@@ -14,8 +14,8 @@ function Rental(props)
 
     function sendRent(){
       
-      const token = sessionStorage.getItem('token');
-
+      const token = JSON.parse(sessionStorage.getItem('token'));
+      console.log(props.productName);
             let form_obj = `{
                 "name": "${props.productName}", 
                 "startingDate": "${props.startDate}",
