@@ -1,0 +1,13 @@
+.App-carousel {
+    border: 6px solid #bbe0ac;
+}
+
+.card {
+    width: 2200px;
+    height: auto;
+}
+
+.carousel-inner img {
+    width: 50%;
+    height: 50%;
+  }
