@@ -24,7 +24,7 @@ function Rental(props)
 
                const options = {
                 method: 'POST',
-                headers: new Headers({ 'Content-type': 'application/json', "Authorization": `Bearer ${token}`}),
+                headers: new Headers({ 'Content-type': 'application/json', 'Authorization': `Bearer ${token}`}),
                 body: form_obj
               };
 
