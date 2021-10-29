@@ -3,18 +3,18 @@ import {Carousel} from 'react-bootstrap';
 import bikeTravel1 from '../images/bikeTravel1.jpg'
 import bikeTravel2 from '../images/bikeTravel2.jpg'
 import bikeTravel3 from '../images/bikeTravel3.jpg'
-
+import './Carousel.css';
 
 
 const CarouselContainer = () =>
 {
     return(
-        <Carousel>
+        <Carousel className="App-carousel">
   <Carousel.Item>
     <img
-      className="d-block w-100 img-responsive"
+      className="card d-block w-100 img-responsive"
       src={bikeTravel1} 
-      alt="First slide"
+      alt="Vivi la vita senza scuse, viaggia senza rimpianti (Oscal Wilde)."
     />
     <Carousel.Caption>
       <h3>Oscal Wilde</h3>
@@ -23,9 +23,9 @@ const CarouselContainer = () =>
   </Carousel.Item>
   <Carousel.Item>
     <img
-      className="d-block w-100 img-responsive"
+      className="card d-block w-100 img-responsive"
       src={bikeTravel2}
-      alt="Second slide"
+      alt="Ovunque tu vada, vacci con tutto il tuo cuore (Confucio)."
     />
 
     <Carousel.Caption>
@@ -35,9 +35,9 @@ const CarouselContainer = () =>
   </Carousel.Item>
   <Carousel.Item>
     <img
-      className="d-block w-100 img-responsive"
+      className="card d-block w-100 img-responsive"
       src={bikeTravel3}
-      alt="Third slide"
+      alt="Non si ricordano i giorni, si ricordano gli attimi (Cesare Pavese)."
     />
 
     <Carousel.Caption>

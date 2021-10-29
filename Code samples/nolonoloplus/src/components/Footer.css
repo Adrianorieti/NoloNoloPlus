@@ -1,0 +1,54 @@
+.App-footer {
+    /*position: relative;*/
+    background-color: #bbe0ac;
+    /*min-height: 10vh;
+    min-width: 20vh;
+    padding: 5%;*/
+    /*font-size: calc(6px + 2vmin);*/
+  }
+
+.cards {
+    /*float: none;
+    display: inline-block;
+    padding: 0;
+    width: auto;
+    margin: 10 px 15px;*/
+    background-color: white;
+    margin: auto 20%;
+    min-width: 50vh;
+
+    /*border: 10px solid black;*/
+    /*min-width: 20vh;*/
+  }
+  
+img .cards {
+    width: 100%;
+    max-width: 150px;
+  }
+
+.info { 
+    padding: 50px 20%;
+    justify-content: center;
+    /*border: left 200px;
+    border-right: 200px;*/
+    /*font-size: calc(6px + 2vmin);*/
+    min-width: 20vh;
+    /*border: 10px solid black;*/
+  }
+
+ /* h6 .info {
+    text-transform: uppercase;
+    font-weight: bold;*/
+    /* font-size: calc(8px + 2vmin); */
+    /*margin: 20% 10%;
+  }*/
+
+ /* p .info {
+    font-size: mediumcalc(8px + 2vmin);
+  }*/
+
+.cclicense {
+    /*padding-top: 30px;*/
+    /*border: 10px solid black;*/
+    margin: 30px 30px;
+}

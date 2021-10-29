@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useHistory } from "react-router";
-
+import './Navbar.css';
 
 
 function Navbar (props){
@@ -78,9 +78,9 @@ function Navbar (props){
   }
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
+    <nav className="App-navbar navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">NoloNoloPlus</a>
+        <a className="navbar-brand" href="https://virtuale.unibo.it/pluginfile.php/825017/mod_resource/content/0/25-Progetto2021-2.pdf" target="_blank">NoloNoloPlus</a>
         <button id="burger" onClick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon "></span>
         </button>

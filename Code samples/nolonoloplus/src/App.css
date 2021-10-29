@@ -1,193 +1,142 @@
-body{
-  flex: 1;
-}
+/*body {
+    font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+  }*/
 
-a
-{
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+/*    width: 90%;
+    margin: 0 auto;*/
+    /* border: 6px solid #bbe0ac;*/
+  }
+
+  .container-properties {
+    /*padding: 10px;*/
+    /*border: 10px solid #115208;*/
+    justify-content: center;
+    font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+  }
+
+   /* unvisited link */
+ a:link {
+    color: #004d00;
+  }
+  
+  /* visited link */
+  a:visited {
+    color: green;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: #001a00;
+  }
+  
+  /* selected link */
+  a:active {
+    color: rgb(135, 219, 124);
+  } 
+
+  .App-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /*border: 6px solid #bbe0ac;*/
+  }
+  
+.banner {
+    position: float;
+    width: 275px;
+   /* font-size: 130%;*/
+    margin:0px 0px 10px 10px;
+    padding: 10px;
+    border: 6px solid #bbe0ac;
     color: white;
 }
 
+@media screen and (min-width: 480px) {
+    .bg-image {
+        background-image: url('./images/treehd.jpg');
 
-.navbar
-{
-    background-color: rgb(99, 218, 99);
+    }
 }
 
-
-
-.custom-toggler .navbar-toggler-icon 
-  {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255 ,255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
-  }
-  
-
-img 
-  {
-    min-height : 300px;
-    max-height : 300px;
-    width : 100%;
-    object-fit: cover;
-  }
-
-
-
-@media screen and (min-width: 480px) {
-
-.bg-image
-  {
-    background-image: url('./images/treehd.jpg')  ;
+.bg-image {
+    background-image: url('./images/treehd.jpg');
     height: 100vh;
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
-
-  
-
-  }
+    position: relative;
+    display: flex;
+    align-items: center;
+    
 }
 
-.bg-image
-{
-  background-image: url('./images/treehd.jpg')  ;
-  height: 100vh;
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  position: relative;
-  display: flex;
-  align-items: center;
-  
 
-}
 
-@media screen and(min-width: 720px)
-{
-  .img-responsive
-  {
-    background-image: url('./images/BANNER.png')  ;
-    height: 40vh;
-    background-size: cover;
-    background-position: center center;
-  }
-
-  .rentForm
-  {
-    position: absolute;
-    width: 100%;
-    background-color: white;
+label {
     padding: 10px;
+}
+
+
+
+.loginpage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login {
     display: flex;
     flex-direction: column;
+    padding: 10px;
+    background-color: white;
     opacity: 0.9;
-    text-align: center;
-  }
-
 }
 
-.rentForm
-{
-  position: absolute;
-  width: 100%;
-  background-color: white;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  opacity: 0.9;
-  text-align: center;
-  top: 50px;
-  
+
+
+
+
+.bg-custom {
+    background-color: rgb(167, 190, 147);
 }
 
-label
-{
-  padding: 10px;
-}
-
-.carousel
-{
-  border: 6px solid whitesmoke;
-
-
-}
-
-.loginpage
-{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%; 
-  
-
-}
-
-.login
-{
- 
-  display: flex;
-  flex-direction: column;
-  padding : 10px;
-  background-color: white;
-  opacity: 0.9;
-  
-  
-  
-}
-
-.tab-content{
-  /* height: 100 !important; */
-  margin: 30px;
-  }
-
-  footer {   
-    position: relative;
-    width: 100%;   
-    padding: 5%;   
-    height: 100%; 
-  }  
-  .bg-custom{   
-    background-color: rgb(167, 190, 147); 
-  }
-
-  #commons
-  {
+#commons {
     object-fit: cover;
-    max-width: 1,5rem;
-    max-height: 1,5rem;
-  }
-
-
-#logout
-{
-  display: none;
+    max-width: 1, 5rem;
+    max-height: 1, 5rem;
 }
 
-.product
-{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+#logout {
+    display: none;
 }
 
-.rental{
-  display: flex;
-  gap: 1.5rem;
-}
-
-.rentalContent{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-}
-.rentbuttons{
-  justify-content: space-between;
+.product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 
-#check
-{
-  background-color: rgb(177, 75, 75);
-  color: black;
+
+.rentalContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.rentbuttons {
+    justify-content: space-between;
+}
+
+#check {
+    background-color: rgb(177, 75, 75);
+    color: black;
 }
