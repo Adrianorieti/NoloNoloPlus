@@ -16,7 +16,7 @@ function Products(){
     const [formDataProduct, setformDataProduct] = useState('');
     const [price, setPrice] = useState(0);
     const [available, setAvailable] = useState(false);
-    const [loggato, setloggato] = useState(false);
+    const [loggato, setloggato] = useState();
     const [prodName, setProdName] = useState('');
     let history = useHistory();
 
@@ -28,7 +28,6 @@ function Products(){
     const token = JSON.parse(sessionStorage.getItem('token'));
     // Prendiamo dal session storage la query del form della home
     const form_obj = sessionStorage.getItem('form_obj');
-    console.log("form obj è", form_obj);
     let options;
     if(token)
     {
@@ -115,6 +114,7 @@ function Products(){
   //COSÌ POSSO REINDIRIZZARE IL CLIENTE LOGGATO
   return (obj ? ( <div className="product"> {(() =>
   {//se arrivo dalla home e sono loggato
+    //inserire un loading ?
     if(loggato){
       console.log("available è", available); // e il prodotto è disponibile per la data che ho scelto
         if(available)//continuo con il noleggio
