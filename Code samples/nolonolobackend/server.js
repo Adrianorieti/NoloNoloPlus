@@ -10,6 +10,7 @@ const product = require('./moduleProduct');
 const category = require('./moduleCategory');
 const reservation = require('./moduleReservation');
 const computePrice = require('./computePrice');
+const pendingRequest = require('./modulePendingRequest');
 const app = express();
 
 // Json web token 
@@ -286,26 +287,40 @@ app.post('/api/products', async (req, res) => {
   res.status(200).json({prodList: prodList});
 })  
 
-//Prende il nome dell'utente che ha fatto la prenotazione, il nome del prodotto, inizio e fine prenotazione
+//Prende il token dell'utente che ha fatto la prenotazione, il nome del prodotto, inizio e fine prenotazione
+// Inizialmente il campo employee della prenotazione è null, prima deve essere accettata
 // 1) Aggiunge la prenotazione al prodotto
 // 2) Aggiunge alla collezione di richieste pendenti dei dipendenti la prenotazione
 // Quando un qualsiasi dipendente accetterà la richiesta allora questa verrà messa nell'array dello user ( verde, rossa)
+// Se non viene accettata la cancelliamo anche dal prodotto, la mettiamo nel prodotto così diciamo viene " bloccato per quella data"
 app.post('/api/addRent', async(req, res) =>{
 
-    let productName = req.body.name;
-    let startDate = req.body.startingDate;
-    let endDate = req.body.endingDate;
-    console.log(productName)
-    console.log(startDate)
-    console.log(endDate)
+    //CONTROLLO IL TOKEN PER PRIMA COSA, DAL QUALE ESTRAGGO LA MAIL
+    const authHeader = req.headers['authorization'];
+    let token;
+    if(authHeader != null)
+     { 
+         token = authHeader && authHeader.split(' ')[1];
+         console.log("Il token è", token);
+     }
+     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
+    {
+        let userMail = decoded.email;
+        let productName = req.body.name;
+        let startDate = req.body.startingDate;
+        let endDate = req.body.endingDate;
+       //cerco il prodotto
     let prod = await product.findOne({name: productName});
     console.log(prod);
+    //creo una nuova reservation
     let newReserve = new reservation({
+        usermail: userMail,
+        product: prod,
         start: `${startDate}`,
         end: `${endDate}`
     })
     console.log(newReserve);
-    //il giro dell'oca
+    //prendo l'array di reservation del prodotto, inserisco ed ordino
     let newReservations =  prod.reservations;
     newReservations.push(newReserve);
     //TO-DO ORDINARE L'ARRAY IN MODO CHE SIA CRESCENTE 
@@ -313,10 +328,24 @@ app.post('/api/addRent', async(req, res) =>{
     //nel caso il dipendente debba metterlo in manutenzione può facilmente capire quale sarebbe la prossima reservation
     
 //vado a fare l'update dell'array di reservations DEL PRODOTTO SINGOLO
-     product.updateOne({ name: productName }, {
-        reservations: newReservations
-      });})
-      
+product.updateOne({ name: productName }, {
+    reservations: newReservations
+})
+
+//ora vado ad inserire la reservation nelle richieste pending
+// così i dipendenti avranno la richiesta pendente
+let newPendingReq = new pendingRequest({
+    usermail: userMail,
+    product: prod,
+    start: `${startDate}`,
+    end: `${endDate}`
+})
+
+newPendingReq.save();
+
+})
+;})
+
 app.post('/api/formProducts', async(req, res) =>
 {
    const authHeader = req.headers['authorization'];
@@ -456,38 +485,16 @@ app.post('/api/formProducts', async(req, res) =>
 });
 
 
-// DISCOUNT DEBUG
+// Pending request debug
+// const pendingReq = new pendingRequest({
 
-async function debugDiscount()
-{
-    let startDate = new Date('Nov 15, 2014');
-    let endDate = new Date('Nov 20, 2014');
-    let userMail = 'lorenzotozzi98@gmail.com';
-    let products ;
-    console.log('startDate: ' , startDate);
-    console.log('endDate: ' , endDate);
-    console.log('userMail :', userMail);
-    let collection = await category.findOne({name: 'Electric S_300'});
-    console.log(collection);
-    // .then(async (response) => {
-    //     console.log("la collezione è", response);
-    //     let typeToFind = response.name;
-    //      products =  await product.find({type: typeToFind});
-    //      console.log("i prodotti" ,products);
-    //      console.log("fine");
-    //     //  ,   function(err, db){
-    //     //     for(i in db)
-    //     //     {
-    //     //         console.log('ELEMENTO' , db[i]);
-    //     //          computePrice.computePrice(response, db[i], userMail, startDate, endDate);
-    
-    //     //     }
-    //     // })
-    // });
-   
+//     username: "Gigino",
+//     product: "Electric S_300",
+//     start: "2021-05-05",
+//     end:"2021-06-06"
+// })
 
-}
-
+// pendingReq.save();
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001');

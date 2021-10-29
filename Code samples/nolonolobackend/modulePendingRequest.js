@@ -1,11 +1,9 @@
-/* Creates products schema for database */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const pendingRequestSchema = new Schema({
 
-/* Sub Schema for product map */
-const reserveSchema = new Schema({
-
+  
     usermail: {
         type: String,
         required: true
@@ -25,7 +23,7 @@ const reserveSchema = new Schema({
         type: Date,
         required: true
     }
-})
+});
 
-const reservation = mongoose.model('reservation', reserveSchema)
-module.exports = reservation;
+const pendingRequest = mongoose.model('pendingRequest', pendingRequestSchema)
+module.exports = pendingRequest;
