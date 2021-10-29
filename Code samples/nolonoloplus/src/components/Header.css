@@ -1,9 +1,9 @@
 .App-header {
     background-color: white;
     min-height: 10vh;
-    display: flex;
+    /*display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center;*/
     /*font-size: calc(10px + 2vmin);*/
     color: black;
     border: 6px solid white;
@@ -27,7 +27,7 @@
 .sponsor {
     /* margin-top: 20px; */
     vertical-align: bottom;
-    width: 300px; 
+    width: 300vh; 
 }
 
 strong {
@@ -36,6 +36,6 @@ strong {
     font-size: 21px;
     }
 
-p {
+/*p {
     font-size: small;
-}
+}*/

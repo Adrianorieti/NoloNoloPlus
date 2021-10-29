@@ -5,8 +5,8 @@ import './Header.css';
 
 function Header() {
     return (
-        <header classname="App-header text-centere">
-            <div className="container-fluid">
+        <header classname="App-header container-properties">
+
                 <div class="row">
                     <div className="col-lg-6">
                         <img className="logo img-fluid" src={NoloNoloLogo} alt="Prenotazioni NoloNolo" title="Prenotazioni NoloNolo" />
@@ -18,7 +18,7 @@ function Header() {
                         </p>
                     </div>
                 </div>
-            </div>
+            
         </header >
     );
 }
