@@ -342,12 +342,19 @@ let newPendingReq = new pendingRequest({
     start: `${startDate}`,
     end: `${endDate}`
 })
-console.log("QUAAA", newPendingReq);
 
 //ATTENZIONE NON CONTROLLA SE ESISTE GIÀ UNA PRENOTAZIONE UGUALE
 //magari usare findone prima per vedere se già esiste una entry completamente uguale con gli stessi campi, in quel caso non vado ad inserire
+let exist = await pendingRequest.findOne({ usermail: userMail, product: prod.name, start: `${startDate}`,})
+if(exist)
+{
+    console.log("c'è già !!!");
+}else{
+    console.log("lo metto");
+    newPendingReq.save();
 
-newPendingReq.save();
+}
+
 
 })
 ;})
@@ -463,12 +470,19 @@ app.post('/api/formProducts', async(req, res) =>
     //        best.push(computePrice(element));
     //    });
     //calcolo il  prodotto più economico
-       price = Math.min(...prices);
+    if(availableProductList.length != 0)
+    {
+           price = Math.min(...prices);
        console.log("TUTTI I PREZZI ",prices);
        console.log("IL MINORE", price);
        //le posizioni sono le stesse
        currentProd = availableProductList[prices.indexOf(price)];
         res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd.name});
+    }else
+    {
+        console.log("bye bye modafoca");
+        res.status(200).json({ availability: false});
+    }
     })
     }
 })
