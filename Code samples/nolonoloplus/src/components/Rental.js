@@ -13,7 +13,8 @@ function Rental(props)
 
     function sendRent(){
       
-          
+      const token = JSON.parse(sessionStorage.getItem('token'));
+      console.log(props.productName);
             let form_obj = `{
                 "name": "${props.productName}", 
                 "startingDate": "${props.startDate}",
@@ -22,7 +23,7 @@ function Rental(props)
 
                const options = {
                 method: 'POST',
-                headers: new Headers({ 'Content-type': 'application/json', "Access-Control-Allow-Origin": "*"}),
+                headers: new Headers({ 'Content-type': 'application/json', 'Authorization': `Bearer ${token}`}),
                 body: form_obj
               };
 
