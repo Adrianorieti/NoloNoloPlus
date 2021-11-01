@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
-
+const server_url = process.env.REACT_APP_SERVER_URL;
+const account_url = process.env.REACT_APP_API_ACCOUNT;
+const login_url = process.env.REACT_APP_LOGIN;
+const register_url = process.env.REACT_APP_REGISTER;
 
 function LoginPage({ nameToParent }) {
 
@@ -76,7 +79,7 @@ function LoginPage({ nameToParent }) {
       headers: new Headers({ 'Content-type': 'application/json' }),
       body: obj
     };
-    let url = 'http://localhost:8001/api/register';
+    let url = `${server_url}`+`${account_url}`+`${register_url}`;
 
     fetch(url, options)
       .then(response => {
@@ -130,7 +133,7 @@ function LoginPage({ nameToParent }) {
       body: obj
     };
 
-    let url = 'http://localhost:8001/api/login';
+    let url = `${server_url}`+`${account_url}`+`${login_url}`;
 
     fetch(url, options)
       .then(response => {

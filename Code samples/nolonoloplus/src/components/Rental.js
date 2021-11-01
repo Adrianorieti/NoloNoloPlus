@@ -27,7 +27,7 @@ function Rental(props)
                 body: form_obj
               };
 
-        let url = 'http://localhost:8001/api/addRent';
+        let url = 'http://localhost:8001/api/rental/addRent';
         fetch(url, options)
         .then(response => {
           if (response.status == 200) {

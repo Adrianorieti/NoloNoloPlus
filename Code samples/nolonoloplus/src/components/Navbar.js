@@ -16,7 +16,7 @@ function Navbar (props){
 
   function checkLog(token)
   {
-       fetch('http://localhost:8001/api/authLog',{
+       fetch('http://localhost:8001/api/auth/authLog',{
           headers: {
             "Authorization": `Bearer ${token}`
           }

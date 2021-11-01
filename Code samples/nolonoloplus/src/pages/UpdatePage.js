@@ -76,7 +76,7 @@ export default function UpdatePage({ nameToParent }) {
                         headers: new Headers({ 'Content-type': 'application/json', 'Authorization': `Bearer ${token}` }),
                         body: obj
                     };
-                    const url = 'http://localhost:8001/api/passw-validation';
+                    const url = 'http://localhost:8001/api/customer/passw-validation';
                     fetch(url, options)
                         .then(response => {
                             if (response.status === 401) {
@@ -109,7 +109,7 @@ export default function UpdatePage({ nameToParent }) {
                     headers: new Headers({ 'Content-type': 'application/json' }),
                     body: obj
                 };
-                const url = 'http://localhost:8001/api/email-validation';
+                const url = 'http://localhost:8001/api/customer/email-validation';
                 fetch(url, options)
                     .then(response => {
                         if (response.status === 401) {
@@ -139,7 +139,7 @@ export default function UpdatePage({ nameToParent }) {
             headers: new Headers({ 'Content-type': 'application/json', 'Authorization': `Bearer ${token}` }),
             body: obj
         };
-        const url = 'http://localhost:8001/api/update';
+        const url = 'http://localhost:8001/api/customer/update';
         fetch(url, options)
             .then(response => {
                 if (response.status === 200) {

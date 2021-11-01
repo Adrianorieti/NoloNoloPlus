@@ -7,6 +7,10 @@ import specialBike from '../images/specialBike.jpeg';
 import cityBike from '../images/cityBike.jpg';
 import { useHistory } from "react-router";
 import Rental from './Rental';
+const server_url = process.env.REACT_APP_SERVER_URL;
+const services_url = process.env.REACT_APP_API_SERVICES;
+const products_url = process.env.REACT_APP_PRODUCTS;
+const formProducts_url = process.env.REACT_APP_FORMPRODUCTS;
 function Products(){
 
     //ci serve per capire se siamo in un caso o nell'altro
@@ -46,7 +50,7 @@ function Products(){
         };
     }
       //la api formProducts gestisce le richieste quando arriviamo dalla home
-      let url = 'http://localhost:8001/api/formProducts'; 
+      let url = `${server_url}`+`${services_url}`+`${formProducts_url}`; 
       fetch(url, options)
         .then(response => {
           if (response.status == 200) {
@@ -74,7 +78,7 @@ function Products(){
         headers: new Headers({ 'Content-type': 'application/json', "Access-Control-Allow-Origin": "*"}),
       };
       //l'api products ci restituisce tutti i prodotti
-      let url = 'http://localhost:8001/api/products';
+      let url = `${server_url}`+`${services_url}` + `${products_url}`;
       fetch(url, options)
         .then(response => {
           if (response.status == 200) {

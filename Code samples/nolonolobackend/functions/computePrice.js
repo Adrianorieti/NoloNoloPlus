@@ -1,5 +1,5 @@
-const user = require('./moduleUser');
-const discount = require('./moduleDiscount');
+const user = require('../schemas/moduleUser');
+const discount = require('../schemas/moduleDiscount');
 
 
 module.exports = {
