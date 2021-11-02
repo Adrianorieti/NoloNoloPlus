@@ -340,8 +340,8 @@ app.post("/api/removeReservation", (req, res) => {
             //creo una prenotazione come quelle che abbiamo nel db
             //forse arriva già in questa forma nel body, da capire.
             let res = {
-                start: new Date(req.body.startingDate),
-                end: new Date(req.body.endingDate),
+                start: req.body.startingDate,
+                end: req.body.endingDate,
                 name: req.body.prodName
             };
             //elimino la prenotazione vecchia dallo user.
