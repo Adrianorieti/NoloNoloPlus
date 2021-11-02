@@ -4,79 +4,111 @@ import CarouselContainer from './components/Carousel';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import {
-    Route,
-    Switch
+  Route,
+  Switch
 } from 'react-router-dom';
 import RentForm from './components/RentForm';
 import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import {
-    useState
+  useState
 } from 'react';
 import Test from './components/Test';
 import Products from './components/Products';
 import UpdatePage from './pages/UpdatePage';
-import PersonalPage from './pages/PersonalPage'
+import PersonalPage from './pages/PersonalPage';
+import FutureReservations from './pages/FutureReservations';
+import ModifyReservation from './pages/ModifyReservation';
 
 
 
 function App() {
 
-    //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
-    const [data, setData] = useState(JSON.parse(sessionStorage.getItem('username')) || '');
-    const [query, setQuery] = useState(null);
+  //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
+  const [data, setData] = useState(JSON.parse(sessionStorage.getItem('username')) || '');
+  const [query, setQuery] = useState(null);
+  const [reservation, setReservation] = useState('');
 
-    const nameToParent = (childdata) => {
-        setData(childdata);
-    }
+  const nameToParent = (childdata) => {
+    setData(childdata);
+  }
 
-    const queryToParent = (rentFormData) => {
-        setQuery(rentFormData);
-    }
+  const queryToParent = (rentFormData) => {
+    setQuery(rentFormData);
+  }
 
-    return (
-        <div className="App" >
-            <Switch>
-                <Route path="/" exact >
-                    <Header />
-                    <Navbar name={data} queryToParent={queryToParent} />
-
-                    <div className="App-content bg-image container-fluid">
-                        <div className="row">
-                            <div className="col">
-                                <RentForm queryToParent={queryToParent} />
-                            </div>
-                            <div className="col">
-                                <h1 className="banner">We provide the mean <br /> you choose the place</h1>
-                            </div>
-                        </div>
-                    </div>
-
-                    {<div> <CarouselContainer /> </div>}
-
-                </Route>
-
-                <Route path="/login" exact >
+  const resToParent = (resData) => {
+    setReservation(resData);
+  }
 
 
-                    <Navbar name={data} queryToParent={queryToParent} />
-                    <LoginPage nameToParent={nameToParent} />
-                </Route>
+  return (
+    <div className="App" >
+      <Switch>
+        <Route path="/" exact >
+          <Header />
+          <Navbar name={data} queryToParent={queryToParent} />
 
-                <Route path="/dashboard" exact >
-                    <Test />
-                </Route>
+          <div className="App-content bg-image container-fluid">
+            <div className="row">
+              <div className="col">
+                <RentForm queryToParent={queryToParent} />
+              </div>
+              <div className="col">
+                <h1 className="banner">We provide the mean <br /> you choose the place</h1>
+              </div>
+            </div>
+          </div>
 
-                <Route path='/products' exact >
-                    <Navbar name={data} queryToParent={queryToParent} />
-                    <Products />
-                </Route>
-            </Switch>
+          {<div> <CarouselContainer /> </div>}
 
-            {<Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
+        </Route>
 
-        </div>
-    );
+        <Route path="/login" exact >
+
+
+          <Navbar name={data} queryToParent={queryToParent} />
+          <LoginPage nameToParent={nameToParent} />
+        </Route>
+
+        <Route path="/personalpage" exact>
+
+          <Navbar name={data} queryToParent={queryToParent} />
+          <PersonalPage />
+
+        </Route>
+
+        <Route path="/updatepage" exact>
+
+          <Navbar name={data} queryToParent={queryToParent} />
+          <UpdatePage nameToParent={nameToParent} />
+
+        </Route>
+
+        <Route path="/futurereservations" exact>
+          <Navbar name={data} queryToParent={queryToParent} />
+          <FutureReservations resToParent={resToParent} />
+        </Route>
+
+        <Route path="/modifyreservation" exact>
+          <Navbar name={data} queryToParent={queryToParent} />
+          <ModifyReservation res={reservation} />
+        </Route>
+
+        <Route path="/dashboard" exact >
+          <Test />
+        </Route>
+
+        <Route path='/products' exact >
+          <Navbar name={data} queryToParent={queryToParent} />
+          <Products />
+        </Route>
+      </Switch>
+
+      {<Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
+
+    </div>
+  );
 }
 
 
