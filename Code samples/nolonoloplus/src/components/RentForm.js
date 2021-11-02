@@ -2,7 +2,7 @@ import React from "react";
 import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
 
-function RentForm({queryToParent}) {
+function RentForm({ queryToParent }) {
 
   let history = useHistory();
 
@@ -13,31 +13,30 @@ function RentForm({queryToParent}) {
     //TO-DO se qualcuno  dei campi non è selezionato allora c'è un errore da mostrare
     //perchè sono richiesti 
     const radioInput = document.querySelector("input[name='products']:checked");
-    let bikeType ;
+    let bikeType;
     if (radioInput) {
       bikeType = radioInput.value;
       let startingDate = document.querySelector("#fromDate").innerHTML;
-   let endingDate = document.querySelector("#toDate").innerHTML;
-   form_obj += `{
+      let endingDate = document.querySelector("#toDate").innerHTML;
+      form_obj += `{
     "name": "${bikeType}",
     "startingDate": "${startingDate}",
     "endingDate": "${endingDate}"
    }`;
-   sessionStorage.setItem('form_obj', form_obj);
-   alert(form_obj);
-   //passiamo il testimone a Products
-   history.push('/products');
+      sessionStorage.setItem('form_obj', form_obj);
+      alert(form_obj);
+      //passiamo il testimone a Products
+      history.push('/products');
     }
-    else
-    {    
-   alert("Please select a field");
+    else {
+      alert("Please select a field");
     }
   }
 
-// useEffect(() =>
-// {
-//   sessionStorage.removeItem('form_obj');
-// })
+  // useEffect(() =>
+  // {
+  //   sessionStorage.removeItem('form_obj');
+  // })
 
   return (
     <main>
@@ -45,7 +44,7 @@ function RentForm({queryToParent}) {
         <fieldset id="Bikes_Types" aria-required="true">
           <legend>Bikes types</legend>
           <section className="mb-3 form-check">
-          <div>
+            <div>
               <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
               <label htmlFor="City-Bike" className="form-label">City Bike</label>
             </div>
@@ -75,7 +74,7 @@ function RentForm({queryToParent}) {
         </fieldset>
         <button id="rentFormButton" type="button" className="btn btn-success" onClick={submit}>Click to submit</button>
       </form>
-    </main> 
+    </main>
 
   );
 }

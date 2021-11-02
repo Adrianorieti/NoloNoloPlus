@@ -11,7 +11,8 @@ import Test from './components/Test';
 import Products from './components/Products';
 import UpdatePage from './pages/UpdatePage';
 import PersonalPage from './pages/PersonalPage'
-
+import FutureReservations from './pages/FutureReservations';
+import ModifyReservation from './pages/ModifyReservation';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
   const [data, setData] = useState(JSON.parse(sessionStorage.getItem('username')) || '');
   const [query, setQuery] = useState(null);
+  const [reservation, setReservation] = useState('');
 
   const nameToParent = (childdata) => {
     setData(childdata);
@@ -26,6 +28,10 @@ function App() {
 
   const queryToParent = (rentFormData) => {
     setQuery(rentFormData);
+  }
+
+  const resToParent = (resData) => {
+    setReservation(resData);
   }
 
 
@@ -69,6 +75,16 @@ function App() {
           <Navbar name={data} queryToParent={queryToParent} />
           <UpdatePage nameToParent={nameToParent} />
 
+        </Route>
+
+        <Route path="/futurereservations" exact>
+          <Navbar name={data} queryToParent={queryToParent} />
+          <FutureReservations resToParent={resToParent} />
+        </Route>
+
+        <Route path="/modifyreservation" exact>
+          <Navbar name={data} queryToParent={queryToParent} />
+          <ModifyReservation res={reservation} />
         </Route>
 
         <Route path="/dashboard" exact>

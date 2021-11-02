@@ -12,8 +12,12 @@ const reserveSchema = new Schema({
     end: {
         type: Date,
         required: true
+    },
+    name: { //nome dell'oggetto che andiamo a noleggiare!
+        type: String,
+        required: true
     }
-})
+});
 
 const UserSchema = new Schema({
     name: {

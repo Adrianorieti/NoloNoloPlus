@@ -7,8 +7,6 @@ export default function PersonalPage() {
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('');
-    const [futureReservations, setFutureReservations] = useState('');
-    const [pastReservations, setPastReservations] = useState('');
 
 
     let history = useHistory();
@@ -32,8 +30,6 @@ export default function PersonalPage() {
                 setPhone(parsedData.phone);
                 setEmail(parsedData.email);
                 setPaymentMethod(parsedData.paymentMethod);
-                setFutureReservations(parsedData.futureReservations);
-                setPastReservations(parsedData.pastReservations);
             }).catch(error => {
                 console.log(error);
             })
@@ -42,7 +38,7 @@ export default function PersonalPage() {
     return (
         <div>
             <div>
-                ciao come stai?
+                Ciao come stai?
                 Queste sono le tue informazioni:
                 <ul>
                     <li>Name: {name}</li>
@@ -53,7 +49,15 @@ export default function PersonalPage() {
                 </ul>
             </div>
             <div>
-                <button onClick={() => { history.push('/updatepage'); }}>Cambia le informazioni personali</button>
+                <button type="button" onClick={() => { history.push('/updatepage'); }}>Clicca per cambiare le informazioni personali</button>
+            </div>
+            <h2>PRENOTAZIONI FUTURE</h2>
+            <div>
+                <button type="button" onClick={() => { history.push('/futurereservations'); }}>Clicca per visualizzare le prenotazioni future</button>
+            </div>
+            <h2>PRENOTAZIONI CONCLUSE</h2>
+            <div>
+                <button type="button" onClick={() => { history.push('/PastReservations'); }}>Clicca per visualizzare le prenotazioni passate</button>
             </div>
         </div>
     );

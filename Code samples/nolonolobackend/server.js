@@ -54,11 +54,11 @@ app.get("/dashboard", (req, res) => {
 
 app.get("/personalpage", (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-})
+});
 
 app.get("/updatepage", (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-})
+});
 
 app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -146,7 +146,7 @@ app.post('/api/login', async (req, res) => {
         console.log('Errore la mail non esiste');
         res.status(500).send({ error: 'Mail not exists' });
     }
-})
+});
 
 app.post('/api/email-validation', async (req, res) => {
     const email = req.body.email;
@@ -158,7 +158,7 @@ app.post('/api/email-validation', async (req, res) => {
     else {
         res.status(401).send();
     }
-})
+});
 
 app.post('/api/passw-validation', async (req, res) => {
     const authHeader = req.headers['authorization'];
@@ -185,7 +185,7 @@ app.post('/api/passw-validation', async (req, res) => {
             }
         });
     }
-})
+});
 
 app.post('/api/update', async (req, res) => {
     //VANNO SETTATI PER BENE GLI STATI DI ERRORE.
@@ -240,7 +240,7 @@ app.post('/api/update', async (req, res) => {
             }
         });
     }
-})
+});
 
 app.post("/api/getInfo", async (req, res) => {
     //fare cose 
@@ -272,7 +272,97 @@ app.post("/api/getInfo", async (req, res) => {
             }
         });
     }
-})
+});
+
+app.post("/api/changeReservation", async (req, res) => {
+    //COME DEVE ESSERE FATTO IL BODY? 
+    //ALLORA DEVO AVERE LA STARTING DATE E ENDING DATE DELLA PRENOTAZIONE + IL NOME DELL'OGGETTO -> QUESTO ARRIVA TUTTO IN UN CAMPO DEL JSON DIREI.
+    //POI DEVO RIORDARMI DEVO AVERE LE NUOVE DATE, IN MODO DA POTER CHECKARE SE PER CASO SONO LIBERE OPPURE NO.
+    //CHE SE LE CAMBIA, DEVO CAMBIARLA ANCHE IN QUELLE DEL PRODOTTO SE NON ERRO. 
+    let prodName = req.body.reservation.name;
+    let presentRes; //la prenotazione attuale nello stesso formato di come viene salvata
+    let source = await product.findOne({ name: prodName });
+    let newStartingDate = new Date(req.body.newStartingDate);
+    let newEndingDate = new Date(req.body.newEndingDate);
+    //io farei cambiare soltanto l'oggetto presente e basta, se non gli va bene cancella la prenotazioni e cerca altro.
+    //devo fare un controllo sulle sue prenotazioni senza tenere conto di quella modificabile.
+    //che forse in primo luogo potrei cavare, poi fare il check e poi riaggiungere in base a se è possibile oppure no modificare.
+    //se poi diventa possibile, devo ricordare di mandare un qualcosa client side per fare in modo che venga richiamata la api removeReservation.
+
+    //CERCO NELL'ARRAY DELLE PRENOTAZIONI E MI SALVO LA POSIZIONE DELLA PRENOTAZIONE CHE CERCO DI MODIFICARE.
+    let prodReservations = source.reservations;
+    let prod;
+    let presResIndex = -1;
+    let conflict = false;
+    for (i = 0; i < prodReservations.length; i++) {
+        prod = prodReservations[i];
+        if (prod == presentRes) {
+            //forse questo if è più complesso ma il concetto è che se è la vecchia reservation allora mi salvo l'indice.
+            presResIndex = i;
+        }
+        else {
+            if (prod.start.getTime() <= presentRes.start && presentRes.start <= prod.end.getTime()
+                || prod.start.getTime() <= presentRes.end && presentRes.end <= prod.end.getTime()) {
+                //devo controllare che ci sia un buco, quindi non deve avere mai dei conflitti con altre.
+                //se l'inizio è compresa in una delle altre o la fine è compresa in una delle altre allora abbiamo finito.
+                conflict = true;
+                break;
+            }
+        }
+    }
+
+    if (!conflict) {
+        //devo calcolare il nuovo costo, displayarlo e poi successivamente chiedere se gli va bene.
+        //a questo punto cancello la vecchia prenotazione(con api che devo fare) e ne creo una nuova che dovrà essere pending.
+    }
+    else {
+        //c'è stato un conflitto e quindi devo controllare gli altri prodotti per categoria.
+    }
+});
+
+//serve quando un utente vuole cancellare una prenotazione futura.
+//DEVO TOGLIERE LA PRENOTAZIONE DA TUTTE LE PARTI: UTENTE, PRODOTTO, E POI ANCHE DAI DIPENDENTI.
+app.post("/api/removeReservation", (req, res) => {
+    //devo avere la starting date, ending date, name product e anche il token.
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            //eliminiamo la prenotazione dallo user.
+            //trovo il modo di identificare il mio user.
+            const email = decoded.email;
+            let source = await user.findOne({ email: email });
+            //creo una prenotazione come quelle che abbiamo nel db
+            //forse arriva già in questa forma nel body, da capire.
+            let res = {
+                start: new Date(req.body.startingDate),
+                end: new Date(req.body.endingDate),
+                name: req.body.prodName
+            };
+            //elimino la prenotazione vecchia dallo user.
+            //trovo indice all'interno dell'array delle reservations.
+            let index = source.futureReservations.indexOf(res);
+            //elimino elemento in determinato indice.
+            source.futureReservations.splice(index, 1);
+            source.save();
+            //adesso eliminiamo la prenotazione vecchia dal prodotto.
+            delete res.name;
+            source = await product.findOne({ name: req.body.prodName });
+            //trovo indice all'interno dell'array delle reservations.
+            index = source.reservations.indexOf(res);
+            //elimino elemento in determinato indice.
+            source.reservations.splice(index, 1);
+            souce.save();
+            //  QUI DEVO ELIMINARE LA PARTE DEI DIPENDENTI.
+            res.status(200).send();
+        });
+    }
+});
 
 app.get("/api/dashboard", auth.verifyToken, auth.verifyAdmin, (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -291,14 +381,13 @@ app.post('/api/products', async (req, res) => {
         prodList.push(doc);
     }
     res.status(200).json({ prodList: prodList });
-})
+});
 
 //Prende il nome dell'utente che ha fatto la prenotazione, il nome del prodotto, inizio e fine prenotazione
 // 1) Aggiunge la prenotazione al prodotto
 // 2) Aggiunge alla collezione di richieste pendenti dei dipendenti la prenotazione
 // Quando un qualsiasi dipendente accetterà la richiesta allora questa verrà messa nell'array dello user ( verde, rossa)
 app.post('/api/addRent', async (req, res) => {
-
     let productName = req.body.name;
     let startDate = req.body.startingDate;
     let endDate = req.body.endingDate;
@@ -323,7 +412,7 @@ app.post('/api/addRent', async (req, res) => {
     product.updateOne({ name: productName }, {
         reservations: newReservations
     });
-})
+});
 
 app.post('/api/formProducts', async (req, res) => {
     const authHeader = req.headers['authorization'];
