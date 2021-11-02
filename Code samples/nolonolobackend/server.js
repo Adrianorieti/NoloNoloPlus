@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const services = require('./api/services');
 const account = require('./api/account');
 const rental = require('./api/rental');
-const costumer = require('./api/costumer');
+const customer = require('./api/customer');
 const auth = require('./api/auth');
 const app = express();
 
@@ -30,7 +30,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use('/api/account/', account);
 app.use('/api/services/', services);
 app.use('/api/rental/', rental);
-app.use('/api/costumer/', costumer);
+app.use('/api/customer/', customer);
 app.use('/api/auth/', auth);
 
 // These API's answer an url query with static files

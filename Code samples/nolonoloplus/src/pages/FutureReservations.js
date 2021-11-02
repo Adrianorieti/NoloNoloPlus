@@ -12,7 +12,7 @@ export default function FutureReservations({ resToParent }) {
             method: 'POST',
             headers: new Headers({ 'Content-type': 'application/json', 'Authorization': `Bearer ${token}` })
         };
-        const url = 'http://localhost:8001/api/getInfo';
+        const url = 'http://localhost:8001/api/customer/getInfo';
         fetch(url, options)
             .then(response => {
                 if (response.status === 200) {
@@ -39,7 +39,7 @@ export default function FutureReservations({ resToParent }) {
         //     headers: new Headers({ 'Content-type': 'application/json', 'Authorization': `Bearer ${token}` }),
         //     body: obj
         // };
-        // const url = 'http://localhost:8001/api/removeReservation';
+        // const url = 'http://localhost:8001/api/customer/removeReservation';
         // fetch(url, options)
         //     .then(response => {
         //         if (response.status === 200) {

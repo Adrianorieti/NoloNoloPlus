@@ -17,7 +17,7 @@ export default function PersonalPage() {
             method: 'POST',
             headers: new Headers({ 'Content-type': 'application/json', 'Authorization': `Bearer ${token}` })
         };
-        const url = 'http://localhost:8001/api/costumer/getInfo';
+        const url = 'http://localhost:8001/api/customer/getInfo';
         fetch(url, options)
             .then(response => {
                 if (response.status === 200) {

@@ -109,7 +109,10 @@ router.post("/getInfo", async (req, res) => {
                     name: source.name,
                     surname: source.surname,
                     phone: source.phone,
-                    email: source.email
+                    email: source.email,
+                    paymentMethod: source.paymentMethod,
+                    futureReservations: source.futureReservations,
+                    pastReservations: source.pastReservations
                 }
                 res.json(JSON.stringify(info));
             }
@@ -118,7 +121,7 @@ router.post("/getInfo", async (req, res) => {
             }
         });
     }
-})
+});
 
 router.post('/email-validation', async (req, res) => {
     const email = req.body.email;
