@@ -132,4 +132,46 @@ router.post('/email-validation', async (req, res) => {
     }
 })
 
+router.post("/removeReservation", (req, res) => {
+    //devo avere la starting date, ending date, name product e anche il token.
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            //eliminiamo la prenotazione dallo user.
+            //trovo il modo di identificare il mio user.
+            const email = decoded.email;
+            let source = await user.findOne({ email: email });
+            //creo una prenotazione come quelle che abbiamo nel db
+            //forse arriva già in questa forma nel body, da capire.
+            let res = {
+                start: req.body.startingDate,
+                end: req.body.endingDate,
+                name: req.body.prodName
+            };
+            //elimino la prenotazione vecchia dallo user.
+            //trovo indice all'interno dell'array delle reservations.
+            let index = source.futureReservations.indexOf(res);
+            //elimino elemento in determinato indice.
+            source.futureReservations.splice(index, 1);
+            source.save();
+            //adesso eliminiamo la prenotazione vecchia dal prodotto.
+            delete res.name;
+            source = await product.findOne({ name: req.body.prodName });
+            //trovo indice all'interno dell'array delle reservations.
+            index = source.reservations.indexOf(res);
+            //elimino elemento in determinato indice.
+            source.reservations.splice(index, 1);
+            souce.save();
+            //  QUI DEVO ELIMINARE LA PARTE DEI DIPENDENTI.
+            res.status(200).send();
+        });
+    }
+});
+
 module.exports = router;
