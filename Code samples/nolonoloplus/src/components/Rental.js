@@ -5,7 +5,7 @@ import scooter from '../images/scooter.jpg';
 import specialBike from '../images/specialBike.jpeg';
 import cityBike from '../images/cityBike.jpg';
 import { useHistory } from "react-router";
-import './Rental.css';
+import './style/Rental.css';
 
 function Rental(props)
 {

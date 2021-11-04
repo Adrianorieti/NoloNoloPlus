@@ -3,7 +3,7 @@ import {Carousel} from 'react-bootstrap';
 import bikeTravel1 from '../images/bikeTravel1.jpg'
 import bikeTravel2 from '../images/bikeTravel2.jpg'
 import bikeTravel3 from '../images/bikeTravel3.jpg'
-import './Carousel.css';
+import './style/Carousel.css';
 
 
 const CarouselContainer = () =>

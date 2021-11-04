@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useHistory } from "react-router";
-import './Navbar.css';
+import './style/Navbar.css';
 
 
 function Navbar (props){

@@ -1,7 +1,7 @@
 import React from "react";
 import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
-import './RentForm.css';
+import './style/RentForm.css';
 
 function RentForm({ queryToParent }) {
 

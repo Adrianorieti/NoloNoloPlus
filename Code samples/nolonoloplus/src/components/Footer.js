@@ -5,7 +5,7 @@ import postepay from '../images/cards/postepay.png'
 import satispay from '../images/cards/satispay.png'
 import sisalpay from '../images/cards/sisalpay.png'
 import visa from '../images/cards/visa.png'
-import './Footer.css';
+import './style/Footer.css';
 
 function Footer(props) {
     return (

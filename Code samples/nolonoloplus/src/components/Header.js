@@ -1,7 +1,7 @@
 import React from 'react';
 import NoloNoloLogo from '../images/logo/NoloNoloLogo.png'
 import progettoTecWeb from '../images/logo/progettoTecWeb.png'
-import './Header.css';
+import './style/Header.css';
 
 function Header() {
     return (
