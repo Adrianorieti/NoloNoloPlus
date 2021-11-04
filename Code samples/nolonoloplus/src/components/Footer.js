@@ -5,7 +5,7 @@ import postepay from '../images/cards/postepay.png'
 import satispay from '../images/cards/satispay.png'
 import sisalpay from '../images/cards/sisalpay.png'
 import visa from '../images/cards/visa.png'
-import './Footer.css';
+import './styles/Footer.css';
 
 function Footer(props) {
     return (
@@ -70,9 +70,9 @@ function Footer(props) {
                     <img id="commons" className="img-fluid" alt="Licenza Creative Commons" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
                 </a>
                 <span xmlnsDct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">
-                    &nbsp; Nolo Nolo Plus -
+                    &nbsp; Nolo Nolo Plus &nbsp;
                 </span>
-                <a xmlnsCc="http://creativecommons.org/ns#" href="http://" property="cc:attributionName" rel="cc:attributionURL">
+                <a xmlnsCc="http://creativecommons.org/ns#" href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/432290" property="cc:attributionName" rel="cc:attributionURL">
                     Progetto per il Corso di Tecnologie Web Unibo prof. Vitali 2021,
                 </a>
                 &nbsp; è distribuito con Licenza
