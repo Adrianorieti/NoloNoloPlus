@@ -1,5 +1,6 @@
 .App-carousel {
     border: 6px solid #bbe0ac;
+    font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
 }
 
 .card {
@@ -11,3 +12,19 @@
     width: 50%;
     height: 50%;
   }
+
+  .text-block {
+      float: left;
+      width: 400%;
+      
+    color: white; 
+    padding-left: 20px; 
+    text-align: right;
+ }
+ 
+ .text-block h4 {
+    color: #307cb6; 
+    font-weight: 600; 
+    font-size: 42px; 
+    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+ }

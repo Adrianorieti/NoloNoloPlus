@@ -21,10 +21,14 @@
     /*min-width: 20vh;*/
   }
   
-img .cards {
-    width: 100%;
-    max-width: 150px;
+.cards img {
+  width: 10vh;
+  min-width: 10vh;
   }
+
+.info h6 {
+  font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+}
 
 .info { 
     padding: 50px 20%;
@@ -50,5 +54,10 @@ img .cards {
 .cclicense {
     /*padding-top: 30px;*/
     /*border: 10px solid black;*/
-    margin: 30px 30px;
+    margin: 30px 20%;
 }
+
+.ccimage img {
+  width: 15vh;
+}
+

@@ -45,20 +45,21 @@ function App() {
   return (
     <div className="App" >
       <Switch>
+
         <Route path="/" exact >
           <Header />
           <Navbar name={data} queryToParent={queryToParent} />
 
-          <div className="App-content bg-image container-fluid">
-            <div className="row">
-              <div className="col">
+          <section className="App-content bg-image">
+            <div className="row container-properties">
+              <div className="col-md-6 rentform">
                 <RentForm queryToParent={queryToParent} />
               </div>
-              <div className="col">
-                <h1 className="banner">We provide the mean <br /> you choose the place</h1>
+              <div className="col-md-6 banner">
+                <h4>We provide the mean you choose the place</h4>
               </div>
             </div>
-          </div>
+          </section>
 
           {<div> <CarouselContainer /> </div>}
 
