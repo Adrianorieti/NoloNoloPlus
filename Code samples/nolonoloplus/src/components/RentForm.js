@@ -40,9 +40,9 @@ function RentForm({ queryToParent }) {
 
   return (
 
-    <main className="App-rent">
-      <div className="container">
-        <div classname="row">
+    <main className="App-rent ">
+      <div className="container App-rent">
+        <div classname="row container-properties">
           <div classname="col-md-12">
             <form className="rentForm" >
 
@@ -72,7 +72,6 @@ function RentForm({ queryToParent }) {
                   </div>
                 </section>
               </fieldset>
-
 
               <fieldset aria-required="true">
                 <legend>Renting dates inputs</legend>

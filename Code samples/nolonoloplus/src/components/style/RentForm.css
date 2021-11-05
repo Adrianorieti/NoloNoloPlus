@@ -1,26 +1,27 @@
-@media screen and (min-width: 480px) {
+/*@media screen and (min-width: 480px) {
     .App-rent {
         margin-top: 50%;
     }
-  }
+  }*/
 
 .App-rent {
-    /*border: 6px solid #bbe0ac;*/
-    justify-content: center;
-    
-}
+  /*border: 6px solid #bbe0ac;*/
 
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  /*border: 6px solid #bbe0ac;*/
+}
 
 .rentForm {
-    background-color: white;
-    color: black;
-    opacity: 0.9;
-    max-height: 80vh;
-    /*border: 6px solid #bbe0ac;*/
-    width: 60vh;
-    height: auto;
-    overflow: scroll;
-    justify-content: center;
-    padding: 3vh 3vh;
+  background-color: white;
+  color: black;
+  opacity: 0.9;
+  max-height: 110vh;
+  /*border: 6px solid #bbe0ac;*/
+  width: 60vh;
+  height: auto;
+  overflow: scroll;
+  justify-content: center;
+  padding: 3vh 3vh;
 }
-

@@ -50,8 +50,8 @@ function App() {
           <Header />
           <Navbar name={data} queryToParent={queryToParent} />
 
-          <section className="App-content bg-image">
-            <div className="row container-properties">
+          <section className="App-content bg-image container-properties">
+            <div className="row">
               <div className="col-md-6 rentform">
                 <RentForm queryToParent={queryToParent} />
               </div>
@@ -107,6 +107,9 @@ function App() {
       </Switch>
 
       {<Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
+
+
+
 
     </div>
   );

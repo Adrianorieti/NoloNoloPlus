@@ -9,7 +9,7 @@ import './style/Footer.css';
 
 function Footer(props) {
     return (
-        <footer className="App-footer container-properties">
+        <footer className="App-footer">
             <div className="row cards">
                 <div className="col-md-2">
                     <img id="card" src={mastercard} alt="You can pay with Mastercard" />

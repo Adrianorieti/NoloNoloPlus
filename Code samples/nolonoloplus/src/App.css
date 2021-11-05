@@ -67,16 +67,6 @@ a:active {
   /*border: 6px solid #bbe0ac;*/
 }
 
-.rentform {
-  justify-content: center;
-}
-
-@media screen and (min-width: 480px) {
-  .banner {
-    padding: auto 20vh;
-  }
-}
-
 .banner {
   /*position: float;
     width: 275px;*/
@@ -86,10 +76,15 @@ a:active {
   /*  border: 6px solid #bbe0ac; */
   color: white;
   padding: 20vh 20vh;
-  text-align: right;
+  text-align: center;
 }
-
-
+/*
+@media only screen and (max-width: 768px) {
+  .banner {
+    adding: auto 20vh;
+    display: none;
+  }
+}*/
 
 .banner h4 {
   color: #297c29;
@@ -97,25 +92,8 @@ a:active {
   font-size: 42px;
   text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff,
     1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
-  text-align: center;
-  overflow:hidden;
-}
-
-@media screen and (min-width: 480px) {
-  .bg-image {
-    background-image: url("./images/treehd.jpg");
-  }
-}
-
-.bg-image {
-  background-image: url("./images/treehd.jpg");
-  height: 100vh;
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  position: relative;
-  display: flex;
-  align-items: center;
+  /*background-position: center center;
+  text-align: center;*/
 }
 
 label {
@@ -173,4 +151,20 @@ label {
 #check {
   background-color: rgb(177, 75, 75);
   color: black;
+}
+
+.bg-image {
+  background-image: url("./images/bikes.jpg");
+  height: auto;
+  background-size: cover;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+@media only screen and (max-width: 768px) {
+  .bg-image {
+    background-image: url("./images/treehd.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+  }
 }
