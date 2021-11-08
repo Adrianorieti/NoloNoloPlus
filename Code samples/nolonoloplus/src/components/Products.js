@@ -24,7 +24,13 @@ function Products(){
     const [prodName, setProdName] = useState('');
     let history = useHistory();
 
-
+    function sortByKey(array, key) {
+      return array.sort(function(a, b) {
+          var x = a[key];
+           var y = b[key];
+          return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      });
+  }
 
     //funzione che gestisce i prodotti derivati dal form_obj
     function getFormProducts(){
@@ -86,7 +92,19 @@ function Products(){
           }else{return(console.log(response.status))}
         }).then((data) => {
           //inseriamo dentro lo state toInsert la lista di prodotti
-         setToInsert(toInsert.concat(data.prodList));
+          const filter = sessionStorage.getItem('filter');
+          if(filter === 'price')
+          {
+          let array = data.prodList;
+            sortByKey(array, 'price');
+          console.log(array);
+          setToInsert(toInsert.concat(array));
+
+            // let priceArray = data.prodList.price;
+          }else
+          {
+            setToInsert(toInsert.concat(data.prodList));
+          }
         })
         .catch(error => {
           console.log(error);
@@ -114,11 +132,11 @@ function Products(){
        
     }
   },[]);
-  //ATTENZIONE DEVO SPOSTARE LA FUNZIONE DIRETTAMENTE DOPO IL PUNTO INTERROGATIVO PER VEDERE SE SONO LOGGATO O MENO , PERCHÈ
-  //COSÌ POSSO REINDIRIZZARE IL CLIENTE LOGGATO
+
+
   return (obj ? ( <div className="product"> {(() =>
-  {//se arrivo dalla home e sono loggato
-    //inserire un loading ?
+  {
+    //se arrivo dalla home e sono loggato
     if(loggato){
       console.log("available è", available); // e il prodotto è disponibile per la data che ho scelto
         if(available)//continuo con il noleggio
@@ -177,6 +195,7 @@ function Products(){
       }
   })()}
    </div>) : (<div className='product'>{toInsert.map((product) =>
+
     
     <div className="card m-3" style={{width: "18rem"}}>
 
@@ -228,7 +247,9 @@ function Products(){
   
     )}
     {/* Questo pulsante lo usiamo per eliminare form_obj dal session storage perchè altrimenti rimarrebbe sempre */}
-    <a  className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); history.push('/products')})}>Disable Filters</a>
+    <a  className="btn btn-primary" onClick={(()=>{sessionStorage.setItem('filter', 'price'); history.go(0)})}>Filter for price</a>
+
+    <a  className="btn btn-primary" onClick={(()=>{sessionStorage.removeItem('form_obj'); sessionStorage.removeItem('filter'); history.go(0)})}>Disable Filters</a>
 
     </div>));
 }
