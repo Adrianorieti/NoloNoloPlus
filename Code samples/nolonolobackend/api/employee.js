@@ -3,6 +3,7 @@ require('dotenv').config();
 const employee = require('../schemas/moduleEmployee');
 const product = require('../schemas/moduleProduct');
 const category = require('../schemas/moduleCategory');
+const user = require('../schemas/moduleUser');
 
 const computePrice = require('../functions/computePrice');
 const auth = require('./auth');
@@ -138,6 +139,22 @@ router.post('/makeRentalHypothesis', auth.verifyAdmin, async (req,res) =>{
         } 
     })
 }
+});
+
+/**
+ * Get all users info from database.
+ * @params null
+ */
+router.get('/getUsersInfo', auth.verifyAdmin, async (req, res) => {
+
+    const usersList = await user.find();
+    if(usersList)
+    {
+        res.status(200).json({users: usersList});
+    }else
+    {
+        res.status(500).send("Database error");
+    }
 });
 
 module.exports = router;
