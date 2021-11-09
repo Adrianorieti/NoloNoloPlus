@@ -1,4 +1,4 @@
-// Express requirements
+/* Server requirements */
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -7,16 +7,18 @@ const account = require('./api/account');
 const rental = require('./api/rental');
 const customer = require('./api/customer');
 const auth = require('./api/auth');
+const employee = require('./api/employee');
 const app = express();
 
 require('dotenv').config();
 
-// Cross-Origin-Resource-Sharing
+/* Cross-Origin-Resource-Sharing */
 var cors = require('cors');
-//Database url
+
+/* Database url */
 var url = process.env.URL;
 
-//Connect and start express services
+/* Connect and start express services */
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(cors({
@@ -27,14 +29,16 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 
+/* Actual server routes */ 
 app.use('/api/account/', account);
 app.use('/api/services/', services);
 app.use('/api/rental/', rental);
 app.use('/api/customer/', customer);
 app.use('/api/auth/', auth);
+app.use('/api/employee/', employee);
 
-// These API's answer an url query with static files
-// This is required so the client can use React routes
+ /* These API's answer an url query with static files,
+ this is required so the client can use React routes */
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -59,6 +63,7 @@ app.get("/updatepage", (req, res) => {
 app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001');

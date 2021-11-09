@@ -30,7 +30,7 @@ function verifyAdmin(req, res, next)
        const authHeader = req.headers['authorization'];
        const token = authHeader && authHeader.split(' ')[1];
        if(token == null) return res.sendStatus(401);
-       jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
+       jwt.verify(token, process.env.TOKEN_EMPLOYEE_KEY, async function(err, decoded)
        {
            if(err) 
            {
@@ -42,10 +42,7 @@ function verifyAdmin(req, res, next)
            if(source.role !== 'admin')
            {
                return res.status(403).send(` Only an admin can access this page`);
-   
            }
-   
-       
            next();
        })
     }
@@ -60,4 +57,6 @@ router.get("/dashboard", verifyToken, verifyAdmin, (req, res) => {
 
 
 
-module.exports = router;
+module.exports = router
+module.exports.verifyToken = verifyToken
+module.exports.verifyAdmin = verifyAdmin
