@@ -144,6 +144,7 @@ router.post('/makeRentalHypothesis', auth.verifyAdmin, async (req,res) =>{
 /**
  * Get all users info from database.
  * @params null
+ * @return {users list}
  */
 router.get('/getUsersInfo', auth.verifyAdmin, async (req, res) => {
 

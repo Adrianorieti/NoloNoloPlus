@@ -38,22 +38,19 @@ router.post('/addRent', async(req, res) =>{
     //creo una nuova reservation
     let newReserve = new reservation({
         usermail: userMail,
-        product: prod.name,
         start: `${startDate}`,
         end: `${endDate}`
     })
     console.log(" NEW RESERVE", newReserve);
-    //prendo l'array di reservation del prodotto, inserisco ed ordino
-    let newReservations =  prod.reservations;
-    newReservations.push(newReserve);
-    //TO-DO ORDINARE L'ARRAY IN MODO CHE SIA CRESCENTE 
-    //così abbiamo tutte le prenotazioni su un determinato prodotto in ordine
-    //nel caso il dipendente debba metterlo in manutenzione può facilmente capire quale sarebbe la prossima reservation
+    prod.reservations.push(newReserve);
     
+    prod.save();
+
 //vado a fare l'update dell'array di reservations DEL PRODOTTO SINGOLO
-product.updateOne({ name: productName }, {
-    reservations: newReservations
-})
+// product.updateOne({ name: productName }, {
+//     reservations: newReservations
+// })
+
 
 //ora vado ad inserire la reservation nelle richieste pending
 // così i dipendenti avranno la richiesta pendente

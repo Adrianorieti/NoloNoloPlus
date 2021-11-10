@@ -11,8 +11,7 @@ const reserveSchema = new Schema({
         required: true
     },
     product: {
-        type: String,
-        required: true
+        type: String
     },
     employee: {
         type: String
