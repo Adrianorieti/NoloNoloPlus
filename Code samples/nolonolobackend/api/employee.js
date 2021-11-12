@@ -4,7 +4,8 @@ const employee = require('../schemas/moduleEmployee');
 const product = require('../schemas/moduleProduct');
 const category = require('../schemas/moduleCategory');
 const user = require('../schemas/moduleUser');
-
+const path = require('path');
+const fs = require('fs');
 const computePrice = require('../functions/computePrice');
 const auth = require('./auth');
 const express = require('express');
@@ -157,5 +158,134 @@ router.get('/getUsersInfo', auth.verifyAdmin, async (req, res) => {
         res.status(500).send("Database error");
     }
 });
+
+/**
+ * Change the defined by email user's entry with the new informations
+ * @param {User email, information field to change (type), new information(data)}
+ * @return {Succesful operation message}
+ * @error Error operation message
+ * @summary The user's entry in the database gets updated with new informations, there is
+ * a check for integrity.
+ */
+router.post('/changeUserInfo',auth.verifyAdmin,  (req, res) => {
+
+    const email = req.body.email;
+    const type = req.body.type;
+    const newValue = req.body.data;
+    let source = await user.findOne({ email: email })
+    
+    if(source)
+    {
+        switch (type) {
+            case 'name':
+                source.name = newValue;
+                break;
+            case 'surname':
+                source.surname = newValue;
+                break;
+            case 'phone':
+                source.phone = newValue;
+                break;
+            case 'email':
+                source.email = newValue;
+                break;
+            case 'paymentMethod':
+                source.paymentMethod = newValue;
+              break;
+            }
+            source.save();
+            res.status(200).send();
+    } 
+
+});
+
+/**
+ * Add a product , checks are made client side.
+ * @param {product : name, type, quantity, status, price, image}
+ * @return {succesful operation message}
+ * @error message error
+ */
+router.post('/addProduct', auth.verifyAdmin, async (req, res) => {
+
+    const newName = req.body.name;
+    const newType = req.body.type;
+    const newQuantity = req.body.quantity;
+    const newStatus = req.body.status;
+    const newPrice = req.body.price;
+    // Check for photo format
+    const file = req.body.file;
+
+    const toAdd = new product({
+        name: newName,
+        type: newType,
+        quantity: newQuantity,
+        status: newStatus,
+        price: newPrice,
+        totalSales: 0,
+        numberOfRents: 0
+    })
+
+    let response = await toAdd.save();
+    if(response === toAdd)
+    {
+        res.status(200).json({message: "Succesful operation"})
+        // Aggiungo la foto 
+        const dest = path.join('../../nolonoloplus/src/images/', file.name);
+        fs.copyFile(file.path, dest);
+    }
+    else
+        res.status(500).json({message: "Error during operation"})
+    
+})  
+/**
+ * Elimina il prodotto specificato dal dipendente solo se non ci sono prenotazioni attive, ritornando la lista di prenotazioni
+ * presente su quel prodotto.
+ * @param {productName}
+ * @return {list of future reservations on product}
+ * @error Se ci sono prenotazioni attive
+ */
+router.post('/deleteProduct', auth.verifyAdmin, async (req, res) => {
+
+    const toDelete = req.body.name;
+    const reservations = [];
+    const source = await product.findOne({name : toDelete})
+    if(source)
+    {
+        // Controllare se sia meglio push o concat
+        reservations.push(source.reservations);
+        //TO-DO controllare se ci sono reservations attive ? o non ha senso ?   
+        await product.remove({name: toDelete}, function(err)
+        {
+            if(err)
+                res.status(500).send(err);
+            else
+                res.status(200).json({reservationList: reservations})
+
+        });
+    }
+})
+
+/**
+ * Add a message in the user's comunication area.
+ * @param {userMail, message to add}
+ * @return {succesful operation}
+ * @error error message
+ */
+router.post('/addComunication', (req, res) =>{
+
+    const message =req.body.message;
+    const userMail = req.body.email;
+    await user.findOne({email: userMail}, function(err, usr)
+    {
+        if(err)
+            res.status(500).send("User not found");
+        else
+            {
+                // Inserisco il messaggio nelle comunicazioni dell'utente
+                 usr.comunications.push(message);
+                 usr.save();
+            }
+    })
+})
 
 module.exports = router;
