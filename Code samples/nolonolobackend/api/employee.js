@@ -14,6 +14,14 @@ const express = require('express');
 const router = express.Router();
 
 
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key];
+         var y = b[key];
+        return ((x.getTime() < y.getTime()) ? -1 : ((x.getTime() > y.getTime()) ? 1 : 0));
+    });
+};
+
 /**
  * Verify if the employee exists in the databse. If yes, the employee receive a token
  * @param null
@@ -287,5 +295,112 @@ router.post('/addComunication', (req, res) =>{
             }
     })
 })
+
+/**
+ * Update an existing product, the change is valid only for the future reservations.
+ * @param {product name and field and relative new value}
+ * @return {succesful message}
+ * @error error message
+ */
+router.post('/updateProduct', auth.verifyAdmin, async (req, res) =>
+{
+    const name = req.body.name;
+    const type = req.body.type;
+    const newValue = req.body.data;
+    let source = await product.findOne({ name: name })
+    
+    if(source)
+    {
+        switch (type) {
+            case 'name':
+                source.name = newValue;
+                break;
+            case 'type':
+                source.type = newValue;
+                break;
+            case 'quantity':
+                source.quantity = newValue;
+                break;
+            case 'status':
+                source.status = newValue;
+                break;
+            case 'price':
+                source.price = newValue;
+                break;
+            }
+            source.save();
+            res.status(200).send();
+    }else
+    {
+        res.status(500).json({error: "Errore con il database, riprovare più tardi"});
+    }
+})
+
+/**
+ * Create a special reservation on a product so it cannot be reserved anymore for that period.
+ * @param {target product name}
+ * @return {list of reservations cancelled from product}
+ * @summary All the existing reservations in the range of the special one are deleted 
+ * and the list of users are returned so that the employee can change the product of the
+ * reservation.
+ * 
+ */
+router.post('/maintenance', async (req, res) =>
+{
+    const productName = req.body.name;
+    let startDate = new Date(req.body.startingDate);
+    let endDate = new Date(req.body.endingDate);
+    startDate.setDate(startDate.getDate() + 1);
+    endDate.setDate(endDate.getDate() + 1);
+
+    const prod = await product.findOne({name: productName});
+    if(prod)
+    {
+        let reservations = prod.reservations;
+        let reservationsToChange = [];
+        // Ordino le prenotazioni per data di inizio
+        sortByKey(reservations, 'start');
+        // Controllo se ci sono prenotazioni
+        // Se la data di inizio della prenotazione è <= della data di fine della nostra
+        // prenotazione speciale allora và eliminata, e va ritornata 
+        for(let i in reservations)
+        {
+            // Se ci sono ancora prenotazioni  passate vengono cancellate
+            // ?????? cosa giusta da fare ????? e se poi accade qualcosa dove andiamo
+            // a guardare ?
+            if(reservations[i].end.getTime() <= startDate.getTime())
+                reservations.splice(i, 1);
+            else if(reservations[i].start.getTime() <= endDate.getTime())
+            {
+                // Salvo la prenotazione
+                reservationsToChange.push(reservations[i]);
+                // La elimino dal prodotto
+                reservations.splice(i, 1);
+
+            }else if(reservations[i].start.getTime() > endDate.getTime())
+            {
+                // Esco dal for perchè ho superato il periodo di mio interesse
+                break;
+            }
+        }
+        // Creo la nuova reservation da aggiungere al prodotto
+        let newReserve = new reservation({
+            usermail: "maintainance",
+            start: `${startDate}`,
+            end: `${endDate}`
+        })
+        // Aggiungo in testa all'array perchè è già ordinato
+        prod.reservations.unshift(newReserve);
+
+        // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
+        prod.save();
+
+        res.status(200).json({list: reservationsToChange});
+    
+    }else{
+        res.status(500).send("Error, please try again later");
+    }
+})
+
 
 module.exports = router;
