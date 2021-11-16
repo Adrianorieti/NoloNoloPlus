@@ -492,7 +492,7 @@ router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
             end: `${endDate}`
     })
         // Aggiungiamo la prenotazione allo user
-       usr.reservations.push(newReserve);
+       usr.futureReservations.push(newReserve);
        usr.save()
         // Aumentiamo il numero di noleggi sul prodotto
        prod.numberOfRents = prod.numberOfRents +1;
@@ -505,7 +505,7 @@ router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
         end: `${endDate}`
         })
         // Aggiungiamo la prenotazione al dipendente
-       emp.reservations.push(newReserve2);
+       emp.futureReservations.push(newReserve2);
        emp.save();
 
        res.status(200).send("All ok");
@@ -515,7 +515,7 @@ router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
     }
 })
 /**
- * Employee deny the begin of a rental in the pending requests and a message is writte
+ * Employee deny the begin of a rental in the pending requests and a message is written
  * in the comunication area of the user explaining why.
  * @param {userMail, productName, message, start and end date}
  * @summary the rental is erased from product and a message is inserted in the user communication area
@@ -543,6 +543,39 @@ router.post('/denyBeginOfRental', async (req, res) => {
             prod.reservations.splice(reservations.indexOf(reserve), 1);
             prod.save();
         }
+    }
+
+})
+
+
+router.post('/confirmLending', async (req, res) => {
+    // Ricevo la prenotazione dalla lista dei dipendenti
+    const userMail = req.body.email;
+    const productName = req.body.name;
+    const employeeMail = req.body.employee;
+    let startDate = new Date(req.body.startingDate);
+    let endDate = new Date(req.body.endingDate);
+    const emp = employee.findOne({email: employeeMail});
+    const usr = user.findOne({email: userMail});
+    if(usr && emp)
+    {
+        // Sposto la prenotazione da future ad active in modo che lo user non possa
+        // modificarla in corso
+       let toChange =  usr.futureReservations.find(item=> { item.start === startDate  && item.end=== endDate } );
+       if(toChange)
+       {
+            usr.futureReservations.splice(futureReservations.indexOf(toChange), 1);
+            usr.activeReservations.push(toChange);
+            usr.save();
+        }
+        // Sposto la prenotazione tra le attive del dipendente
+        emp.futureReservations.splice(futureReservations.indexOf(toChange), 1);
+        emp.activeReservations.push(toChange);
+        emp.save();
+        res.status(200).send("Succesful operation");
+    }else
+    {
+        res.status(500).send("Internal Database error");
     }
 
 })
