@@ -176,7 +176,7 @@ router.get('/getUsersInfo', auth.verifyAdmin, async (req, res) => {
  * @summary The user's entry in the database gets updated with new informations, there is
  * a check for integrity.
  */
-router.post('/changeUserInfo',auth.verifyAdmin,  (req, res) => {
+router.post('/changeUserInfo',auth.verifyAdmin, async (req, res) => {
 
     const email = req.body.email;
     const type = req.body.type;
@@ -280,7 +280,7 @@ router.post('/deleteProduct', auth.verifyAdmin, async (req, res) => {
  * @return {succesful operation}
  * @error error message
  */
-router.post('/addComunication', (req, res) =>{
+router.post('/addComunication', async (req, res) =>{
 
     const message =req.body.message;
     const userMail = req.body.email;
@@ -578,5 +578,137 @@ router.post('/confirmLending', async (req, res) => {
         res.status(500).send("Internal Database error");
     }
 
+})
+
+router.post('/confirmEndOfRental', async (req, res) => {
+
+    const userMail = req.body.email;
+    const employee = req.body.employee;
+    const endDate = new Date(req.body.endingDate);
+    const productName = req.body.name;
+    const pointsToAdd = req.body.points;
+    let emp = await employee.findOne({email: employee});
+    let usr = await user.findOne({email: userMail});
+    if(usr && emp)
+    {
+        // Trovo la prenotazione nelle active dell'utente
+        let toChange = usr.activeReservations.find(item=> { item.end === endDate  && item.name=== productName } );
+        // La elimino dalle attive e la metto nelle passate
+        usr.activeReservations.slice(indexOf(toChange), 1);
+        usr.pastReservations.push(toChange);
+        //Cambio i fidelity points dello user
+        usr.fidelityPoints += pointsToAdd; // controllare se sia stringa o numero
+        usr.save();
+
+        //Faccio lo stesso con il dipendente, qui faccio di nuovo la ricerca perchè gli schemas sono diversi per ora
+        let toChange = emp.activeReservations.find(item=> { item.end === endDate  && item.name=== productName } );
+
+        emp.activeReservations.slice(indexOf(toChange), 1);
+        emp.pastReservations.push(toChange);
+        emp.save();
+
+        res.status(200).send("ok");
+    }else{
+        res.status(404).send("not found");
+    }
+})
+/**
+ * Get all future reservations from all products
+ * 
+ */
+router.post('getAllReservations', async (req, res) => {
+
+    let toSend = [];
+    let today = new Date();
+    product.find({},  async function(err, db){
+
+        if(err) return(res.status(500).send(err));
+        //Per tutti i prodotti
+    for(i in db) 
+    {
+        available=true;
+        //Per tutte le reservations dei prodotti
+        for(j in db[i].reservations)
+        {
+            let x = db[i].reservations[j];
+            //Se inizia dopo oggi
+          if(x.start.getTime() >= today.getTime())
+          {
+              toSend.push(x);
+              //Se è attiva in questo momento
+          }else if(x.start.getTime() < today.getTime() && x.end.getTime() > today.getTime())
+           {
+               toSend.push(x);
+           }
+        }   
+    } 
+    res.status(200).json({listOfReservations: toSend}); 
+
+})
+})
+
+router.post('/modifyRental', async (req, res) => {
+    const productName = req.body.name;
+    const userMail = req.body.email;
+    const employeeMail = req.body.employee;
+    let startDate = new Date(req.body.startingDate);
+    let endDate = new Date(req.body.endingDate);
+
+    let prod = await product.findOne({name: productName});
+    let usr = await user.findOne({email: userMail});
+    let emp = await employee.findOne({email: employeeMail});
+    if(prod && usr && emp)
+    {
+        // Cambio dentro il product
+        let toChange = prod.reservations.find(item=> { item.end === endDate  && item.userMail=== userMail } );
+        prod.reservations.slice(indexOf(toChange), 1);
+        const newReserve = new reservation({
+            usermail: userMail,
+            start: startDate,
+            end: endDate
+        })
+        prod.reservations.push(newReserve);
+        prod.save();
+
+        // Cambio nello user
+        let toChange = usr.futureReservations.find(item=> { item.end === endDate  && item.name=== productName } );
+        usr.futureReservations.slice(indexOf(toChange), 1);
+        const newReserve = new reservation({
+            name: productName,
+            start: startDate,
+            end: endDate
+        })
+        usr.futureReservations.push(newReserve);
+        usr.save();
+        // Cambio nel dipendente
+        let toChange = emp.futureReservations.find(item=> { item.end === endDate  && item.name === productName && item.usermail === userMail } );
+        emp.futureReservations.slice(indexOf(toChange), 1);
+        const newReserve = new reservation({
+            usermail: userMail,
+            name: productName,
+            start: startDate,
+            end: endDate
+        })
+        emp.futureReservations.push(newReserve);
+        emp.save();
+
+        res.status(200).send("all ok");
+    }else
+    {
+        res.status(500).send("internal server error");
+    }
+})
+
+router.post(' /getPastReservations ', async(req, res) => {
+    const employeeMail = req.body.email;
+    let toSend = [];
+    let emp = await employee.findOne({email: employeeMail})
+    if(emp)
+    {
+        toSend.concat(emp.pastReservations);
+        res.status(200).json({listOfPastReservations: toSend})
+    }else{
+        res.status(404).send("employee not found");
+    }
 })
 module.exports = router;

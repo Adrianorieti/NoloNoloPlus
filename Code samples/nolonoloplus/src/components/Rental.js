@@ -31,12 +31,15 @@ function Rental(props)
         fetch(url, options)
         .then(response => {
           if (response.status == 200) {
+            console.log("sono qui");
             return response.json();
           }else{return(console.log(response.status))}
         }).then((data) => {
           console.log("è andato tutto bene ", data);
+          history.push('/personalpage');
         })
         .catch(error => {
+          alert("Spiacenti il prodotto non è piu disponibile");
           console.log(error);
         });
     

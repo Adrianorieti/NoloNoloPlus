@@ -13,7 +13,7 @@ const reserveSchema = new Schema({
         type: Date,
         required: true
     },
-    name: { //nome dell'oggetto che andiamo a noleggiare!
+    name: { //nome del prodotto singolo
         type: String,
         required: true
     }

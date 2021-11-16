@@ -8,7 +8,6 @@ const reserveSchema = new Schema({
 
     usermail: {
         type: String,
-        required: true
     },
     product: {
         type: String
