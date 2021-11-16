@@ -3,6 +3,7 @@ require('dotenv').config();
 const employee = require('../schemas/moduleEmployee');
 const product = require('../schemas/moduleProduct');
 const category = require('../schemas/moduleCategory');
+const reservation = require('../schemas/moduleReservation');
 const user = require('../schemas/moduleUser');
 const path = require('path');
 const fs = require('fs');
@@ -136,7 +137,7 @@ router.post('/makeRentalHypothesis', auth.verifyAdmin, async (req,res) =>{
             availableProductList.push(db[i]);
             prices.push(await computePrice.computePrice(collection, db[i], userMail, startDate, endDate));
         }
-        }
+    }
         if(availableProductList.length != 0)
         {
             price = Math.min(...prices);
@@ -368,7 +369,7 @@ router.post('/maintenance', async (req, res) =>
             // Se ci sono ancora prenotazioni  passate vengono cancellate
             // ?????? cosa giusta da fare ????? e se poi accade qualcosa dove andiamo
             // a guardare ?
-            if(reservations[i].end.getTime() <= startDate.getTime())
+            if(reservations[i].end.getTime() < startDate.getTime())
                 reservations.splice(i, 1);
             else if(reservations[i].start.getTime() <= endDate.getTime())
             {
@@ -401,6 +402,148 @@ router.post('/maintenance', async (req, res) =>
         res.status(500).send("Error, please try again later");
     }
 })
+/**
+ * Create a rental on the product if the employee is verified.
+ * @param {necessary rental info}
+ * @return {reservation added in product and user if existing}
+ * @summary the employee can create a reservation in the past, future or present if 
+ * there is availability on the product.
+ */
+router.post('/makeRental', auth.verifyAdmin, async (req, res) => {
 
+    const userMail = req.body.email;
+    const productName = req.body.name;
+    let startDate = new Date(req.body.startingDate);
+    let endDate = new Date(req.body.endingDate);
 
+    const prod = await product.findOne({name: productName});
+    if(prod)
+    {
+        let reservations = prod.reservations;
+        sortByKey(reservations, 'start');
+        let available = true;
+        for(i in reservations)
+        {
+            if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
+            {
+                console.log("l'inizio è compreso");
+                available = false;
+                break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
+
+            }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
+            {
+                console.log("la fine  è compresa");
+
+                available = false;
+                break;
+
+            }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
+            {
+                console.log("comprende tutto");
+                available = false;
+                break;
+            }else
+            {
+                // essendo ordinato appena trovo una inferiore esco dal for
+                break;
+            }
+        }
+        if(available)
+        {
+                let newReserve = new reservation({
+                    usermail: userMail,
+                    start: `${startDate}`,
+                    end: `${endDate}`
+            })
+
+            prod.reservations.push(newReserve);
+            prod.save();
+            res.status(200).send("Added reservation");
+        }
+    }
+
+})
+
+/**
+ * Confirm the virtual begin of a rental.
+ * @param {pending request plus employee email}
+ * @return {successful operation}
+ * @summary The employee confirm a pending request and the reservation is added in the user
+ * array, in his array and the product number of rents gets updated.
+ */
+router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
+
+    const userMail = req.body.email;
+    const employeeMail = req.body.employee;
+    const productName = req.body.name;
+    let startDate = new Date(req.body.startingDate);
+    let endDate = new Date(req.body.endingDate);
+
+    const usr = await user.findOne({email: userMail});
+    const prod = await product.findOne({name: productName});
+    const emp = await employee.findOne({email: employeeMail});
+    if(usr && prod && emp)
+    {
+        let newReserve = new reservation({
+            usermail: userMail,
+            employee: employeeMail,
+            product: productName,
+            start: `${startDate}`,
+            end: `${endDate}`
+    })
+        // Aggiungiamo la prenotazione allo user
+       usr.reservations.push(newReserve);
+       usr.save()
+        // Aumentiamo il numero di noleggi sul prodotto
+       prod.numberOfRents = prod.numberOfRents +1;
+       prod.save();
+
+       let newReserve2 = new reservation({
+        usermail: userMail,
+        product: productName,
+        start: `${startDate}`,
+        end: `${endDate}`
+        })
+        // Aggiungiamo la prenotazione al dipendente
+       emp.reservations.push(newReserve2);
+       emp.save();
+
+       res.status(200).send("All ok");
+    }else
+    {
+        res.status(500).send("Database internal error, please check your query");
+    }
+})
+/**
+ * Employee deny the begin of a rental in the pending requests and a message is writte
+ * in the comunication area of the user explaining why.
+ * @param {userMail, productName, message, start and end date}
+ * @summary the rental is erased from product and a message is inserted in the user communication area
+ */
+router.post('/denyBeginOfRental', async (req, res) => {
+    const userMail = req.body.email;
+    const productName = req.body.name;
+    const message = req.body.message;
+    let startDate = new Date(req.body.startingDate);
+    let endDate = new Date(req.body.endingDate);
+
+    const usr = await user.findOne({email: userMail});
+    const prod = await product.findOne({name: productName});
+
+    if(usr && prod)
+    {
+        // Inserisco il messaggio nelle comunicazioni dell'utente
+        usr.comunications.push(message);
+        usr.save();
+        // Rendo di nuovo libero il prodotto
+        let reservations = prod.reservations;
+        let reserve = reservations.find(item=> { item.start === startDate  && item.end=== endDate } );
+        if(reserve)
+        {
+            prod.reservations.splice(reservations.indexOf(reserve), 1);
+            prod.save();
+        }
+    }
+
+})
 module.exports = router;

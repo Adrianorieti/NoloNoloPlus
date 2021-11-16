@@ -5,16 +5,20 @@ const Schema = mongoose.Schema;
 /* Sub Schema for product map */
 const reserveSchema = new Schema({
 
+    usermail: {
+        type: String,
+        required: true
+    },
+    name: { //nome dell'oggetto che andiamo a noleggiare!
+        type: String,
+        required: true
+    },
     start: {
         type: Date,
         required: true
     },
     end: {
         type: Date,
-        required: true
-    },
-    name: { //nome dell'oggetto che andiamo a noleggiare!
-        type: String,
         required: true
     }
 })
