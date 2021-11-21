@@ -10,8 +10,7 @@ const express = require('express');
 const router = express.Router();
 
 
-router.post('/login' , async (req, res) =>
-{
+router.post('/login', async (req, res) => {
     const mail = req.body.email;
 
     //We check if user exists in database
@@ -72,7 +71,10 @@ router.post('/register', async (req, res) => {
                 phone: req.body.phone,
                 email: req.body.email,
                 password: hash,
-                role: 'customer'
+                paymentMethod: 'Paypal',
+                role: 'customer',
+                fidelityPoints: 5,
+                amountPaid: 0
             });
 
             //user is saved in mongodb

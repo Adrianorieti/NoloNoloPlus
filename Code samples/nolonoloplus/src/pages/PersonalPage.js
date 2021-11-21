@@ -7,6 +7,7 @@ export default function PersonalPage() {
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('');
+    const [activeRes, setActiveRes] = useState('');
 
 
     let history = useHistory();
@@ -30,10 +31,21 @@ export default function PersonalPage() {
                 setPhone(parsedData.phone);
                 setEmail(parsedData.email);
                 setPaymentMethod(parsedData.paymentMethod);
+                setActiveRes(parsedData.activeReservations);
             }).catch(error => {
                 console.log(error);
             })
-    });
+    }, []);
+
+    function deleteAccount() {
+        if (activeRes.length != 0) {
+            alert('Ci sono delle prenotazioni attive, non è possibile eliminare il proprio account.');
+        }
+        else {
+            //QUI DEVO FARE UNA RICHIESTA PER L'ELIMINAZIONE DELL'ACCOUNT.
+
+        }
+    }
 
     return (
         <div>
@@ -51,13 +63,20 @@ export default function PersonalPage() {
             <div>
                 <button type="button" onClick={() => { history.push('/updatepage'); }}>Clicca per cambiare le informazioni personali</button>
             </div>
+            <div>
+                <button type="button" onClick={() => { alert('account eliminato'); }}>Clicca per eliminare il proprio account</button>
+            </div>
             <h2>PRENOTAZIONI FUTURE</h2>
             <div>
                 <button type="button" onClick={() => { history.push('/futurereservations'); }}>Clicca per visualizzare le prenotazioni future</button>
             </div>
+            <h2>PRENOTAZIONI ATTIVE</h2>
+            <div>
+                <button type="button" onClick={() => { history.push('/activereservations'); }}>Clicca per visualizzare le prenotazioni passate</button>
+            </div>
             <h2>PRENOTAZIONI CONCLUSE</h2>
             <div>
-                <button type="button" onClick={() => { history.push('/PastReservations'); }}>Clicca per visualizzare le prenotazioni passate</button>
+                <button type="button" onClick={() => { history.push('/pastreservations'); }}>Clicca per visualizzare le prenotazioni passate</button>
             </div>
         </div>
     );

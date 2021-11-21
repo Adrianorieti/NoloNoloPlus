@@ -6,6 +6,10 @@ const Schema = mongoose.Schema;
 /* Sub Schema for product map */
 const reserveSchema = new Schema({
 
+    usermail: {
+        type: String,
+        required: true
+    },
     start: {
         type: Date,
         required: true
@@ -22,11 +26,11 @@ const ProductSchema = new Schema({
         type: String,
         required: true
     },
-    type : {
+    type: {
         type: String,
         required: true
     },
-    quantity : {
+    quantity: {
         type: Number,
         required: true
     },
@@ -41,14 +45,12 @@ const ProductSchema = new Schema({
     reservations: [reserveSchema],
     totalSales: {
         type: Number,
-        required: true
     },
     numberOfRents: {
         type: Number,
-        required: true
     }
 })
 
 
-const product = mongoose.model('product', ProductSchema); 
+const product = mongoose.model('product', ProductSchema);
 module.exports = product;

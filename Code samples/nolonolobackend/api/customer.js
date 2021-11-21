@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const user = require('../schemas/moduleUser');
+const product = require('../schemas/moduleProduct');
 
 
 const express = require('express');
@@ -112,6 +113,7 @@ router.post("/getInfo", async (req, res) => {
                     email: source.email,
                     paymentMethod: source.paymentMethod,
                     futureReservations: source.futureReservations,
+                    activeReservations: source.activeReservations,
                     pastReservations: source.pastReservations
                 }
                 res.json(JSON.stringify(info));
@@ -131,11 +133,64 @@ router.post('/email-validation', async (req, res) => {
         res.status(200).send();
     }
     else {
-        res.status(401).send();
+        res.status(400).send();
     }
 })
 
-router.post("/removeReservation", (req, res) => {
+router.post("/modifypreparation", async (req, res) => {
+    //QUI SERVE LA MAIL
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            const prodName = req.body.prodName;
+            let prod = await product.findOne({ name: prodName });
+            if (prod) {
+                if (req.body.operation === 'remove') {
+                    //devo togliere da array la reservation
+                    let index = -1;
+                    let start = new Date(req.body.start);
+                    console.log("siamo nella remove" + start);
+                    for (let i in prod.reservations) {
+                        console.log("siamo nella remove" + prod.reservations[i].start);
+                        //faccio req.body.start perchè è già una data vera e propria
+                        if (prod.reservations[i].start.getTime() === start.getTime()) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    console.log('siamo nella remove temporanea con index:' + index);
+                    prod.reservations.splice(index, 1);
+                    prod.save();
+                    console.log("rimosso");
+                }
+                else if (req.body.operation === 'create') {
+                    let reservation = {
+                        usermail: decoded.email,
+                        start: req.body.start,
+                        end: req.body.end
+                    };
+                    //devo pushare nell'array la reservation.
+                    prod.reservations.push(reservation);
+                    prod.save();
+                    console.log("creato");
+                }
+                res.status(200).send();
+            }
+            else {
+                res.status(400).send();
+            }
+        });
+    }
+})
+
+router.post("/removeReservation", async (req, res) => {
+    console.log("siamo qua");
     //devo avere la starting date, ending date, name product e anche il token.
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -150,28 +205,33 @@ router.post("/removeReservation", (req, res) => {
             //trovo il modo di identificare il mio user.
             const email = decoded.email;
             let source = await user.findOne({ email: email });
+            let index = -1;
+            let startingDate = new Date(req.body.startingDate);
             //creo una prenotazione come quelle che abbiamo nel db
-            //forse arriva già in questa forma nel body, da capire.
-            let res = {
-                start: req.body.startingDate,
-                end: req.body.endingDate,
-                name: req.body.prodName
-            };
-            //elimino la prenotazione vecchia dallo user.
-            //trovo indice all'interno dell'array delle reservations.
-            let index = source.futureReservations.indexOf(res);
+            for (let i in source.futureReservations) {
+                if (source.futureReservations[i].start.getTime() === startingDate.getTime()) {
+                    index = i;
+                    break;
+                }
+            }
             //elimino elemento in determinato indice.
+            console.log("indice dei user è: " + index);
             source.futureReservations.splice(index, 1);
             source.save();
             //adesso eliminiamo la prenotazione vecchia dal prodotto.
-            delete res.name;
-            source = await product.findOne({ name: req.body.prodName });
+
+            let prod = await product.findOne({ name: req.body.prodName });
             //trovo indice all'interno dell'array delle reservations.
-            index = source.reservations.indexOf(res);
+            for (let i in prod.reservations) {
+                if (prod.reservations[i].start.getTime() === startingDate.getTime()) {
+                    index = i;
+                    break;
+                }
+            }
+            console.log("indice dei prodotti è: " + index);
             //elimino elemento in determinato indice.
-            source.reservations.splice(index, 1);
-            souce.save();
-            //  QUI DEVO ELIMINARE LA PARTE DEI DIPENDENTI.
+            prod.reservations.splice(index, 1);
+            prod.save();
             res.status(200).send();
         });
     }
