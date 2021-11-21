@@ -28,6 +28,8 @@ app.use(cors({
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'backoffice/html')));
+
 
 /* Actual server routes */ 
 app.use('/api/account/', account);
@@ -62,6 +64,10 @@ app.get("/updatepage", (req, res) => {
 
 app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.get('/employee/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'backoffice/html', 'login.html'));
 });
 
 

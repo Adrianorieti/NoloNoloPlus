@@ -24,8 +24,8 @@ function sortByKey(array, key) {
 };
 
 /**
- * Verify if the employee exists in the databse. If yes, the employee receive a token
- * @param null
+ * Verify if the employee exists in the database. If yes, the employee receive a token
+ * @param {email, password}
  */
 router.post('/login', async (req, res) => {
 
@@ -601,7 +601,7 @@ router.post('/confirmEndOfRental', async (req, res) => {
         usr.save();
 
         //Faccio lo stesso con il dipendente, qui faccio di nuovo la ricerca perchè gli schemas sono diversi per ora
-        let toChange = emp.activeReservations.find(item=> { item.end === endDate  && item.name=== productName } );
+        toChange = emp.activeReservations.find(item=> { item.end === endDate  && item.name=== productName } );
 
         emp.activeReservations.slice(indexOf(toChange), 1);
         emp.pastReservations.push(toChange);
@@ -671,9 +671,9 @@ router.post('/modifyRental', async (req, res) => {
         prod.save();
 
         // Cambio nello user
-        let toChange = usr.futureReservations.find(item=> { item.end === endDate  && item.name=== productName } );
+         toChange = usr.futureReservations.find(item=> { item.end === endDate  && item.name=== productName } );
         usr.futureReservations.slice(indexOf(toChange), 1);
-        const newReserve = new reservation({
+         newReserve = new reservation({
             name: productName,
             start: startDate,
             end: endDate
@@ -681,9 +681,9 @@ router.post('/modifyRental', async (req, res) => {
         usr.futureReservations.push(newReserve);
         usr.save();
         // Cambio nel dipendente
-        let toChange = emp.futureReservations.find(item=> { item.end === endDate  && item.name === productName && item.usermail === userMail } );
+         toChange = emp.futureReservations.find(item=> { item.end === endDate  && item.name === productName && item.usermail === userMail } );
         emp.futureReservations.slice(indexOf(toChange), 1);
-        const newReserve = new reservation({
+         newReserve = new reservation({
             usermail: userMail,
             name: productName,
             start: startDate,
