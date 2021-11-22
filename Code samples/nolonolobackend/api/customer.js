@@ -125,6 +125,32 @@ router.post("/getInfo", async (req, res) => {
     }
 });
 
+router.post('/deleteaccount', async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            const email = decoded.email;
+            user.deleteOne({ email: email })
+                .then(() => {
+                    //sono riuscito ad eliminarlo
+                    console.log("account removed");
+                    res.status(200).send();
+                })
+                .catch((error) => {
+                    //non sono riuscito ad eliminarlo
+                    console.log(error);
+                    res.status(500).send();
+                })
+        });
+    }
+});
+
 router.post('/email-validation', async (req, res) => {
     const email = req.body.email;
     let source = await user.findOne({ email: email });
@@ -135,7 +161,7 @@ router.post('/email-validation', async (req, res) => {
     else {
         res.status(400).send();
     }
-})
+});
 
 router.post("/modifypreparation", async (req, res) => {
     //QUI SERVE LA MAIL
