@@ -52,6 +52,8 @@ const UserSchema = new Schema({
     amountPaid: Number,
     //prenotazioni future modificabili
     futureReservations: [reserveSchema],
+    //prenotazioni attive e non modificabili
+    activeReservations: [reserveSchema],
     //prenotazioni completate
     pastReservations: [reserveSchema]
 });

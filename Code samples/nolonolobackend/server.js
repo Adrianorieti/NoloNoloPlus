@@ -44,19 +44,23 @@ app.get('/login', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.get("/dashboard", (req, res) => {
+app.get("/dashboard", function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.get("/personalpage", (req, res) => {
+app.get("/personalpage", function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-})
+});
 
-app.get("/updatepage", (req, res) => {
+app.get("/updatepage", function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-})
+});
 
-app.get('/products', (req, res) => {
+app.get("/futurereservations", function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.get('/products', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 

@@ -112,7 +112,7 @@ export default function UpdatePage({ nameToParent }) {
                 const url = 'http://localhost:8001/api/customer/email-validation';
                 fetch(url, options)
                     .then(response => {
-                        if (response.status === 401) {
+                        if (response.status === 400) {
                             //LA MAIL È GIÀ UTILIZZATA DA QUALCUNO SETTIAMO LO STATO DI ERRORE!
                             alert("questa mail è già stata utilizzata!");
                         }
