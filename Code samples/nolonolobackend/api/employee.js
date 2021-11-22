@@ -26,10 +26,14 @@ function sortByKey(array, key) {
 /**
  * Verify if the employee exists in the database. If yes, the employee receive a token
  * @param {email, password}
+ * @return {token}
  */
 router.post('/login', async (req, res) => {
 
+    console.log("SONO QUIII");
+    console.log(req.body);
     const email = req.body.email;
+    console.log(email);
 
     const source = await employee.findOne({ email: email });
    
@@ -37,12 +41,12 @@ router.post('/login', async (req, res) => {
     {
         const password = req.body.password;
 
-        const buff = Buffer.from(password, 'base64');
+        // const buff = Buffer.from(password, 'base64');
 
-        const decodedpass = buff.toString('utf-8');
+        // const decodedpass = buff.toString('utf-8');
 
         // We compare the passwords
-        if (await bcrypt.compare(decodedpass, source.password)) {
+        if (await bcrypt.compare(password, source.password)) {
 
             console.log("Success");
 

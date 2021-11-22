@@ -7,6 +7,7 @@ const account = require('./api/account');
 const rental = require('./api/rental');
 const customer = require('./api/customer');
 const auth = require('./api/auth');
+const employeeRoutes = require('./routes/empRoutes');
 const employee = require('./api/employee');
 const app = express();
 
@@ -39,6 +40,9 @@ app.use('/api/customer/', customer);
 app.use('/api/auth/', auth);
 app.use('/api/employee/', employee);
 
+/* Alternative routes for static files */
+app.use('/employee/', employeeRoutes);
+
  /* These API's answer an url query with static files,
  this is required so the client can use React routes */
 
@@ -66,9 +70,7 @@ app.get('/products', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.get('/employee/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'backoffice/html', 'login.html'));
-});
+
 
 
 app.listen(8001, function () {
