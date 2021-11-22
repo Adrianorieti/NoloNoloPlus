@@ -31,73 +31,67 @@ router.post('/addRent', async (req, res) => {
         let endDate = new Date(req.body.endingDate);
         startDate.setDate(startDate.getDate() + 1);
         endDate.setDate(endDate.getDate() + 1);
+       
+       //cerco il prodotto
+    let prod = await product.findOne({name: productName});
+    // Controllo se nel frattempo non si sono fregati il prodotto
+    let reservations = prod.reservations;
+    let available = true;
+    for(i in reservations)
+    {
+        if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
+        {
+            console.log("l'inizio è compreso");
+            available = false;
+            break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
 
-        //la vado ad inserire nello user SOLO PER TESTING PIÙ EASY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        let person = await user.findOne({ email: userMail });
-        if (person) {
-            let res = {
-                start: startDate,
-                end: endDate,
-                name: productName
-            };
-            person.futureReservations.push(res);
-            person.save();
+        }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
+        {
+            console.log("la fine  è compresa");
+
+            available = false;
+            break;
+
+        }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
+        {
+            console.log("comprende tutto");
+            available = false;
+            break;
         }
-
-        //cerco il prodotto
-        let prod = await product.findOne({ name: productName });
-        if (prod) {
-            console.log('stiamo mettendo il prodotto');
-            let newRes = {
-                usermail: userMail,
-                start: startDate,
-                end: endDate
-            };
-            prod.reservations.push(newRes);
-            prod.save();
-        }
-        // let newReserve = new reservation({
-        //     usermail: userMail,
-        //     product: prod.name,
-        //     start: `${startDate}`,
-        //     end: `${endDate}`
-        // })
-        // console.log(" NEW RESERVE", newReserve);
-        // //prendo l'array di reservation del prodotto, inserisco ed ordino
-        // let newReservations = prod.reservations;
-        // newReservations.push(newReserve);
-        // //TO-DO ORDINARE L'ARRAY IN MODO CHE SIA CRESCENTE 
-        // //così abbiamo tutte le prenotazioni su un determinato prodotto in ordine
-        // //nel caso il dipendente debba metterlo in manutenzione può facilmente capire quale sarebbe la prossima reservation
-
-        // //vado a fare l'update dell'array di reservations DEL PRODOTTO SINGOLO
-        // product.updateOne({ name: productName }, {
-        //     reservations: newReservations
-        // })
-
+    }
+    if(available)
+    {
+        
+        //creo una nuova reservation
+        let newReserve = new reservation({
+            usermail: userMail,
+            start: `${startDate}`,
+            end: `${endDate}`
+        })
+        console.log(" NEW RESERVE", newReserve);
+        prod.reservations.push(newReserve);
+        prod.save();
         //ora vado ad inserire la reservation nelle richieste pending
         // così i dipendenti avranno la richiesta pendente
-        // let newPendingReq = new pendingRequest({
-        //     usermail: userMail,
-        //     product: prod.name,
-        //     start: `${startDate}`,
-        //     end: `${endDate}`
-        // })
-
-        // //ATTENZIONE NON CONTROLLA SE ESISTE GIÀ UNA PRENOTAZIONE UGUALE
-        // //magari usare findone prima per vedere se già esiste una entry completamente uguale con gli stessi campi, in quel caso non vado ad inserire
-        // let exist = await pendingRequest.findOne({ usermail: userMail, product: prod.name, start: `${startDate}`, })
-        // if (exist) {
-        //     console.log("c'è già !!!");
-        // } else {
-        //     console.log("lo metto");
-        //     newPendingReq.save();
-
-        // }
-        res.status(200).send();
-
-    })
-        ;
+        let newPendingReq = new pendingRequest({
+            usermail: userMail,
+            product: prod.name,
+            start: `${startDate}`,
+            end: `${endDate}`
+        })  
+        // Controlliamo se la pending request esiste già prima di inserirla
+    let exist = await pendingRequest.findOne({ usermail: userMail, product: prod.name, start: `${startDate}`,}) 
+    if(exist)
+    {
+        console.log("c'è già !!!");
+        res.status(400).json({message: "The reserve is already present"});
+    }else{
+        console.log("lo metto");    
+        newPendingReq.save();    
+        res.status(200).json({message: "All went good :)"});
+    }
+}
+})
 })
 
 

@@ -52,6 +52,8 @@ router.post('/update', async (req, res) => {
             console.log(email);
             //diamo per scontato che lo user esista??
             //in questo caso si perchè prendiamo dal token, ma se uno lo modifica?
+            // https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a
+           
             let source = await user.findOne({ email: email });
             console.log(source);
 
