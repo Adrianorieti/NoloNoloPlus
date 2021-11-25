@@ -10,6 +10,7 @@ const fs = require('fs');
 const computePrice = require('../functions/computePrice');
 const auth = require('./auth');
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 
 const router = express.Router();
@@ -55,7 +56,7 @@ router.post('/login', async (req, res) => {
             const accessToken = jwt.sign(employee, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });
 
             //Send token back to client 
-            res.json({ accessToken: accessToken});
+            res.status(200).json({ accessToken: accessToken});
 
         } else {
             res.status(404).send('Error, the requested account may not exists or your credentials are not correct');

@@ -26,13 +26,14 @@
             "password": "${pass}"
           }`;
 
-          console.log(data);
           $.post({
             type: 'POST',
               url: 'http://localhost:8001/api/employee/login',
               contentType: 'application/json; charset=utf-8',
               dataType: 'json',
               data: data
+            }, function(data){
+              console.log(data);
             });
 
           
