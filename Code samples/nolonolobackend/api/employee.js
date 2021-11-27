@@ -41,11 +41,7 @@ router.post('/login', async (req, res) => {
     if(source)  // L'account richiesto è stato trovato
     {
         const password = req.body.password;
-
-        // const buff = Buffer.from(password, 'base64');
-
-        // const decodedpass = buff.toString('utf-8');
-
+        
         // We compare the passwords
         if (await bcrypt.compare(password, source.password)) {
 
