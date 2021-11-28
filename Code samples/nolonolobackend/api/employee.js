@@ -31,10 +31,7 @@ function sortByKey(array, key) {
  */
 router.post('/login', async (req, res) => {
 
-    console.log("SONO QUIII");
-    console.log(req.body);
     const email = req.body.email;
-    console.log(email);
 
     const source = await employee.findOne({ email: email });
    
@@ -45,13 +42,13 @@ router.post('/login', async (req, res) => {
         // We compare the passwords
         if (await bcrypt.compare(password, source.password)) {
 
-            console.log("Success");
-
+            
             // Create the json web token
             const employee = { email: `${source.email}` };
             const accessToken = jwt.sign(employee, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });
-
+            
             //Send token back to client 
+            console.log("Success");
             res.status(200).json({ accessToken: accessToken});
 
         } else {

@@ -17,5 +17,6 @@ function login(event)
               data: data
             }, function(data){
               sessionStorage.setItem('token', data.accessToken);
+              window.location.href = `http://localhost:8001/employee/panel?token=${data.accessToken}`;
             });
       }

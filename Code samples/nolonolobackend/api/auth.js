@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const user = require('../schemas/moduleUser');
 const path = require('path');
-
+const employee = require('../schemas/moduleEmployee');
 
 function verifyToken(req, res, next)
 {
@@ -38,7 +38,8 @@ function verifyAdmin(req, res, next)
                return res.status(403).send(` ${err.name} `);
            }
       
-           const source =  await user.findOne({ name: decoded.name });
+           const source =  await employee.findOne({ email: decoded.email });
+           console.log(source)
            if(source.role !== 'admin')
            {
                return res.status(403).send(` Only an admin can access this page`);
@@ -47,11 +48,13 @@ function verifyAdmin(req, res, next)
        })
     }
 
+    /* Queste sono solamente prove */
 router.get("/authLog", verifyToken, (req, res) => {
     res.sendStatus(200);
 });
 
-router.get("/dashboard", verifyToken, verifyAdmin, (req, res) => {
+router.post("/dashboard", verifyAdmin, (req, res) => {
+    console.log("Prima di renderizzare la pagina di merda");
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
