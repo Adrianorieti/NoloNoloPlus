@@ -26,28 +26,33 @@ function verifyToken(req, res, next)
 }
 
 function verifyAdmin(req, res, next)
-    {
-       const authHeader = req.headers['authorization'];
-       const token = authHeader && authHeader.split(' ')[1];
-       if(token == null) return res.sendStatus(401);
-       jwt.verify(token, process.env.TOKEN_EMPLOYEE_KEY, async function(err, decoded)
-       {
+    {   
+        /* We retrieve the full url of the request so we can extract the parameters */
+        const current_url = new URL(`http://${req.get('host')}` + req.originalUrl);
+        const search_params = current_url.searchParams;
+        const token = search_params.get('token');
+        if(token == null) return res.sendStatus(401);
+        else if(token)
+        {
+            jwt.verify(token, process.env.TOKEN_EMPLOYEE_KEY, async function(err, decoded)
+        {
+           console.log('sono dentro');
            if(err) 
            {
                console.log(err.name);
                return res.status(403).send(` ${err.name} `);
            }
-      
            const source =  await employee.findOne({ email: decoded.email });
-           console.log(source)
+           console.log(source);
            if(source.role !== 'admin')
            {
                return res.status(403).send(` Only an admin can access this page`);
            }
            next();
        })
+        }
     }
-
+    
     /* Queste sono solamente prove */
 router.get("/authLog", verifyToken, (req, res) => {
     res.sendStatus(200);
