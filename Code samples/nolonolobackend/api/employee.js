@@ -78,18 +78,16 @@ router.get('/products', async (req, res) => {
 
 /**
  * Make a rental hypothesis impersonating a user.
- * @param {jsonwebtoken, productName, categoryName, userMail, startDate, endDate}
+ * @param { categoryName, userMail, startDate, endDate}
  * @return {available product, computed price, image}
  * @error  Returns error if there is no available product for a given date
  */
-router.post('/makeRentalHypothesis', auth.verifyAdmin, async (req,res) =>{
+router.post('/makeRentalHypothesis', async (req,res) =>{
 
-    const userMail = req.body.name;
-    const name = req.body.name;
+    const userMail = req.body.email;
+    const name = req.body.categoryName;
     let startDate = new Date(req.body.startingDate);
-    startDate.setDate(startDate.getDate() + 1);
     let endDate = new Date(req.body.endingDate);
-    endDate.setDate(endDate.getDate() + 1);
 
     if(startDate.getTime() > endDate.getTime())
     {
@@ -154,7 +152,7 @@ router.post('/makeRentalHypothesis', auth.verifyAdmin, async (req,res) =>{
  * @params null
  * @return {users list}
  */
-router.get('/getUsersInfo', auth.verifyAdmin, async (req, res) => {
+router.get('/getUsersInfo', async (req, res) => {
 
     const usersList = await user.find();
     if(usersList)

@@ -4,6 +4,7 @@ function login(event)
         console.log("sono qui");
           let mail = $('#inputEmail').val();
           let pass = $('#inputPassword').val();
+          
           let data = `{
             "email": "${mail}",
             "password": "${pass}"
@@ -19,4 +20,10 @@ function login(event)
               sessionStorage.setItem('token', data.accessToken);
               window.location.href = `http://localhost:8001/employee/panel?token=${data.accessToken}`;
             });
-      }
+}
+
+/** Get all single products from database */
+function goToRentalHypothesis()
+{
+  window.location.href = `http://localhost:8001/employee/rentalHypothesis`;
+}

@@ -1,16 +1,97 @@
+let productsNames = [];
+let categoriesNames = [];
+let productsPrices = [];
+
 function logout(){
 
     sessionStorage.clear();
     window.location.href = `http://localhost:8001/employee/login`;
 
 }
+
+function sendRentalHypothesis(x)
+{
+    let email = $('#email').val();
+    console.log(email);
+    let startDate = $('#startDate').val();
+    console.log(startDate);
+    let endDate = $('#endDate').val();
+    console.log(endDate);
+
+    let obj = `{
+        "categoryName": "${categoriesNames[x]}",
+        "email": "${email}",
+        "startingDate": "${startDate}",
+        "endingDate": "${endDate}"
+    }`;
+
+    $.post({
+        type: 'POST',
+          url: 'http://localhost:8001/api/employee/makeRentalHypothesis',
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          data: obj
+        }, function(data){
+            let toInsert = '';
+            if(data.availability)
+            {
+                 toInsert = `<div id="available">
+                <h5>The product is available !</h5>
+                <p>Final price: ${data.finalPrice}€</p>
+                <p>Product chosen by system: ${data.currProdName}</p>
+                </div>`
+            }else
+            {
+                 toInsert = `<div id="unavailable">
+                <h5>The product is available !</h5>
+                <p>Final price: ${data.finalPrice}€</p>
+                <p>Product chosen by system: ${data.currProdName}</p>
+                </div>`
+            }
+            $('#info').html(toInsert);   
+        }).fail(function(err)
+        {
+            alert(err);
+        });
+}
+/** Make a rental hypothesis on a product , there is no need to be logged */
+function makeRentalHypothesis(x)
+{
+    
+    let toInsert = `<div id="summary"><h5>Insert last infos</h5>
+    <p>Name: ${productsNames[x]}</p>
+    <p>Price: ${productsPrices[x]}$</p>
+    <form>
+  <div class="mb-3">
+    <label for="email" class="form-label">User Email address</label>
+    <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+  </div>
+  <div class="mb-3">
+    <label for="startDate" class="form-label">Start Date</label>
+    <input type="date" class="form-control" id="startDate">
+  </div>
+  <div class="mb-3 >
+  <label class="form-check-label" for="endDate">End Date</label>
+    <input type="date" class="form-control" id="endDate">
+  </div>
+  <button type="submit" class="btn btn-primary" onclick="sendRentalHypothesis(${x})">Send</button>
+</form>
+    </div>`;
+    $("#content").html("");
+    $('#info').html(toInsert);
+}
+
 /** Renders all products in the content div */ 
 function showProducts(products)
 {
+    let token = sessionStorage.getItem('token');
     let toInsert = '';
     let image = '';
     for(x in products)
     {
+        productsNames.push(products[x].name);
+        productsPrices.push(products[x].price);
+        categoriesNames.push(products[x].type);
         image = '';
         switch(products[x].type){
             case 'Electric S_300':
@@ -29,17 +110,34 @@ function showProducts(products)
                 image = 'specialBike.jpeg' ;
                 break;
         }
-        toInsert += `<div class="card" style="width: 18rem;">
-        <img src="../images/${image}" class="card-img-top" alt="Product image">
-        <div class="card-body">
-          <h5 class="card-title">${products[x].name}</h5>
-          <p class="card-text">${products[x].price}$ per day</p>
-          <p class="card-text">Status: ${products[x].status}</p>
-          <a href="#" class="btn btn-primary">Change product</a>
-        </div>
-      </div>`
-      console.log("FINEEEEEEEEE");
+        if(token)
+        {
+            toInsert += `<div class="card" style="width: 18rem;">
+            <img src="../images/${image}" class="card-img-top" alt="Product image">
+            <div class="card-body">
+              <h5 class="card-title">${products[x].name}</h5>
+              <p class="card-text">${products[x].price}$ per day</p>
+              <p class="card-text">Status: ${products[x].status}</p>
+              <a href="#" class="btn btn-primary">Add a rent</a>
+            </div>
+          </div>`
+        }else
+        {
+            
+            toInsert += `<div class="card" style="width: 18rem;">
+            <img src="../images/${image}" class="card-img-top" alt="Product image">
+            <div class="card-body">
+              <h5 class="card-title">${products[x].name}</h5>
+              <p class="card-text">${products[x].price}$ per day</p>
+              <p class="card-text">Status: ${products[x].status}</p>
+              <a href="#" class="btn btn-primary" onclick="makeRentalHypothesis(${x})">Make rental hypothesis</a>
+            </div>
+          </div>`
+        }
+       
     }
+    console.log(productsNames);
+
     $('#content').html(toInsert);
 }
 
@@ -51,6 +149,44 @@ function getAllproducts()
           url: 'http://localhost:8001/api/employee/products',
         }, function(data){
             showProducts(data.productList);     
+        }).fail(function(err)
+        {
+            // change this
+            alert('error');
+        })
+}
+
+function showCostumers(costumers)
+{
+    console.log(costumers);
+    let toInsert = '';
+    let image = '../images/user.jpeg';
+    for(x in costumers)
+    {
+        
+        toInsert += `<div class="card" style="width: 18rem;">
+        <img src="../images/${image}" class="card-img-top" alt="Product image">
+        <div class="card-body">
+          <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
+          <p class="card-text">Email :${costumers[x].email}</p>
+          <p class="card-text">Phone :${costumers[x].phone}</p>
+          <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>
+          <p class="card-text">Fidelity point: ${costumers[x].fidelityPoints}</p>
+          <p class="card-text">Amount paid: ${costumers[x].amountPaid}</p>
+          <a href="#" class="btn btn-primary">Change user info</a>
+        </div>
+      </div>`
+    }
+    $('#content').html(toInsert);
+}
+
+function getAllcostumers()
+{
+    $.get({
+        type: 'GET',
+          url: 'http://localhost:8001/api/employee/getUsersInfo',
+        }, function(data){
+            showCostumers(data.users);     
         }).fail(function(err)
         {
             alert('error');
