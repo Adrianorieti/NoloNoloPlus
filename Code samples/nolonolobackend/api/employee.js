@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
  * @param jsonwebtoken
  * @return { list of all single products}
  */
-router.get('/products', auth.verifyAdmin ,async (req, res) => {
+router.get('/products', async (req, res) => {
 
     const products = await product.find();
     if(products)
