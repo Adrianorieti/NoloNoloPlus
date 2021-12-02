@@ -165,12 +165,16 @@ router.get('/getUsersInfo', async (req, res) => {
  * @summary The user's entry in the database gets updated with new informations, there is
  * a check for integrity.
  */
-router.post('/changeUserInfo',auth.verifyAdmin, async (req, res) => {
+router.post('/changeUserInfo', async (req, res) => {
 
-    const email = req.body.email;
+    console.log(req.body);
+    const email = req.body.userMail;
     const type = req.body.type;
     const newValue = req.body.data;
     let oldValue;
+    console.log(email);
+    console.log(type);
+    console.log(newValue);
     let source = await user.findOne({ email: email })
     
     if(source)

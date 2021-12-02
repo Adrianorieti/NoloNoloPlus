@@ -14,7 +14,7 @@ function logout(){
 
 function sendInfo(type, x)
 {
-  let value = allCostumers[x][type];
+  let value = $(`#${type}`).val();
   let obj = `{
     "type": "${type}",
     "data": "${value}",
@@ -22,6 +22,14 @@ function sendInfo(type, x)
   }`
 
   console.log(obj);
+
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/changeUserInfo',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    })
 }
 
 function changeUserInfo(x, event)

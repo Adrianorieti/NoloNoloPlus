@@ -36,14 +36,12 @@ function verifyAdmin(req, res, next)
         {
             jwt.verify(token, process.env.TOKEN_EMPLOYEE_KEY, async function(err, decoded)
         {
-           console.log('sono dentro');
            if(err) 
            {
                console.log(err.name);
                return res.status(403).send(` ${err.name} `);
            }
            const source =  await employee.findOne({ email: decoded.email });
-           console.log(source);
            if(source.role !== 'admin')
            {
                return res.status(403).send(` Only an admin can access this page`);
