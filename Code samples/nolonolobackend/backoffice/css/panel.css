@@ -33,3 +33,7 @@ li
     flex-wrap: wrap;
     gap: 1.5rem;
 }
+
+.col{
+    display: flex;
+}

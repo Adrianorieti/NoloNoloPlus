@@ -1,12 +1,54 @@
 let productsNames = [];
 let categoriesNames = [];
 let productsPrices = [];
-
+let allCostumers = [];
 function logout(){
 
     sessionStorage.clear();
     window.location.href = `http://localhost:8001/employee/login`;
 
+}
+
+function changeUserInfo(x, event)
+{
+  event.preventDefault();
+  let toInsert = `<div class="row g-3">
+  <div class="col">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" id="name" class="form-control" placeholder="${allCostumers[x].name}" aria-label="First name">
+    <button type="button" class="btn btn-primary btn-block">+</button>
+  </div>
+  <div class="col">
+    <label for="surname" class="form-label">Surname</label> 
+    <input type="text" id="surname" class="form-control" placeholder="${allCostumers[x].surname}" aria-label="Last name">
+    <button type="button" class="btn btn-primary btn-block">+</button>
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col">
+    <label for="phone" class="form-label">Phone</label>
+    <input type="text" id="phone" class="form-control" placeholder="${allCostumers[x].phone}" aria-label="First name">
+    <button type="button" class="btn btn-primary btn-block">+</button>
+  </div>
+  <div class="col">
+    <label for="email" class="form-label">Email</label> 
+    <input type="email" id="email" class="form-control" placeholder="${allCostumers[x].email}" aria-label="Last name">
+    <button type="button" class="btn btn-primary btn-block">+</button>
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col">
+    <label for="payment" class="form-label">Payment method</label>
+    <input type="text" id="payment" class="form-control" placeholder="${allCostumers[x].paymentMethod}" aria-label="First name">
+    <button type="button" class="btn btn-primary btn-block">+</button>
+  </div>
+  <div class="col">
+    <label for="points" class="form-label">Fidelity points</label> 
+    <input type="text" id="points" class="form-control" placeholder="${allCostumers[x].fidelityPoints}" aria-label="Last name">
+    <button type="button" class="btn btn-primary btn-block">+</button>
+  </div>
+</div>`
+$("#content").html(toInsert);
 }
 
 function sendRentalHypothesis(x, event)
@@ -158,7 +200,9 @@ function getAllproducts()
 
 function showCostumers(costumers)
 {
-    console.log(costumers);
+    allCostumers = allCostumers.concat(costumers);
+    console.log(allCostumers);
+
     let toInsert = '';
     let image = '../images/user.jpeg';
     for(x in costumers)
@@ -173,7 +217,7 @@ function showCostumers(costumers)
           <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>
           <p class="card-text">Fidelity point: ${costumers[x].fidelityPoints}</p>
           <p class="card-text">Amount paid: ${costumers[x].amountPaid}</p>
-          <a href="#" class="btn btn-primary">Change user info</a>
+          <a href="#" class="btn btn-primary" onclick="changeUserInfo(x, event)">Change user info</a>
         </div>
       </div>`
     }

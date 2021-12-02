@@ -8,6 +8,7 @@ const user = require('../schemas/moduleUser');
 const path = require('path');
 const fs = require('fs');
 const computePrice = require('../functions/computePrice');
+const emailChange = require('../functions/emailCascade');
 const auth = require('./auth');
 const express = require('express');
 const bcrypt = require('bcrypt');
@@ -90,7 +91,6 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
     let startDate = new Date(req.body.startingDate);
     let endDate = new Date(req.body.endingDate);
 
-    console.log(req.body);
     // Check if the user is perculing us
     if(startDate.getTime() > endDate.getTime())
     {
@@ -101,19 +101,15 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
 
     // I find out the collection to send it to the compute price function
     const collection =  await category.findOne({name: name});
-    console.log(collection);
     let price;
     let available = true;
-    console.log("nome prodotto", prodName);
     // I find the product on the database and i check if there is an available date
     let prod = await product.findOne({name: prodName});
-        console.log("SONO QUIIIIIIIIIIIIIIIII");
     if(prod)
     {
-    console.log(prod);
     if(prod.reservations)
     {
-        for( i in prod.reservations) 
+        for( let i in prod.reservations) 
         {
                     let x = reservations[i];
                     if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
@@ -133,9 +129,6 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
     }
     if(available) {
         price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
-        console.log(price);
-        console.log(available);
-        console.log(prodName);
         res.status(200).json({finalPrice: price, availability: available, currProdName: prodName});
      }else
      {
@@ -177,6 +170,7 @@ router.post('/changeUserInfo',auth.verifyAdmin, async (req, res) => {
     const email = req.body.email;
     const type = req.body.type;
     const newValue = req.body.data;
+    let oldValue;
     let source = await user.findOne({ email: email })
     
     if(source)
@@ -192,16 +186,21 @@ router.post('/changeUserInfo',auth.verifyAdmin, async (req, res) => {
                 source.phone = newValue;
                 break;
             case 'email':
+                oldValue = source.email;
                 source.email = newValue;
                 break;
             case 'paymentMethod':
                 source.paymentMethod = newValue;
               break;
             }
+            // Lo user è modificato
             source.save();
+    // Se è la mail la cambio in tutte le prenotazioni dello user, dei prodotti che lui
+    // ha prenotato, e in quelle del dipendente, ma anche nelle pending request
+            if(newValue === 'email')
+                emailChange.emailCascadeChange(source, newValue, oldValue);
             res.status(200).send();
     } 
-
 });
 
 /**

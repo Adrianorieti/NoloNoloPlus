@@ -20,4 +20,5 @@ router.get('/rentalHypothesis', (req, res) => {
 });
 
 
+
 module.exports = router;
