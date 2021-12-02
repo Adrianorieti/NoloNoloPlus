@@ -74,12 +74,9 @@ router.post('/register', async (req, res) => {
                 password: hash,
                 role: 'customer'
             });
-
             //user is saved in mongodb
             newUser.save();
-
             res.status(200).send();
-
 
         })
     } else {
