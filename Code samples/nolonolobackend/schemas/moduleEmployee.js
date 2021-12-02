@@ -20,6 +20,9 @@ const reserveSchema = new Schema({
     end: {
         type: Date,
         required: true
+    },
+    expense: { // costo del noleggio
+        type: Number
     }
 })
 

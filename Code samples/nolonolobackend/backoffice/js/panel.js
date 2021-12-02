@@ -7,6 +7,7 @@ function getCostumers()
 {
   return allCostumers;
 }
+
 function logout(){
     sessionStorage.clear();
     window.location.href = `http://localhost:8001/employee/login`;
@@ -122,7 +123,6 @@ function sendRentalHypothesis(x, event)
 /** Make a rental hypothesis on a product , there is no need to be logged */
 function makeRentalHypothesis(x)
 {
-    
     let toInsert = `<div id="summary"><h5>Insert last infos</h5>
     <p>Name: ${productsNames[x]}</p>
     <p>Price: ${productsPrices[x]}$</p>
@@ -149,6 +149,9 @@ function makeRentalHypothesis(x)
 /** Renders all products in the content div */ 
 function showProducts(products)
 {
+    productsNames = [];
+    productsPrices = [];
+    categoriesNames = [];
     let token = sessionStorage.getItem('token');
     let toInsert = '';
     let image = '';
@@ -223,6 +226,7 @@ function getAllproducts()
 
 function showCostumers(costumers)
 {
+    allCostumers = [];
     allCostumers = allCostumers.concat(costumers);
     console.log(allCostumers);
 

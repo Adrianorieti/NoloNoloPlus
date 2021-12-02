@@ -2,9 +2,6 @@ const path = require('path');
 const express = require('express');
 const router = express.Router();
 require('dotenv').config();
-const url = require('url');
-const jwt = require('jsonwebtoken');
-const employee = require('../schemas/moduleEmployee');
 const auth = require('../api/auth');
 
 router.get('/login', (req, res) => {
