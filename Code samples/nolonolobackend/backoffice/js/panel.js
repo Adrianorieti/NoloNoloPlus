@@ -1,12 +1,27 @@
+let allCostumers = [];
 let productsNames = [];
 let categoriesNames = [];
 let productsPrices = [];
-let allCostumers = [];
-function logout(){
 
+function getCostumers()
+{
+  return allCostumers;
+}
+function logout(){
     sessionStorage.clear();
     window.location.href = `http://localhost:8001/employee/login`;
+}
 
+function sendInfo(type, x)
+{
+  let value = allCostumers[x][type];
+  let obj = `{
+    "type": "${type}",
+    "data": "${value}",
+    "userMail": "${allCostumers[x].email}"
+  }`
+
+  console.log(obj);
 }
 
 function changeUserInfo(x, event)
@@ -16,7 +31,7 @@ function changeUserInfo(x, event)
   <div class="col">
     <label for="name" class="form-label">Name</label>
     <input type="text" id="name" class="form-control" placeholder="${allCostumers[x].name}" aria-label="First name">
-    <button type="button" class="btn btn-primary btn-block">+</button>
+    <button type="button" class="btn btn-primary btn-block" onclick="sendInfo('name', x)">+</button>
   </div>
   <div class="col">
     <label for="surname" class="form-label">Surname</label> 
