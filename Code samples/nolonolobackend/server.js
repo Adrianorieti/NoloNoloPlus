@@ -2,14 +2,17 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const employee = require('./schemas/moduleEmployee');
 const services = require('./api/services');
 const account = require('./api/account');
 const rental = require('./api/rental');
 const customer = require('./api/customer');
 const auth = require('./api/auth');
 const employeeRoutes = require('./routes/empRoutes');
-const employee = require('./api/employee');
+const emp = require('./api/employee');
 const app = express();
+//const bcrypt = require('bcrypt');
+
 
 require('dotenv').config();
 
@@ -29,16 +32,16 @@ app.use(cors({
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
-app.use(express.static(path.join(__dirname, 'backoffice/html')));
+app.use(express.static(path.join(__dirname, 'backoffice')));
 
 
-/* Actual server routes */ 
+/* Actual API server routes */ 
 app.use('/api/account/', account);
 app.use('/api/services/', services);
 app.use('/api/rental/', rental);
 app.use('/api/customer/', customer);
 app.use('/api/auth/', auth);
-app.use('/api/employee/', employee);
+app.use('/api/employee/', emp);
 
 /* Alternative routes for static files */
 app.use('/employee/', employeeRoutes);
@@ -75,6 +78,19 @@ app.get('/products', function (req, res) {
 });
 
 
+// bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
+
+//     let emp = new employee({
+//         name: "Magalli",
+//         surname: "Crudista",
+//         phone: 123445678,
+//         email: "magalli.crudista123@nolonolo.com",
+//         password: hash,
+//         role: 'admin'
+//     });
+
+//    emp.save();
+// })
 
 
 app.listen(8001, function () {

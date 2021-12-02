@@ -8,8 +8,10 @@ const user = require('../schemas/moduleUser');
 const path = require('path');
 const fs = require('fs');
 const computePrice = require('../functions/computePrice');
+const emailChange = require('../functions/emailCascade');
 const auth = require('./auth');
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 
 const router = express.Router();
@@ -30,32 +32,25 @@ function sortByKey(array, key) {
  */
 router.post('/login', async (req, res) => {
 
-    console.log("SONO QUIII");
-    console.log(req.body);
     const email = req.body.email;
-    console.log(email);
 
     const source = await employee.findOne({ email: email });
    
     if(source)  // L'account richiesto è stato trovato
     {
         const password = req.body.password;
-
-        // const buff = Buffer.from(password, 'base64');
-
-        // const decodedpass = buff.toString('utf-8');
-
+        
         // We compare the passwords
         if (await bcrypt.compare(password, source.password)) {
 
-            console.log("Success");
-
+            
             // Create the json web token
             const employee = { email: `${source.email}` };
             const accessToken = jwt.sign(employee, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });
-
+            
             //Send token back to client 
-            res.json({ accessToken: accessToken});
+            console.log("Success");
+            res.status(200).json({ accessToken: accessToken});
 
         } else {
             res.status(404).send('Error, the requested account may not exists or your credentials are not correct');
@@ -71,7 +66,7 @@ router.post('/login', async (req, res) => {
  * @param jsonwebtoken
  * @return { list of all single products}
  */
-router.get('/products', auth.verifyAdmin ,async (req, res) => {
+router.get('/products', async (req, res) => {
 
     const products = await product.find();
     if(products)
@@ -84,74 +79,64 @@ router.get('/products', auth.verifyAdmin ,async (req, res) => {
 
 /**
  * Make a rental hypothesis impersonating a user.
- * @param {jsonwebtoken, productName, categoryName, userMail, startDate, endDate}
+ * @param { categoryName, userMail, startDate, endDate}
  * @return {available product, computed price, image}
  * @error  Returns error if there is no available product for a given date
  */
-router.post('/makeRentalHypothesis', auth.verifyAdmin, async (req,res) =>{
+router.post('/makeRentalHypothesis', async (req,res) =>{
 
-    const userMail = req.body.name;
-    const name = req.body.name;
+    const userMail = req.body.email;
+    const name = req.body.categoryName;
+    const prodName = req.body.productName;
     let startDate = new Date(req.body.startingDate);
-    startDate.setDate(startDate.getDate() + 1);
     let endDate = new Date(req.body.endingDate);
-    endDate.setDate(endDate.getDate() + 1);
 
+    // Check if the user is perculing us
     if(startDate.getTime() > endDate.getTime())
     {
         let tmp = startDate;
         startDate = endDate;
         endDate = tmp;
     }
+
+    // I find out the collection to send it to the compute price function
     const collection =  await category.findOne({name: name});
-    let typeToFind = collection.name;
-    if(collection)
+    let price;
+    let available = true;
+    // I find the product on the database and i check if there is an available date
+    let prod = await product.findOne({name: prodName});
+    if(prod)
     {
-        let price ;
-        let available = false;
-        let currentProd;
-        let availableProductList = [];
-        let prices = [];
-        product.find({type: typeToFind},  async function(err, db){
-        if(err) return(res.status(500).send(err));
-
-    for(i in db) 
+    if(prod.reservations)
     {
-        available=true;
-        for(j in db[i].reservations)
+        for( let i in prod.reservations) 
         {
-            let x = db[i].reservations[j];
-            if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
-            {
-                available = false;
-                break; 
-            }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
-            { 
-                available = false;
-                break;
-
-            }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
-            {
-                available = false;
-                break;
-            }
-        }   
-        if(available)
-        {
-            availableProductList.push(db[i]);
-            prices.push(await computePrice.computePrice(collection, db[i], userMail, startDate, endDate));
+                    let x = reservations[i];
+                    if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
+                    {
+                        available = false;
+                        break; 
+                    }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
+                    { 
+                        available = false;                    
+                        break;
+                    }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
+                    {
+                        available = false;
+                        break;
+                    }
         }
     }
-        if(availableProductList.length != 0)
-        {
-            price = Math.min(...prices);
-            currentProd = availableProductList[prices.indexOf(price)];
-            res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd.name});
-        }else
-        {
-            res.status(200).json({ availability: false});
-        } 
-    })
+    if(available) {
+        price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
+        res.status(200).json({finalPrice: price, availability: available, currProdName: prodName});
+     }else
+     {
+         res.status(404).json({ availability: false});
+     }
+}else
+{
+    res.status(500).json({ error: "prodotto non trovato"});
 }
 });
 
@@ -160,7 +145,7 @@ router.post('/makeRentalHypothesis', auth.verifyAdmin, async (req,res) =>{
  * @params null
  * @return {users list}
  */
-router.get('/getUsersInfo', auth.verifyAdmin, async (req, res) => {
+router.get('/getUsersInfo', async (req, res) => {
 
     const usersList = await user.find();
     if(usersList)
@@ -180,11 +165,16 @@ router.get('/getUsersInfo', auth.verifyAdmin, async (req, res) => {
  * @summary The user's entry in the database gets updated with new informations, there is
  * a check for integrity.
  */
-router.post('/changeUserInfo',auth.verifyAdmin, async (req, res) => {
+router.post('/changeUserInfo', async (req, res) => {
 
-    const email = req.body.email;
+    console.log(req.body);
+    const email = req.body.userMail;
     const type = req.body.type;
     const newValue = req.body.data;
+    let oldValue;
+    console.log(email);
+    console.log(type);
+    console.log(newValue);
     let source = await user.findOne({ email: email })
     
     if(source)
@@ -200,16 +190,21 @@ router.post('/changeUserInfo',auth.verifyAdmin, async (req, res) => {
                 source.phone = newValue;
                 break;
             case 'email':
+                oldValue = source.email;
                 source.email = newValue;
                 break;
             case 'paymentMethod':
                 source.paymentMethod = newValue;
               break;
             }
+            // Lo user è modificato
             source.save();
+    // Se è la mail la cambio in tutte le prenotazioni dello user, dei prodotti che lui
+    // ha prenotato, e in quelle del dipendente, ma anche nelle pending request
+            if(newValue === 'email')
+                emailChange.emailCascadeChange(source, newValue, oldValue);
             res.status(200).send();
     } 
-
 });
 
 /**

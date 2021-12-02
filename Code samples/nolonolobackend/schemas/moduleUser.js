@@ -16,6 +16,12 @@ const reserveSchema = new Schema({
     name: { //nome del prodotto singolo
         type: String,
         required: true
+    },
+    employee: {
+        type: String
+    },
+    expense: { // costo del noleggio
+        type: Number
     }
 })
 
@@ -50,6 +56,7 @@ const UserSchema = new Schema({
     role: String,
     fidelityPoints: Number,
     amountPaid: Number,
+    communications: [String],
     //prenotazioni future modificabili
     futureReservations: [reserveSchema],
     //prenotazioni attive e non modificabili
