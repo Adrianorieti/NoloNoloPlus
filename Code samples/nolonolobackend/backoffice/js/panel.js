@@ -9,22 +9,21 @@ function logout(){
 
 }
 
-function sendRentalHypothesis(x)
+function sendRentalHypothesis(x, event)
 {
+  event.preventDefault();
     let email = $('#email').val();
-    console.log(email);
     let startDate = $('#startDate').val();
-    console.log(startDate);
     let endDate = $('#endDate').val();
-    console.log(endDate);
 
     let obj = `{
         "categoryName": "${categoriesNames[x]}",
+        "productName": "${productsNames[x]}",
         "email": "${email}",
         "startingDate": "${startDate}",
         "endingDate": "${endDate}"
     }`;
-
+    console.log(obj);
     $.post({
         type: 'POST',
           url: 'http://localhost:8001/api/employee/makeRentalHypothesis',
@@ -39,13 +38,14 @@ function sendRentalHypothesis(x)
                 <h5>The product is available !</h5>
                 <p>Final price: ${data.finalPrice}€</p>
                 <p>Product chosen by system: ${data.currProdName}</p>
+                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
                 </div>`
             }else
             {
                  toInsert = `<div id="unavailable">
-                <h5>The product is available !</h5>
-                <p>Final price: ${data.finalPrice}€</p>
+                <h5>The product is unavailable in these dates!</h5>
                 <p>Product chosen by system: ${data.currProdName}</p>
+                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
                 </div>`
             }
             $('#info').html(toInsert);   
@@ -74,7 +74,7 @@ function makeRentalHypothesis(x)
   <label class="form-check-label" for="endDate">End Date</label>
     <input type="date" class="form-control" id="endDate">
   </div>
-  <button type="submit" class="btn btn-primary" onclick="sendRentalHypothesis(${x})">Send</button>
+  <button type="submit" class="btn btn-primary" onclick="sendRentalHypothesis(${x}, event)">Send</button>
 </form>
     </div>`;
     $("#content").html("");

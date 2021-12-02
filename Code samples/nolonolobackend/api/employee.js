@@ -86,64 +86,64 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
 
     const userMail = req.body.email;
     const name = req.body.categoryName;
+    const prodName = req.body.productName;
     let startDate = new Date(req.body.startingDate);
     let endDate = new Date(req.body.endingDate);
 
+    console.log(req.body);
+    // Check if the user is perculing us
     if(startDate.getTime() > endDate.getTime())
     {
         let tmp = startDate;
         startDate = endDate;
         endDate = tmp;
     }
+
+    // I find out the collection to send it to the compute price function
     const collection =  await category.findOne({name: name});
-    let typeToFind = collection.name;
-    if(collection)
+    console.log(collection);
+    let price;
+    let available = true;
+    console.log("nome prodotto", prodName);
+    // I find the product on the database and i check if there is an available date
+    let prod = await product.findOne({name: prodName});
+        console.log("SONO QUIIIIIIIIIIIIIIIII");
+    if(prod)
     {
-        let price ;
-        let available = false;
-        let currentProd;
-        let availableProductList = [];
-        let prices = [];
-        product.find({type: typeToFind},  async function(err, db){
-        if(err) return(res.status(500).send(err));
-
-    for(i in db) 
+    console.log(prod);
+    if(prod.reservations)
     {
-        available=true;
-        for(j in db[i].reservations)
+        for( i in prod.reservations) 
         {
-            let x = db[i].reservations[j];
-            if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
-            {
-                available = false;
-                break; 
-            }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
-            { 
-                available = false;
-                break;
-
-            }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
-            {
-                available = false;
-                break;
-            }
-        }   
-        if(available)
-        {
-            availableProductList.push(db[i]);
-            prices.push(await computePrice.computePrice(collection, db[i], userMail, startDate, endDate));
+                    let x = reservations[i];
+                    if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
+                    {
+                        available = false;
+                        break; 
+                    }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
+                    { 
+                        available = false;                    
+                        break;
+                    }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
+                    {
+                        available = false;
+                        break;
+                    }
         }
     }
-        if(availableProductList.length != 0)
-        {
-            price = Math.min(...prices);
-            currentProd = availableProductList[prices.indexOf(price)];
-            res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd.name});
-        }else
-        {
-            res.status(200).json({ availability: false});
-        } 
-    })
+    if(available) {
+        price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
+        console.log(price);
+        console.log(available);
+        console.log(prodName);
+        res.status(200).json({finalPrice: price, availability: available, currProdName: prodName});
+     }else
+     {
+         res.status(404).json({ availability: false});
+     }
+}else
+{
+    res.status(500).json({ error: "prodotto non trovato"});
 }
 });
 
