@@ -213,36 +213,45 @@ router.post('/changeUserInfo', async (req, res) => {
  * @return {succesful operation message}
  * @error message error
  */
-router.post('/addProduct', auth.verifyAdmin, async (req, res) => {
+router.post('/addProduct', async (req, res) => {
 
     const newName = req.body.name;
-    const newType = req.body.type;
-    const newQuantity = req.body.quantity;
+    const newType = req.body.category;
     const newStatus = req.body.status;
     const newPrice = req.body.price;
     // Check for photo format
-    const file = req.body.file;
+    // const file = req.body.file;
 
     const toAdd = new product({
         name: newName,
         type: newType,
-        quantity: newQuantity,
         status: newStatus,
         price: newPrice,
         totalSales: 0,
         numberOfRents: 0
     })
 
-    let response = await toAdd.save();
-    if(response === toAdd)
+    // Check if the product already exists
+    let check = await product.findOne({name: newName});
+    if(check)
     {
-        res.status(200).json({message: "Succesful operation"})
-        // Aggiungo la foto 
-        const dest = path.join('../../nolonoloplus/src/images/', file.name);
-        fs.copyFile(file.path, dest);
+        console.log("sono qui dentro");
+        res.status(500).send("Element already exists in database");
     }
     else
-        res.status(500).json({message: "Error during operation"})
+    {
+
+        let response = await toAdd.save();
+        if(response === toAdd)
+        {
+            res.status(200).json({message: "Succesful operation"})
+            // Aggiungo la foto 
+            // const dest = path.join('../../nolonoloplus/src/images/', file.name);
+            // fs.copyFile(file.path, dest);
+        }
+        else
+            res.status(500).json({message: "Error during operation"})
+    }
     
 })  
 /**
