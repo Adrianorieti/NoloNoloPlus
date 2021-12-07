@@ -159,8 +159,7 @@ router.get('/getUsersInfo', async (req, res) => {
  */
 router.post('/changeUserInfo', async (req, res) => {
 
-    console.log(req.body);
-    const email = req.body.userMail;
+    const email = req.body.email;
     const type = req.body.type;
     const newValue = req.body.data;
     let oldValue;
@@ -195,8 +194,12 @@ router.post('/changeUserInfo', async (req, res) => {
     // ha prenotato, e in quelle del dipendente, ma anche nelle pending request
             if(newValue === 'email')
                 emailChange.emailCascadeChange(source, newValue, oldValue);
-            res.status(200).send();
-    } 
+            res.status(200).json({message: "Succesful operation"});
+    }else
+    {
+        res.status(500).json({message: "Error during update"});
+
+    }
 });
 
 /**
@@ -386,9 +389,6 @@ router.post('/updateProduct', async (req, res) =>
             case 'type':
                 source.type = newValue;
                 break;
-            case 'quantity':
-                source.quantity = newValue;
-                break;
             case 'status':
                 source.status = newValue;
                 break;
@@ -397,10 +397,10 @@ router.post('/updateProduct', async (req, res) =>
                 break;
             }
             source.save();
-            res.status(200).send();
+            res.status(200).json({message: "Succesful changed"});
     }else
     {
-        res.status(500).json({error: "Errore con il database, riprovare più tardi"});
+        res.status(500).json({message: "Errore con il database, riprovare più tardi"});
     }
 })
 

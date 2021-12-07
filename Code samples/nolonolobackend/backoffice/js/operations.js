@@ -1,3 +1,4 @@
+/** General control deputated to close areas when close buttons are pushed  */
 function reset(input)
 {
   console.log("ciaoooooooo");
@@ -11,6 +12,8 @@ function reset(input)
     case 'comunication':
       $('#comunication').html(`<button type="button" class="btn btn-lg btn-primary btn-block" onclick="addComunication()" >Add Comunication</button>`);
       break;
+    case 'change':
+      $('#change').html(`<button type="button" class="btn btn-lg btn-primary btn-block" onclick="changeProduct()" >Change product</button>`)
     default:
         break;
   }
@@ -108,10 +111,7 @@ function sendDelete()
     }).fail(function(){
         $('#delete').html("Error, maybe the element already exists");
     })
-
-
 }
-
 
 /** Chiediamo al server tutti i prodotti e li mettiamo in un select per il dipendente così può cancellarli */
 function showDeleteProduct()
@@ -140,6 +140,7 @@ function showDeleteProduct()
     })
 }
 
+/** Send comunication to user's area comunication */
 function sendComunication()
 {
   let email = $('#email').val();
@@ -163,6 +164,7 @@ function sendComunication()
     })
 }
 
+/** Show comunication field for insertion */
 function addComunication()
 {
   let toInsert = `
@@ -178,4 +180,63 @@ function addComunication()
 </div>
   `
   $('#comunication').html(toInsert);
+}
+
+function sendChange()
+{
+  let name = $('#oldname').val();
+  let field = $('#changeMenu').val();
+  let newValue = $('#newValue').val();
+  console.log(name);
+  console.log(field);
+  console.log(newValue);
+
+  const obj = `{
+    "name": "${name}",
+    "type": "${field}",
+    "data": "${newValue}"
+  }`;
+
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/updateProduct',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(data){
+        $('#change').html(data.message);
+    }).fail(function(data){
+        $('#change').html(data.message);
+    })
+  
+}
+
+/** Show the area when the employee can change a product field */
+function changeProduct()
+{
+  toInsert = `
+  <div class="mb-3">
+  <label for="oldname" class="form-label">Product name</label>
+  <input type="text" class="form-control" id="oldname">
+</div>
+  <div class="input-group mb-3">
+  <label class="input-group-text" for="changeMenu">Field</label>
+  <select class="form-select" id="changeMenu">
+    <option selected value="name">Name</option>
+    <option value="type">Type</option>
+    <option value="status">Status</option>
+    <option value="price">Price</option>
+  </select>
+</div>
+<div class="mb-3">
+  <label for="newValue" class="form-label">New value</label>
+  <input type="text" class="form-control" id="newValue">
+</div>
+<span id="changeErr"></span>
+<button class="btn btn-outline-primary " type="button" onclick="sendChange()" >Confirm</button>
+<button class="btn btn-outline-warning" type="button" onclick="reset('change')" >Close</button>
+
+  `
+
+  $('#change').html(toInsert);
 }
