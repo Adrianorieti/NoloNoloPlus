@@ -10,20 +10,12 @@ const fs = require('fs');
 const computePrice = require('../functions/computePrice');
 const emailChange = require('../functions/emailCascade');
 const auth = require('./auth');
+const sortBy = require('../functions/sortBy');
 const express = require('express');
 const bcrypt = require('bcrypt');
 
 
 const router = express.Router();
-
-
-function sortByKey(array, key) {
-    return array.sort(function(a, b) {
-        var x = a[key];
-         var y = b[key];
-        return ((x.getTime() < y.getTime()) ? -1 : ((x.getTime() > y.getTime()) ? 1 : 0));
-    });
-};
 
 /**
  * Verify if the employee exists in the database. If yes, the employee receive a token
@@ -213,37 +205,45 @@ router.post('/changeUserInfo', async (req, res) => {
  * @return {succesful operation message}
  * @error message error
  */
-router.post('/addProduct', auth.verifyAdmin, async (req, res) => {
+router.post('/addProduct', async (req, res) => {
 
     const newName = req.body.name;
-    const newType = req.body.type;
-    const newQuantity = req.body.quantity;
+    const newType = req.body.category;
     const newStatus = req.body.status;
     const newPrice = req.body.price;
     // Check for photo format
-    const file = req.body.file;
+    // const file = req.body.file;
 
     const toAdd = new product({
         name: newName,
         type: newType,
-        quantity: newQuantity,
         status: newStatus,
         price: newPrice,
         totalSales: 0,
         numberOfRents: 0
     })
 
-    let response = await toAdd.save();
-    if(response === toAdd)
+    // Check if the product already exists
+    let check = await product.findOne({name: newName});
+    if(check)
     {
-        res.status(200).json({message: "Succesful operation"})
-        // Aggiungo la foto 
-        const dest = path.join('../../nolonoloplus/src/images/', file.name);
-        fs.copyFile(file.path, dest);
+        console.log("sono qui dentro");
+        res.status(500).send("Element already exists in database");
     }
     else
-        res.status(500).json({message: "Error during operation"})
-    
+    {
+
+        let response = await toAdd.save();
+        if(response === toAdd)
+        {
+            res.status(200).json({message: "Succesful operation"})
+            // Aggiungo la foto 
+            // const dest = path.join('../../nolonoloplus/src/images/', file.name);
+            // fs.copyFile(file.path, dest);
+        }
+        else
+            res.status(500).json({message: "Error during operation"})
+    }
 })  
 /**
  * Elimina il prodotto specificato dal dipendente solo se non ci sono prenotazioni attive, ritornando la lista di prenotazioni
@@ -252,7 +252,7 @@ router.post('/addProduct', auth.verifyAdmin, async (req, res) => {
  * @return {list of future reservations on product}
  * @error Se ci sono prenotazioni attive
  */
-router.post('/deleteProduct', auth.verifyAdmin, async (req, res) => {
+router.post('/deleteProduct', async (req, res) => {
 
     const toDelete = req.body.name;
     const reservations = [];
@@ -260,16 +260,82 @@ router.post('/deleteProduct', auth.verifyAdmin, async (req, res) => {
     if(source)
     {
         // Controllare se sia meglio push o concat
-        reservations.push(source.reservations);
-        //TO-DO controllare se ci sono reservations attive ? o non ha senso ?   
-        await product.remove({name: toDelete}, function(err)
-        {
-            if(err)
-                res.status(500).send(err);
-            else
-                res.status(200).json({reservationList: reservations})
+        reservations.concat(source.reservations);
+        // TEST PER VEDERE SE FUNZIONA VISTO CHE NON ABBIAMO RESERVATIONS NEI PRODOTTI
+        let start = new Date("12-01-2021");
+        let end = new Date("12-05-2021");
+        let start2 = new Date("12-10-2021");
+        let end2 = new Date("12-15-2021");
+        let start3 = new Date("12-28-2021");
+        let end3 = new Date("12-30-2021");
+        let newReserve = new reservation({
+            usermail: "PROVAPROVA@gmail.com",
+            start: start,
+            end: end
+        })
+        let newReserve2 = new reservation({
+            usermail: "PROVAPROVA@gmail.com",
+            start: start2,
+            end: end2
+        })
+        let newReserve3 = new reservation({
+            usermail: "PROVAPROVA@gmail.com",
+            start: start3,
+            end: end3
+        })
+        reservations.push(newReserve2);
+        reservations.push(newReserve);
+        reservations.push(newReserve3);
 
-        });
+        // Da tenere
+        sortBy.sortByTime(reservations, 'start');
+        var today = new Date();
+
+        /**Se vedo che ci possono essere delle prenotazioni attive */
+        if(reservations[0].start.getTime() <= today.getTime())
+        {   
+            /** Scorro tutto l'array per vedere se trovo delle prenotazioni attive, se trovo o supero esco */
+            for(let x in reservations)
+            {
+                // Se trovo una reservation a cavallo cioè ancora attiva
+                if(reservations[x].start.getTime() <= today.getTime() && reservations[x].end.getTime() >= today.getTime())
+                {
+                    console.log("PRODUCT STILL HAS ACTIVE RES");
+                    break;
+                    // return res.status(500).json({error: "Operation impossible, product still has active reservations"});
+                    
+                }else if(reservations[x].start.getTime() > today.getTime())
+                {
+                    console.log("OK");
+                    //Cancello dall'array delle prenotazioni tutte quelle passate
+                    let newReservations = reservations.slice(x);
+                    console.log(newReservations);
+                    break;
+                    // Mando la lista di prenotazioni future
+                    // await product.remove({name: toDelete}, function(err)
+                    // {
+                    //     if(err)
+                    //         res.status(500).send(err);
+                    //     else
+                    //         res.status(200).json({reservationList: newReservations})
+                    
+                    // });
+                }
+            }
+        }else
+        {
+            console.log("OK");
+                    // Mando la lista di prenotazioni future senza cancellare nulla
+                    // await product.remove({name: toDelete}, function(err)
+                    // {
+                    //     if(err)
+                    //         res.status(500).send(err);
+                    //     else
+                    //         res.status(200).json({reservationList: reservations})
+                    
+                    // });
+        }
+        
     }
 })
 
@@ -281,19 +347,21 @@ router.post('/deleteProduct', auth.verifyAdmin, async (req, res) => {
  */
 router.post('/addComunication', async (req, res) =>{
 
-    const message =req.body.message;
+    const message = req.body.message;
     const userMail = req.body.email;
-    await user.findOne({email: userMail}, function(err, usr)
+    let usr =  await user.findOne({email: userMail});
+    if(usr)
     {
-        if(err)
-            res.status(500).send("User not found");
-        else
-            {
-                // Inserisco il messaggio nelle comunicazioni dell'utente
-                 usr.comunications.push(message);
-                 usr.save();
-            }
-    })
+        console.log(usr);
+        usr.communications.push(message);
+        usr.save();
+        res.status(200).json({message: "Succesful operation"})
+    }else
+    {
+        console.log("user not found");
+        res.status(404).json({message: "user not found"});
+    }
+    
 })
 
 /**
@@ -302,7 +370,7 @@ router.post('/addComunication', async (req, res) =>{
  * @return {succesful message}
  * @error error message
  */
-router.post('/updateProduct', auth.verifyAdmin, async (req, res) =>
+router.post('/updateProduct', async (req, res) =>
 {
     const name = req.body.name;
     const type = req.body.type;
@@ -359,7 +427,7 @@ router.post('/maintenance', async (req, res) =>
         let reservations = prod.reservations;
         let reservationsToChange = [];
         // Ordino le prenotazioni per data di inizio
-        sortByKey(reservations, 'start');
+        sortBy.sortByTime(reservations, 'start');
         // Controllo se ci sono prenotazioni
         // Se la data di inizio della prenotazione è <= della data di fine della nostra
         // prenotazione speciale allora và eliminata, e va ritornata 
@@ -419,7 +487,7 @@ router.post('/makeRental', auth.verifyAdmin, async (req, res) => {
     if(prod)
     {
         let reservations = prod.reservations;
-        sortByKey(reservations, 'start');
+        sortBy.sortByTime(reservations, 'start');
         let available = true;
         for(i in reservations)
         {

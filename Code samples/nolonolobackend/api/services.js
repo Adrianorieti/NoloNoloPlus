@@ -27,10 +27,8 @@ router.post('/getCategory', async (req, res) => {
         }
         res.json(JSON.stringify(category));
     }
-    else {
-        res.status(400).send();
-    }
-})
+});
+
 
 router.post('/formProducts', async (req, res) => {
     const authHeader = req.headers['authorization'];
@@ -107,7 +105,6 @@ router.post('/formProducts', async (req, res) => {
                         }
 
                         if (available) {
-                            console.log(db[i].name);
                             //IL PRODOTTO SINGOLO CORRENTE NON LA CATEGORIA
                             //dobbiamo fare in modo che sia il + economico
                             //productList è un array di elementi disponibili in una determinata data
@@ -129,10 +126,10 @@ router.post('/formProducts', async (req, res) => {
                     //calcolo il  prodotto più economico
                     if (availableProductList.length != 0) {
                         price = Math.min(...prices);
-                        console.log("TUTTI I PREZZI ", prices);
+                        console.log("TUTTI I PREZZI ",prices);
                         console.log("IL MINORE", price);
                         //le posizioni sono le stesse
-                        currentProd = availableProductList[prices.indexOf(price)];
+                        currentProd = availableProductList[prices.indexOf(price.toString())];                 
                         res.status(200).json({ prod: collection, finalPrice: price, availability: true, currProdName: currentProd.name });
                     } else {
                         console.log("bye bye modafoca");

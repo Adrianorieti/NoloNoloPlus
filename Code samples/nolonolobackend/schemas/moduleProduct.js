@@ -36,10 +36,6 @@ const ProductSchema = new Schema({
         type: String,
         required: true
     },
-    quantity: {
-        type: Number,
-        required: true
-    },
     status: {
         type: String,
         required: true
