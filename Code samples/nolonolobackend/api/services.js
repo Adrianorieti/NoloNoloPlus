@@ -138,19 +138,19 @@ router.post('/formProducts', async (req, res) => {
                 })
             }
         })
-    } else { // l'utente non è loggato quindi calcoliamo la media del prezzo 
+    } else { // Se l'utente non è loggato ritorniamo la media del prezzo
 
 
-        const prod = await category.findOne({ name: name });
+        const collection = await category.findOne({ name: name });
 
-        if (prod) {
+        if (collection) {
             //TO-DO capire il checkout ed il prezzo
-            let price = prod.price;
+            let price = collection.price;
             let period = endDate.getTime() - startDate.getTime();
             period = period / (1000 * 3600 * 24);
             price = price * period;
 
-            return (res.status(200).json({ prod: prod, finalPrice: price }));
+            return (res.status(200).json({ prod: collection, finalPrice: price }));
         }
     }
 });

@@ -7,6 +7,8 @@ import specialBike from '../images/specialBike.jpeg';
 import cityBike from '../images/cityBike.jpg';
 import { useHistory } from "react-router";
 import Rental from './Rental';
+import { Link } from 'react-router-dom';
+
 const server_url = process.env.REACT_APP_SERVER_URL;
 const services_url = process.env.REACT_APP_API_SERVICES;
 const products_url = process.env.REACT_APP_PRODUCTS;
@@ -185,8 +187,8 @@ function Products(){
 <div className="card-body">
   <h5 className="card-title">{formDataProduct.name}</h5>
   <p className="card-text">{formDataProduct.description}</p>
-  <p className="card-text">The price for the requested period is : {price}$</p>
-  <p id="check">Login to check availability for this product.</p>
+  <p className="card-text">The medium price for the requested period is : {price}$</p>
+  <p id="check"><Link onClick={(()=>{history.push('/login')})}>Login</Link> to check availability for this product.</p>
 </div>
 </div>
 <a href="#" className="btn btn-primary m-3" onClick={(()=>{sessionStorage.removeItem('form_obj'); window.location.reload()})}>Disable Filters</a>
