@@ -24,7 +24,6 @@ function sendInfo()
         }).fail(function()
         {
             $('#onErr').html(data.message);
-
         })
     }
 
