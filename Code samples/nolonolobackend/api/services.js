@@ -56,7 +56,6 @@ router.post('/formProducts', async(req, res) =>
         if(collection)
         {
             let price ;
-            let period = endDate.getTime() - startDate.getTime();
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
             let available = false;
             let currentProd;
@@ -106,18 +105,10 @@ router.post('/formProducts', async(req, res) =>
                 availableProductList.push(db[i]);
                 //aggiungo il prezzo finale di questo prodotto nell'array
                 // prices.push(computePrice(db[i]))
-                // console.log("PREZZO COMPUTATO", await computePrice.computePrice(collection, db[i], decoded.email, startDate, endDate));
-                console.log("//////////////////////////////////");
-                console.log("startDate", startDate);
-                console.log("endDate", endDate);
                 prices.push(await computePrice.computePrice(collection, db[i], decoded.email, startDate, endDate));
             }
 
         }
-    //     let best = [];
-    //    productList.forEach((element) => {
-    //        best.push(computePrice(element));
-    //    });
     //calcolo il  prodotto più economico
     if(availableProductList.length != 0)
     {
@@ -125,11 +116,10 @@ router.post('/formProducts', async(req, res) =>
        console.log("TUTTI I PREZZI ",prices);
        console.log("IL MINORE", price);
        //le posizioni sono le stesse
-       currentProd = availableProductList[prices.indexOf(price)];
+       currentProd = availableProductList[prices.indexOf(price.toString())];
         res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd.name});
     }else
     {
-        console.log("bye bye modafoca");
         res.status(200).json({ availability: false});
     }
     })
