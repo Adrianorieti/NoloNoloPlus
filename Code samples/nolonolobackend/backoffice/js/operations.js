@@ -6,7 +6,11 @@ function reset(input)
       $('#add').html(`<button type="button" class="btn btn-lg btn-primary btn-block" onclick="addProduct()" >Add product</button>`);
       break;
     case 'delete':
-      $('#delete').html(`<button type="button" class="btn btn-lg btn-danger btn-block" onclick="showDeleteProduct()" >Delete product</button>`)
+      $('#delete').html(`<button type="button" class="btn btn-lg btn-danger btn-block" onclick="showDeleteProduct()" >Delete product</button>`);
+      break;
+    case 'comunication':
+      $('#comunication').html(`<button type="button" class="btn btn-lg btn-primary btn-block" onclick="addComunication()" >Add Comunication</button>`);
+      break;
     default:
         break;
   }
@@ -100,10 +104,9 @@ function sendDelete()
       dataType: 'json',
       data: obj
     }, function(){
-        $('#add').html("Successful added");
+        $('#delete').html("Successful deletion");
     }).fail(function(){
-        $('#add').html("Error, maybe the element already exists");
-
+        $('#delete').html("Error, maybe the element already exists");
     })
 
 
@@ -135,7 +138,44 @@ function showDeleteProduct()
         // change this
         alert('error');
     })
+}
 
+function sendComunication()
+{
+  let email = $('#email').val();
+  let message = $('#text').val();
 
+  const obj = `{
+    "email": "${email}",
+    "message": "${message}"
+  }`;
+  console.log(obj);
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/addComunication',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(data){
+        $('#comunication').html(data.message);
+    }).fail(function(data){
+        $('#comunication').html(data.message);
+    })
+}
 
+function addComunication()
+{
+  let toInsert = `
+<div class="mb-3">
+  <label for="email" class="form-label">User email</label>
+  <input type="email" class="form-control" id="email"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+</div>
+<div class="mb-3">
+  <label for="text" class="form-label">Message to send</label>
+  <textarea class="form-control" id="text" rows="3"></textarea>
+  <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Insert</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset('comunication')" >Close</button>
+</div>
+  `
+  $('#comunication').html(toInsert);
 }

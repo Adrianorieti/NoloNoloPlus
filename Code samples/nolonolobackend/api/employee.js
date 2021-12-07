@@ -347,19 +347,21 @@ router.post('/deleteProduct', async (req, res) => {
  */
 router.post('/addComunication', async (req, res) =>{
 
-    const message =req.body.message;
+    const message = req.body.message;
     const userMail = req.body.email;
-    await user.findOne({email: userMail}, function(err, usr)
+    let usr =  await user.findOne({email: userMail});
+    if(usr)
     {
-        if(err)
-            res.status(500).send("User not found");
-        else
-            {
-                // Inserisco il messaggio nelle comunicazioni dell'utente
-                 usr.comunications.push(message);
-                 usr.save();
-            }
-    })
+        console.log(usr);
+        usr.communications.push(message);
+        usr.save();
+        res.status(200).json({message: "Succesful operation"})
+    }else
+    {
+        console.log("user not found");
+        res.status(404).json({message: "user not found"});
+    }
+    
 })
 
 /**
@@ -368,7 +370,7 @@ router.post('/addComunication', async (req, res) =>{
  * @return {succesful message}
  * @error error message
  */
-router.post('/updateProduct', auth.verifyAdmin, async (req, res) =>
+router.post('/updateProduct', async (req, res) =>
 {
     const name = req.body.name;
     const type = req.body.type;
