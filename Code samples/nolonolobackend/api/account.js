@@ -84,12 +84,9 @@ router.post('/register', async (req, res) => {
                 fidelityPoints: 5,
                 amountPaid: 0
             });
-
             //user is saved in mongodb
             newUser.save();
-
             res.status(200).send();
-
 
         })
     } else {

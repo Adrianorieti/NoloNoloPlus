@@ -10,6 +10,9 @@ const reserveSchema = new Schema({
         type: String,
         required: true
     },
+    employee: {
+        type: String
+    },
     start: {
         type: Date,
         required: true
@@ -17,6 +20,9 @@ const reserveSchema = new Schema({
     end: {
         type: Date,
         required: true
+    },
+    expense: { // costo del noleggio
+        type: Number
     }
 })
 
@@ -28,10 +34,6 @@ const ProductSchema = new Schema({
     },
     type: {
         type: String,
-        required: true
-    },
-    quantity: {
-        type: Number,
         required: true
     },
     status: {

@@ -42,7 +42,6 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
         }
     }
 }
-
 async function changeCascadeProds(prods, newMail, oldMail) {
     for await (const prod of product.find()) { // per tutti i prodotti del database
         if (prods.include(prod.name)) // se c'è match con quelli che cerco
@@ -54,7 +53,9 @@ async function changeCascadeProds(prods, newMail, oldMail) {
             }
             prod.save();
         }
+
     }
+
 }
 
 async function checkPendingReqs(newMail, oldMail) {
@@ -62,6 +63,7 @@ async function checkPendingReqs(newMail, oldMail) {
         req.userMail = newMail;
         req.save();
     }
+
 }
 
 

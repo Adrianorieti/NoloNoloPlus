@@ -22,6 +22,9 @@ const pendingRequestSchema = new Schema({
     end: {
         type: Date,
         required: true
+    },
+    expense: {
+        type: Number
     }
 });
 
