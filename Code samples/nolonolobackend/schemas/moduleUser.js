@@ -16,6 +16,9 @@ const reserveSchema = new Schema({
     name: { //nome del prodotto singolo
         type: String,
         required: true
+    },
+    employee: {
+        type: String
     }
 })
 

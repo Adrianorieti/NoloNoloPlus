@@ -45,7 +45,7 @@ module.exports = {
             let period = endDate.getTime() - startDate.getTime();
             period = period / (1000 * 3600 * 24);
             //così mi prende  anche il giorno finale altrimenti non me lo prende
-            period += 1;
+            period += 1; x
             console.log("giorni prenotati ", period);
             finalPrice = dailyPrice * period;
 

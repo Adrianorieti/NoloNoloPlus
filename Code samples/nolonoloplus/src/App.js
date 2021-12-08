@@ -17,8 +17,11 @@ import Test from './components/Test';
 import Products from './components/Products';
 import UpdatePage from './pages/UpdatePage';
 import PersonalPage from './pages/PersonalPage';
+import NewUserPage from './pages/newUserPage';
 import FutureReservations from './pages/FutureReservations';
 import ModifyReservation from './pages/ModifyReservation';
+import ActiveReservations from "./pages/ActiveReservations";
+import PastReservations from "./pages/PastReservations";
 
 
 
@@ -44,11 +47,11 @@ function App() {
 
   return (
     <div className="App" >
+      {<Navbar name={data} queryToParent={queryToParent} />}
       <Switch>
+
         <Route path="/" exact >
           <Header />
-          <Navbar name={data} queryToParent={queryToParent} />
-
           <div className="App-content bg-image container-fluid">
             <div className="row">
               <div className="col">
@@ -65,33 +68,37 @@ function App() {
         </Route>
 
         <Route path="/login" exact >
-
-
-          <Navbar name={data} queryToParent={queryToParent} />
           <LoginPage nameToParent={nameToParent} />
         </Route>
 
         <Route path="/personalpage" exact>
-
-          <Navbar name={data} queryToParent={queryToParent} />
           <PersonalPage />
 
         </Route>
 
-        <Route path="/updatepage" exact>
+        <Route path="/newpersonalpage" exact>
+          <NewUserPage />
 
-          <Navbar name={data} queryToParent={queryToParent} />
+        </Route>
+
+        <Route path="/updatepage" exact>
           <UpdatePage nameToParent={nameToParent} />
 
         </Route>
 
         <Route path="/futurereservations" exact>
-          <Navbar name={data} queryToParent={queryToParent} />
           <FutureReservations resToParent={resToParent} />
         </Route>
 
+        <Route path="/activereservations" exact>
+          <ActiveReservations />
+        </Route>
+
+        <Route path="/pastreservations" exact>
+          <PastReservations />
+        </Route>
+
         <Route path="/modifyreservation" exact>
-          <Navbar name={data} queryToParent={queryToParent} />
           <ModifyReservation res={reservation} />
         </Route>
 
@@ -100,7 +107,6 @@ function App() {
         </Route>
 
         <Route path='/products' exact >
-          <Navbar name={data} queryToParent={queryToParent} />
           <Products />
         </Route>
       </Switch>

@@ -7,7 +7,11 @@ const product = require('../schemas/moduleProduct');
 const express = require('express');
 const router = express.Router();
 
-
+/**
+ * Given a password and a mail, returns ok if the password is associated with the given email, unauthorized otherwise.
+ * @param {email, password}
+ * @return {200, 401}
+ */
 router.post('/passw-validation', async (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -35,7 +39,28 @@ router.post('/passw-validation', async (req, res) => {
     }
 })
 
+/**
+ * Given a mail, returns ok if there is a user with that email associated, bad request otherwise.
+ * @param {email, password}
+ * @return {200, 401}
+ */
+router.post('/email-validation', async (req, res) => {
+    const email = req.body.email;
+    let source = await user.findOne({ email: email });
+    if (!source) {
+        //nessuno è stato trovato con la mail che stiamo per inserire.
+        res.status(200).send();
+    }
+    else {
+        res.status(400).send();
+    }
+});
 
+/**
+ * Given a field to updates, and the new value, updates that field.
+ * @param {email | passw | name | surname | phone | ...}
+ * @returns {200, 500}
+ */
 router.post('/update', async (req, res) => {
     //VANNO SETTATI PER BENE GLI STATI DI ERRORE.
     const authHeader = req.headers['authorization'];
@@ -53,7 +78,7 @@ router.post('/update', async (req, res) => {
             //diamo per scontato che lo user esista??
             //in questo caso si perchè prendiamo dal token, ma se uno lo modifica?
             // https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a
-           
+
             let source = await user.findOne({ email: email });
             console.log(source);
 
@@ -93,7 +118,11 @@ router.post('/update', async (req, res) => {
     }
 })
 
-
+/**
+ * Given an email associated with a user, returns his info(passw excluded)
+ * @param {email}
+ * @returns {info}
+ */
 router.post("/getInfo", async (req, res) => {
     //fare cose 
     const authHeader = req.headers['authorization'];
@@ -127,6 +156,11 @@ router.post("/getInfo", async (req, res) => {
     }
 });
 
+/**
+ * Given an email associated with a user, deletes him from the DB
+ * @param {email}
+ * @returns {200, 401, 500}
+ */
 router.post('/deleteaccount', async (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -153,18 +187,12 @@ router.post('/deleteaccount', async (req, res) => {
     }
 });
 
-router.post('/email-validation', async (req, res) => {
-    const email = req.body.email;
-    let source = await user.findOne({ email: email });
-    if (!source) {
-        //nessuno è stato trovato con la mail che stiamo per inserire.
-        res.status(200).send();
-    }
-    else {
-        res.status(400).send();
-    }
-});
-
+/**
+ * Given an email associated with a user, a product name, dates and an operation,
+ * operate on the reservation made by the user into the product scheme.
+ * @param {email, name, start, end, operation}
+ * @returns {200, 400, 401}
+ */
 router.post("/modifypreparation", async (req, res) => {
     //QUI SERVE LA MAIL
     const authHeader = req.headers['authorization'];
@@ -217,6 +245,12 @@ router.post("/modifypreparation", async (req, res) => {
     }
 })
 
+/**
+ * Given an email a reservation associated with a user, a product and a reservation, removes the reservation
+ * from the user schema and from the product schema
+ * @param {email, startingDate, prodName}
+ * @returns {200, 401}
+ */
 router.post("/removeReservation", async (req, res) => {
     console.log("siamo qua");
     //devo avere la starting date, ending date, name product e anche il token.

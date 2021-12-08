@@ -15,7 +15,11 @@ router.post('/products', async (req, res) => {
     res.status(200).json({ prodList: prodList });
 })
 
-//from the name of the product, returns the category.
+/**
+ * from the name of a product, return his category
+ * @param {prodName}
+ * @return {category}
+ */
 router.post('/getCategory', async (req, res) => {
     let prodName = req.body.prodName;
     const prod = await product.findOne({ name: prodName });

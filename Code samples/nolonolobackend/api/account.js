@@ -9,7 +9,11 @@ const express = require('express');
 
 const router = express.Router();
 
-
+/**
+ *  Verify if the user exists in the database. If yes, the user receives a token
+ * @param {email, password}
+ * @return {token}
+ */
 router.post('/login', async (req, res) => {
     const mail = req.body.email;
 
@@ -46,6 +50,10 @@ router.post('/login', async (req, res) => {
 
 });
 
+/**
+ * Create a new user inside the database.
+ * @param {name, surname, email, password, phone, paymentMethod}
+ */
 router.post('/register', async (req, res) => {
 
     const mail = req.body.email;
