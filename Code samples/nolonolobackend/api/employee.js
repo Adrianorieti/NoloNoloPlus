@@ -198,7 +198,6 @@ router.post('/changeUserInfo', async (req, res) => {
     }else
     {
         res.status(500).json({message: "Error during update"});
-
     }
 });
 
@@ -309,7 +308,7 @@ router.post('/deleteProduct', async (req, res) => {
                     
                 }else if(reservations[x].start.getTime() > today.getTime())
                 {
-                    console.log("OK");
+                    console.log("OK potrei anche cancellarlo");
                     //Cancello dall'array delle prenotazioni tutte quelle passate
                     let newReservations = reservations.slice(x);
                     console.log(newReservations);
@@ -327,7 +326,7 @@ router.post('/deleteProduct', async (req, res) => {
             }
         }else
         {
-            console.log("OK");
+            console.log("OK potrei anche cancellarlo");
                     // Mando la lista di prenotazioni future senza cancellare nulla
                     // await product.remove({name: toDelete}, function(err)
                     // {
@@ -476,45 +475,56 @@ router.post('/maintenance', async (req, res) =>
  * @summary the employee can create a reservation in the past, future or present if 
  * there is availability on the product.
  */
-router.post('/makeRental', auth.verifyAdmin, async (req, res) => {
+router.post('/makeRental',  async (req, res) => {
 
     const userMail = req.body.email;
     const productName = req.body.name;
-    let startDate = new Date(req.body.startingDate);
-    let endDate = new Date(req.body.endingDate);
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
 
+    console.log(startDate.getDate());
+    console.log(endDate.getDate());
+
+    const source = await user.findOne({email: userMail});
+
+    if(source)
+    {
     const prod = await product.findOne({name: productName});
     if(prod)
     {
         let reservations = prod.reservations;
         sortBy.sortByTime(reservations, 'start');
         let available = true;
-        for(i in reservations)
+        if(reservations)
         {
-            if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
-            {
-                console.log("l'inizio è compreso");
-                available = false;
-                break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
 
-            }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
+            for(i in reservations)
             {
-                console.log("la fine  è compresa");
+                if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
+                {
+                    console.log("l'inizio è compreso");
+                    available = false;
+                    break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
 
-                available = false;
-                break;
+                }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
+                {
+                    console.log("la fine  è compresa");
 
-            }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
-            {
-                console.log("comprende tutto");
-                available = false;
-                break;
-            }else
-            {
-                // essendo ordinato appena trovo una inferiore esco dal for
-                break;
+                    available = false;
+                    break;
+
+                }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
+                {
+                    console.log("comprende tutto");
+                    available = false;
+                    break;
+                }else
+                {
+                    // essendo ordinato appena trovo una inferiore esco dal for
+                    break;
+                }
             }
-        }
+        }   
         if(available)
         {
                 let newReserve = new reservation({
@@ -525,10 +535,16 @@ router.post('/makeRental', auth.verifyAdmin, async (req, res) => {
 
             prod.reservations.push(newReserve);
             prod.save();
-            res.status(200).send("Added reservation");
+            res.status(200).json({message: "Added reservation"});
+        }else
+        {
+            res.status(500).json({message: "Product unavailable on these dates"});
         }
     }
-
+    }else
+    {
+        res.status(500).json({message: "Invalid email inserted"});
+    }
 })
 
 /**
@@ -614,7 +630,6 @@ router.post('/denyBeginOfRental', async (req, res) => {
 
 })
 
-
 router.post('/confirmLending', async (req, res) => {
     // Ricevo la prenotazione dalla lista dei dipendenti
     const userMail = req.body.email;
@@ -683,7 +698,7 @@ router.post('/confirmEndOfRental', async (req, res) => {
  * Get all future reservations from all products
  * 
  */
-router.post('getAllReservations', async (req, res) => {
+router.post('/getAllReservations', async (req, res) => {
 
     let toSend = [];
     let today = new Date();

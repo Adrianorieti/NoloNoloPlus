@@ -2,6 +2,7 @@ let allCostumers = [];
 let productsNames = [];
 let categoriesNames = [];
 let productsPrices = [];
+let allProducts = [];
 
 function getCostumers()
 {
@@ -12,7 +13,6 @@ function logout(){
     sessionStorage.clear();
     window.location.href = `http://localhost:8001/employee/login`;
 }
-
 
 function sendRentalHypothesis(x, event)
 {
@@ -91,11 +91,13 @@ function showProducts(products)
     productsNames = [];
     productsPrices = [];
     categoriesNames = [];
+    allProducts = [] ;
     let token = sessionStorage.getItem('token');
     let toInsert = '';
     let image = '';
-    for(x in products)
+    for(let x in products)
     {
+        allProducts.push(products[x]);
         productsNames.push(products[x].name);
         productsPrices.push(products[x].price);
         categoriesNames.push(products[x].type);
@@ -125,7 +127,14 @@ function showProducts(products)
               <h5 class="card-title">${products[x].name}</h5>
               <p class="card-text">${products[x].price}$ per day</p>
               <p class="card-text">Status: ${products[x].status}</p>
-              <a href="#" class="btn btn-primary">Add a rent</a>
+              <div class="input-group mb-3">
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" onclick="showAddRent(${x}, allProducts)">Add Rent</a></li>
+              <li><a class="dropdown-item"></a></li>
+              <li><a class="dropdown-item"></a></li>
+            </ul>
+          </div>
             </div>
           </div>`
         }else
@@ -169,7 +178,7 @@ function showCostumers(costumers)
     allCostumers = allCostumers.concat(costumers);
     let toInsert = '';
     let image = '../images/user.jpeg';
-    for(x in costumers)
+    for(let x in costumers)
     {
         toInsert += `<div class="card" style="width: 18rem;">
         <img src="../images/${image}" class="card-img-top" alt="Product image">
@@ -183,7 +192,7 @@ function showCostumers(costumers)
            <div class="input-group mb-3">
             <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" onclick="changeUserInfo(x, event, allCostumers)">Change user info</a></li>
+              <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
               <li><a class="dropdown-item" href="#"></a></li>
               <li><a class="dropdown-item" href="#"></a></li>
             </ul>

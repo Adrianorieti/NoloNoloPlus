@@ -92,7 +92,7 @@ function addProduct()
     $('#add').html(toInsert);
 
 }
-
+/** TODO GESTIRE GRAFICAMENTE LA LISTA DI RESERVATIONS RITORNATA DAL SERVER QUANDO CANCELLIAMO IL PRODOTTO */
 function sendDelete()
 {
   let toDelete = $('#product').val();
@@ -109,7 +109,7 @@ function sendDelete()
     }, function(){
         $('#delete').html("Successful deletion");
     }).fail(function(){
-        $('#delete').html("Error, maybe the element already exists");
+        $('#delete').html("Error, maybe the element doesn't exists");
     })
 }
 
