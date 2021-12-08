@@ -99,36 +99,44 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
     let prod = await product.findOne({name: prodName});
     if(prod)
     {
-    if(prod.reservations)
-    {
-        for( let i in prod.reservations) 
+        console.log(prod.reservations);
+        if(prod.reservations)
         {
-                    let x = reservations[i];
-                    if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
-                    {
-                        available = false;
-                        break; 
-                    }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
-                    { 
-                        available = false;                    
-                        break;
-                    }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
-                    {
-                        available = false;
-                        break;
-                    }
+            for( let i in prod.reservations) 
+            {
+                        let x = prod.reservations[i];
+                        if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
+                        {
+                            console.log("Sono qui1")
+                            available = false;
+                            break; 
+                        }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
+                        { 
+                            console.log("Sono qui2")
+                            available = false;                    
+                            break;
+                        }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
+                        {
+                            console.log("Sono qui3")
+                            available = false;
+                            break;
+                        }
+            }
         }
-    }
     if(available) {
+        console.log("sono qui 4")
         price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
         res.status(200).json({finalPrice: price, availability: available, currProdName: prodName});
      }else
      {
-         res.status(404).json({ availability: false});
+        console.log("sono qui 5")
+        console.log(prodName);
+         res.status(200).json({ currProdName: prodName, availability: false});
      }
 }else
 {
-    res.status(500).json({ error: "prodotto non trovato"});
+    console.log("sono qui 6")
+    res.status(404).json({ error: "prodotto non trovato"});
 }
 });
 
@@ -363,7 +371,6 @@ router.post('/addComunication', async (req, res) =>{
         console.log("user not found");
         res.status(404).json({message: "user not found"});
     }
-    
 })
 
 /**
@@ -489,7 +496,7 @@ router.post('/makeRental',  async (req, res) => {
 
     if(source)
     {
-    const prod = await product.findOne({name: productName});
+        const prod = await product.findOne({name: productName});
     if(prod)
     {
         let reservations = prod.reservations;
@@ -497,7 +504,6 @@ router.post('/makeRental',  async (req, res) => {
         let available = true;
         if(reservations)
         {
-
             for(i in reservations)
             {
                 if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )

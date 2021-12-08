@@ -22,13 +22,11 @@ $.post({
       data: obj
     }, function(data)
     {
-        $('#content').html(data.message);
+        $('#content').html("succesful operation");
     }).fail(function(data)
     {
-        $('#content').html(data.message);
-
+        $('#content').html("Error product is unavailable or mail incorrect");
     })
-
 }
 
 function showAddRent(x, products)

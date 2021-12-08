@@ -54,10 +54,16 @@ function sendRentalHypothesis(x, event)
                 </div>`
             }
             $('#info').html(toInsert);   
-        }).fail(function(err)
+        }).fail(function(data)
         {
-            alert(err);
-        });
+          toInsert = `<div id="unavailable">
+          <h5>The product is unavailable in these dates!</h5>
+          <p>Product chosen by system: ${data.currProdName}</p>
+          <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
+          </div>`     
+          $('#info').html(toInsert);   
+
+           });
 }
 /** Make a rental hypothesis on a product , there is no need to be logged */
 function makeRentalHypothesis(x)
