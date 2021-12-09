@@ -1,22 +1,7 @@
 /** General control deputated to close areas when close buttons are pushed  */
-function reset(input)
+function reset()
 {
-  console.log("ciaoooooooo");
-  switch(input){
-    case "add":
-      $('#add').html(`<button type="button" class="btn btn-lg btn-primary btn-block" onclick="addProduct()" >Add product</button>`);
-      break;
-    case 'delete':
-      $('#delete').html(`<button type="button" class="btn btn-lg btn-danger btn-block" onclick="showDeleteProduct()" >Delete product</button>`);
-      break;
-    case 'comunication':
-      $('#comunication').html(`<button type="button" class="btn btn-lg btn-primary btn-block" onclick="addComunication()" >Add Comunication</button>`);
-      break;
-    case 'change':
-      $('#change').html(`<button type="button" class="btn btn-lg btn-primary btn-block" onclick="changeProduct()" >Change product</button>`)
-    default:
-        break;
-  }
+  location.reload();
 }
 
 function sendProduct(event)
@@ -85,18 +70,18 @@ function addProduct()
 </div>
 <span id="error"></span> <br>
 <button type="submit" class="btn btn-lg btn-primary btn-block" >Add product</button>
+<button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
 </form>
-<button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset('add')" >Close</button>
 
     `;
-    $('#add').html(toInsert);
+    $('#content').html(toInsert);
 
 }
 /** TODO GESTIRE GRAFICAMENTE LA LISTA DI RESERVATIONS RITORNATA DAL SERVER QUANDO CANCELLIAMO IL PRODOTTO */
 function sendDelete()
 {
   let toDelete = $('#product').val();
-  
+  console.log(toDelete);
   const obj =`{
     "name": "${toDelete}"
   }`
@@ -114,30 +99,16 @@ function sendDelete()
 }
 
 /** Chiediamo al server tutti i prodotti e li mettiamo in un select per il dipendente così può cancellarli */
-function showDeleteProduct()
+function showDeleteProduct(x, products)
 {
-  let toInsert= '';
-  $.get({
-    type: 'GET',
-      url: 'http://localhost:8001/api/employee/products',
-    }, function(data){
-      toInsert = `<div class="input-group mb-3">
-      <label class="input-group-text" for="status">Choose product to delete</label>
-      <select class="form-select" id="product">
+    
+     let toInsert = `
+     <input class="form-control" type="text" id="product" value="${products[x].name}" aria-label="readonly input example" readonly>
       `
-      for(let name in data.productList)
-      {
-        toInsert += `<option value="${data.productList[name].name}">${data.productList[name].name}</option>`
-      }
       toInsert += `</select></div>
       <button type="button" class="btn btn-lg btn-danger btn-block" onclick="sendDelete()" >Confirm Deletion</button>
-      <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset('delete')" >Close</button>`;
-      $('#delete').html(toInsert);
-    }).fail(function(err)
-    {
-        // change this
-        alert('error');
-    })
+      <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>`;
+      $('#content').html(toInsert);
 }
 
 /** Send comunication to user's area comunication */
@@ -145,7 +116,6 @@ function sendComunication()
 {
   let email = $('#email').val();
   let message = $('#text').val();
-
   const obj = `{
     "email": "${email}",
     "message": "${message}"
@@ -165,21 +135,20 @@ function sendComunication()
 }
 
 /** Show comunication field for insertion */
-function addComunication()
+function addComunication(x, allCostumers)
 {
   let toInsert = `
-<div class="mb-3">
-  <label for="email" class="form-label">User email</label>
-  <input type="email" class="form-control" id="email"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
-</div>
+  <div class="input-group mb-3">
+  <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
+  <div class="input-group mb-3">
 <div class="mb-3">
   <label for="text" class="form-label">Message to send</label>
   <textarea class="form-control" id="text" rows="3"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Insert</button>
-  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset('comunication')" >Close</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
 </div>
   `
-  $('#comunication').html(toInsert);
+  $('#content').html(toInsert);
 }
 
 function sendChange()
@@ -212,13 +181,11 @@ function sendChange()
 }
 
 /** Show the area when the employee can change a product field */
-function changeProduct()
+function changeProduct(x, products)
 {
   toInsert = `
-  <div class="mb-3">
-  <label for="oldname" class="form-label">Product name</label>
-  <input type="text" class="form-control" id="oldname">
-</div>
+  <div class="input-group mb-3">
+  <input class="form-control" type="text" id='oldname' value="${products[x].name}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3">
   <label class="input-group-text" for="changeMenu">Field</label>
   <select class="form-select" id="changeMenu">
@@ -234,9 +201,9 @@ function changeProduct()
 </div>
 <span id="changeErr"></span>
 <button class="btn btn-outline-primary " type="button" onclick="sendChange()" >Confirm</button>
-<button class="btn btn-outline-warning" type="button" onclick="reset('change')" >Close</button>
+<button class="btn btn-outline-warning" type="button" onclick="reset()" >Close</button>
 
   `
 
-  $('#change').html(toInsert);
+  $('#content').html(toInsert);
 }
