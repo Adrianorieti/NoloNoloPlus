@@ -25,5 +25,6 @@ function login(event)
 /** Get all single products from database */
 function goToRentalHypothesis()
 {
+  sessionStorage.clear();
   window.location.href = `http://localhost:8001/employee/rentalHypothesis`;
 }

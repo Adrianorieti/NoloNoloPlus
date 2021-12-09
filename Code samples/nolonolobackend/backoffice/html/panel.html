@@ -18,6 +18,15 @@
 </head>
 <script>
 $( document ).ready(function(){
+  let token = sessionStorage.getItem('token');
+ 
+  if( (document.referrer.includes('login') ||document.referrer.includes('rentalHypothesis')) && token == null)
+   {
+      alert("error");
+      window.location('http://localhost:8001/employee/login');
+    }
+   console.log("sono qua");
+
     let allCostumers = getCostumers();
     allCostumers= [];
       })
@@ -46,7 +55,7 @@ $( document ).ready(function(){
                             More Actions
                           </a>
                           <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                            <li><a class="dropdown-item" onclick="addProduct()">Add product</a></li>
+                            <li><a class="dropdown-item" onclick="showAddProduct()">Add product</a></li>
                         </li>
                       </ul>
                     </div>

@@ -137,13 +137,14 @@ function showProducts(products)
             <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" onclick="showAddRent(${x}, allProducts)">Add Rent</a></li>
-              <li><a class="dropdown-item" onclick="changeProduct(${x}, allProducts)">Change product info</a></li>
+              <li><a class="dropdown-item" onclick="showChangeProduct(${x}, allProducts)">Change product info</a></li>
               <li><a class="dropdown-item" onclick="showDeleteProduct(${x}, allProducts)">Delete</a></li>
+              <li><a class="dropdown-item" onclick="showMantainance(${x}, allProducts)">Mantainance</a></li>
             </ul>
           </div>
             </div>
           </div>`
-        }else
+        }else if( !token && document.referrer.includes('login'))
         {
             
             toInsert += `<div class="card" style="width: 18rem;">
@@ -199,7 +200,7 @@ function showCostumers(costumers)
             <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
-              <li><a class="dropdown-item" href="#" onclick="addComunication(${x}, allCostumers)">Add communication</a></li>
+              <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
               <li><a class="dropdown-item" href="#"></a></li>
             </ul>
           </div>
