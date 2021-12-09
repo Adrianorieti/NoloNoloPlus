@@ -222,3 +222,41 @@ function getAllcostumers()
             alert('error');
         })
 }
+
+function showPendingRequests(requests)
+{
+  let toInsert= '';
+  for(let x in requests)
+  {
+    toInsert += `
+    <div class="card">
+    <h5 class="card-header">${x}</h5>
+    <div class="card-body">
+    <h5 class="card-title">Product: ${requests[x].product}</h5>
+    <p class="card-text">User: ${requests[x].usermail}</p>
+    <p class="card-text">From: ${requests[x].start} </p>
+    <p class="card-text">TO: ${requests[x].end} </p>
+    <a href="#" class="btn btn-primary">Accept</a>
+    <a href="#" class="btn btn-danger">Deny</a>
+    </div>
+    </div>
+    
+    `
+  }
+  $('#title').html('<h2>Pending requests</h2>')
+  $('#content').html(toInsert);
+}
+
+function getPendingRequests()
+{
+  $.get({
+    type: 'GET',
+      url: 'http://localhost:8001/api/employee/pendingRequests',
+    }, function(data){
+      console.log(data.pendingList);
+      showPendingRequests(data.pendingList);
+    }).fail(function(err)
+    {
+        alert('error');
+    })
+}

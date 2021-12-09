@@ -26,6 +26,15 @@ li
     text-align: center;
     padding: 1rem;
 }
+#title
+{
+    width: 100%;
+    justify-content: center;
+}
+#title>h2
+{
+    text-align: center;
+}
 #content
 {
     text-align: center;

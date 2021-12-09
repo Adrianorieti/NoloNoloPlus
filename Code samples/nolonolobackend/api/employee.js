@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const employee = require('../schemas/moduleEmployee');
+const pending = require('../schemas/modulePendingRequest');
 const product = require('../schemas/moduleProduct');
 const category = require('../schemas/moduleCategory');
 const reservation = require('../schemas/moduleReservation');
@@ -573,6 +574,16 @@ router.post('/makeRental',  async (req, res) => {
     }
 })
 
+router.get('/pendingRequests', async (req, res) => {
+
+    const reqs = await pending.find();
+    if(reqs)
+    {
+        res.status(200).json({pendingList: reqs});
+    }else{
+        res.status(500).json({message: "Error with database"});
+    }
+})
 /**
  * Confirm the virtual begin of a rental.
  * @param {pending request plus employee email}
@@ -623,6 +634,7 @@ router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
         res.status(500).send("Database internal error, please check your query");
     }
 })
+
 /**
  * Employee deny the begin of a rental in the pending requests and a message is written
  * in the comunication area of the user explaining why.

@@ -19,23 +19,22 @@
 <script>
 $( document ).ready(function(){
   let token = sessionStorage.getItem('token');
- 
   if( (document.referrer.includes('login') ||document.referrer.includes('rentalHypothesis')) && token == null)
    {
       alert("error");
       window.location('http://localhost:8001/employee/login');
     }
-   console.log("sono qua");
-
     let allCostumers = getCostumers();
     allCostumers= [];
+
+    getPendingRequests();
       })
 
 </script>
 <body>
     <nav class="App-navbar navbar navbar-expand-lg navbar-dark bg-dark justify-content-end" >
         <div class="container-fluid">
-          <a class="navbar-brand" href="#" >NoloNoloPanel</a>
+          <a class="navbar-brand" href="" >NoloNoloPanel</a>
           <button id="burger" class="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon "></span>
           </button>
@@ -66,7 +65,8 @@ $( document ).ready(function(){
           </div>
         </div>
       </nav>
-    <div class="main">
+    <div id="main">
+      <div id="title"></div>
       <div id="content">
 
       </div>
