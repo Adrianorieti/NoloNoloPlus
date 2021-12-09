@@ -139,7 +139,7 @@ function showProducts(products)
               <li><a class="dropdown-item" onclick="showAddRent(${x}, allProducts)">Add Rent</a></li>
               <li><a class="dropdown-item" onclick="showChangeProduct(${x}, allProducts)">Change product info</a></li>
               <li><a class="dropdown-item" onclick="showDeleteProduct(${x}, allProducts)">Delete</a></li>
-              <li><a class="dropdown-item" onclick="showMantainance(${x}, allProducts)">Mantainance</a></li>
+              <li><a class="dropdown-item" onclick="showMaintenance(${x}, allProducts)">Mantainance</a></li>
             </ul>
           </div>
             </div>

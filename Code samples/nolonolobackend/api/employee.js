@@ -124,18 +124,15 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
             }
         }
     if(available) {
-        console.log("sono qui 4")
         price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
         res.status(200).json({finalPrice: price, availability: available, currProdName: prodName});
      }else
      {
-        console.log("sono qui 5")
         console.log(prodName);
          res.status(200).json({ currProdName: prodName, availability: false});
      }
 }else
 {
-    console.log("sono qui 6")
     res.status(404).json({ error: "prodotto non trovato"});
 }
 });
@@ -422,56 +419,75 @@ router.post('/updateProduct', async (req, res) =>
 router.post('/maintenance', async (req, res) =>
 {
     const productName = req.body.name;
-    let startDate = new Date(req.body.startingDate);
-    let endDate = new Date(req.body.endingDate);
-    startDate.setDate(startDate.getDate() + 1);
-    endDate.setDate(endDate.getDate() + 1);
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
 
     const prod = await product.findOne({name: productName});
     if(prod)
     {
         let reservations = prod.reservations;
-        let reservationsToChange = [];
-        // Ordino le prenotazioni per data di inizio
-        sortBy.sortByTime(reservations, 'start');
-        // Controllo se ci sono prenotazioni
+        if(reservations)
+        {
+            let reservationsToChange = [];
+            // Ordino le prenotazioni per data di inizio
+            sortBy.sortByTime(reservations, 'start');
+            // Controllo se ci sono prenotazioni
         // Se la data di inizio della prenotazione è <= della data di fine della nostra
         // prenotazione speciale allora và eliminata, e va ritornata 
         for(let i in reservations)
         {
+
             // Se ci sono ancora prenotazioni  passate vengono cancellate
             // ?????? cosa giusta da fare ????? e se poi accade qualcosa dove andiamo
             // a guardare ?
             if(reservations[i].end.getTime() < startDate.getTime())
-                reservations.splice(i, 1);
+            reservations.splice(i, 1);
+            // qui sono sicuro che è compresa    
             else if(reservations[i].start.getTime() <= endDate.getTime())
             {
                 // Salvo la prenotazione
                 reservationsToChange.push(reservations[i]);
                 // La elimino dal prodotto
                 reservations.splice(i, 1);
-
+                
             }else if(reservations[i].start.getTime() > endDate.getTime())
             {
                 // Esco dal for perchè ho superato il periodo di mio interesse
                 break;
             }
         }
+
         // Creo la nuova reservation da aggiungere al prodotto
         let newReserve = new reservation({
-            usermail: "maintainance",
+            usermail: "maintenance@maintenance",
             start: `${startDate}`,
             end: `${endDate}`
         })
         // Aggiungo in testa all'array perchè è già ordinato
         prod.reservations.unshift(newReserve);
-
+        
         // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
         prod.save();
-
+        console.log("all ok");
         res.status(200).json({list: reservationsToChange});
-    
+    }else
+    {
+        console.log("all ok but no previous reservations");
+
+          // Creo la nuova reservation da aggiungere al prodotto
+          let newReserve = new reservation({
+            usermail: "maintenance@maintenance",
+            start: `${startDate}`,
+            end: `${endDate}`
+        })
+        // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
+        prod.save();
+        res.status(200).json({message: "There were no previous reservations"});
+
+    }
+        
     }else{
+        console.log("product error");
         res.status(500).send("Error, please try again later");
     }
 })
@@ -533,10 +549,14 @@ router.post('/makeRental',  async (req, res) => {
         }   
         if(available)
         {
+            let collection = await category.findOne({name: prod.type});
+            let price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
+
                 let newReserve = new reservation({
                     usermail: userMail,
                     start: `${startDate}`,
-                    end: `${endDate}`
+                    end: `${endDate}`,
+                    expense: `${price}`
             })
 
             prod.reservations.push(newReserve);

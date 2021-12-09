@@ -54,7 +54,6 @@ function showAddRent(x, products)
     $('#content').html(toInsert);
 }
 
-
 function sendProduct(event)
 {
     event.preventDefault();
@@ -129,7 +128,6 @@ function showAddProduct()
 
 }
 
-
 function sendChange()
 {
   let name = $('#oldname').val();
@@ -187,7 +185,6 @@ function showChangeProduct(x, products)
   $('#content').html(toInsert);
 }
 
-
 /** TODO GESTIRE GRAFICAMENTE LA LISTA DI RESERVATIONS RITORNATA DAL SERVER QUANDO CANCELLIAMO IL PRODOTTO */
 function sendDelete()
 {
@@ -220,4 +217,64 @@ function showDeleteProduct(x, products)
       <button type="button" class="btn btn-lg btn-danger btn-block" onclick="sendDelete()" >Confirm Deletion</button>
       <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>`;
       $('#content').html(toInsert);
+}
+
+function sendMaintenance()
+{
+  let name = $('#name').val();
+  let start = $('#start').val();
+  let end = $('#end').val();
+
+  const obj =`{
+    "name": "${name}",
+    "start": "${start}",
+    "end": "${end}"
+  }`;
+
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/maintenance',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(data){
+        if(data.message)
+          $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>${data.message}</div>`);
+        else if(data.list)
+        {
+          let toInsert = '';
+          for(let x in data.list)
+          {
+            toInsert += `<p><b>Reservation ${x}</b></p>
+            <p>From: ${data.list[x].start} </p>
+            <p>To: ${data.list[x].end}</p>
+            `
+          }
+          $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>${toInsert}</div>`);
+
+        }
+          // $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>
+          // ${data.message}
+          // </div>`);
+
+    }).fail(function(data){
+        $('#content').html("Error occurred ,try again later");
+    })
+  
+}
+/** Show the mainenance html form */
+function showMaintenance(x , products)
+{
+
+  let toInsert =`
+  <input class="form-control" type="text" id="name" value="${products[x].name}" aria-label="readonly input example" readonly>
+  <label for="start">Start:</label>
+  <input type="date" id="start" name="start"> 
+  <label for="end">End:</label>
+  <input type="date" id="end" name="end"> 
+  <button type="button" class="btn btn-dark" onclick="sendMaintenance()">Send product to maintenance</button>
+  <button type="button" class="btn btn-warning" onclick="reset()">Back</button>
+
+  `
+  $('#content').html(toInsert);
 }
