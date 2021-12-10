@@ -51,6 +51,7 @@ function showAddRent(x, products)
     </div>
     <button class="btn btn-outline-primary " type="button" onclick="sendRent()">Rent</button>
     `
+    $('#title').html("");
     $('#content').html(toInsert);
 }
 
@@ -124,6 +125,7 @@ function showAddProduct()
 </form>
 
     `;
+    $('#title').html("");
     $('#content').html(toInsert);
 
 }
@@ -181,6 +183,7 @@ function showChangeProduct(x, products)
 <button class="btn btn-outline-warning" type="button" onclick="reset()" >Close</button>
 
   `
+  $('#title').html("");
 
   $('#content').html(toInsert);
 }
@@ -216,6 +219,7 @@ function showDeleteProduct(x, products)
       toInsert += `</select></div>
       <button type="button" class="btn btn-lg btn-danger btn-block" onclick="sendDelete()" >Confirm Deletion</button>
       <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>`;
+      $('#title').html("");
       $('#content').html(toInsert);
 }
 
@@ -276,5 +280,6 @@ function showMaintenance(x , products)
   <button type="button" class="btn btn-warning" onclick="reset()">Back</button>
 
   `
+  $('#title').html("");
   $('#content').html(toInsert);
 }

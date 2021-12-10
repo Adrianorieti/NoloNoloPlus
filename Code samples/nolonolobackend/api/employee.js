@@ -38,8 +38,8 @@ router.post('/login', async (req, res) => {
 
             
             // Create the json web token
-            const employee = { email: `${source.email}` };
-            const accessToken = jwt.sign(employee, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });
+            const employeeMail = { email: `${source.email}` };
+            const accessToken = jwt.sign(employeeMail, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });
             
             //Send token back to client 
             console.log("Success");
@@ -686,7 +686,6 @@ router.post('/denyBeginOfRental', async (req, res) => {
         if(reserve)
         {
             prod.reservations.splice(reservations.indexOf(reserve), 1);
-            console.log("dopo", prod.reservations);
             prod.save();
         }
         await pending.deleteOne({_id: id}, function(err)
@@ -698,9 +697,8 @@ router.post('/denyBeginOfRental', async (req, res) => {
         }).clone().catch(function(err){ console.log(err)});      
     }else
         res.status(500).json({message: "Error occurred"});
-
-
 })
+
 /** The employee confirm that the user took the product */
 router.post('/confirmLending', async (req, res) => {
     // Ricevo la prenotazione dalla lista dei dipendenti
@@ -731,14 +729,13 @@ router.post('/confirmLending', async (req, res) => {
     {
         res.status(500).send("Internal Database error");
     }
-
 })
 
 /** The employee confirm the user returned the product */
 router.post('/confirmEndOfRental', async (req, res) => {
 
     const userMail = req.body.email;
-    const employee = req.body.employee;
+    const employeeMail = req.body.employee;
     const endDate = new Date(req.body.endingDate);
     const productName = req.body.name;
     const pointsToAdd = req.body.points;
@@ -771,36 +768,38 @@ router.post('/confirmEndOfRental', async (req, res) => {
  * Get all future reservations from all products
  * 
  */
-router.post('/getAllReservations', async (req, res) => {
+router.get('/getAllReservations', async (req, res) => {
 
     let toSend = [];
     let today = new Date();
-    product.find({},  async function(err, db){
+    let source = await product.find({});
 
-        if(err) return(res.status(500).send(err));
-        //Per tutti i prodotti
-    for(i in db) 
+    if(source)
     {
-        available=true;
-        //Per tutte le reservations dei prodotti
-        for(j in db[i].reservations)
+      //Per tutti i prodotti
+        for(i in source) 
         {
-            let x = db[i].reservations[j];
-            //Se inizia dopo oggi
-          if(x.start.getTime() >= today.getTime())
-          {
-              toSend.push(x);
-              //Se è attiva in questo momento
-          }else if(x.start.getTime() < today.getTime() && x.end.getTime() > today.getTime())
-           {
-               toSend.push(x);
-           }
-        }   
-    } 
-    res.status(200).json({listOfReservations: toSend}); 
+            available=true;
+            //Per tutte le reservations dei prodotti
+            for(j in source[i].reservations)
+            {
+                let x = source[i].reservations[j];
+                //Se inizia dopo oggi
+              if(x.start.getTime() >= today.getTime())
+              {
+                  toSend.push(x);
+                  //Se è attiva in questo momento
+              }else if(x.start.getTime() < today.getTime() && x.end.getTime() > today.getTime())
+               {
+                   toSend.push(x);
+               }
+            }   
+        } 
+         res.status(200).json({reservations: toSend});
+    }else
+        return(res.status(500).send(err));
+})
 
-})
-})
 
 /** The employee can modify a rental */
 router.post('/modifyRental', async (req, res) => {

@@ -161,7 +161,7 @@ function showProducts(products)
        
     }
     console.log(productsNames);
-
+    $('#title').html("");
     $('#content').html(toInsert);
 }
 
@@ -208,6 +208,7 @@ function showCostumers(costumers)
         </div>
       </div>`
     }
+    $('#title').html("");
     $('#content').html(toInsert);
 }
 
@@ -350,6 +351,43 @@ function getPendingRequests()
       showPendingRequests(data.pendingList);
     }).fail(function(err)
     {
+        $('#content').html("Try again later please");
+    })
+}
+function showAllReservations(reservations)
+{
+  console.log(reservations);
+  let toInsert = '';
+  for(let x in reservations)
+    {
+      toInsert += `
+      <div class="card">
+      <h5 class="card-header">${x}</h5>
+      <div class="card-body">
+      <h5 class="card-title">User: ${reservations[x].usermail}</h5>
+      <p class="card-text">From: ${reservations[x].name}</p>
+      <p class="card-text">From: ${reservations[x].start}</p>
+      <p class="card-text">To: ${reservations[x].end} </p>
+      <a href="#" class="btn btn-primary" >Modify rental</a>
+    </div>
+    </div>
+      `
+    }
+    $('#content').html(toInsert);
+
+}
+
+function getAllReservations()
+{
+  $('#title').html('');
+    $.get({
+    type: 'GET',
+      url: 'http://localhost:8001/api/employee/getAllReservations',
+    }, function(data){
+      showAllReservations(data.reservations);
+    }).fail(function(err)
+    {
+      
         $('#content').html("Try again later please");
     })
 }
