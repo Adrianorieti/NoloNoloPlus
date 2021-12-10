@@ -2,7 +2,7 @@ let email ;
 
 function reset()
 {
-  history.back();
+  location.reload();
 }
 
 

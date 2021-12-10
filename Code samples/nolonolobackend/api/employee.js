@@ -658,10 +658,11 @@ router.post('/confirmBeginOfRental',  async (req, res) => {
  */
 router.post('/denyBeginOfRental', async (req, res) => {
     const userMail = req.body.email;
-    const productName = req.body.name;
+    const productName = req.body.product;
     const message = req.body.message;
-    let startDate = new Date(req.body.startingDate);
-    let endDate = new Date(req.body.endingDate);
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    let id = req.body.id;
 
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
@@ -669,17 +670,35 @@ router.post('/denyBeginOfRental', async (req, res) => {
     if(usr && prod)
     {
         // Inserisco il messaggio nelle comunicazioni dell'utente
-        usr.comunications.push(message);
+        usr.communications.push(message);
         usr.save();
+        
         // Rendo di nuovo libero il prodotto
         let reservations = prod.reservations;
-        let reserve = reservations.find(item=> { item.start === startDate  && item.end=== endDate } );
+        console.log("user reservations" ,reservations)
+        let reserve;
+        for(let x in reservations)
+        {
+           
+            if(reservations[x].start.getDate() === startDate.getDate() && reservations[x].end.getDate() === endDate.getDate() )
+                reserve=reservations[x];
+        }
         if(reserve)
         {
             prod.reservations.splice(reservations.indexOf(reserve), 1);
+            console.log("dopo", prod.reservations);
             prod.save();
         }
-    }
+        await pending.deleteOne({_id: id}, function(err)
+        {
+            if(err)
+                res.status(500).json({message: err});
+            else
+                res.status(200).json({message: "Succesful operation"})
+        }).clone().catch(function(err){ console.log(err)});      
+    }else
+        res.status(500).json({message: "Error occurred"});
+
 
 })
 /** The employee confirm that the user took the product */

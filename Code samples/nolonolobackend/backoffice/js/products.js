@@ -2,7 +2,7 @@ let prodName;
 /** Refresh page */
 function reset()
 {
-  history.back();
+  location.reload();
 }
 
 function sendRent()

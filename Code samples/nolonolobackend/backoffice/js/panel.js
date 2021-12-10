@@ -224,6 +224,55 @@ function getAllcostumers()
         })
 }
 
+function denyPendingRequest(x)
+{
+ let message = $('#text').val();
+ let email = $('#email').val();
+ let start = requests[x].start;
+ let end = requests[x].end;
+ let product = requests[x].product;
+ let id = requests[x]._id;
+
+ const obj =`{
+  "email": "${email}",
+  "start": "${start}",
+  "end": "${end}",
+  "product": "${product}",
+  "message": "${message}",
+  "id": "${id}"
+}`;
+
+$.post({
+  type: 'POST',
+    url: 'http://localhost:8001/api/employee/denyBeginOfRental',
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json',
+    data: obj
+  }, function(){
+    $('#content').html("Succesful operation");
+  }).fail(function(){
+    $('#content').html("error");
+
+  })
+
+
+}
+
+function showDenyPendingRequest(x)
+{
+  let toInsert = `
+  <div class="input-group mb-3">
+  <input class="form-control" type="text" id='email' value="${requests[x].usermail}" aria-label="readonly input example" readonly></div>
+  <div class="input-group mb-3">
+<div class="mb-3">
+  <label for="text" class="form-label">Message to send</label>
+  <textarea class="form-control" id="text" rows="3"></textarea>
+  <button type="button" class="btn btn-lg btn-primary btn-block" onclick="denyPendingRequest(${x})" >Insert</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
+</div>`
+$('#content').html(toInsert);
+}
+
 function confirmPendingRequest(x)
 {
   console.log(x);
@@ -244,7 +293,6 @@ function confirmPendingRequest(x)
     "expense": "${price}",
     "id": "${id}"
   }`;
-  console.log(obj);
   $.post({
     type: 'POST',
       url: 'http://localhost:8001/api/employee/confirmBeginOfRental',
@@ -279,7 +327,7 @@ function showPendingRequests(data)
     <p class="card-text">TO: ${requests[x].end} </p>
     <p class="card-text">Price: ${requests[x].expense} </p>
     <a href="#" class="btn btn-primary" onclick="confirmPendingRequest(${x})">Accept</a>
-    <a href="#" class="btn btn-danger" onclick="denyPendingRequest(${x})">Deny</a>
+    <a href="#" class="btn btn-danger" onclick="showDenyPendingRequest(${x})">Deny</a>
     </div>
     </div>
     
