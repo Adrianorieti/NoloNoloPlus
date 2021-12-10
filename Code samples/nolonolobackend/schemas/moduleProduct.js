@@ -50,6 +50,7 @@ const ProductSchema = new Schema({
     },
     numberOfRents: {
         type: Number,
+        required: true
     }
 })
 

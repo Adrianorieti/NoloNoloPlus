@@ -5,6 +5,9 @@ const Schema = mongoose.Schema;
 /* Sub Schema for product map */
 const reserveSchema = new Schema({
 
+    usermail: {
+        type: String
+    },
     start: {
         type: Date,
         required: true
@@ -13,7 +16,7 @@ const reserveSchema = new Schema({
         type: Date,
         required: true
     },
-    name: { //nome del prodotto singolo
+    product: { //nome del prodotto singolo
         type: String,
         required: true
     },

@@ -22,6 +22,10 @@ const reserveSchema = new Schema({
     end: {
         type: Date,
         required: true
+    },
+    expense: {
+        type: Number,
+        required: true
     }
 })
 

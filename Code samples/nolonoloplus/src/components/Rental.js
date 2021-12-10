@@ -18,7 +18,8 @@ function Rental(props)
             let form_obj = `{
                 "name": "${props.productName}", 
                 "startingDate": "${props.startDate}",
-                "endingDate": "${props.endDate}"
+                "endingDate": "${props.endDate}",
+                "expense": "${props.price}"
                }`;
 
                const options = {

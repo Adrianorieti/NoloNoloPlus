@@ -574,6 +574,7 @@ router.post('/makeRental',  async (req, res) => {
     }
 })
 
+/** Return all pending requests */
 router.get('/pendingRequests', async (req, res) => {
 
     const reqs = await pending.find();
@@ -591,13 +592,16 @@ router.get('/pendingRequests', async (req, res) => {
  * @summary The employee confirm a pending request and the reservation is added in the user
  * array, in his array and the product number of rents gets updated.
  */
-router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
+router.post('/confirmBeginOfRental',  async (req, res) => {
 
     const userMail = req.body.email;
     const employeeMail = req.body.employee;
-    const productName = req.body.name;
-    let startDate = new Date(req.body.startingDate);
-    let endDate = new Date(req.body.endingDate);
+    const productName = req.body.product;
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    let price = req.body.expense;
+    let id = req.body.id;
+    console.log(req.body);
 
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
@@ -605,12 +609,15 @@ router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
     if(usr && prod && emp)
     {
         let newReserve = new reservation({
-            usermail: userMail,
-            employee: employeeMail,
-            product: productName,
+            usermail: `${userMail}`,
+            employee: `${employeeMail}`,
+            product: `${productName}`,
             start: `${startDate}`,
-            end: `${endDate}`
+            end: `${endDate}`,
+            expense: price
     })
+    console.log(newReserve);
+
         // Aggiungiamo la prenotazione allo user
        usr.futureReservations.push(newReserve);
        usr.save()
@@ -619,16 +626,24 @@ router.post('/confirmBeginOfRental', auth.verifyAdmin , async (req, res) => {
        prod.save();
 
        let newReserve2 = new reservation({
-        usermail: userMail,
-        product: productName,
+        usermail: `${userMail}`,
+        product: `${productName}`,
         start: `${startDate}`,
-        end: `${endDate}`
+        end: `${endDate}`,
+        expense: price
         })
+        console.log(newReserve2);
         // Aggiungiamo la prenotazione al dipendente
        emp.futureReservations.push(newReserve2);
        emp.save();
-
-       res.status(200).send("All ok");
+        // Cancelliamo la pending request
+        await pending.deleteOne({_id: id}, function(err)
+        {
+            if(err)
+                res.status(500).json({message: err});
+            else
+                res.status(200).json({message: "Succesfully added"})
+        });      
     }else
     {
         res.status(500).send("Database internal error, please check your query");
@@ -667,7 +682,7 @@ router.post('/denyBeginOfRental', async (req, res) => {
     }
 
 })
-
+/** The employee confirm that the user took the product */
 router.post('/confirmLending', async (req, res) => {
     // Ricevo la prenotazione dalla lista dei dipendenti
     const userMail = req.body.email;
@@ -700,6 +715,7 @@ router.post('/confirmLending', async (req, res) => {
 
 })
 
+/** The employee confirm the user returned the product */
 router.post('/confirmEndOfRental', async (req, res) => {
 
     const userMail = req.body.email;
@@ -767,6 +783,7 @@ router.post('/getAllReservations', async (req, res) => {
 })
 })
 
+/** The employee can modify a rental */
 router.post('/modifyRental', async (req, res) => {
     const productName = req.body.name;
     const userMail = req.body.email;

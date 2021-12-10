@@ -3,6 +3,7 @@ let productsNames = [];
 let categoriesNames = [];
 let productsPrices = [];
 let allProducts = [];
+let requests= [];
 
 function getCostumers()
 {
@@ -223,28 +224,73 @@ function getAllcostumers()
         })
 }
 
-function showPendingRequests(requests)
+function confirmPendingRequest(x)
+{
+  console.log(x);
+  console.log("dentro confirm", requests[x]);
+  let userMail = requests[x].usermail;
+  let employeeMail = sessionStorage.getItem('email');
+  let start = requests[x].start;
+  let end = requests[x].end;
+  let product = requests[x].product;
+  let price = requests[x].expense;
+  let id = requests[x]._id;
+  const obj =`{
+    "email": "${userMail}",
+    "employee": "${employeeMail}",
+    "start": "${start}",
+    "end": "${end}",
+    "product": "${product}",
+    "expense": "${price}",
+    "id": "${id}"
+  }`;
+  console.log(obj);
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/confirmBeginOfRental',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(){
+
+      $(`#card-${x}`).html("Succesfully added");
+    }).fail(function(){
+      $(`#card-${x}`).html("Error, please try again");
+
+    })
+}
+
+function showPendingRequests(data)
 {
   let toInsert= '';
+  requests = [];
+  requests = requests.concat(data);
+  console.log("requests", requests);
   for(let x in requests)
   {
+    console.log(requests[x]);
     toInsert += `
-    <div class="card">
+    <div class="card" id="card-${x}">
     <h5 class="card-header">${x}</h5>
     <div class="card-body">
     <h5 class="card-title">Product: ${requests[x].product}</h5>
     <p class="card-text">User: ${requests[x].usermail}</p>
     <p class="card-text">From: ${requests[x].start} </p>
     <p class="card-text">TO: ${requests[x].end} </p>
-    <a href="#" class="btn btn-primary">Accept</a>
-    <a href="#" class="btn btn-danger">Deny</a>
+    <p class="card-text">Price: ${requests[x].expense} </p>
+    <a href="#" class="btn btn-primary" onclick="confirmPendingRequest(${x})">Accept</a>
+    <a href="#" class="btn btn-danger" onclick="denyPendingRequest(${x})">Deny</a>
     </div>
     </div>
     
     `
   }
   $('#title').html('<h2>Pending requests</h2>')
-  $('#content').html(toInsert);
+  if(requests.length === 0)
+    $('#content').html("<p>There are no pending requests waiting for approval</p>");
+  else
+    $('#content').html(toInsert);
+
 }
 
 function getPendingRequests()
@@ -253,10 +299,9 @@ function getPendingRequests()
     type: 'GET',
       url: 'http://localhost:8001/api/employee/pendingRequests',
     }, function(data){
-      console.log(data.pendingList);
       showPendingRequests(data.pendingList);
     }).fail(function(err)
     {
-        alert('error');
+        $('#content').html("Try again later please");
     })
 }

@@ -1,7 +1,6 @@
 function login(event)
       {
         event.preventDefault();
-        console.log("sono qui");
           let mail = $('#inputEmail').val();
           let pass = $('#inputPassword').val();
           
@@ -18,6 +17,7 @@ function login(event)
               data: data
             }, function(data){
               sessionStorage.setItem('token', data.accessToken);
+              sessionStorage.setItem('email', mail);
               window.location.href = `http://localhost:8001/employee/panel?token=${data.accessToken}`;
             });
 }

@@ -29,6 +29,7 @@ router.post('/addRent', async(req, res) =>{
         let productName = req.body.name;
         let startDate = new Date(req.body.startingDate);
         let endDate = new Date(req.body.endingDate);
+        let price = req.body.price;
         startDate.setDate(startDate.getDate() + 1);
         endDate.setDate(endDate.getDate() + 1);
        
@@ -66,7 +67,8 @@ router.post('/addRent', async(req, res) =>{
         let newReserve = new reservation({
             usermail: userMail,
             start: `${startDate}`,
-            end: `${endDate}`
+            end: `${endDate}`,
+            expense: `${price}`
         })
         console.log(" NEW RESERVE", newReserve);
         prod.reservations.push(newReserve);
@@ -77,7 +79,8 @@ router.post('/addRent', async(req, res) =>{
             usermail: userMail,
             product: prod.name,
             start: `${startDate}`,
-            end: `${endDate}`
+            end: `${endDate}`,
+            expense: `${price}`
         })  
         // Controlliamo se la pending request esiste già prima di inserirla
     let exist = await pendingRequest.findOne({ usermail: userMail, product: prod.name, start: `${startDate}`,}) 
