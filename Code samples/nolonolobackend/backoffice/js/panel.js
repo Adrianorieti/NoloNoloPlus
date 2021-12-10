@@ -365,10 +365,10 @@ function showAllReservations(reservations)
       <h5 class="card-header">${x}</h5>
       <div class="card-body">
       <h5 class="card-title">User: ${reservations[x].usermail}</h5>
-      <p class="card-text">From: ${reservations[x].name}</p>
+      <p class="card-text">Product: ${reservations[x].name}</p>
       <p class="card-text">From: ${reservations[x].start}</p>
       <p class="card-text">To: ${reservations[x].end} </p>
-      <a href="#" class="btn btn-primary" >Modify rental</a>
+      <a href="#" class="btn btn-primary">Modify rental</a>
     </div>
     </div>
       `
@@ -388,6 +388,30 @@ function getAllReservations()
     }).fail(function(err)
     {
       
+        $('#content').html("Try again later please");
+    })
+}
+
+function getPastReservations()
+{
+  let email = sessionStorage.getItem('email');
+  console.log(email);
+  
+   let obj = `{
+     "email": "${email}"
+   }`;
+
+  console.log(obj);
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/getPastReservations',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(data){
+      console.log(data.reservations);
+    }).fail(function(err)
+    {
         $('#content').html("Try again later please");
     })
 }

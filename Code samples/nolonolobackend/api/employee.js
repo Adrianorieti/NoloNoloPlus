@@ -854,14 +854,14 @@ router.post('/modifyRental', async (req, res) => {
     }
 })
 
-router.post(' /getPastReservations ', async(req, res) => {
+router.post('/getPastReservations', async(req, res) => {
     const employeeMail = req.body.email;
     let toSend = [];
     let emp = await employee.findOne({email: employeeMail})
     if(emp)
     {
         toSend.concat(emp.pastReservations);
-        res.status(200).json({listOfPastReservations: toSend})
+        res.status(200).json({reservations: toSend})
     }else{
         res.status(404).send("employee not found");
     }
