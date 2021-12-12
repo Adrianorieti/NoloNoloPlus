@@ -14,7 +14,8 @@ const reserveSchema = new Schema({
         type: String
     },
     name: {
-        type: String
+        type: String,
+        required: true
     },
     start: {
         type: Date,

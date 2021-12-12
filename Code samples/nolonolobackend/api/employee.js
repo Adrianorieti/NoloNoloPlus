@@ -803,54 +803,100 @@ router.get('/getAllReservations', async (req, res) => {
 
 /** The employee can modify a rental */
 router.post('/modifyRental', async (req, res) => {
-    const productName = req.body.name;
-    const userMail = req.body.email;
+    const productName = req.body.product;
+    const userMail = req.body.user;
     const employeeMail = req.body.employee;
-    let startDate = new Date(req.body.startingDate);
-    let endDate = new Date(req.body.endingDate);
-
-    let prod = await product.findOne({name: productName});
+    const oldProduct = req.body.oldProduct;
+    const oldStart = new Date(req.body.oldStart);
+    const oldEnd = new Date(req.body.oldEnd);
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    let expense = req.body.expense;
+    console.log(oldProduct);
+    let prod = await product.findOne({name: oldProduct});
     let usr = await user.findOne({email: userMail});
     let emp = await employee.findOne({email: employeeMail});
+  
     if(prod && usr && emp)
     {
         // Cambio dentro il product
-        let toChange = prod.reservations.find(item=> { item.end === endDate  && item.userMail=== userMail } );
-        prod.reservations.slice(indexOf(toChange), 1);
-        const newReserve = new reservation({
+        console.log(prod.reservations);
+        console.log(prod.reservations[0].end.getDate());
+        console.log(endDate.getDate());
+        let toChange;
+        let x;
+        for(x in prod.reservations)
+        { // cerco la vecchia prenotazione ... 
+            if(prod.reservations[x].end.getDate() === oldEnd.getDate())
+               { 
+                   toChange = prod.reservations[x];
+                   break;
+                }
+        }
+        console.log(toChange);
+        console.log(x);
+        if(toChange)
+       {  // ... se la trovo la cancello
+            prod.reservations = prod.reservations.slice(x, 1);
+            console.log("new ", prod.reservations);
+            // aggiungo la nuova con i nuovi dati
+            const newReserve = new reservation({
             usermail: userMail,
+            name: productName,
+            expense: expense,
             start: startDate,
             end: endDate
         })
-        prod.reservations.push(newReserve);
-        prod.save();
+            let newProd = await product.findOne({name: productName});
+            if(newProd)
+            { // controllo se è available in quella data prima di mandarla
+                // fare una funzione prendendo la roba da makeRental
+                newProd.reservations.push(newReserve);
+                newProd.save();
+            }else{
+                res.status(500).json({message: "Incorrect or non existent product inserted"});            }
+        }
 
         // Cambio nello user
-         toChange = usr.futureReservations.find(item=> { item.end === endDate  && item.name=== productName } );
-        usr.futureReservations.slice(indexOf(toChange), 1);
-         newReserve = new reservation({
-            name: productName,
+         toChange = usr.futureReservations.find(item=> { item.end.getDate() === endDate.getDate()  && item.product=== productName } );
+         console.log(toChange);
+
+         if(toChange)
+        {
+            usr.futureReservations.slice(indexOf(toChange), 1);
+            newReserve = new reservation({
+            product: productName,
+            usermail: userMail,
+            employee: employeeMail,
+            expense: expense,
             start: startDate,
             end: endDate
-        })
-        usr.futureReservations.push(newReserve);
-        usr.save();
+            })
+            usr.futureReservations.push(newReserve);
+            usr.save();
+        }
         // Cambio nel dipendente
          toChange = emp.futureReservations.find(item=> { item.end === endDate  && item.name === productName && item.usermail === userMail } );
-        emp.futureReservations.slice(indexOf(toChange), 1);
-         newReserve = new reservation({
-            usermail: userMail,
-            name: productName,
-            start: startDate,
-            end: endDate
-        })
-        emp.futureReservations.push(newReserve);
-        emp.save();
+         console.log(toChange);
 
-        res.status(200).send("all ok");
+         if(toChange)
+         {
+             emp.futureReservations.slice(indexOf(toChange), 1);
+             newReserve = new reservation({
+             usermail: userMail,
+             product: productName,
+             expense: expense,
+             start: startDate,
+             end: endDate
+             })
+             emp.futureReservations.push(newReserve);
+             emp.save();
+         }
+
+        res.status(200).json({message: "all ok"});
     }else
     {
-        res.status(500).send("internal server error");
+        res.status(500).json({message: "internal server error"});
     }
 })
 
