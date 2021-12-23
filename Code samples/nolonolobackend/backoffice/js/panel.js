@@ -362,16 +362,20 @@ function getPendingRequests()
 
 function sendModifyRental(x)
 {
+  console.log("SONO QUIIII");
   let oldStart = allReservations[x].start;
   let oldEnd = allReservations[x].end;
   let oldProduct = allReservations[x].name;
   let email = $('#user').val(); // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
   let employee = sessionStorage.getItem('email');
-  let product = $('#name').val() || oldProduct; // nome del prodotto
-  let start = $('#start').val() || oldStart;
-  let end = $('#end').val() || oldEnd;
+  let product = $('#name').val(); // nome del prodotto
+  let start = $('#start').val();
+  let end = $('#end').val();
+  console.log(product);
+  console.log(start);
+  console.log(end);
   // devo comunque mandare i vecchi dati
-  if(email && employee && product && start && end)
+  if( product && start && end)
   {
 
   let obj = `{
@@ -384,6 +388,7 @@ function sendModifyRental(x)
     "start": "${start}",
     "end": "${end}"
   }`;
+  console.log("AOOOOO", obj);
 
   $.post({
     type: 'POST',
@@ -405,7 +410,6 @@ function sendModifyRental(x)
 
 function showModify(x)
 {
-  console.log(allReservations[x]);
   let toInsert = `
   <form onsubmit="sendProduct(event)" class="needs-validation">
   <div class="mb-3">
@@ -417,11 +421,11 @@ function showModify(x)
 </div>
 <div class="input-group mb-3">
 <label class="input-group-text" for="start">Start</label>
-<input type="date">
+<input type="date" id="start">
 </div>
 <div class="input-group mb-3">
 <label class="input-group-text" for="end">End</label>
-<input type="date">
+<input type="date" id="end">
 </div>
 <span id="error"></span> <br>
 <button type="submit" class="btn btn-lg btn-primary btn-block" onclick="sendModifyRental(${x})">Send</button>
