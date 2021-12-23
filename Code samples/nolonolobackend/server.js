@@ -91,7 +91,7 @@ app.get('/products', (req, res) => {
 
 // let newPending = new pending({
 //     usermail: "lorenzotozzi98@gmail.com",
-//     product: "City Rock",
+//     product: "stocastico",
 //     employee: 'magalli.crudista123@nolonolo.com',
 //     start: "2021-12-15",
 //     end: "2021-12-17",
