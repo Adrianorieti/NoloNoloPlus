@@ -21,7 +21,6 @@ module.exports = {
             let finalPrice = 0;
             // Sconto totale che il cliente vedrà in fattura
             let totalDiscount = 0;
-
              // Andiamo a prendere il discount Rate associato al discountCode
             let discountElement = await discount.findOne({discountCode: discountCode});
             //da calcolare come percentuale sul prezzo
@@ -40,11 +39,15 @@ module.exports = {
 
             }
             // Prezzo basico del periodo (quindi di alta o bassa stagione ecc)
-            let period = endDate.getTime() - startDate.getTime();
-            period = period / (1000 * 3600 * 24);
+            let period = endDate.getDate() - startDate.getDate();
+            // period = period / (1000 * 3600 * 24);
             //così mi prende  anche il giorno finale altrimenti non me lo prende
-            period += 1;
+            console.log("whaaaat",period);
+            period -= 1;
+            console.log(period);
+            console.log(finalPrice);
             finalPrice = dailyPrice * period;
+            console.log(finalPrice);
 
 
              // Se inizio il venerdì e la prenotazione dura 3 o + giorni allora sconto
@@ -71,6 +74,8 @@ module.exports = {
              }
              startDate.setDate(startDate.getDate() - 2);
              // Prenotazioni più lunghe di 12 giorni
+             console.log(finalPrice);
+
              if(period > 12)
              {
                 finalPrice -= ((finalPrice * 4) / 100);
@@ -94,6 +99,7 @@ module.exports = {
                 finalPrice -= ((finalPrice * 10) / 100);
                 totalDiscount += 10;
             }
+            console.log(finalPrice);
             if(totalDiscount < 0)
                 totalDiscount = 0; // cioè non abbiamo fatto nessuno sconto bensì una maggiorazione
             return(finalPrice.toFixed(2));

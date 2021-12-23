@@ -14,7 +14,7 @@ const auth = require('./auth');
 const sortBy = require('../functions/sortBy');
 const express = require('express');
 const bcrypt = require('bcrypt');
-
+const checkAvailability = require('../functions/checkAvailability');
 
 const router = express.Router();
 
@@ -800,103 +800,128 @@ router.get('/getAllReservations', async (req, res) => {
         return(res.status(500).send(err));
 })
 
-
-/** The employee can modify a rental */
+/** The employee can modify a rental
+ * 
+ * 
+*/
 router.post('/modifyRental', async (req, res) => {
-    const productName = req.body.product;
+    const productName = req.body.product; // il nuovo prodotto !
     const userMail = req.body.user;
     const employeeMail = req.body.employee;
     const oldProduct = req.body.oldProduct;
-    const oldStart = new Date(req.body.oldStart);
     const oldEnd = new Date(req.body.oldEnd);
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
-    let expense = req.body.expense;
-    console.log(oldProduct);
+    //vecchio prodotto per andargli a cambiare le cose
     let prod = await product.findOne({name: oldProduct});
+    //user in questione
     let usr = await user.findOne({email: userMail});
+    // employee in questione
     let emp = await employee.findOne({email: employeeMail});
   
     if(prod && usr && emp)
     {
         // Cambio dentro il product
-        console.log(prod.reservations);
-        console.log(prod.reservations[0].end.getDate());
-        console.log(endDate.getDate());
+        // console.log(prod.reservations[0].end.getDate());
+        // console.log(endDate.getDate());
         let toChange;
         let x;
+        // cerco la vecchia prenotazione ... 
         for(x in prod.reservations)
-        { // cerco la vecchia prenotazione ... 
+        { 
             if(prod.reservations[x].end.getDate() === oldEnd.getDate())
                { 
                    toChange = prod.reservations[x];
                    break;
                 }
-        }
-        console.log(toChange);
-        console.log(x);
+        }            
         if(toChange)
        {  // ... se la trovo la cancello
-            prod.reservations = prod.reservations.slice(x, 1);
-            console.log("new ", prod.reservations);
+            prod.reservations.splice(x, 1);
+            prod.save()
+
             // aggiungo la nuova con i nuovi dati
-            const newReserve = new reservation({
-            usermail: userMail,
-            name: productName,
-            expense: expense,
-            start: startDate,
-            end: endDate
-        })
-            let newProd = await product.findOne({name: productName});
+             let newProd = await product.findOne({name: productName});
             if(newProd)
             { // controllo se è available in quella data prima di mandarla
                 // fare una funzione prendendo la roba da makeRental
-                newProd.reservations.push(newReserve);
-                newProd.save();
+                let collection = await category.findOne({name: newProd.type})
+                let newExpense = await computePrice.computePrice(collection, newProd, userMail, startDate, endDate)
+                console.log("la nuova expense", newExpense);
+                console.log(productName);
+                const newReserve = new reservation({
+                    usermail: userMail,
+                    employee: employeeMail,
+                    name: productName,
+                    expense: newExpense,
+                    start: startDate,
+                    end: endDate
+                })
+                console.log(newReserve);
+                //controllo che ci siano prenotazioni e se è disponibile sennò crasha
+                if(newProd.reservations.length > 0)
+                {
+                    if( checkAvailability.checkAvailability(newProd, startDate, endDate))
+                    {  
+                        newProd.reservations.push(newReserve);
+                        newProd.save();
+                    }else
+                    {
+                    res.status(500).json({message: "Product not available"});
+                    }
+                }else
+                {
+                    newProd.reservations.push(newReserve);
+                    newProd.save();
+
+                }
+        
             }else{
-                res.status(500).json({message: "Incorrect or non existent product inserted"});            }
-        }
+                res.status(500).json({message: "Incorrect or non existent product inserted"});         
+               }
+        
 
-        // Cambio nello user
-         toChange = usr.futureReservations.find(item=> { item.end.getDate() === endDate.getDate()  && item.product=== productName } );
-         console.log(toChange);
 
-         if(toChange)
-        {
-            usr.futureReservations.slice(indexOf(toChange), 1);
-            newReserve = new reservation({
-            product: productName,
-            usermail: userMail,
-            employee: employeeMail,
-            expense: expense,
-            start: startDate,
-            end: endDate
-            })
-            usr.futureReservations.push(newReserve);
-            usr.save();
-        }
-        // Cambio nel dipendente
-         toChange = emp.futureReservations.find(item=> { item.end === endDate  && item.name === productName && item.usermail === userMail } );
-         console.log(toChange);
+        // // Cambio nello user
+        //  toChange = usr.futureReservations.find(item=> { item.end.getDate() === endDate.getDate()  && item.product=== productName } );
+        //  console.log(toChange);
 
-         if(toChange)
-         {
-             emp.futureReservations.slice(indexOf(toChange), 1);
-             newReserve = new reservation({
-             usermail: userMail,
-             product: productName,
-             expense: expense,
-             start: startDate,
-             end: endDate
-             })
-             emp.futureReservations.push(newReserve);
-             emp.save();
+        //  if(toChange)
+        // {
+        //     usr.futureReservations.slice(indexOf(toChange), 1);
+        //     newReserve = new reservation({
+        //     product: productName,
+        //     usermail: userMail,
+        //     employee: employeeMail,
+        //     expense: expense,
+        //     start: startDate,
+        //     end: endDate
+        //     })
+        //     usr.futureReservations.push(newReserve);
+        //     usr.save();
+        // }
+        // // Cambio nel dipendente
+        //  toChange = emp.futureReservations.find(item=> { item.end === endDate  && item.name === productName && item.usermail === userMail } );
+        //  console.log(toChange);
+
+        //  if(toChange)
+        //  {
+        //      emp.futureReservations.slice(indexOf(toChange), 1);
+        //      newReserve = new reservation({
+        //      usermail: userMail,
+        //      product: productName,
+        //      expense: expense,
+        //      start: startDate,
+        //      end: endDate
+        //      })
+        //      emp.futureReservations.push(newReserve);
+        //      emp.save();
          }
 
-        res.status(200).json({message: "all ok"});
+        // res.status(200).json({message: "all ok"});
     }else
     {
-        res.status(500).json({message: "internal server error"});
+        res.status(500).json({message: "Product or employee or user non existent"});
     }
 })
 

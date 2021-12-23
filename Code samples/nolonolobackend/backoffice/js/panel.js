@@ -364,15 +364,16 @@ function sendModifyRental(x)
 {
   let oldStart = allReservations[x].start;
   let oldEnd = allReservations[x].end;
-  let oldExpense = allReservations[x].expense;
   let oldProduct = allReservations[x].name;
   let email = $('#user').val(); // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
   let employee = sessionStorage.getItem('email');
   let product = $('#name').val() || oldProduct; // nome del prodotto
   let start = $('#start').val() || oldStart;
   let end = $('#end').val() || oldEnd;
-  let expense = $('#expense').val() || oldExpense;
   // devo comunque mandare i vecchi dati
+  if(email && employee && product && start && end)
+  {
+
   let obj = `{
     "user": "${email}", 
     "employee": "${employee}",
@@ -381,8 +382,7 @@ function sendModifyRental(x)
     "oldStart": "${oldStart}",
     "oldEnd": "${oldEnd}",
     "start": "${start}",
-    "end": "${end}",
-    "expense": "${expense}"
+    "end": "${end}"
   }`;
 
   $.post({
@@ -397,6 +397,10 @@ function sendModifyRental(x)
     {
         $('#content').html("Try again later please");
     })
+  }else
+  {
+    $('#error').html("Please enter all fields")
+  }
 }
 
 function showModify(x)
@@ -418,12 +422,6 @@ function showModify(x)
 <div class="input-group mb-3">
 <label class="input-group-text" for="end">End</label>
 <input type="date">
-</div>
-<div class="input-group mb-3">
-<label class="input-group-text" for="expense">Expense</label>
-<span class="input-group-text">€</span>
-<input type="text" class="form-control" id="expense" aria-label="Amount (to the nearest euro)">
-<span class="input-group-text">.00</span>
 </div>
 <span id="error"></span> <br>
 <button type="submit" class="btn btn-lg btn-primary btn-block" onclick="sendModifyRental(${x})">Send</button>

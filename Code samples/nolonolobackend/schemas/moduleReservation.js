@@ -15,6 +15,9 @@ const reserveSchema = new Schema({
     employee: {
         type: String
     },
+    name: {
+        type: String
+    },
     start: {
         type: Date,
         required: true
