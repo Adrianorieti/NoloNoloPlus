@@ -1,3 +1,4 @@
+let futureRes = [];
 let allCostumers = [];
 let productsNames = [];
 let categoriesNames = [];
@@ -520,9 +521,38 @@ function getAllReservations()
         $('#content').html("Try again later please");
     })
 }
+function confirmLending(x)
+{
+  let employee = sessionStorage.getItem('email');
+  let product = futureRes[x].product;
+  let user = futureRes[x].usermail;
+  let start = futureRes[x].start;
+  let end = futureRes[x].end;
+
+  let obj = `{
+    "user": "${user}", 
+    "product": "${product}",
+    "employee": "${employee}",
+    "start": "${start}",
+    "end": "${end}"
+  }`;
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/confirmLending',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(){
+        $('#content').html("Successful operation");
+        location.reload();
+    }).fail(function(){
+        $('#content').html("Error, maybe the element doesn't exists");
+    })
+}
 
 function showMyReservations(emp)
 {
+  futureRes = futureRes.concat(emp.futureReservations);
   let active = '';
   let future = '';
   let past = '';
@@ -537,6 +567,8 @@ function showMyReservations(emp)
         <p class="card-text">From: ${emp.activeReservations[x].start}</p>
         <p class="card-text">To: ${emp.activeReservations[x].end} </p>
         <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
+        <a href="#" class="btn btn-primary" onclick="confirmEndOfRental(${x})">Confirm restitution</a>
+
         </div>
         </div>
 

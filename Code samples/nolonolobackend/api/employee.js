@@ -734,36 +734,95 @@ router.post('/denyBeginOfRental', async (req, res) => {
         res.status(500).json({message: "Error occurred"});
 })
 
-/** The employee confirm that the user took the product */
+/** Whit this function we actualli confirm that the rent started, so 
+ * the future res gets cancelled and is moved to the active, in the user and in the employee
+ * the amount paid gets updated 
+ */
 router.post('/confirmLending', async (req, res) => {
-    // Ricevo la prenotazione dalla lista dei dipendenti
-    const userMail = req.body.email;
-    const productName = req.body.name;
+    // Ricevo la prenotazione dalla lista delle future res dei dipendenti
+    const userMail = req.body.user;
     const employeeMail = req.body.employee;
-    let startDate = new Date(req.body.startingDate);
-    let endDate = new Date(req.body.endingDate);
-    const emp = employee.findOne({email: employeeMail});
-    const usr = user.findOne({email: userMail});
-    if(usr && emp)
+    let productName = req.body.product;
+    let start = new Date(req.body.start);
+    let end = new Date(req.body.end);
+    const emp = await employee.findOne({email: employeeMail});
+    const usr = await user.findOne({email: userMail});
+    const prod = await product.findOne({name: productName});
+    if(usr && emp && prod)
     {
         // Sposto la prenotazione da future ad active in modo che lo user non possa
         // modificarla in corso
-       let toChange =  usr.futureReservations.find(item=> { item.start === startDate  && item.end=== endDate } );
-       if(toChange)
-       {
-            usr.futureReservations.splice(futureReservations.indexOf(toChange), 1);
-            usr.activeReservations.push(toChange);
-            usr.save();
+       
+        let toChange ;
+        let x;
+        for(x in usr.futureReservations)
+        { 
+            console.log("dentro for",usr.futureReservations[x]);
+            if(usr.futureReservations[x].end.getDate() === end.getDate() && usr.futureReservations[x].start.getDate() === start.getDate())
+               { 
+                   toChange = usr.futureReservations[x];
+                   break;
+                }
         }
-        // Sposto la prenotazione tra le attive del dipendente
-        emp.futureReservations.splice(futureReservations.indexOf(toChange), 1);
-        emp.activeReservations.push(toChange);
-        emp.save();
-        res.status(200).send("Succesful operation");
+            if(toChange)
+            {
+             //sposto da future ad active
+
+             usr.activeReservations.push(toChange);
+             usr.futureReservations.splice(x, 1);
+             usr.save();
+            }
+             // DIPENDENTE
+             toChange= '';
+             x = 0;
+
+            for(x in emp.futureReservations)
+            { 
+             if(emp.futureReservations[x].end.getDate() === end.getDate() && emp.futureReservations[x].start.getDate() === start.getDate() )
+                { 
+                    toChange = emp.futureReservations[x];
+                    break;
+                 }
+            } 
+            if(toChange)
+            {
+                console.log("cambio in dipendente");
+
+             emp.futureReservations.splice(x,  1);
+             emp.activeReservations.push(toChange);
+             console.log(emp.activeReservations);
+             emp.save();
+
+            }
+
+        //PRODOTTO
+        toChange= '';
+        x = 0;
+
+       for(x in prod.reservations)
+       { 
+        if(prod.reservations[x].end.getDate() === end.getDate() && prod.reservations[x].start.getDate() === start.getDate() )
+           { 
+               toChange = prod.reservations[x];
+               break;
+            }
+        }
+        if(toChange)
+            {
+            console.log("cambio in prodotto");
+             prod.reservations.splice(x,  1);
+             prod.activeReservations.push(toChange);
+             console.log(prod.activeReservations);
+             prod.save();
+
+            }
+
+
+
     }else
-    {
-        res.status(500).send("Internal Database error");
-    }
+        {
+            res.status(500).send("Internal Database error");
+        }
 })
 
 /** The employee confirm the user returned the product */

@@ -49,6 +49,7 @@ const ProductSchema = new Schema({
         required: true
     },
     reservations: [reserveSchema],
+    activeReservations: [reserveSchema],
     totalSales: {
         type: Number,
     },
