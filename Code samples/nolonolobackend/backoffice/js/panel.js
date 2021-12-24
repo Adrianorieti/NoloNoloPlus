@@ -533,6 +533,8 @@ function showMyReservations(emp)
         <p class="card-text">To: ${emp.activeReservations[x].end} </p>
         <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
         </div>
+        </div>
+
     `
   }
   for(x in emp.futureReservations)
@@ -546,6 +548,9 @@ function showMyReservations(emp)
         <p class="card-text">From: ${emp.futureReservations[x].start}</p>
         <p class="card-text">To: ${emp.futureReservations[x].end} </p>
         <p class="card-text">Expense: ${emp.futureReservations[x].expense} </p>
+        <a href="#" class="btn btn-primary" onclick="confirmLending(${x})">Confirm lending</a>
+
+        </div>
         </div>
     `
   }
@@ -561,24 +566,29 @@ function showMyReservations(emp)
         <p class="card-text">To: ${emp.pastReservations[x].end} </p>
         <p class="card-text">Expense: ${emp.pastReservations[x].expense} </p>
         </div>
+        </div>
+
     `
   }
   let toInsert =`
-  <div id="container">
   <div id="active">
+  <h3>Active</h3>
   ${active}
   </div>
   
   <div id="future">
+  <h3>Future</h3>
   ${future}
   </div>
   
   <div id="past">
+  <h3>Past</h3>
   ${past}
+
   </div>
-  </div>
+ 
   `
-  $('#content').html(toInsert);
+  $('#reservations').html(toInsert);
 }
 
 function getMyReservations()
