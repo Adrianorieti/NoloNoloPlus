@@ -42,12 +42,8 @@ module.exports = {
             let period = endDate.getDate() - startDate.getDate();
             // period = period / (1000 * 3600 * 24);
             //così mi prende  anche il giorno finale altrimenti non me lo prende
-            console.log("whaaaat",period);
             period -= 1;
-            console.log(period);
-            console.log(finalPrice);
             finalPrice = dailyPrice * period;
-            console.log(finalPrice);
 
 
              // Se inizio il venerdì e la prenotazione dura 3 o + giorni allora sconto
@@ -56,25 +52,22 @@ module.exports = {
                 startDate.setDate(startDate.getDate() + 2);
                 if(startDate.getTime() <= endDate.getTime())
                 {  
-                    console.log("SCONTO WEEKEND");
                     finalPrice -= (((finalPrice * 7) / 100));
                     totalDiscount += 2;
                 }
-
+                startDate.setDate(startDate.getDate() - 2);
                 //qui controllo se inizio dal lunedì e dura + di 3 giorni in totale
              }else if(startDate.getDay() === 1)
              {
                 startDate.setDate(startDate.getDate() + 2);
                 if(startDate.getDate() <= endDate.getDate())
                 {    
-                     console.log("SCONTO INFRASETTIMANALE");
                     finalPrice -= (((finalPrice * 7) / 100));
                     totalDiscount += 2;
                 }
+                startDate.setDate(startDate.getDate() - 2);
              }
-             startDate.setDate(startDate.getDate() - 2);
              // Prenotazioni più lunghe di 12 giorni
-             console.log(finalPrice);
 
              if(period > 12)
              {
@@ -99,7 +92,6 @@ module.exports = {
                 finalPrice -= ((finalPrice * 10) / 100);
                 totalDiscount += 10;
             }
-            console.log(finalPrice);
             if(totalDiscount < 0)
                 totalDiscount = 0; // cioè non abbiamo fatto nessuno sconto bensì una maggiorazione
             return(finalPrice.toFixed(2));

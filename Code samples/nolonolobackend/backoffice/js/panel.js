@@ -388,7 +388,6 @@ function sendModifyRental(x)
     "start": "${start}",
     "end": "${end}"
   }`;
-  console.log("AOOOOO", obj);
 
   $.post({
     type: 'POST',
@@ -398,8 +397,9 @@ function sendModifyRental(x)
       data: obj
     }, function(){
       $('#content').html("Yes");
-    }).fail(function()
+    }).fail(function(data)
     {
+      console.log(data.message);
         $('#content').html("Try again later please");
     })
   }else
@@ -435,15 +435,50 @@ function showModify(x)
   $('#content').html(toInsert);
 }
 
-function showReservations(reservations, modify)
+function rentDeletion(x)
+{
+  let start = allReservations[x].start;
+  let end = allReservations[x].end;
+  let product = allReservations[x].name;
+  let email = allReservations[x].usermail; // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
+  let employee = sessionStorage.getItem('email');
+
+  let obj = `{
+    "user": "${email}", 
+    "employee": "${employee}",
+    "product": "${product}",
+    "start": "${start}",
+    "end": "${end}"
+  }`;
+  console.log(obj);
+  
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/deleteRental',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(){
+        $('#content').html("Successful deletion");
+    }).fail(function(){
+        $('#content').html("Error, maybe the element doesn't exists");
+    })
+  }
+
+function showDelete(x)
+{
+  let toInsert = `</select></div>
+  <button type="button" class="btn btn-lg btn-danger btn-block" onclick="rentDeletion(${x})" >Confirm Deletion</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>`;
+  $('#content').html(toInsert);
+}
+function showReservations(reservations)
 {
   console.log(reservations);
   let toInsert = '';
   allReservations = allReservations.concat(reservations);
   for(let x in reservations)
     {
-      if(modify)
-      {
         toInsert += `
         <div class="card">
         <h5 class="card-header">${x}</h5>
@@ -454,23 +489,11 @@ function showReservations(reservations, modify)
         <p class="card-text">To: ${reservations[x].end} </p>
         <p class="card-text">Expense: ${reservations[x].expense} </p>
         <a href="#" class="btn btn-primary" onclick="showModify(${x})">Modify rental</a>
+        <a href="#" class="btn btn-danger" onclick="showDelete(${x})">Delete</a>
+
       </div>
       </div>
         `
-      }else
-      {
-        toInsert += `
-        <div class="card">
-        <h5 class="card-header">${x}</h5>
-        <div class="card-body">
-        <h5 class="card-title">User: ${reservations[x].usermail}</h5>
-        <p class="card-text">Product: ${reservations[x].name}</p>
-        <p class="card-text">From: ${reservations[x].start}</p>
-        <p class="card-text">To: ${reservations[x].end} </p>
-        <p class="card-text">To: ${reservations[x].expense} </p>
-      </div>
-      </div>`
-      }
     }
     if(toInsert === '')
       $('#content').html("No reservations");
@@ -486,31 +509,96 @@ function getAllReservations()
     type: 'GET',
       url: 'http://localhost:8001/api/employee/getAllReservations',
     }, function(data){
-      showReservations(data.reservations, true);
+      showReservations(data.reservations);
     }).fail(function(err)
     {
         $('#content').html("Try again later please");
     })
 }
 
-function getPastReservations()
+function showMyReservations(emp)
+{
+  let active = '';
+  let future = '';
+  let past = '';
+  for(x in emp.activeReservations)
+  {
+    active += `
+    <div class="card">
+        <h5 class="card-header">${x}</h5>
+        <div class="card-body">
+        <h5 class="card-title">User: ${emp.activeReservations[x].usermail}</h5>
+        <p class="card-text">Product: ${emp.activeReservations[x].product}</p>
+        <p class="card-text">From: ${emp.activeReservations[x].start}</p>
+        <p class="card-text">To: ${emp.activeReservations[x].end} </p>
+        <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
+        </div>
+    `
+  }
+  for(x in emp.futureReservations)
+  {
+    future += `
+    <div class="card">
+        <h5 class="card-header">${x}</h5>
+        <div class="card-body">
+        <h5 class="card-title">User: ${emp.futureReservations[x].usermail}</h5>
+        <p class="card-text">Product: ${emp.futureReservations[x].product}</p>
+        <p class="card-text">From: ${emp.futureReservations[x].start}</p>
+        <p class="card-text">To: ${emp.futureReservations[x].end} </p>
+        <p class="card-text">Expense: ${emp.futureReservations[x].expense} </p>
+        </div>
+    `
+  }
+  for(x in emp.pastReservations)
+  {
+    past += `
+    <div class="card">
+        <h5 class="card-header">${x}</h5>
+        <div class="card-body">
+        <h5 class="card-title">User: ${emp.pastReservations[x].usermail}</h5>
+        <p class="card-text">Product: ${emp.pastReservations[x].product}</p>
+        <p class="card-text">From: ${emp.pastReservations[x].start}</p>
+        <p class="card-text">To: ${emp.pastReservations[x].end} </p>
+        <p class="card-text">Expense: ${emp.pastReservations[x].expense} </p>
+        </div>
+    `
+  }
+  let toInsert =`
+  <div id="container">
+  <div id="active">
+  ${active}
+  </div>
+  
+  <div id="future">
+  ${future}
+  </div>
+  
+  <div id="past">
+  ${past}
+  </div>
+  </div>
+  `
+  $('#content').html(toInsert);
+}
+
+function getMyReservations()
 {
   $('#title').html('');
+  $('#content').html('');
 
-  let email = sessionStorage.getItem('email');  
-   let obj = `{
-     "email": "${email}"
-   }`;
-
-  console.log(obj);
+  let email = sessionStorage.getItem('email');
+  let obj = `{
+    "email": "${email}"
+  }`;
   $.post({
     type: 'POST',
-      url: 'http://localhost:8001/api/employee/getPastReservations',
+      url: `http://localhost:8001/api/employee/singleEmp`,
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
-      data: obj
+      data: obj 
     }, function(data){
-      showReservations(data.reservations, false);
+      console.log(data.emp);
+      showMyReservations(data.emp);
     }).fail(function(err)
     {
         $('#content').html("Try again later please");

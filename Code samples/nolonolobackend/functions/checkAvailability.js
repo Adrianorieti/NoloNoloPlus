@@ -5,16 +5,13 @@ module.exports = {
 
     checkAvailability: function(product, startDate, endDate)
     {
-        console.log("primo check");
         let reservations = product.reservations;
         if(reservations.length > 1)
             sortBy.sortByTime(reservations, 'start');
-        console.log("secondo check");
         let available = true;
         // non dovrebbe mai accadere che sia nullo ma non si sa mai
         if(reservations)
         {
-            console.log("qui ci entra ??");
             for(i in reservations)
             {
                 if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
@@ -42,7 +39,6 @@ module.exports = {
                 }
             }
         }   
-        console.log("available", available);
         return available;
     }
 

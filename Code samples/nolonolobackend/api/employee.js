@@ -17,7 +17,20 @@ const bcrypt = require('bcrypt');
 const checkAvailability = require('../functions/checkAvailability');
 
 const router = express.Router();
+//và cambiato ma se lascio senza /emp non mi funzionano le altre porchiddio
+router.post('/singleEmp', async (req, res) =>
+{
+    let email = req.body.email;
+    let emp = await employee.findOne({email: email});
 
+    if(emp)
+    {
+        res.status(200).json({emp: emp});
+    }else
+    {
+        res.status(404).json({message: "Error employee not found"});
+    }
+})
 /**
  * Verify if the employee exists in the database. If yes, the employee receive a token
  * @param {email, password}
@@ -492,6 +505,7 @@ router.post('/maintenance', async (req, res) =>
         res.status(500).send("Error, please try again later");
     }
 })
+
 /**
  * Create a rental on the product if the employee is verified.
  * @param {necessary rental info}
@@ -502,6 +516,7 @@ router.post('/maintenance', async (req, res) =>
 router.post('/makeRental',  async (req, res) => {
 
     const userMail = req.body.email;
+    const employeeMail = req.body.employee;
     const productName = req.body.name;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
@@ -509,45 +524,48 @@ router.post('/makeRental',  async (req, res) => {
     console.log(startDate.getDate());
     console.log(endDate.getDate());
 
-    const source = await user.findOne({email: userMail});
+    const usr = await user.findOne({email: userMail});
 
-    if(source)
+    if(usr)
     {
         const prod = await product.findOne({name: productName});
-    if(prod)
-    {
-        let reservations = prod.reservations;
-        sortBy.sortByTime(reservations, 'start');
-        let available = true;
-        if(reservations)
+        const emp = await employee.findOne({email: employeeMail});
+
+        if(prod && emp)
         {
-            for(i in reservations)
+            console.log(emp);
+            let reservations = prod.reservations;
+            sortBy.sortByTime(reservations, 'start');
+            let available = true;
+            if(reservations)
             {
-                if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
+                for(i in reservations)
                 {
-                    console.log("l'inizio è compreso");
-                    available = false;
-                    break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
+                    if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
+                    {
+                        console.log("l'inizio è compreso");
+                        available = false;
+                        break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
 
-                }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
-                {
-                    console.log("la fine  è compresa");
+                    }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
+                    {
+                        console.log("la fine  è compresa");
 
-                    available = false;
-                    break;
+                        available = false;
+                        break;
 
-                }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
-                {
-                    console.log("comprende tutto");
-                    available = false;
-                    break;
-                }else
-                {
-                    // essendo ordinato appena trovo una inferiore esco dal for
-                    break;
+                    }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
+                    {
+                        console.log("comprende tutto");
+                        available = false;
+                        break;
+                    }else
+                    {
+                        // essendo ordinato appena trovo una inferiore esco dal for
+                        break;
+                    }
                 }
-            }
-        }   
+            }   
         if(available)
         {
             let collection = await category.findOne({name: prod.type});
@@ -555,13 +573,30 @@ router.post('/makeRental',  async (req, res) => {
 
                 let newReserve = new reservation({
                     usermail: userMail,
+                    name: productName, //diocane cambiare questo per farlo essere unico
                     start: `${startDate}`,
                     end: `${endDate}`,
                     expense: `${price}`
             })
-
+            //salvo nel prodotto
             prod.reservations.push(newReserve);
             prod.save();
+
+            let newReserve2 = new reservation({
+                usermail: userMail,
+                product: productName,
+                employee: employeeMail,
+                start: `${startDate}`,
+                end: `${endDate}`,
+                expense: `${price}`
+        })
+        //salvo nello user
+            usr.futureReservations.push(newReserve2);
+            usr.save();
+        //salvo nell'employee
+            emp.futureReservations.push(newReserve2);
+            emp.save();
+
             res.status(200).json({message: "Added reservation"});
         }else
         {
@@ -812,6 +847,8 @@ router.post('/modifyRental', async (req, res) => {
     const oldEnd = new Date(req.body.oldEnd);
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
+    console.log(startDate.getDate());
+    console.log(endDate.getDate());
     //vecchio prodotto per andargli a cambiare le cose
     let prod = await product.findOne({name: oldProduct});
     //user in questione
@@ -827,7 +864,7 @@ router.post('/modifyRental', async (req, res) => {
         let toChange;
         let x;
         let newExpense;
-        // cerco la vecchia prenotazione ... 
+        // cerco la vecchia prenotazione nel vecchio prodotto
         for(x in prod.reservations)
         { 
             if(prod.reservations[x].end.getDate() === oldEnd.getDate())
@@ -837,17 +874,18 @@ router.post('/modifyRental', async (req, res) => {
                 }
         }            
         if(toChange)
-       {  // ... se la trovo la cancello
+        {  
+            // ... se la trovo la cancello
             prod.reservations.splice(x, 1);
+            prod.save(); // salvo di nuovo il prodotto
             // aggiungo la nuova con i nuovi dati
              let newProd = await product.findOne({name: productName});
             if(newProd)
-            { // controllo se è available in quella data prima di mandarla
-                // fare una funzione prendendo la roba da makeRental
-                let collection = await category.findOne({name: newProd.type})
+            {
+                 // controllo se è available in quella data prima di mandarla
+                 let collection = await category.findOne({name: newProd.type})
                  newExpense = await computePrice.computePrice(collection, newProd, userMail, startDate, endDate)
-                console.log("la nuova expense", newExpense);
-                console.log(productName);
+
                 const newReserve = new reservation({
                     usermail: userMail,
                     employee: employeeMail,
@@ -856,7 +894,6 @@ router.post('/modifyRental', async (req, res) => {
                     start: startDate,
                     end: endDate
                 })
-                console.log(newReserve);
                 //controllo che ci siano prenotazioni e se è disponibile sennò crasha
                 if(newProd.reservations.length > 0)
                 {
@@ -864,26 +901,23 @@ router.post('/modifyRental', async (req, res) => {
                     {  
                         newProd.reservations.push(newReserve);
                         newProd.save();
+
                     }else
                     {
-                    res.status(500).json({message: "Product not available"});
+                        res.status(500).json({message: "Product not available"});
                     }
                 }else
                 {
                     newProd.reservations.push(newReserve);
                     newProd.save();
-
                 }
-        
-           } 
+            } 
         }else{
-                res.status(500).json({message: "Incorrect or non existent product inserted"});         
-               }
-    
-               console.log("vado nello user");
+               return(res.status(500).json({message: "Incorrect or non existent product inserted"}));         
+            }
+            // USER
                toChange = '';
                x= 0;
-               console.log("to change", toChange);
                for(x in usr.futureReservations)
                { 
                    if(usr.futureReservations[x].end.getDate() === oldEnd.getDate())
@@ -892,13 +926,11 @@ router.post('/modifyRental', async (req, res) => {
                           break;
                        }
                } 
-               console.log("trovata", toChange); 
          if(toChange)
         {
             //cancello quella vecchia
-            console.log("prima di eliminarla", usr.futureReservations);
             usr.futureReservations.splice(x, 1);
-            console.log("la elimino", usr.futureReservations);
+
             newReserve = new reservation({
             product: productName,
             usermail: userMail,
@@ -907,48 +939,102 @@ router.post('/modifyRental', async (req, res) => {
             start: startDate,
             end: endDate
             })
-            console.log("new res usr", newReserve);
+
             usr.futureReservations.push(newReserve);
             usr.save();
-            console.log("fatto ???");
         }else
         {
             res.status(500).json({message: "not found in employee"});
         }
 
         // Cambio nel dipendente
-        console.log("vado nel dipendente");
                 toChange= '';
                 x = 0;
-                console.log("to change", toChange);
 
-               for(x in emp.futureReservations)
+        for(x in emp.futureReservations)
+        { 
+            if(emp.futureReservations[x].end.getDate() === oldEnd.getDate())
                { 
-                   if(emp.futureReservations[x].end.getDate() === oldEnd.getDate())
-                      { 
-                          toChange = emp.futureReservations[x];
-                          break;
-                       }
-               } 
-             if(toChange)
-                emp.futureReservations.splice(x,  1);
-             newReserve = new reservation({
-             usermail: userMail,
-             product: productName,
-             expense: newExpense,
-             start: startDate,
-             end: endDate
-             })
-             
-             emp.futureReservations.push(newReserve);
-             console.log("res dell'emp",emp.futureReservations );
-             emp.save();
+                   toChange = emp.futureReservations[x];
+                   break;
+                }
+        } 
+
+         if(toChange)
+            emp.futureReservations.splice(x,  1);
+
+         newReserve = new reservation({
+         usermail: userMail,
+         product: productName,
+         expense: newExpense,
+         start: startDate,
+         end: endDate
+         })
+         
+         emp.futureReservations.push(newReserve);
+         emp.save();
         
 
          res.status(200).json({message: "ALL OKK"});
     }else
     {
         res.status(500).json({message: "Product or employee or user non existent"});
+    }
+})
+
+router.post('/deleteRental', async (req, res) => {
+    let oldProduct = req.body.product;
+    let userMail = req.body.user;
+    let employeeMail = req.body.employee;
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    //vecchio prodotto per andargli a cambiare le cose
+    let prod = await product.findOne({name: oldProduct});
+    //user in questione
+    let usr = await user.findOne({email: userMail});
+    // employee in questione
+    let emp = await employee.findOne({email: employeeMail});
+  
+    if(prod &&  usr && emp)
+    {
+        //elimino del prodotto
+        let x;
+        // cerco la prenotazione nel prodotto
+        for(x in prod.reservations)
+        { 
+            if(prod.reservations[x].end.getDate() === endDate.getDate() && prod.reservations[x].start.getDate() === startDate.getDate())
+               { 
+                   break;
+                }
+        }    
+        prod.reservations.splice(x, 1);
+        prod.save();     
+        // elimino nello user
+        for(x in usr.futureReservations)
+        { 
+            if(usr.futureReservations[x].end.getDate() === endDate.getDate() && usr.futureReservations[x].start.getDate() === startDate.getDate())
+               { 
+                   break;
+                }
+        }    
+        usr.futureReservations.splice(x, 1);
+        usr.save(); 
+        //elimino nel dipendente
+        for(x in emp.futureReservations)
+        { 
+            if(emp.futureReservations[x].end.getDate() === endDate.getDate() && emp.futureReservations[x].start.getDate() === startDate.getDate())
+               { 
+                   break;
+                }
+        }    
+        emp.futureReservations.splice(x, 1);
+        emp.save(); 
+
+        res.status(200).json({message: 'succesful operation'})
+    }else
+    {
+        console.log("porcodio");
+        res.status(500).json({message: "something went wrong"});
     }
 })
 

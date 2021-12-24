@@ -7,6 +7,7 @@ function reset()
 
 function sendRent()
 {
+  let employee = sessionStorage.getItem('email');
  let email = $('#email').val();
  let start = $('#start').val();
  let end = $('#end').val();
@@ -14,11 +15,14 @@ function sendRent()
 
  let obj = `{
     "name": "${prodName}",
+    "employee": "${employee}",
     "email": "${email}",
     "start": "${start}",
     "end": "${end}"
 }`;
-console.log(obj);
+
+console.log("PORCODDIO", obj);
+
 $.post({
     type: 'POST',
       url: 'http://localhost:8001/api/employee/makeRental',

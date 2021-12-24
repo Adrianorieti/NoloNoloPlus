@@ -45,3 +45,10 @@ li
     flex-wrap: wrap;
     gap: 1.5rem;
 }
+
+#container
+{
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
