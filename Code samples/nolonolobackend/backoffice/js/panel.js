@@ -1,3 +1,4 @@
+let activeRes = [];
 let futureRes = [];
 let allCostumers = [];
 let productsNames = [];
@@ -521,6 +522,38 @@ function getAllReservations()
         $('#content').html("Try again later please");
     })
 }
+function confirmEndOfRental(x)
+{
+  let employee = sessionStorage.getItem('email');
+  let product = activeRes[x].product;
+  let user = activeRes[x].usermail;
+  let start = activeRes[x].start;
+  let end = activeRes[x].end;
+  let expense = activeRes[x].expense;
+
+  let obj = `{
+    "user": "${user}", 
+    "expense": "${expense}",
+    "product": "${product}",
+    "employee": "${employee}",
+    "start": "${start}",
+    "end": "${end}"
+  }`;
+  console.log(obj);
+  $.post({
+    type: 'POST',
+      url: 'http://localhost:8001/api/employee/confirmEndOfRental',
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      data: obj
+    }, function(){
+        $('#content').html("Successful operation");
+        location.reload();
+    }).fail(function(){
+        $('#content').html("Error, maybe the element doesn't exists");
+    })
+}
+
 function confirmLending(x)
 {
   let employee = sessionStorage.getItem('email');
@@ -552,6 +585,7 @@ function confirmLending(x)
 
 function showMyReservations(emp)
 {
+  activeRes = activeRes.concat(emp.activeReservations);
   futureRes = futureRes.concat(emp.futureReservations);
   let active = '';
   let future = '';

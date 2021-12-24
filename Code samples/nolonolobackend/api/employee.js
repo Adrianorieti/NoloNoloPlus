@@ -734,7 +734,7 @@ router.post('/denyBeginOfRental', async (req, res) => {
         res.status(500).json({message: "Error occurred"});
 })
 
-/** Whit this function we actualli confirm that the rent started, so 
+/** Whit this function we actually confirm that the rent started, so 
  * the future res gets cancelled and is moved to the active, in the user and in the employee
  * the amount paid gets updated 
  */
@@ -815,7 +815,9 @@ router.post('/confirmLending', async (req, res) => {
              console.log(prod.activeReservations);
              prod.save();
 
+             res.status(200).json({message:"all ok"});
             }
+
 
 
 
@@ -828,32 +830,88 @@ router.post('/confirmLending', async (req, res) => {
 /** The employee confirm the user returned the product */
 router.post('/confirmEndOfRental', async (req, res) => {
 
-    const userMail = req.body.email;
+    console.log("arrivato");
+    const userMail = req.body.user;
     const employeeMail = req.body.employee;
-    const endDate = new Date(req.body.endingDate);
-    const productName = req.body.name;
-    const pointsToAdd = req.body.points;
-    let emp = await employee.findOne({email: employee});
-    let usr = await user.findOne({email: userMail});
-    if(usr && emp)
+    let productName = req.body.product;
+    let start = new Date(req.body.start);
+    let end = new Date(req.body.end);
+    let expense = req.body.expense;
+    const emp = await employee.findOne({email: employeeMail});
+    const usr = await user.findOne({email: userMail});
+    const prod = await product.findOne({name: productName});
+    if(usr && emp && prod)
     {
-        // Trovo la prenotazione nelle active dell'utente
-        let toChange = usr.activeReservations.find(item=> { item.end === endDate  && item.name=== productName } );
-        // La elimino dalle attive e la metto nelle passate
-        usr.activeReservations.slice(indexOf(toChange), 1);
-        usr.pastReservations.push(toChange);
-        //Cambio i fidelity points dello user
-        usr.fidelityPoints += pointsToAdd; // controllare se sia stringa o numero
-        usr.save();
+        let toChange ;
+        let x;
+        console.log("TRYYYY", usr.prova);
+        for(x in usr.activeReservations)
+        { 
+            console.log("dentro for",usr.activeReservations[x]);
+            if(usr.activeReservations[x].end.getDate() === end.getDate() && usr.activeReservations[x].start.getDate() === start.getDate())
+               { 
+                   toChange = usr.activeReservations[x];
+                   break;
+                }
+        }
+            if(toChange)
+            {
+             //sposto da future ad active
 
-        //Faccio lo stesso con il dipendente, qui faccio di nuovo la ricerca perchè gli schemas sono diversi per ora
-        toChange = emp.activeReservations.find(item=> { item.end === endDate  && item.name=== productName } );
+             usr.pastReservations.push(toChange);
+             usr.activeReservations.splice(x, 1);
+             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+             usr.save();
+            }
+             // DIPENDENTE
+             toChange= '';
+             x = 0;
 
-        emp.activeReservations.slice(indexOf(toChange), 1);
-        emp.pastReservations.push(toChange);
-        emp.save();
+            for(x in emp.activeReservations)
+            { 
+             if(emp.activeReservations[x].end.getDate() === end.getDate() && emp.activeReservations[x].start.getDate() === start.getDate() )
+                { 
+                    toChange = emp.activeReservations[x];
+                    break;
+                 }
+            } 
+            if(toChange)
+            {
+                console.log("cambio in dipendente");
 
-        res.status(200).send("ok");
+             emp.activeReservations.splice(x,  1);
+             emp.pastReservations.push(toChange);
+             console.log(emp.pastReservations);
+            //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+
+             emp.save();
+
+            }
+
+        //PRODOTTO
+        toChange= '';
+        x = 0;
+
+       for(x in prod.activeReservations)
+       { 
+        if(prod.activeReservations[x].end.getDate() === end.getDate() && prod.activeReservations[x].start.getDate() === start.getDate() )
+           { 
+               toChange = prod.activeReservations[x];
+               break;
+            }
+        }
+        if(toChange)
+            {
+            console.log("cambio in prodotto");
+             prod.activeReservations.splice(x,  1);
+             prod.pastReservations.push(toChange);
+             console.log(prod.pastReservations);
+             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+
+             prod.save();
+
+             res.status(200).json({message: "all ok"});
+            }
     }else{
         res.status(404).send("not found");
     }
