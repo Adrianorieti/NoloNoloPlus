@@ -173,6 +173,7 @@ function showProducts(products)
 /** Get all single products from database */
 function getAllproducts()
 {
+  $('#reservations').html('');
     $.get({
         type: 'GET',
           url: 'http://localhost:8001/api/employee/products',
@@ -219,6 +220,7 @@ function showCostumers(costumers)
 
 function getAllcostumers()
 {
+  $('#reservations').html('');
     $.get({
         type: 'GET',
           url: 'http://localhost:8001/api/employee/getUsersInfo',
@@ -349,6 +351,8 @@ function showPendingRequests(data)
 
 function getPendingRequests()
 {
+  $('#reservations').html('');
+
   $.get({
     type: 'GET',
       url: 'http://localhost:8001/api/employee/pendingRequests',
@@ -504,6 +508,7 @@ function showReservations(reservations)
 
 function getAllReservations()
 {
+  $('#reservations').html('');
   $('#title').html('');
     $.get({
     type: 'GET',
@@ -593,6 +598,8 @@ function showMyReservations(emp)
 
 function getMyReservations()
 {
+  $('#reservations').html('');
+
   $('#title').html('');
   $('#content').html('');
 
