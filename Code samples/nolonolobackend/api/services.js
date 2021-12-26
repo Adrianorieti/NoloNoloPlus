@@ -4,6 +4,7 @@ const computePrice = require('../functions/computePrice');
 const jwt = require('jsonwebtoken');
 
 const express = require('express');
+const checkAvailability = require('../functions/checkAvailability');
 const router = express.Router();
 
 router.post('/products', async (req, res) => {
@@ -20,17 +21,11 @@ router.post('/formProducts', async(req, res) =>
    const authHeader = req.headers['authorization'];
    let token;
    if(authHeader != null)
-    { 
         token = authHeader && authHeader.split(' ')[1];
-        console.log("Il token è", token);
-    }
-
+    
    const name = req.body.name;
-   console.log("START DATE", req.body.startingDate)
-
    let startDate = new Date(req.body.startingDate);
    startDate.setDate(startDate.getDate() + 1);
-   console.log("START DATE", startDate);
    let endDate = new Date(req.body.endingDate);
    endDate.setDate(endDate.getDate() + 1);
 
@@ -40,12 +35,10 @@ router.post('/formProducts', async(req, res) =>
        startDate = endDate;
        endDate = tmp;
    }
-  
    if(token != null) //  Siamo loggati 
    {
     jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
     {
-        console.log("email dell'utente" ,decoded.email);
         if(err) 
             console.log(err);
 
@@ -57,49 +50,18 @@ router.post('/formProducts', async(req, res) =>
         {
             let price ;
             //ANDIAMO A VEDERE SUI SINGOLI PRODOTTI SE C'È DISPONIBILITÀ
-            let available = false;
+            let available;
             let currentProd;
             let availableProductList = [];
             let prices = [];
           product.find({type: typeToFind},  async function(err, db){
 
             if(err) return(res.status(500).send(err));
-        console.log(db);
+
         for(i in db) 
         {
-            available=true;
-
-            for(j in db[i].reservations)
+           if(checkAvailability.checkAvailability(db[i], startDate, endDate))
             {
-                let x = db[i].reservations[j];
-              
-                // nei primi due if controlliamo che inizio o fine della prenotazione richiesta
-                //sia nel mezzo di un'altra, nell'ultimo se ne contiene un'altra già esistente
-                if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
-                {
-                    console.log("l'inizio è compreso");
-                    available = false;
-                    break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
-
-                }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
-                {
-                    console.log("la fine  è compresa");
-
-                    available = false;
-                    break;
-
-                }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
-                {
-                    console.log("comprende tutto");
-                    available = false;
-                    break;
-                }
-
-            }   
-
-           if(available)
-            {
-                //IL PRODOTTO SINGOLO CORRENTE NON LA CATEGORIA
                 //dobbiamo fare in modo che sia il + economico
                 //productList è un array di elementi disponibili in una determinata data
                 availableProductList.push(db[i]);
@@ -113,8 +75,6 @@ router.post('/formProducts', async(req, res) =>
     if(availableProductList.length != 0)
     {
            price = Math.min(...prices);
-       console.log("TUTTI I PREZZI ",prices);
-       console.log("IL MINORE", price);
        //le posizioni sono le stesse
        currentProd = availableProductList[prices.indexOf(price.toString())];
         res.status(200).json({prod: collection, finalPrice: price, availability: available, currProdName: currentProd.name});
@@ -127,7 +87,6 @@ router.post('/formProducts', async(req, res) =>
 })
 }else{ // l'utente non è loggato quindi calcoliamo la media del prezzo 
 
-   
     const prod =  await category.findOne({name: name});
 
     if(prod)
