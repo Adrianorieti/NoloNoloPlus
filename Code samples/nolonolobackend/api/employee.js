@@ -837,6 +837,7 @@ router.post('/confirmEndOfRental', async (req, res) => {
     let start = new Date(req.body.start);
     let end = new Date(req.body.end);
     let expense = req.body.expense;
+    let fidelityPoints = req.body.points;
     const emp = await employee.findOne({email: employeeMail});
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
@@ -845,6 +846,7 @@ router.post('/confirmEndOfRental', async (req, res) => {
         let toChange ;
         let x;
         console.log("TRYYYY", usr.prova);
+        // USER
         for(x in usr.activeReservations)
         { 
             console.log("dentro for",usr.activeReservations[x]);
@@ -861,8 +863,12 @@ router.post('/confirmEndOfRental', async (req, res) => {
              usr.pastReservations.push(toChange);
              usr.activeReservations.splice(x, 1);
              //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+             usr.amountPaid += expense;
+             usr.fidelitypoints += fidelityPoints;
              usr.save();
             }
+
+
              // DIPENDENTE
              toChange= '';
              x = 0;
@@ -881,9 +887,8 @@ router.post('/confirmEndOfRental', async (req, res) => {
 
              emp.activeReservations.splice(x,  1);
              emp.pastReservations.push(toChange);
-             console.log(emp.pastReservations);
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
-
+             emp.totalReservations += 1;
              emp.save();
 
             }
@@ -907,7 +912,8 @@ router.post('/confirmEndOfRental', async (req, res) => {
              prod.pastReservations.push(toChange);
              console.log(prod.pastReservations);
              //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
-
+            prod.totalSales += expense;
+            prod.numberOfRents += 1;
              prod.save();
 
              res.status(200).json({message: "all ok"});

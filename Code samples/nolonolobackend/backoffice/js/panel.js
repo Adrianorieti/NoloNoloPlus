@@ -530,28 +530,32 @@ function confirmEndOfRental(x)
   let start = activeRes[x].start;
   let end = activeRes[x].end;
   let expense = activeRes[x].expense;
-
-  let obj = `{
-    "user": "${user}", 
-    "expense": "${expense}",
-    "product": "${product}",
-    "employee": "${employee}",
-    "start": "${start}",
-    "end": "${end}"
-  }`;
-  console.log(obj);
-  $.post({
-    type: 'POST',
-      url: 'http://localhost:8001/api/employee/confirmEndOfRental',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      data: obj
-    }, function(){
-        $('#content').html("Successful operation");
-        location.reload();
-    }).fail(function(){
-        $('#content').html("Error, maybe the element doesn't exists");
-    })
+  let points = $('#points').val();
+  if(points)
+  { 
+     let obj = `{
+      "user": "${user}", 
+      "expense": "${expense}",
+      "product": "${product}",
+      "employee": "${employee}",
+      "start": "${start}",
+      "end": "${end}"
+    }`;
+    console.log(obj);
+    $.post({
+      type: 'POST',
+        url: 'http://localhost:8001/api/employee/confirmEndOfRental',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: obj
+      }, function(){
+          $('#content').html("Successful operation");
+          location.reload();
+      }).fail(function(){
+          $('#content').html("Error, maybe the element doesn't exists");
+      })
+    }else
+      $('#pointsError').html("You must insert points to add");
 }
 
 function confirmLending(x)
@@ -601,6 +605,9 @@ function showMyReservations(emp)
         <p class="card-text">From: ${emp.activeReservations[x].start}</p>
         <p class="card-text">To: ${emp.activeReservations[x].end} </p>
         <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
+        label class="input-group-text" for="points">Insert points</label>
+        <input type="text" class="form-control" id="points" aria-label="Insert the points to add or subtract">
+        <span id="pointsError></span>
         <a href="#" class="btn btn-primary" onclick="confirmEndOfRental(${x})">Confirm restitution</a>
 
         </div>
