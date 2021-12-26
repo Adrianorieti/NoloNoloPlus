@@ -5,7 +5,6 @@ module.exports = {
 
     checkAvailability: function(product, startDate, endDate)
     {
-
         if(product.futureReservations.length > 1)
             sortBy.sortByTime(product.futureReservations, 'start');
         let available = true;

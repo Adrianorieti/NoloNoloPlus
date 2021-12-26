@@ -93,6 +93,7 @@ function sendProduct(event)
 /** Creates the add product's form */
 function showAddProduct()
 {
+  $('#reservations').html('');
     let toInsert = `
     <form onsubmit="sendProduct(event)" class="needs-validation">
     <div class="mb-3">
