@@ -7,6 +7,7 @@ let productsPrices = [];
 let allProducts = [];
 let requests= [];
 let allReservations = [];
+
 function reset()
 {
   location.reload();
@@ -377,9 +378,6 @@ function sendModifyRental(x)
   let product = $('#name').val(); // nome del prodotto
   let start = $('#start').val();
   let end = $('#end').val();
-  console.log(product);
-  console.log(start);
-  console.log(end);
   // devo comunque mandare i vecchi dati
   if( product && start && end)
   {

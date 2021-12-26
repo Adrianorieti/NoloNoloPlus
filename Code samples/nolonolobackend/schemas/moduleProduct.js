@@ -13,7 +13,7 @@ const reserveSchema = new Schema({
     employee: {
         type: String
     },
-    name: {
+    product: {
         type: String,
         required: true
     },
@@ -48,7 +48,7 @@ const ProductSchema = new Schema({
         type: Number,
         required: true
     },
-    reservations: [reserveSchema],
+    futureReservations: [reserveSchema],
     activeReservations: [reserveSchema],
     pastReservations:[reserveSchema],
     totalSales: {

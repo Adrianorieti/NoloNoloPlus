@@ -15,8 +15,9 @@ const sortBy = require('../functions/sortBy');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const checkAvailability = require('../functions/checkAvailability');
-
 const router = express.Router();
+const reservations = require('../functions/reservationsHelper');
+
 //và cambiato ma se lascio senza /emp non mi funzionano le altre porchiddio
 router.post('/singleEmp', async (req, res) =>
 {
@@ -55,12 +56,12 @@ router.post('/login', async (req, res) => {
             const accessToken = jwt.sign(employeeMail, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });
             
             //Send token back to client 
-            console.log("Success");
+             
             res.status(200).json({ accessToken: accessToken});
 
         } else {
             res.status(404).send('Error, the requested account may not exists or your credentials are not correct');
-            console.log("Password doesn't match");
+             
         }
     }else{
         res.status(404).send('Error, the requested account may not exists or your credentials are not correct');
@@ -90,21 +91,18 @@ router.get('/products', async (req, res) => {
  * @error  Returns error if there is no available product for a given date
  */
 router.post('/makeRentalHypothesis', async (req,res) =>{
-
     const userMail = req.body.email;
     const name = req.body.categoryName;
     const prodName = req.body.productName;
     let startDate = new Date(req.body.startingDate);
     let endDate = new Date(req.body.endingDate);
 
-    // Check if the user is perculing us
     if(startDate.getTime() > endDate.getTime())
     {
         let tmp = startDate;
         startDate = endDate;
         endDate = tmp;
     }
-
     // I find out the collection to send it to the compute price function
     const collection =  await category.findOne({name: name});
     let price;
@@ -112,37 +110,14 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
     // I find the product on the database and i check if there is an available date
     let prod = await product.findOne({name: prodName});
     if(prod)
-    {
-        console.log(prod.reservations);
-        if(prod.reservations)
-        {
-            for( let i in prod.reservations) 
-            {
-                        let x = prod.reservations[i];
-                        if( startDate.getTime() >= x.start.getTime() && startDate.getTime() <= x.end.getTime() )
-                        {
-                            console.log("Sono qui1")
-                            available = false;
-                            break; 
-                        }else if( endDate.getTime() >= x.start.getTime() && endDate.getTime() <= x.end.getTime())
-                        { 
-                            console.log("Sono qui2")
-                            available = false;                    
-                            break;
-                        }else if( startDate.getTime() <= x.start.getTime()  &&  endDate.getTime() >=  x.end.getTime())
-                        {
-                            console.log("Sono qui3")
-                            available = false;
-                            break;
-                        }
-            }
-        }
-    if(available) {
+    { 
+        if(checkAvailability.checkAvailability(prod, startDate, endDate)) {
+            
         price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
         res.status(200).json({finalPrice: price, availability: available, currProdName: prodName});
+
      }else
      {
-        console.log(prodName);
          res.status(200).json({ currProdName: prodName, availability: false});
      }
 }else
@@ -182,9 +157,6 @@ router.post('/changeUserInfo', async (req, res) => {
     const type = req.body.type;
     const newValue = req.body.data;
     let oldValue;
-    console.log(email);
-    console.log(type);
-    console.log(newValue);
     let source = await user.findOne({ email: email })
     
     if(source)
@@ -248,7 +220,6 @@ router.post('/addProduct', async (req, res) => {
     let check = await product.findOne({name: newName});
     if(check)
     {
-        console.log("sono qui dentro");
         res.status(500).send("Element already exists in database");
     }
     else
@@ -277,86 +248,24 @@ router.post('/deleteProduct', async (req, res) => {
 
     const toDelete = req.body.name;
     const reservations = [];
-    const source = await product.findOne({name : toDelete})
-    if(source)
+    const prod = await product.findOne({name : toDelete})
+    if(prod)
     {
-        // Controllare se sia meglio push o concat
-        reservations.concat(source.reservations);
-        // TEST PER VEDERE SE FUNZIONA VISTO CHE NON ABBIAMO RESERVATIONS NEI PRODOTTI
-        let start = new Date("12-01-2021");
-        let end = new Date("12-05-2021");
-        let start2 = new Date("12-10-2021");
-        let end2 = new Date("12-15-2021");
-        let start3 = new Date("12-28-2021");
-        let end3 = new Date("12-30-2021");
-        let newReserve = new reservation({
-            usermail: "PROVAPROVA@gmail.com",
-            start: start,
-            end: end
-        })
-        let newReserve2 = new reservation({
-            usermail: "PROVAPROVA@gmail.com",
-            start: start2,
-            end: end2
-        })
-        let newReserve3 = new reservation({
-            usermail: "PROVAPROVA@gmail.com",
-            start: start3,
-            end: end3
-        })
-        reservations.push(newReserve2);
-        reservations.push(newReserve);
-        reservations.push(newReserve3);
-
-        // Da tenere
-        sortBy.sortByTime(reservations, 'start');
-        var today = new Date();
-
-        /**Se vedo che ci possono essere delle prenotazioni attive */
-        if(reservations[0].start.getTime() <= today.getTime())
-        {   
-            /** Scorro tutto l'array per vedere se trovo delle prenotazioni attive, se trovo o supero esco */
-            for(let x in reservations)
+        if(prod.activeReservations.length <= 0)
+        {
+            let futureRes = [];
+            futureRes = futureRes.concat(prod.futureReservations);
+            await product.remove({name: toDelete}, function(err)
             {
-                // Se trovo una reservation a cavallo cioè ancora attiva
-                if(reservations[x].start.getTime() <= today.getTime() && reservations[x].end.getTime() >= today.getTime())
-                {
-                    console.log("PRODUCT STILL HAS ACTIVE RES");
-                    break;
-                    // return res.status(500).json({error: "Operation impossible, product still has active reservations"});
-                    
-                }else if(reservations[x].start.getTime() > today.getTime())
-                {
-                    console.log("OK potrei anche cancellarlo");
-                    //Cancello dall'array delle prenotazioni tutte quelle passate
-                    let newReservations = reservations.slice(x);
-                    console.log(newReservations);
-                    break;
-                    // Mando la lista di prenotazioni future
-                    // await product.remove({name: toDelete}, function(err)
-                    // {
-                    //     if(err)
-                    //         res.status(500).send(err);
-                    //     else
-                    //         res.status(200).json({reservationList: newReservations})
-                    
-                    // });
-                }
-            }
+                if(err)
+                    res.status(500).send(err);
+                else
+                    res.status(200).json({reservationList: futureRes})
+            })
         }else
         {
-            console.log("OK potrei anche cancellarlo");
-                    // Mando la lista di prenotazioni future senza cancellare nulla
-                    // await product.remove({name: toDelete}, function(err)
-                    // {
-                    //     if(err)
-                    //         res.status(500).send(err);
-                    //     else
-                    //         res.status(200).json({reservationList: reservations})
-                    
-                    // });
+            res.status(400).json({message: "The product has active reservations"});
         }
-        
     }
 })
 
@@ -373,13 +282,11 @@ router.post('/addComunication', async (req, res) =>{
     let usr =  await user.findOne({email: userMail});
     if(usr)
     {
-        console.log(usr);
         usr.communications.push(message);
         usr.save();
         res.status(200).json({message: "Succesful operation"})
     }else
     {
-        console.log("user not found");
         res.status(404).json({message: "user not found"});
     }
 })
@@ -439,69 +346,48 @@ router.post('/maintenance', async (req, res) =>
     const prod = await product.findOne({name: productName});
     if(prod)
     {
-        let reservations = prod.reservations;
-        if(reservations)
+        if(prod.futureReservations)
         {
             let reservationsToChange = [];
             // Ordino le prenotazioni per data di inizio
-            sortBy.sortByTime(reservations, 'start');
-            // Controllo se ci sono prenotazioni
-        // Se la data di inizio della prenotazione è <= della data di fine della nostra
-        // prenotazione speciale allora và eliminata, e va ritornata 
-        for(let i in reservations)
-        {
+            sortBy.sortByTime(prod.futureReservations, 'start');
+            // Se la data di inizio della prenotazione è <= della data di fine della nostra
+            // prenotazione speciale allora và eliminata, e va ritornata 
+            for(let i in prod.futureReservations)
+            {
+                // SE INIZIA PRIMA CHE DOVREBBE FINIRE LA MANUTENZIONE
+              if(prod.futureReservations[i].start.getTime() <= endDate.getTime())
+                 {
+                     // Salvo la prenotazione
+                     reservationsToChange.push(prod.futureReservations[i]);
+                     // La elimino dal prodotto
+                     prod.futureReservations.splice(i, 1);
 
-            // Se ci sono ancora prenotazioni  passate vengono cancellate
-            // ?????? cosa giusta da fare ????? e se poi accade qualcosa dove andiamo
-            // a guardare ?
-            if(reservations[i].end.getTime() < startDate.getTime())
-            reservations.splice(i, 1);
-            // qui sono sicuro che è compresa    
-            else if(reservations[i].start.getTime() <= endDate.getTime())
-            {
-                // Salvo la prenotazione
-                reservationsToChange.push(reservations[i]);
-                // La elimino dal prodotto
-                reservations.splice(i, 1);
-                
-            }else if(reservations[i].start.getTime() > endDate.getTime())
-            {
-                // Esco dal for perchè ho superato il periodo di mio interesse
-                break;
-            }
+                 }else if(prod.futureReservations[i].start.getTime() > endDate.getTime())
+                 {
+                     // Esco dal for perchè ho superato il periodo di mio interesse
+                     break;
+                 }
         }
-
         // Creo la nuova reservation da aggiungere al prodotto
-        let newReserve = new reservation({
-            usermail: "maintenance@maintenance",
-            start: `${startDate}`,
-            end: `${endDate}`
-        })
+        let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate);
         // Aggiungo in testa all'array perchè è già ordinato
         prod.reservations.unshift(newReserve);
         
         // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
         prod.save();
-        console.log("all ok");
         res.status(200).json({list: reservationsToChange});
     }else
-    {
-        console.log("all ok but no previous reservations");
-
-          // Creo la nuova reservation da aggiungere al prodotto
-          let newReserve = new reservation({
-            usermail: "maintenance@maintenance",
-            start: `${startDate}`,
-            end: `${endDate}`
-        })
-        // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
-        prod.save();
-        res.status(200).json({message: "There were no previous reservations"});
-
-    }
-        
+        {
+              // Creo la nuova reservation da aggiungere al prodotto
+              let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate);
+            prod.futureReservations.push(newReserve);
+            // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
+            prod.save();
+            res.status(200).json({message: "There were no previous reservations"});
+        }
     }else{
-        console.log("product error");
+         
         res.status(500).send("Error, please try again later");
     }
 })
@@ -520,84 +406,33 @@ router.post('/makeRental',  async (req, res) => {
     const productName = req.body.name;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
-
-    console.log(startDate.getDate());
-    console.log(endDate.getDate());
-
     const usr = await user.findOne({email: userMail});
-
     if(usr)
     {
         const prod = await product.findOne({name: productName});
         const emp = await employee.findOne({email: employeeMail});
 
         if(prod && emp)
-        {
-            console.log(emp);
-            let reservations = prod.reservations;
-            sortBy.sortByTime(reservations, 'start');
-            let available = true;
-            if(reservations)
+        {   
+            if(checkAvailability.checkAvailability(prod, startDate, endDate))
             {
-                for(i in reservations)
-                {
-                    if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
-                    {
-                        console.log("l'inizio è compreso");
-                        available = false;
-                        break; // passo all'oggetto successivo non guardo tutte le altre reservation di quell'oggetto
+                let collection = await category.findOne({name: prod.type});
+                let price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
 
-                    }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
-                    {
-                        console.log("la fine  è compresa");
+                let newReserve = reservations.createReservation(userMail,employeeMail, productName, price, startDate, endDate);
+        
+                //salvo nel prodotto
+                prod.futureReservations.push(newReserve);
+                prod.save();
 
-                        available = false;
-                        break;
+                //salvo nello user
+                usr.futureReservations.push(newReserve);
+                usr.save();
+                //salvo nell'employee
+                emp.futureReservations.push(newReserve);
+                emp.save();
 
-                    }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
-                    {
-                        console.log("comprende tutto");
-                        available = false;
-                        break;
-                    }else
-                    {
-                        // essendo ordinato appena trovo una inferiore esco dal for
-                        break;
-                    }
-                }
-            }   
-        if(available)
-        {
-            let collection = await category.findOne({name: prod.type});
-            let price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
-
-                let newReserve = new reservation({
-                    usermail: userMail,
-                    name: productName, //diocane cambiare questo per farlo essere unico
-                    start: `${startDate}`,
-                    end: `${endDate}`,
-                    expense: `${price}`
-            })
-            //salvo nel prodotto
-            prod.reservations.push(newReserve);
-            prod.save();
-
-            let newReserve2 = new reservation({
-                usermail: userMail,
-                product: productName,
-                employee: employeeMail,
-                start: `${startDate}`,
-                end: `${endDate}`,
-                expense: `${price}`
-        })
-        //salvo nello user
-            usr.futureReservations.push(newReserve2);
-            usr.save();
-        //salvo nell'employee
-            emp.futureReservations.push(newReserve2);
-            emp.save();
-
-            res.status(200).json({message: "Added reservation"});
+                res.status(200).json({message: "Added reservation"});
         }else
         {
             res.status(500).json({message: "Product unavailable on these dates"});
@@ -636,23 +471,13 @@ router.post('/confirmBeginOfRental',  async (req, res) => {
     let endDate = new Date(req.body.end);
     let price = req.body.expense;
     let id = req.body.id;
-    console.log(req.body);
-
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
     const emp = await employee.findOne({email: employeeMail});
     if(usr && prod && emp)
     {
-        let newReserve = new reservation({
-            usermail: `${userMail}`,
-            employee: `${employeeMail}`,
-            product: `${productName}`,
-            start: `${startDate}`,
-            end: `${endDate}`,
-            expense: price
-    })
-    console.log(newReserve);
-
+        let newReserve = reservations.createReservation(userMail, employeeMail, productName,price, startDate, endDate);
+     
         // Aggiungiamo la prenotazione allo user
        usr.futureReservations.push(newReserve);
        usr.save()
@@ -660,16 +485,8 @@ router.post('/confirmBeginOfRental',  async (req, res) => {
        prod.numberOfRents = prod.numberOfRents +1;
        prod.save();
 
-       let newReserve2 = new reservation({
-        usermail: `${userMail}`,
-        product: `${productName}`,
-        start: `${startDate}`,
-        end: `${endDate}`,
-        expense: price
-        })
-        console.log(newReserve2);
         // Aggiungiamo la prenotazione al dipendente
-       emp.futureReservations.push(newReserve2);
+       emp.futureReservations.push(newReserve);
        emp.save();
         // Cancelliamo la pending request
         await pending.deleteOne({_id: id}, function(err)
@@ -708,19 +525,12 @@ router.post('/denyBeginOfRental', async (req, res) => {
         usr.communications.push(message);
         usr.save();
         
-        // Rendo di nuovo libero il prodotto
-        let reservations = prod.reservations;
-        console.log("user reservations" ,reservations)
-        let reserve;
-        for(let x in reservations)
+        let x;
+        let toChange;
+        [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, startDate, endDate);
+        if(toChange)
         {
-           
-            if(reservations[x].start.getDate() === startDate.getDate() && reservations[x].end.getDate() === endDate.getDate() )
-                reserve=reservations[x];
-        }
-        if(reserve)
-        {
-            prod.reservations.splice(reservations.indexOf(reserve), 1);
+            prod.reservations.splice(x, 1);
             prod.save();
         }
         await pending.deleteOne({_id: id}, function(err)
@@ -729,7 +539,9 @@ router.post('/denyBeginOfRental', async (req, res) => {
                 res.status(500).json({message: err});
             else
                 res.status(200).json({message: "Succesful operation"})
-        }).clone().catch(function(err){ console.log(err)});      
+        }).clone().catch(function(err){
+             res.status(500).json({message: "error while deleting pending req"})
+            });      
     }else
         res.status(500).json({message: "Error occurred"});
 })
@@ -753,74 +565,38 @@ router.post('/confirmLending', async (req, res) => {
         // Sposto la prenotazione da future ad active in modo che lo user non possa
         // modificarla in corso
        
-        let toChange ;
-        let x;
-        for(x in usr.futureReservations)
-        { 
-            console.log("dentro for",usr.futureReservations[x]);
-            if(usr.futureReservations[x].end.getDate() === end.getDate() && usr.futureReservations[x].start.getDate() === start.getDate())
-               { 
-                   toChange = usr.futureReservations[x];
-                   break;
-                }
-        }
+            let toChange ;
+            let x;
+            //USER
+            [toChange, x] = reservations.searchInProduct(usr.futureReservations, toChange, x, start, end);
+
             if(toChange)
             {
              //sposto da future ad active
-
              usr.activeReservations.push(toChange);
              usr.futureReservations.splice(x, 1);
              usr.save();
             }
              // DIPENDENTE
-             toChange= '';
-             x = 0;
+             [toChange, x] = reservations.searchInProduct(emp.futureReservations, toChange, x, start, end);
 
-            for(x in emp.futureReservations)
-            { 
-             if(emp.futureReservations[x].end.getDate() === end.getDate() && emp.futureReservations[x].start.getDate() === start.getDate() )
-                { 
-                    toChange = emp.futureReservations[x];
-                    break;
-                 }
-            } 
+       
             if(toChange)
             {
-                console.log("cambio in dipendente");
-
              emp.futureReservations.splice(x,  1);
-             emp.activeReservations.push(toChange);
-             console.log(emp.activeReservations);
+             emp.activeReservations.push(toChange); 
              emp.save();
-
             }
-
-        //PRODOTTO
-        toChange= '';
-        x = 0;
-
-       for(x in prod.reservations)
-       { 
-        if(prod.reservations[x].end.getDate() === end.getDate() && prod.reservations[x].start.getDate() === start.getDate() )
-           { 
-               toChange = prod.reservations[x];
-               break;
-            }
-        }
-        if(toChange)
+            //PRODOTTO
+       
+            [toChange, x] = reservations.searchInProduct(prod.futureReservations, toChange, x, start, end);
+            if(toChange)
             {
-            console.log("cambio in prodotto");
-             prod.reservations.splice(x,  1);
-             prod.activeReservations.push(toChange);
-             console.log(prod.activeReservations);
-             prod.save();
-
-             res.status(200).json({message:"all ok"});
+                prod.futureReservations.splice(x,  1);
+                prod.activeReservations.push(toChange);
+                prod.save();
+                res.status(200).json({message:"all ok"});
             }
-
-
-
-
     }else
         {
             res.status(500).send("Internal Database error");
@@ -828,9 +604,7 @@ router.post('/confirmLending', async (req, res) => {
 })
 
 /** The employee confirm the user returned the product */
-router.post('/confirmEndOfRental', async (req, res) => {
-
-    console.log("arrivato");
+router.post('/confirmEndOfRental', async (req, res) => {  
     const userMail = req.body.user;
     const employeeMail = req.body.employee;
     let productName = req.body.product;
@@ -845,21 +619,12 @@ router.post('/confirmEndOfRental', async (req, res) => {
     {
         let toChange ;
         let x;
-        console.log("TRYYYY", usr.prova);
         // USER
-        for(x in usr.activeReservations)
-        { 
-            console.log("dentro for",usr.activeReservations[x]);
-            if(usr.activeReservations[x].end.getDate() === end.getDate() && usr.activeReservations[x].start.getDate() === start.getDate())
-               { 
-                   toChange = usr.activeReservations[x];
-                   break;
-                }
-        }
+        [toChange, x] = reservations.searchInProduct(usr.activeReservations, toChange, x, start, end)
+
             if(toChange)
             {
              //sposto da future ad active
-
              usr.pastReservations.push(toChange);
              usr.activeReservations.splice(x, 1);
              //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
@@ -867,56 +632,32 @@ router.post('/confirmEndOfRental', async (req, res) => {
              usr.fidelitypoints += fidelityPoints;
              usr.save();
             }
-
-
              // DIPENDENTE
-             toChange= '';
-             x = 0;
+             [toChange, x] = reservations.searchInProduct(emp.activeReservations, toChange, x, start, end)
 
             for(x in emp.activeReservations)
-            { 
-             if(emp.activeReservations[x].end.getDate() === end.getDate() && emp.activeReservations[x].start.getDate() === start.getDate() )
-                { 
-                    toChange = emp.activeReservations[x];
-                    break;
-                 }
-            } 
+           
             if(toChange)
             {
-                console.log("cambio in dipendente");
-
              emp.activeReservations.splice(x,  1);
              emp.pastReservations.push(toChange);
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
              emp.totalReservations += 1;
              emp.save();
-
             }
 
         //PRODOTTO
-        toChange= '';
-        x = 0;
-
-       for(x in prod.activeReservations)
-       { 
-        if(prod.activeReservations[x].end.getDate() === end.getDate() && prod.activeReservations[x].start.getDate() === start.getDate() )
-           { 
-               toChange = prod.activeReservations[x];
-               break;
-            }
-        }
+       
+        [toChange, x] = reservations.searchInProduct(prod.activeReservations, toChange, x, start, end);
         if(toChange)
-            {
-            console.log("cambio in prodotto");
-             prod.activeReservations.splice(x,  1);
-             prod.pastReservations.push(toChange);
-             console.log(prod.pastReservations);
+            {   
+                prod.activeReservations.splice(x,  1);
+                prod.pastReservations.push(toChange);   
              //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
-            prod.totalSales += expense;
-            prod.numberOfRents += 1;
-             prod.save();
-
-             res.status(200).json({message: "all ok"});
+                prod.totalSales += expense;
+                prod.numberOfRents += 1;
+                prod.save();
+                res.status(200).json({message: "all ok"});
             }
     }else{
         res.status(404).send("not found");
@@ -930,18 +671,18 @@ router.get('/getAllReservations', async (req, res) => {
 
     let toSend = [];
     let today = new Date();
-    let source = await product.find({});
+    let prods = await product.find({});
 
-    if(source)
+    if(prods)
     {
       //Per tutti i prodotti
-        for(i in source) 
+        for(i in prods) 
         {
             available=true;
             //Per tutte le reservations dei prodotti
-            for(j in source[i].reservations)
+            for(j in prods[i].futureReservations)
             {
-                let x = source[i].reservations[j];
+                let x = prods[i].futureReservations[j];
                 //Se inizia dopo oggi
               if(x.start.getTime() >= today.getTime())
               {
@@ -967,11 +708,10 @@ router.post('/modifyRental', async (req, res) => {
     const userMail = req.body.user;
     const employeeMail = req.body.employee;
     const oldProduct = req.body.oldProduct;
+    const oldStart = new Date(req.body.oldStart);
     const oldEnd = new Date(req.body.oldEnd);
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
-    console.log(startDate.getDate());
-    console.log(endDate.getDate());
     //vecchio prodotto per andargli a cambiare le cose
     let prod = await product.findOne({name: oldProduct});
     //user in questione
@@ -981,26 +721,18 @@ router.post('/modifyRental', async (req, res) => {
   
     if(prod && usr && emp)
     {
-        // Cambio dentro il product
-        // console.log(prod.reservations[0].end.getDate());
-        // console.log(endDate.getDate());
+        // Cambio dentro il product 
         let toChange;
         let x;
         let newExpense;
         // cerco la vecchia prenotazione nel vecchio prodotto
-        for(x in prod.reservations)
-        { 
-            if(prod.reservations[x].end.getDate() === oldEnd.getDate())
-               { 
-                   toChange = prod.reservations[x];
-                   break;
-                }
-        }            
+        [toChange, x] = reservations.searchInProduct(prod.futureReservations, toChange, x, oldStart, oldEnd)
+             
         if(toChange)
         {  
             // ... se la trovo la cancello
-            prod.reservations.splice(x, 1);
-            prod.save(); // salvo di nuovo il prodotto
+            prod.futureReservations.splice(x, 1);
+            prod.save(); 
             // aggiungo la nuova con i nuovi dati
              let newProd = await product.findOne({name: productName});
             if(newProd)
@@ -1009,20 +741,14 @@ router.post('/modifyRental', async (req, res) => {
                  let collection = await category.findOne({name: newProd.type})
                  newExpense = await computePrice.computePrice(collection, newProd, userMail, startDate, endDate)
 
-                const newReserve = new reservation({
-                    usermail: userMail,
-                    employee: employeeMail,
-                    name: productName,
-                    expense: newExpense,
-                    start: startDate,
-                    end: endDate
-                })
+                const newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate);
+            
                 //controllo che ci siano prenotazioni e se è disponibile sennò crasha
-                if(newProd.reservations.length > 0)
+                if(newProd.futureReservations.length > 0)
                 {
                     if( checkAvailability.checkAvailability(newProd, startDate, endDate))
                     {  
-                        newProd.reservations.push(newReserve);
+                        newProd.futureReservations.push(newReserve);
                         newProd.save();
 
                     }else
@@ -1031,7 +757,7 @@ router.post('/modifyRental', async (req, res) => {
                     }
                 }else
                 {
-                    newProd.reservations.push(newReserve);
+                    newProd.futureReservations.push(newReserve);
                     newProd.save();
                 }
             } 
@@ -1039,30 +765,12 @@ router.post('/modifyRental', async (req, res) => {
                return(res.status(500).json({message: "Incorrect or non existent product inserted"}));         
             }
             // USER
-               toChange = '';
-               x= 0;
-               for(x in usr.futureReservations)
-               { 
-                   if(usr.futureReservations[x].end.getDate() === oldEnd.getDate())
-                      { 
-                          toChange = usr.futureReservations[x];
-                          break;
-                       }
-               } 
+               [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, oldStart, oldEnd);
+            
          if(toChange)
         {
             //cancello quella vecchia
             usr.futureReservations.splice(x, 1);
-
-            newReserve = new reservation({
-            product: productName,
-            usermail: userMail,
-            employee: employeeMail,
-            expense: newExpense,
-            start: startDate,
-            end: endDate
-            })
-
             usr.futureReservations.push(newReserve);
             usr.save();
         }else
@@ -1071,33 +779,14 @@ router.post('/modifyRental', async (req, res) => {
         }
 
         // Cambio nel dipendente
-                toChange= '';
-                x = 0;
-
-        for(x in emp.futureReservations)
-        { 
-            if(emp.futureReservations[x].end.getDate() === oldEnd.getDate())
-               { 
-                   toChange = emp.futureReservations[x];
-                   break;
-                }
-        } 
+         [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x , oldStart, oldEnd);         
 
          if(toChange)
             emp.futureReservations.splice(x,  1);
-
-         newReserve = new reservation({
-         usermail: userMail,
-         product: productName,
-         expense: newExpense,
-         start: startDate,
-         end: endDate
-         })
          
          emp.futureReservations.push(newReserve);
          emp.save();
         
-
          res.status(200).json({message: "ALL OKK"});
     }else
     {
@@ -1122,41 +811,35 @@ router.post('/deleteRental', async (req, res) => {
     {
         //elimino del prodotto
         let x;
+        let toChange;
         // cerco la prenotazione nel prodotto
-        for(x in prod.reservations)
-        { 
-            if(prod.reservations[x].end.getDate() === endDate.getDate() && prod.reservations[x].start.getDate() === startDate.getDate())
-               { 
-                   break;
-                }
-        }    
-        prod.reservations.splice(x, 1);
-        prod.save();     
+        [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
+
+        if(toChange)
+        {
+            prod.futureReservations.splice(x, 1);
+            prod.save();
+        }     
         // elimino nello user
-        for(x in usr.futureReservations)
-        { 
-            if(usr.futureReservations[x].end.getDate() === endDate.getDate() && usr.futureReservations[x].start.getDate() === startDate.getDate())
-               { 
-                   break;
-                }
-        }    
-        usr.futureReservations.splice(x, 1);
-        usr.save(); 
+        [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, endDate, startDate);
+
+        if(toChange)
+        {   
+             usr.futureReservations.splice(x, 1);
+             usr.save();
+        } 
         //elimino nel dipendente
-        for(x in emp.futureReservations)
-        { 
-            if(emp.futureReservations[x].end.getDate() === endDate.getDate() && emp.futureReservations[x].start.getDate() === startDate.getDate())
-               { 
-                   break;
-                }
-        }    
-        emp.futureReservations.splice(x, 1);
-        emp.save(); 
+        [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, endDate, startDate);
+
+        if(toChange)
+        {    
+            emp.futureReservations.splice(x, 1);
+            emp.save();
+        }
 
         res.status(200).json({message: 'succesful operation'})
     }else
     {
-        console.log("porcodio");
         res.status(500).json({message: "something went wrong"});
     }
 })

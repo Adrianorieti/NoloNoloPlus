@@ -5,31 +5,30 @@ module.exports = {
 
     checkAvailability: function(product, startDate, endDate)
     {
-        let reservations = product.reservations;
-        if(reservations.length > 1)
-            sortBy.sortByTime(reservations, 'start');
+
+        if(product.futureReservations.length > 1)
+            sortBy.sortByTime(product.futureReservations, 'start');
         let available = true;
         // non dovrebbe mai accadere che sia nullo ma non si sa mai
-        if(reservations)
+        if(product.futureReservations)
         {
-            for(i in reservations)
+            for(i in product.futureReservations)
             {
-                if( startDate.getTime() >= reservations[i].start.getTime() && startDate.getTime() <= reservations[i].end.getTime() )
+                if( startDate.getTime() >= product.futureReservations[i].start.getTime() && startDate.getTime() <= product.futureReservations[i].end.getTime() )
                 {
-                    console.log("l'inizio è compreso");
+                    //comprende tutto
                     available = false;
                     break; 
 
-                }else if( endDate.getTime() >= reservations[i].start.getTime() && endDate.getTime() <= reservations[i].end.getTime())
+                }else if( endDate.getTime() >= product.futureReservations[i].start.getTime() && endDate.getTime() <= product.futureReservations[i].end.getTime())
                 {
-                    console.log("la fine  è compresa");
-
+                    //la fine è compresa
                     available = false;
                     break;
 
-                }else if( startDate.getTime() <= reservations[i].start.getTime()  &&  endDate.getTime() >=  reservations[i].end.getTime())
+                }else if( startDate.getTime() <= product.futureReservations[i].start.getTime()  &&  endDate.getTime() >=  product.futureReservations[i].end.getTime())
                 {
-                    console.log("comprende tutto");
+                    //comprende tuttp
                     available = false;
                     break;
                 }else
