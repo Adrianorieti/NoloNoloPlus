@@ -103,6 +103,7 @@ function makeRentalHypothesis(x)
 /** Renders all products in the content div */ 
 function showProducts(products)
 {
+  console.log(products);
     productsNames = [];
     productsPrices = [];
     categoriesNames = [];
@@ -169,6 +170,7 @@ function showProducts(products)
        
     }
     console.log(productsNames);
+    console.log(toInsert);
     $('#title').html("");
     $('#content').html(toInsert);
 }

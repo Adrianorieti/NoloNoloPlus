@@ -111,7 +111,6 @@ function Products(){
         });
     }
 
-    
    useEffect(() =>
   {
     const form_obj = sessionStorage.getItem('form_obj'); 
@@ -133,7 +132,6 @@ function Products(){
     }
   },[]);
 
-
   return (obj ? ( <div className="product"> {(() =>
   {
     //se arrivo dalla home e sono loggato
@@ -146,7 +144,6 @@ function Products(){
             console.log("PRODUCT NAME", prodName);
             return(
               <Rental categoryName={formDataProduct.name} productName={prodName} startDate={obj.startingDate} endDate={obj.endingDate} price={price} description={formDataProduct.description}/>
-
             );
           }else {
             sessionStorage.removeItem('form_obj');

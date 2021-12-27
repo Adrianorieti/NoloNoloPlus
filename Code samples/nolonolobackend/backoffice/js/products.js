@@ -21,8 +21,6 @@ function sendRent()
     "end": "${end}"
 }`;
 
-console.log("PORCODDIO", obj);
-
 $.post({
     type: 'POST',
       url: 'http://localhost:8001/api/employee/makeRental',
@@ -262,9 +260,6 @@ function sendMaintenance()
           $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>${toInsert}</div>`);
 
         }
-          // $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>
-          // ${data.message}
-          // </div>`);
 
     }).fail(function(data){
         $('#content').html("Error occurred ,try again later");

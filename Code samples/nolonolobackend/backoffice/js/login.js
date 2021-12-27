@@ -21,7 +21,6 @@ function login(event)
               window.location.href = `http://localhost:8001/employee/panel?token=${data.accessToken}`;
             });
 }
-
 /** Get all single products from database */
 function goToRentalHypothesis()
 {
