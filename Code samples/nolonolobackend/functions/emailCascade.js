@@ -5,7 +5,7 @@ const pendingRequest = require('../schemas/modulePendingRequest');
 /* Change the old usr mail with the new usr mail in all the corrisponding reservations **/
 async function changeCascadeEmps(emps, newMail, oldMail) {
     //per tutti gli impiegati del database
-    for await (const emp of employee.find()) {
+    for await (let emp of employee.find()) {
         // Se trovo un match con quelli che sto cercando
         if (emps.include(emp.email)) {
             if (emp.futureReservations) // se il dipendente ha delle future res
@@ -18,9 +18,9 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
                     }
                 }
             }
-            if (emp.activeReservations) // se il dipendente ha delle future res
+            if (emp.activeReservations) // se il dipendente ha delle acrive res
             {
-                for (let x in emp.activeReservations) // per tutte le sue future res
+                for (let x in emp.activeReservations) // per tutte le sue active res
                 {
                     // se la mail è quella vecchia dello usr 
                     if (emp.activeReservations[x].userMail === oldMail) {
@@ -28,9 +28,9 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
                     }
                 }
             }
-            if (emp.pastReservations) // se il dipendente ha delle future res
+            if (emp.pastReservations) // se il dipendente ha delle past res
             {
-                for (let x in emp.pastReservations) // per tutte le sue future res
+                for (let x in emp.pastReservations) // per tutte le sue past res
                 {
                     // se la mail è quella vecchia dello usr 
                     if (emp.pastReservations[x].userMail === oldMail) {
@@ -43,7 +43,7 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
     }
 }
 async function changeCascadeProds(prods, newMail, oldMail) {
-    for await (const prod of product.find()) { // per tutti i prodotti del database
+    for await (let prod of product.find()) { // per tutti i prodotti del database
         if (prods.include(prod.name)) // se c'è match con quelli che cerco
         {
             for (let x in prod.reservations) {
@@ -59,7 +59,7 @@ async function changeCascadeProds(prods, newMail, oldMail) {
 }
 
 async function checkPendingReqs(newMail, oldMail) {
-    for await (const req of pendingRequest.find({ userMail: oldMail })) {
+    for await (let req of pendingRequest.find({ userMail: oldMail })) {
         req.userMail = newMail;
         req.save();
     }

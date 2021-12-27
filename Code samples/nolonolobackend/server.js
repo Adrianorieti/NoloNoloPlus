@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.static(path.join(__dirname, 'backoffice')));
 
 
-/* Actual API server routes */ 
+/* Actual API server routes */
 app.use('/api/account/', account);
 app.use('/api/services/', services);
 app.use('/api/rental/', rental);
@@ -46,8 +46,8 @@ app.use('/api/employee/', emp);
 /* Alternative routes for static files */
 app.use('/employee/', employeeRoutes);
 
- /* These API's answer an url query with static files,
- this is required so the client can use React routes */
+/* These API's answer an url query with static files,
+this is required so the client can use React routes */
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));

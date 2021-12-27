@@ -188,6 +188,29 @@ router.post('/deleteaccount', async (req, res) => {
 });
 
 /**
+ * Given an email associated with a user, cleares his communications field.
+ * @param {email}
+ * @returns {200, 401}
+ */
+router.post("/clearcommunications", async (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    //anche questo if è un attimo da capire e fare meglio.
+    if (token == null) {
+        console.log("401");
+        return res.sendStatus(401);//va rifatto
+    }
+    else {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+            const email = decoded.email;
+            let usr = await user.findOne({ email: email });
+            usr.communications = [];
+            usr.save();
+            res.status(200).send();
+        })
+    }
+})
+/**
  * Given an email associated with a user, a product name, dates and an operation,
  * operate on the reservation made by the user into the product scheme.
  * @param {email, name, start, end, operation}
@@ -298,5 +321,57 @@ router.post("/removeReservation", async (req, res) => {
         });
     }
 });
+
+
+//------------------------------------------------------------------------
+//API FATTE IN MODO REST
+/**
+ * Verify if the manager exists in the database. If yes, the manager receive a token
+ * @param {email, password}
+ * @return {token}
+ */
+router.get('/:attribute', async (req, res) => {
+    const attribute = req.params.attribute;
+    //trovo tutti gli user del sistema
+    let users = await user.find();
+    if (users) {
+        if (attribute !== 'all') {
+            users = users.map(user => ({ attribute: user[attribute] }));
+        }
+        res.status(200).json({ users: users });
+    }
+    else {
+        //non ci sono utenti 
+        res.status(500).send("no active users");
+    }
+});
+//RICORDARSI CHE POI BISOGNA FARE PIÙ LAVORO CLIENT SIDE
+
+//METTO ANCHE QUI QUELLA DELL'EMPLOYEE
+router.get('/:attribute', async (req, res) => {
+    const attribute = req.params.attribute;
+    //trovo tutti gli user del sistema
+    let employees = await employee.find();
+    if (employees) {
+        if (attribute !== 'all') {
+            employees = employees.map(employee => ({ attribute: employee[attribute] }));
+        }
+        res.status(200).json({ employees: employees });
+    }
+    else {
+        //non ci sono dipendenti 
+        res.status(500).send("no employees");
+    }
+});
+
+router.get('/category', async (req, res) => {
+
+});
+
+router.get('/category/:prod', async (req, res) => {
+
+});
+
+
 
 module.exports = router;
