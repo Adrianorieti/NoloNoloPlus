@@ -111,8 +111,7 @@ router.post('/formProducts', async (req, res) => {
                 return (res.status(200).json({ prod: prod, finalPrice: price }));
             }
         }
-    });
-
-
+    }
+});
 
 module.exports = router;
