@@ -26,10 +26,30 @@ li
     text-align: center;
     padding: 1rem;
 }
+
+#title
+{
+    width: 100%;
+    justify-content: center;
+}
+#title>h2
+{
+    text-align: center;
+}
 #content
 {
     text-align: center;
+    justify-content: center;
+
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
+}
+
+#reservations
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between ;
+    padding: 2rem;
 }

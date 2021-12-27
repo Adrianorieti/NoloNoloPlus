@@ -15,12 +15,19 @@ const reserveSchema = new Schema({
     employee: {
         type: String
     },
+    name: {
+        type: String
+    },
     start: {
         type: Date,
         required: true
     },
     end: {
         type: Date,
+        required: true
+    },
+    expense: {
+        type: Number,
         required: true
     }
 })

@@ -16,10 +16,6 @@ router.get('/rentalHypothesis', (req, res) => {
     res.sendFile(path.join(process.env.ABSOLUTE_PATH, '/html', 'rentalHypothesis.html'));
 });
 
-router.get('/operations', (req, res) =>
-{
-    res.sendFile(path.join(process.env.ABSOLUTE_PATH, '/html', 'operations.html'));
-})
 
 
 

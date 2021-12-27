@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const employee = require('./schemas/moduleEmployee');
+const pending = require('./schemas/modulePendingRequest');
 const services = require('./api/services');
 const account = require('./api/account');
 const rental = require('./api/rental');
@@ -92,6 +93,16 @@ app.get('/products', function (req, res) {
 //    emp.save();
 // })
 
+// let newPending = new pending({
+//     usermail: "lorenzotozzi98@gmail.com",
+//     product: "stocastico",
+//     employee: 'magalli.crudista123@nolonolo.com',
+//     start: "2021-12-15",
+//     end: "2021-12-17",
+//     expense: 33
+// })
+
+// newPending.save();
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001');

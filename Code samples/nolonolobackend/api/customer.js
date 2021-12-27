@@ -3,7 +3,6 @@ require('dotenv').config();
 const user = require('../schemas/moduleUser');
 const product = require('../schemas/moduleProduct');
 
-
 const express = require('express');
 const router = express.Router();
 
