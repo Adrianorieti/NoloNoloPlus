@@ -86,12 +86,22 @@ a:active {
   }
 }*/
 
-.banner h4 {
+/*.banner h4 {
   color: #297c29;
   font-weight: 600;
   font-size: 42px;
   text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff,
     1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+  /*background-position: center center;
+  text-align: center;*/
+/*} */
+
+.banner h4 {
+  color: white;
+  font-weight: 600;
+  font-size: 42px;
+  text-shadow: 2px 0 0 #297c29, -2px 0 0 #297c29, 0 2px 0 #297c29, 0 -2px 0 #297c29,
+    1px 1px #297c29, -1px -1px 0 #297c29, 1px -1px 0 #297c29, -1px 1px 0 #297c29;
   /*background-position: center center;
   text-align: center;*/
 }
@@ -168,3 +178,39 @@ label {
     background-position: center center;
   }
 }
+
+/* Breadcrumb style */
+ul.breadcrumb {
+  padding: 10px 16px;
+  list-style: none;
+  background-color: #bbe0ac;
+  /*background-color: #eee;
+  min-height: 5vh;*/
+}
+
+/* Display list items side by side */
+ul.breadcrumb li {
+  display: inline;
+  font-size: 18px;
+  /*margin-left: 80px;
+  color: #787878;*/
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.breadcrumb li+li:before {
+  padding: 8px;
+  color: #84bf45;
+  content: "/\00a0";
+}
+
+/* Add a color to all links inside the list */
+ul.breadcrumb li a {
+  color: #395f;
+  text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.breadcrumb li a:hover {
+  color: #447231;
+  text-decoration: underline;
+} 

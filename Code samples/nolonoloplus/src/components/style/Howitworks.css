@@ -1,0 +1,166 @@
+.App-how {
+    background-color: #bbe0ac;
+    min-height: 10vh;
+    color: black;
+    /*border: 6px solid white;*/
+    font-size: calc(6px + 2vmin);
+
+  }  
+
+.howitworks-wrap {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    position: absolute;
+}
+.howitworks {
+    padding: 60px 0 70px 0;
+    margin-bottom: 60px;
+    /*background:#fff url(../../images/icons/skyline.svg) repeat-x bottom center;*/
+    background-size: 1000px;
+}
+.howitworks .btn {
+    font-weight: 500;
+    color: #fff;
+    /*font-size: 16px;*/
+    padding: 10px 30px;
+    width: auto;
+    margin-top:30px;
+}
+.howitworks-block {
+    position: relative;
+}
+.howitworks-block .inner {
+	text-align: center;
+	position: relative;
+}
+@media screen and (min-width:768px) {
+	.howitworks-block .inner:after {
+		content: "";
+		width: 170px;
+		right: -101px;
+		height: 2px;
+		/*background: url(../../images/how-it-works-sep.png) repeat-x;*/
+		position: absolute;
+		top: 83px;
+	} 	
+
+} 
+@media screen and (max-width:1200px) {
+	.howitworks-block .inner:after {
+		width: 105px;
+		right: -69px;
+	} 	
+} 
+@media screen and (max-width:990px) {
+	.howitworks-block .inner:after {
+		width: 45px;
+		right: -40px;
+	} 	
+} 	
+.howitworks-block.last .inner:after {
+	display: none;
+} 
+.howitworks-block .how-it-works-icon {
+    position: relative;
+    /*background: url(../../images/bg-how-it-works-icon.png);*/
+    border-radius: 50%;
+    width:168px;
+    height:168px;
+    background-size: 168px;
+    margin:auto;
+}
+.howitworks-block .how-it-works-icon:after {
+	content: "";
+	background: #f8f8f8;
+	width: 138px;
+	height: 138px;
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;	
+	border-radius: 50%;
+}
+.howitworks-block .how-it-works-icon img {
+	max-height: 60px;
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	max-width: 80px;
+}
+.howitworks-block .how-it-works-icon .stepnumber {
+	position: absolute;
+	background: #447231;
+	width: 32px;
+	height: 32px;
+	color: #fff;
+	z-index: 1;
+	left: 9px;
+	top: 9px;
+	border-radius: 50%;
+	line-height: 31px;
+	/*font-size: 16px;*/
+    font-size: 21px;
+	font-weight: 500;
+}
+.howitworks .steptitle {
+    /*font-size: 21px;*/
+    font-size: 26px;
+    font-weight: 500;
+    color: #423338;
+    margin: 30px 0 10px 0;
+    text-transform: none;
+    display: block;
+    text-align: center;
+}
+.howitworks .stepdesc {
+    color: #666;
+    /*font-size: 15px;*/
+    font-size: 20px;
+    font-weight: 300;
+    text-align: center;
+    margin: 0 0 30px 0;
+    display: block;
+    line-height: 24px;
+    padding: 0 30px;
+}
+
+.btn-default {
+    background-color: #447231;
+    border-color: white;
+    color: #63585c;
+    border-radius: 2px;
+    width: 100%;
+    text-transform: uppercase;
+    padding: 8px 12px;
+}
+.btn-default:hover {
+    background-color: #63585c;
+    border-color: #63585c;
+    color: #bbe0ac;;
+}
+
+.subtitle {
+    font-size: calc(6px + 3vmin);
+    color: #423338;
+    font-weight: 300;
+    margin: 10px 0 40px;
+    display: block;
+}
+
+.above {
+    color: #787878;
+    font-size: calc(2px + 2vmin);
+}
+
+@media only screen and (max-width: 992px) {
+    .above {
+        font-size: calc(5px + 2vmin);
+    }
+}

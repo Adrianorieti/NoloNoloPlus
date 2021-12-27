@@ -19,7 +19,8 @@ import UpdatePage from './pages/UpdatePage';
 import PersonalPage from './pages/PersonalPage';
 import FutureReservations from './pages/FutureReservations';
 import ModifyReservation from './pages/ModifyReservation';
-
+import Howitworks from './components/Howitworks'
+import { Link } from 'react-router-dom';
 
 
 function App() {
@@ -49,6 +50,23 @@ function App() {
         <Route path="/" exact >
           <Header />
           <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li>Home</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div className="row">
+              <div className="col-md-12 rentform">
+                <Howitworks />
+              </div>
+            </div>
+          </section>
 
           <section className="App-content bg-image container-properties">
             <div className="row">
@@ -66,15 +84,33 @@ function App() {
         </Route>
 
         <Route path="/login" exact >
-
-
           <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>Login</li>
+                </ul>
+              </div>
+            </div>
+          </section>
           <LoginPage nameToParent={nameToParent} />
         </Route>
 
         <Route path="/personalpage" exact>
 
           <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>Personal page</li>
+                </ul>
+              </div>
+            </div>
+          </section>
           <PersonalPage />
 
         </Route>
@@ -82,17 +118,47 @@ function App() {
         <Route path="/updatepage" exact>
 
           <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>Update page</li>
+                </ul>
+              </div>
+            </div>
+          </section>
           <UpdatePage nameToParent={nameToParent} />
 
         </Route>
 
         <Route path="/futurereservations" exact>
           <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>Future reservation</li>
+                </ul>
+              </div>
+            </div>
+          </section>
           <FutureReservations resToParent={resToParent} />
         </Route>
 
         <Route path="/modifyreservation" exact>
           <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>My reservations</li>
+                </ul>
+              </div>
+            </div>
+          </section>
           <ModifyReservation res={reservation} />
         </Route>
 
@@ -102,7 +168,33 @@ function App() {
 
         <Route path='/products' exact >
           <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>Products</li>
+                </ul>
+              </div>
+            </div>
+          </section>
           <Products />
+        </Route>
+
+
+        <Route path='/contatts' exact >
+          <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>Contacts</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          <Footer />
         </Route>
       </Switch>
 
@@ -111,7 +203,7 @@ function App() {
 
 
 
-    </div>
+    </div >
   );
 }
 

@@ -6,14 +6,15 @@
 }  
 
 .logo {
-  height: 8vh;
+  height: 10vh;
+  max-height: 10vh;
   margin-top: 2%;
   margin-bottom: 20px;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 992px) {
   .logo {
-    height: 10vh;
+    height: 12vh;
   }
 }
 
@@ -25,6 +26,17 @@
 
 strong {
   color: #84bf45;
-  font-size: 120%;
-  vertical-align: middle;
+  /*font-size: 120%;*/
+  font-size: calc(1px + 2vmin);
+  /*vertical-align: middle;*/
+}
+
+@media only screen and (max-width: 992px) {
+  strong {
+    font-size: calc(3px + 3vmin);
+  }
+}
+
+span {
+  padding:5%;
 }

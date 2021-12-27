@@ -1,6 +1,8 @@
 .App-navbar {
   /*font-size: calc(6px + 2vmin);*/
   font-size: 2vh;
+  color: white;
+  /*border: 6px solid white;*/
 }
 
 @media only screen and (max-width: 768px) {
@@ -10,18 +12,33 @@
   }
 }
 
-.navbar-brand {
-  /*font-size: calc(6px + 2vmin);*/
+.nav-link {
+  color: white !important;
+}
+
+/*.navbar-brand {
+  font-size: calc(6px + 2vmin);
   font-size: 3vh;
 }
 
 @media only screen and (max-width: 768px) {
   .navbar-brand {
-    /*font-size: calc(6px + 2vmin);*/
+    font-size: calc(6px + 2vmin);
     font-size: 4vh;
   }
-}
+}*/
 
 .custom-toggler .navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255 ,255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
 }
+
+@media only screen and (max-width: 992px) {
+  .nav-link {
+    display: inline;
+    position:absolute;
+    left: 60%;
+  }
+}
+
+ 
+
