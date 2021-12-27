@@ -43,7 +43,6 @@ router.post('/login', async (req, res) => {
         console.log('Errore la mail non esiste');
         res.status(500).send({ error: 'Mail not exists' });
     }
-
 });
 
 router.post('/register', async (req, res) => {

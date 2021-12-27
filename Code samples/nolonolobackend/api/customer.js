@@ -3,10 +3,8 @@ require('dotenv').config();
 const user = require('../schemas/moduleUser');
 const product = require('../schemas/moduleProduct');
 
-
 const express = require('express');
 const router = express.Router();
-
 
 router.post('/passw-validation', async (req, res) => {
     const authHeader = req.headers['authorization'];
@@ -34,7 +32,6 @@ router.post('/passw-validation', async (req, res) => {
         });
     }
 })
-
 
 router.post('/update', async (req, res) => {
     //VANNO SETTATI PER BENE GLI STATI DI ERRORE.
@@ -92,7 +89,6 @@ router.post('/update', async (req, res) => {
         });
     }
 })
-
 
 router.post("/getInfo", async (req, res) => {
     //fare cose 

@@ -13,6 +13,10 @@ const reserveSchema = new Schema({
     employee: {
         type: String
     },
+    product: {
+        type: String,
+        required: true
+    },
     start: {
         type: Date,
         required: true
@@ -44,12 +48,15 @@ const ProductSchema = new Schema({
         type: Number,
         required: true
     },
-    reservations: [reserveSchema],
+    futureReservations: [reserveSchema],
+    activeReservations: [reserveSchema],
+    pastReservations:[reserveSchema],
     totalSales: {
         type: Number,
     },
     numberOfRents: {
         type: Number,
+        required: true
     }
 })
 

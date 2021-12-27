@@ -5,6 +5,9 @@ const Schema = mongoose.Schema;
 /* Sub Schema for product map */
 const reserveSchema = new Schema({
 
+    usermail: {
+        type: String
+    },
     start: {
         type: Date,
         required: true
@@ -13,7 +16,7 @@ const reserveSchema = new Schema({
         type: Date,
         required: true
     },
-    name: { //nome del prodotto singolo
+    product: { //nome del prodotto singolo
         type: String,
         required: true
     },
@@ -62,7 +65,8 @@ const UserSchema = new Schema({
     //prenotazioni attive e non modificabili
     activeReservations: [reserveSchema],
     //prenotazioni completate
-    pastReservations: [reserveSchema]
+    pastReservations: [reserveSchema],
+    activeReservations: [reserveSchema]
 });
 
 const user = mongoose.model('user', UserSchema); // crei uno user e sarà in questa collezione, questo sarà il modello e quello sarà lo schema

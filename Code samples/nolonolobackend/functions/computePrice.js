@@ -20,9 +20,8 @@ module.exports = {
             let finalPrice = 0;
             // Sconto totale che il cliente vedrà in fattura
             let totalDiscount = 0;
-
-            // Andiamo a prendere il discount Rate associato al discountCode
-            let discountElement = await discount.findOne({ discountCode: discountCode });
+             // Andiamo a prendere il discount Rate associato al discountCode
+            let discountElement = await discount.findOne({discountCode: discountCode});
             //da calcolare come percentuale sul prezzo
             const discountRate = discountElement.discountRate;
             // Il segno che mi dice se devo sommare o sottrarre
@@ -39,10 +38,10 @@ module.exports = {
 
             }
             // Prezzo basico del periodo (quindi di alta o bassa stagione ecc)
-            let period = endDate.getTime() - startDate.getTime();
-            period = period / (1000 * 3600 * 24);
+            let period = endDate.getDate() - startDate.getDate();
+            // period = period / (1000 * 3600 * 24);
             //così mi prende  anche il giorno finale altrimenti non me lo prende
-            period += 1;
+            period -= 1;
             finalPrice = dailyPrice * period;
 
 
@@ -52,24 +51,22 @@ module.exports = {
                 startDate.setDate(startDate.getDate() + 2);
                 if(startDate.getTime() <= endDate.getTime())
                 {  
-                    console.log("SCONTO WEEKEND");
                     finalPrice -= (((finalPrice * 7) / 100));
                     totalDiscount += 2;
                 }
                 startDate.setDate(startDate.getDate() - 2);
-
                 //qui controllo se inizio dal lunedì e dura + di 3 giorni in totale
             } else if (startDate.getDay() === 1) {
                 startDate.setDate(startDate.getDate() + 2);
                 if(startDate.getDate() <= endDate.getDate())
                 {    
-                     console.log("SCONTO INFRASETTIMANALE");
                     finalPrice -= (((finalPrice * 7) / 100));
                     totalDiscount += 2;
                 }
+                startDate.setDate(startDate.getDate() - 2);
              }
-             startDate.setDate(startDate.getDate() - 2);
              // Prenotazioni più lunghe di 12 giorni
+
              if(period > 12)
              {
                 finalPrice -= ((finalPrice * 4) / 100);
