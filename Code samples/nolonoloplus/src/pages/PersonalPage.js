@@ -136,6 +136,9 @@ export default function PersonalPage() {
                 <button type="button" onClick={() => { history.push('/updatepage'); }}>Clicca per cambiare le informazioni personali</button>
             </div>
             <div>
+                <button type="button" onClick={() => { history.push('newpersonalpage'); }}>nuova user page</button>
+            </div>
+            <div>
                 <button type="button" onClick={deleteAccount}>Clicca per eliminare il proprio account</button>
             </div>
             <h2>PRENOTAZIONI FUTURE</h2>

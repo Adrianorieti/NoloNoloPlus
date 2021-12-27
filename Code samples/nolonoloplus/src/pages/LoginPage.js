@@ -79,7 +79,7 @@ function LoginPage({ nameToParent }) {
       headers: new Headers({ 'Content-type': 'application/json' }),
       body: obj
     };
-    let url = `${server_url}`+`${account_url}`+`${register_url}`;
+    let url = `${server_url}` + `${account_url}` + `${register_url}`;
 
     fetch(url, options)
       .then(response => {
@@ -133,7 +133,7 @@ function LoginPage({ nameToParent }) {
       body: obj
     };
 
-    let url = `${server_url}`+`${account_url}`+`${login_url}`;
+    let url = `${server_url}` + `${account_url}` + `${login_url}/user`;
 
     fetch(url, options)
       .then(response => {
