@@ -234,37 +234,32 @@ router.post('/addProduct', async (req, res) => {
             res.status(500).json({message: "Error during operation"})
     }
 })  
-/**
- * Elimina il prodotto specificato dal dipendente solo se non ci sono prenotazioni attive, ritornando la lista di prenotazioni
- * presente su quel prodotto.
- * @param {productName}
- * @return {list of future reservations on product}
- * @error Se ci sono prenotazioni attive
- */
-router.post('/deleteProduct', async (req, res) => {
 
-    const toDelete = req.body.name;
-    const reservations = [];
-    const prod = await product.findOne({name : toDelete})
-    if(prod)
-    {
-        if(prod.activeReservations.length <= 0)
-        {
-            let futureRes = [];
-            futureRes = futureRes.concat(prod.futureReservations);
-            await product.remove({name: toDelete}, function(err)
-            {
-                if(err)
-                    res.status(500).send(err);
-                else
-                    res.status(200).json({reservationList: futureRes})
-            })
-        }else
-        {
-            res.status(400).json({message: "The product has active reservations"});
-        }
-    }
-})
+// REPLACED WITH NEW APIS
+// router.post('/deleteProduct', async (req, res) => {
+
+//     const toDelete = req.body.name;
+//     const reservations = [];
+//     const prod = await product.findOne({name : toDelete})
+//     if(prod)
+//     {
+//         if(prod.activeReservations.length <= 0)
+//         {
+//             let futureRes = [];
+//             futureRes = futureRes.concat(prod.futureReservations);
+//             await product.remove({name: toDelete}, function(err)
+//             {
+//                 if(err)
+//                     res.status(500).send(err);
+//                 else
+//                     res.status(200).json({reservationList: futureRes})
+//             })
+//         }else
+//         {
+//             res.status(400).json({message: "The product has active reservations"});
+//         }
+//     }
+// }) 
 
 /**
  * Add a message in the user's comunication area.
@@ -590,7 +585,7 @@ router.post('/confirmLending', async (req, res) => {
             if(toChange)
             {
                 prod.futureReservations.splice(x,  1);
-                prod.activeReservations.push(toChange);
+                prod.activeReservation = toChange;
                 prod.save();
                 res.status(200).json({message:"all ok"});
             }
@@ -644,11 +639,11 @@ router.post('/confirmEndOfRental', async (req, res) => {
             }
 
         //PRODOTTO
-       
-        [toChange, x] = reservations.searchInProduct(prod.activeReservations, toChange, x, start, end);
+       toChange = prod.activeReservation;
+
         if(toChange)
             {   
-                prod.activeReservations.splice(x,  1);
+                prod.activeReservation = '';
                 prod.pastReservations.push(toChange);   
              //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
                 prod.totalSales += expense;
