@@ -5,6 +5,7 @@ module.exports = {
 
     checkAvailability: function(product, startDate, endDate)
     {
+        product.futureReservations.push(product.activeReservation); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
         if(product.futureReservations.length > 1)
             sortBy.sortByTime(product.futureReservations, 'start');
         let available = true;
