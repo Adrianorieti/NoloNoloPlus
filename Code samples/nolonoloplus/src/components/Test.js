@@ -19,12 +19,12 @@ function Test(){
             "name": "accalappialappia"
         }`;
         const options = {
-            method: 'POST',
-            headers: new Headers({ 'Content-type': 'application/json'}),
-            body: obj
+            method: 'DELETE',
+            // headers: new Headers({ 'Content-type': 'application/json'}),
+            // body: obj
           };
-            const url = `http://localhost:8001/api/products/stocastico`;
-        fetch(url, options)
+            const url = `http://localhost:8001/api/products/accalappialappia`;
+            fetch(url, options)
         .then(response => {
             if (response.status === 200) {
                 return response.json();

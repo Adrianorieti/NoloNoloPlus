@@ -97,25 +97,21 @@ router.post('/:name', (req, res) => {
     })
 })
 
- /** Deletes a product if exists and there are no active reservations return the list of future reservations */
+ /** Deletes a product if exists and return the list of future reservations */
 router.delete('/:name', (req, res) => {
     let name = req.params.name;
-    product.exists({name:name}, function (err, doc) {
+    console.log(name);
+    product.exists({name: name}, function (err, doc) {
         if (err){
             res.status(404).json({message: "Product not found", error: err})
         }else{
-            if(doc.activeReservation != null)
-            {    
                 product.findOneAndDelete({ name: name })
                         .exec()
                         .then((result) => {
+                            console.log(result)
                             res.status(200).json({ message: 'Product deleted', reservations: result.futureReservations})
                 })
-            }else
-            {
-                res.status(500).json({ message: 'Active reservations present'});
-
-            }
+           
     }
     });
 })
