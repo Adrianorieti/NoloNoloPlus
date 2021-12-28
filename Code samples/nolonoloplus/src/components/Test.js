@@ -19,11 +19,11 @@ function Test(){
             "name": "accalappialappia"
         }`;
         const options = {
-            method: 'DELETE',
+            method: 'GET',
             // headers: new Headers({ 'Content-type': 'application/json'}),
             // body: obj
           };
-            const url = `http://localhost:8001/api/products/accalappialappia`;
+            const url = `http://localhost:8001/api/products/`;
             fetch(url, options)
         .then(response => {
             if (response.status === 200) {
