@@ -12,8 +12,9 @@ function Products() {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   let allProducts =[];
-  /** Creates event listener on search bar */
-  function setSearchBar()
+
+/** Creates event listener on search bar */
+function setSearchBar()
   {
     const searchBar = document.getElementById('searchBar');
     searchBar.addEventListener('keyup', (e) => {
@@ -28,25 +29,14 @@ function Products() {
                 filtered.push(allProducts[x]);
             };  
     }
-    console.log(filtered);
+    // facendo così forziamo il re rendering degli state
     setLoading(false);
     setProducts(products.concat(filtered));
     setLoading(true);
-
-    // console.log("filtered", filtered);
-    // allProducts.forEach((product) => {
-    //      console.log(product.name);
-    //      console.log(searchString);
-    //     if(product.name.indexOf(searchString) > -1 )
-    //         {
-    //             filtered.push[product];
-    //         }
-    // });
 })
 }
   /** Renderizza nel div content le categorie di prodotto */
-
-   function rendering()
+function rendering()
     {
        return(
             <Product products={products} token={token} />                 
@@ -81,8 +71,6 @@ useEffect(() => {
     
   }, []);
 
-  
-  
   return ( <div id="main">
       <div id="searchWrapper">
                 <input
@@ -101,16 +89,6 @@ useEffect(() => {
 }
 
 export default Products;
-
-
-
-
-
-
-
-
-
-
-// dopodichè se clicca ipotesi o l'altro li rimando alla pagina iniziale e da lì gestisco un'altra pagina
+// DUE PAGINE DIVERSE
 // se è loggato farò apparire la schermata di conferma della prenotazione
 // se non è loggato farò apparire il risultato finale dell'ipotesi
