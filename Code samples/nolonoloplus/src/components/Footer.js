@@ -9,7 +9,7 @@ import './style/Footer.css';
 
 function Footer(props) {
     return (
-        <footer className="App-footer container-properties">
+        <footer className="App-footer">
             <div className="row cards">
                 <div className="col-md-2">
                     <img id="card" src={mastercard} alt="You can pay with Mastercard" />
@@ -65,20 +65,22 @@ function Footer(props) {
                 </div>
             </div>
 
-            <div className="cclicense row d-flex justify-content-center text-center">
-                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
-                    <img id="commons" className="img-fluid" alt="Licenza Creative Commons" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
-                </a>
-                <span xmlnsDct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">
-                    &nbsp; Nolo Nolo Plus -
-                </span>
-                <a xmlnsCc="http://creativecommons.org/ns#" href="http://" property="cc:attributionName" rel="cc:attributionURL">
-                    Progetto per il Corso di Tecnologie Web Unibo prof. Vitali 2021,
-                </a>
-                &nbsp; è distribuito con Licenza
-                <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
-                &nbsp; Creative Commons Attribuzione - Non commerciale - Condividi allo stesso modo 4.0 Internazionale
-                </a>.
+            <div className="row cclicense d-flex justify-content-center text-center">
+                <div className="col-md-12 ccimage">
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+                        <img id="commons" className="img-fluid" alt="Licenza Creative Commons" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+                    </a>
+                    <span xmlnsDct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">
+                        &nbsp; Nolo Nolo Plus &nbsp;
+                    </span>
+                    <a xmlnsCc="http://creativecommons.org/ns#" href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/432290" property="cc:attributionName" rel="cc:attributionURL" target="_blank">
+                        Progetto per il Corso di Tecnologie Web Unibo prof. Vitali 2021,
+                    </a>
+                    &nbsp; è distribuito con Licenza
+                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+                        &nbsp; Creative Commons Attribuzione - Non commerciale - Condividi allo stesso modo 4.0 Internazionale
+                    </a>.
+                </div>
             </div>
         </footer>
     );

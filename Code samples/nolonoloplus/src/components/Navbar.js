@@ -80,31 +80,33 @@ function Navbar (props){
   return (
     <nav className="App-navbar navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
-        <a className="navbar-brand" href="https://virtuale.unibo.it/pluginfile.php/825017/mod_resource/content/0/25-Progetto2021-2.pdf" target="_blank">NoloNoloPlus</a>
+      
+        <h3><i class="fa fa-renren fa-2x"></i>&nbsp; NoloNoloPlus</h3>
+
         <button id="burger" onClick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon "></span>
         </button>
+
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
-          <ul className="navbar-nav ">
+          <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">Home</Link>
+            <i className="fa fa-fw fa-home fa-2x"></i><Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={'/products'} >Products</Link>
+            <i class="fa fa-bicycle fa-2x"></i><Link className="nav-link" to={'/products'} >Products</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
+            <i className="fa fa-fw fa-user fa-2x"></i><Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="#footer" >Contacts</Link>
+            <i className="fa fa-fw fa-envelope fa-2x"></i><Link className="nav-link" to={'/footer'} >Contacts</Link>
             </li>
-
             <li className="nav-item" id="logout"  >
-              <Link className="nav-link" onClick={logout}>Logout</Link>
+            <Link className="nav-link" onClick={logout}>Logout</Link>
             </li>
-
           </ul>
         </div>
+
       </div>
     </nav>
   );

@@ -24,9 +24,9 @@ function RentForm({ queryToParent }) {
     "startingDate": "${startingDate}",
     "endingDate": "${endingDate}"
    }`;
-   sessionStorage.setItem('form_obj', form_obj);
-   //passiamo il testimone a Products
-   history.push('/products');
+      sessionStorage.setItem('form_obj', form_obj);
+      //passiamo il testimone a Products
+      history.push('/products');
     }
     else {
       alert("Please select a field");
@@ -39,45 +39,55 @@ function RentForm({ queryToParent }) {
   // })
 
   return (
-    <div className="App-rent">
-      <main>
-        <form className="rentForm" >
-          <fieldset id="Bikes_Types" aria-required="true">
-            <legend>Bikes types</legend>
-            <section className="mb-3 form-check">
-              <div>
-                <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
-                <label htmlFor="City-Bike" className="form-label">City Bike</label>
-              </div>
-              <div>
-                <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" ></input>
-                <label htmlFor="Mountain-Bike" className="form-label">Mountain Bike</label>
-              </div>
-              <div>
-                <input id="City-Bike" name="products" className="form-select" type="radio" value="Scooter"></input>
-                <label htmlFor="Scooter" className="form-label">Scooter</label>
-              </div>
-              <div>
-                <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric S_300" ></input>
-                <label htmlFor="Electric-Bike" className="form-label">Electric Bike</label>
-              </div>
-              <div>
-                <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Special Bike" ></input>
-                <label htmlFor="Special-Bike" className="form-label">Special Bike</label>
-              </div>
-            </section>
-          </fieldset>
 
-          <fieldset aria-required="true">
-            <legend>Renting dates inputs</legend>
-            <section className="mb-3">
-              <RangeDaysPicker />
-            </section>
-          </fieldset>
-          <button id="rentFormButton" type="button" className="btn btn-success" onClick={submit}>Click to submit</button>
-        </form>
-      </main>
+    <main className="App-rent ">
+      <div className="container App-rent">
+        <div classname="row container-properties">
+          <div classname="col-md-12">
+            <form className="rentForm" >
+
+              <fieldset id="Bikes_Types" aria-required="true">
+                <legend>Bikes types</legend>
+                <hr></hr>
+                <section className="mb-3 form-check">
+                  <div>
+                    <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
+                    <label htmlFor="City-Bike" className="form-label">City Bike</label>
+                  </div>
+                  <div>
+                    <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" ></input>
+                    <label htmlFor="Mountain-Bike" className="form-label">Mountain Bike</label>
+                  </div>
+                  <div>
+                    <input id="City-Bike" name="products" className="form-select" type="radio" value="Scooter"></input>
+                    <label htmlFor="Scooter" className="form-label">Scooter</label>
+                  </div>
+                  <div>
+                    <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric S_300" ></input>
+                    <label htmlFor="Electric-Bike" className="form-label">Electric Bike</label>
+                  </div>
+                  <div>
+                    <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Special Bike" ></input>
+                    <label htmlFor="Special-Bike" className="form-label">Special Bike</label>
+                  </div>
+                </section>
+              </fieldset>
+
+              <fieldset aria-required="true">
+                <legend>Renting dates inputs</legend>
+                <hr></hr>
+                <section className="mb-3">
+                  <RangeDaysPicker />
+                </section>
+              </fieldset>
+
+              <button id="rentFormButton" type="button" className="btn btn-success" onClick={submit}>Click to submit</button>
+            </form>
+          </div>
+        </div>
       </div>
+    </main>
+
   );
 }
 

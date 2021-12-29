@@ -1,41 +1,42 @@
 .App-header {
-    background-color: white;
-    min-height: 10vh;
-    /*display: flex;
-    flex-direction: column;
-    justify-content: center;*/
-    /*font-size: calc(10px + 2vmin);*/
-    color: black;
-    border: 6px solid white;
-  }
-
-
-
-@media screen and (min-width: 480px) {
-    .logo {
-        height: 5vh;
-    }
-}
+  background-color: white;
+  min-height: 10vh;
+  color: black;
+  border: 6px solid white;
+}  
 
 .logo {
-    /* margin-top: 20px; */
-    height: 10vh;
-    align-items: center; 
+  height: 10vh;
+  max-height: 10vh;
+  margin-top: 2%;
+  margin-bottom: 20px;
 }
 
+@media only screen and (max-width: 992px) {
+  .logo {
+    height: 12vh;
+  }
+}
 
 .sponsor {
-    /* margin-top: 20px; */
-    vertical-align: bottom;
-    width: 300vh; 
+  height: 8vh;
+  margin-top: 2%;
+  margin-bottom: 20px;
 }
 
 strong {
-    /* color: #307cb6; */
-    color: #84bf45;
-    font-size: 21px;
-    }
+  color: #84bf45;
+  /*font-size: 120%;*/
+  font-size: calc(1px + 2vmin);
+  /*vertical-align: middle;*/
+}
 
-/*p {
-    font-size: small;
-}*/
+@media only screen and (max-width: 992px) {
+  strong {
+    font-size: calc(3px + 3vmin);
+  }
+}
+
+span {
+  padding:5%;
+}

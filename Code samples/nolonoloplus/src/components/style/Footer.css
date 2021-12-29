@@ -4,7 +4,9 @@
     /*min-height: 10vh;
     min-width: 20vh;
     padding: 5%;*/
-    /*font-size: calc(6px + 2vmin);*/
+    font-size: calc(6px + 2vmin);
+    /*font-size: calc(10px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));*/
+
   }
 
 .cards {
@@ -21,10 +23,20 @@
     /*min-width: 20vh;*/
   }
   
-img .cards {
-    width: 100%;
-    max-width: 150px;
+.cards img {
+  width: 10vh;
+  min-width: 10vh;
   }
+
+  @media only screen and (max-width: 768px) {
+    .cards {
+display: none;
+    }
+  }
+
+.info h6 {
+  font-size: calc(12px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+}
 
 .info { 
     padding: 50px 20%;
@@ -50,5 +62,11 @@ img .cards {
 .cclicense {
     /*padding-top: 30px;*/
     /*border: 10px solid black;*/
-    margin: 30px 30px;
+    margin: 30px 20%;
 }
+
+.ccimage img {
+  width: 15vh;
+}
+
+

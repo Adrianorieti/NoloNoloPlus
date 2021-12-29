@@ -22,8 +22,6 @@ async function isLog()
         return false;
     }
 
-      
-
     
   
 }
