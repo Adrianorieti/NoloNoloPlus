@@ -1,56 +1,116 @@
 import React from "react";
-import {useEffect, useState} from 'react';
+import { useEffect, useState} from "react";
+import { useHistory } from "react-router";
+import { chooseImage } from "../functions/helper";
+import './style/products.css';
+import Product from '../components/Product';
 
+function Products() {
 
-function Products(){
+  const [products, setProducts] = useState([]);
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
+  const history = useHistory();
+  let allProducts =[];
+  /** Creates event listener on search bar */
+  function setSearchBar()
+  {
+    const searchBar = document.getElementById('searchBar');
+    searchBar.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+        
+    let filtered = [];
+    for(let x in allProducts)
+    {
+        if(allProducts[x].name.toLowerCase().includes(searchString) || 
+        allProducts[x].price.toString().includes(searchString))
+            {
+                filtered.push(allProducts[x]);
+            };  
+    }
+    console.log(filtered);
+    setLoading(false);
+    setProducts(products.concat(filtered));
+    setLoading(true);
 
+    // console.log("filtered", filtered);
+    // allProducts.forEach((product) => {
+    //      console.log(product.name);
+    //      console.log(searchString);
+    //     if(product.name.indexOf(searchString) > -1 )
+    //         {
+    //             filtered.push[product];
+    //         }
+    // });
+})
+}
+  /** Renderizza nel div content le categorie di prodotto */
 
-const [products, setProducts] = useState([]);
-const [token, setToken] = useState('');
+   function rendering()
+    {
+       return(
+            <Product products={products} token={token} />                 
+            )
+       
+   }
 
-    
-    useEffect(async () => {
+/** Prendiamo le categorie di oggetti dal server */
+useEffect(() => {
+    let res = [];
 
-        function getProducts(x)
-        {
-            let options = {
-                method: 'GET'
-            };
-            let url = 'http://localhost:8001/api/products/';
-            fetch(url, options)
-            .then(response => {
-            if (response.status == 200) {
-                return response.json();
-            }
-            }).then((data) => {
-            setProducts(products.push(data[0]))
-            console.log(products);
-            })
-            .catch(error => {
-            console.log(error); // CAMBIARE
-            });
+    async function getProducts() {
+      let url = "http://localhost:8001/api/categories/";
+      try
+      {
+          let response = await fetch(url);
+             res = await response.json();
+             allProducts = allProducts.concat(res);
+            setProducts(products.concat(res)); // la prima volta è 5
+            // setProducts([...products,res]);
+            setLoading(true)
+      }catch(error)
+      {
+          console.log(error);
+      }
     }
 
-
-    setToken(JSON.parse(sessionStorage.getItem('token')));
-  
+    setToken(JSON.parse(sessionStorage.getItem("token")));
+    
     getProducts();
+    setSearchBar();
+    
+  }, []);
 
-
-    },[])
   
+  
+  return ( <div id="main">
+      <div id="searchWrapper">
+                <input
+                    type="text"
+                    name="searchBar"
+                    id="searchBar"
+                    placeholder="search for name or price"
+                />
+            </div>
 
-
-
-
-    return(
-        // se c'è il token renderizzo con pulsante per prenotare altrimenti per fare un'ipotesi
-        // dopodichè se clicca ipotesi o l'altro li rimando alla pagina iniziale e da lì gestisco un'altra pagina
-        // se è loggato farò apparire la schermata di conferma della prenotazione
-        // se non è loggato farò apparire il risultato finale dell'ipotesi
-        <div>{token ? <p>Il token esiste</p> : <p>il token non esiste</p>}</div>
-    )
+    <div className="content" id="content"> 
+  {loading ? rendering() :  <p>Vuoto</p>}     
+    </div>
+    </div>
+  )
 }
 
-
 export default Products;
+
+
+
+
+
+
+
+
+
+
+// dopodichè se clicca ipotesi o l'altro li rimando alla pagina iniziale e da lì gestisco un'altra pagina
+// se è loggato farò apparire la schermata di conferma della prenotazione
+// se non è loggato farò apparire il risultato finale dell'ipotesi
