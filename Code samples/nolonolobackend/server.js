@@ -11,6 +11,8 @@ const customer = require('./api/customer');
 const auth = require('./api/auth');
 const employeeRoutes = require('./routes/empRoutes');
 const emp = require('./api/employee');
+const categories = require('./api/categories');
+const products = require('./api/products');
 const app = express();
 //const bcrypt = require('bcrypt');
 
@@ -43,6 +45,8 @@ app.use('/api/rental/', rental);
 app.use('/api/customer/', customer);
 app.use('/api/auth/', auth);
 app.use('/api/employee/', emp);
+app.use('/api/categories', categories);
+app.use('/api/products', products);
 
 /* Alternative routes for static files */
 app.use('/employee/', employeeRoutes);

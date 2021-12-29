@@ -14,7 +14,8 @@ import {
   useState
 } from 'react';
 import Test from './components/Test';
-import Products from './components/Products';
+// import Products from './components/Products';
+import Products from './pages/Products';
 import UpdatePage from './pages/UpdatePage';
 import PersonalPage from './pages/PersonalPage';
 import NewUserPage from './pages/newUserPage';
@@ -193,6 +194,7 @@ function App() {
             </div>
           </section>
           <Products />
+          {/* <Products /> */}
         </Route>
 
 

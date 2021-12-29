@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
-import './newUserPage.css';
+import './style/newUserPage.css';
 
 export default function newUserPage() {
 
