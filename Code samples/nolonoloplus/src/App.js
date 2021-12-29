@@ -14,7 +14,7 @@ import {
   useState
 } from 'react';
 import Test from './components/Test';
-// import Products from './components/Products';
+import Hypothesis from './pages/Hypothesis';
 import Products from './pages/Products';
 import UpdatePage from './pages/UpdatePage';
 import PersonalPage from './pages/PersonalPage';
@@ -23,7 +23,6 @@ import FutureReservations from './pages/FutureReservations';
 import ModifyReservation from './pages/ModifyReservation';
 import ActiveReservations from "./pages/ActiveReservations";
 import PastReservations from "./pages/PastReservations";
-
 
 
 function App() {
@@ -103,15 +102,21 @@ function App() {
           <ModifyReservation res={reservation} />
         </Route>
 
-        <Route path="/dashboard" exact >
+        <Route path="/hypothesis" exact >
+          <Hypothesis />
+        </Route>
+
+        <Route path="/test" exact >
           <Test />
         </Route>
+
 
         <Route path='/products' exact >
           <Products />
           {/* <Products /> */}
         </Route>
       </Switch>
+
 
       {<Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
 

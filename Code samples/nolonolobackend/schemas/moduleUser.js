@@ -57,8 +57,14 @@ const UserSchema = new Schema({
         required: true
     },
     role: String,
-    fidelityPoints: Number,
-    amountPaid: Number,
+    fidelityPoints: {
+        type: Number,
+        required: true
+    },
+    amountPaid: { 
+        type: Number,
+        required: true
+    },
     communications: [String],
     //prenotazioni future modificabili
     futureReservations: [reserveSchema],
@@ -66,7 +72,6 @@ const UserSchema = new Schema({
     activeReservations: [reserveSchema],
     //prenotazioni completate
     pastReservations: [reserveSchema],
-    activeReservations: [reserveSchema]
 });
 
 const user = mongoose.model('user', UserSchema); // crei uno user e sarà in questa collezione, questo sarà il modello e quello sarà lo schema

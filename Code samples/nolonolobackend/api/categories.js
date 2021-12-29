@@ -14,17 +14,9 @@ router.get('/', (req, res) => {
             res.status(500).json({ message: 'Internal error', error: err })
         else
         {
-            console.log(docs.length);
             res.status(200).json(docs);
         }
     })
-        // .exec()
-        // .then((categories) => {
-        //     res.status(200).json(categories);
-        // })
-        // .catch((err) => {
-        //     res.status(500).json({ message: 'Internal error', error: err })
-        // })
 })
 
 /** Get a single category by name */
@@ -43,9 +35,12 @@ router.get('/:name', (req, res) => {
 /** Verify if a category has at least an available product and return the less expensive */
 router.get('/:name/available', auth.verifyToken, async (req, res) => {
   let name = req.params.name; 
-  let start = new Date(req.body.start);
-  let end = new Date(req.body.end);
+  let start = new Date(req.query.start);
+  start.setDate(start.getDate() +1);
+  let end = new Date(req.query.end);
+  end.setDate(end.getDate() +1);
   let email = req.email;
+  // pensare di spostare il segno sui prodotti per non dover fare questa call al database
   let collection = await category.findOne({name: name})
   if(collection)
     {
@@ -63,9 +58,9 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
             }
             if(availableProducts.length > 0) {
                 let price = Math.min(...prices);
-                let index = prices.indexOf(price);
+                let index = prices.indexOf(price.toString());
                 let winner = availableProducts[index]; //le posizioni sono le stesse 
-                res.status(200).json({ category: collection, finalPrice: price, availability: available, product: winner });
+                res.status(200).json({finalPrice: price, product: winner});
             } else {
                 res.status(500).json({message: "No products available for those dates"});
             }      

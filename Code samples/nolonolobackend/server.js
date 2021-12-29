@@ -4,6 +4,8 @@ const path = require('path');
 const mongoose = require('mongoose');
 const employee = require('./schemas/moduleEmployee');
 const pending = require('./schemas/modulePendingRequest');
+const bcrypt = require('bcrypt');
+const user = require('./schemas/moduleUser');
 const services = require('./api/services');
 const account = require('./api/account');
 const rental = require('./api/rental');
@@ -85,16 +87,19 @@ app.get('/products', function (req, res) {
 
 // bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
 
-//     let emp = new employee({
-//         name: "Magalli",
-//         surname: "Crudista",
-//         phone: 123445678,
-//         email: "magalli.crudista123@nolonolo.com",
+//     let def = new user({
+//         name: "default",
+//         surname: "user",
+//         phone: 000000000,
+//         email: "defaultUser@nolonolo.com",
 //         password: hash,
-//         role: 'admin'
+//         role: 'user',
+//         paymentMethod: 'none',
+//         fidelityPoints: 0,
+//          amountPaid: 0
 //     });
 
-//    emp.save();
+//    def.save();
 // })
 
 // let newPending = new pending({

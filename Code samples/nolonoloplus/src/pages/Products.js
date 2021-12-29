@@ -15,7 +15,7 @@ function Products() {
 
 /** Creates event listener on search bar */
 function setSearchBar()
-  {
+{
     const searchBar = document.getElementById('searchBar');
     searchBar.addEventListener('keyup', (e) => {
     const searchString = e.target.value.toLowerCase();
@@ -27,25 +27,27 @@ function setSearchBar()
         allProducts[x].price.toString().includes(searchString))
             {
                 filtered.push(allProducts[x]);
-            };  
+            }  
     }
     // facendo così forziamo il re rendering degli state
     setLoading(false);
     setProducts(products.concat(filtered));
     setLoading(true);
-})
+  })
 }
-  /** Renderizza nel div content le categorie di prodotto */
+
+/** Renderizza nel div content le categorie di prodotto */
 function rendering()
-    {
-       return(
-            <Product products={products} token={token} />                 
-            )
+{
+    return(
+         <Product products={products} token={token} />                 
+         )
        
-   }
+}
 
 /** Prendiamo le categorie di oggetti dal server */
-useEffect(() => {
+useEffect(() => 
+{
     let res = [];
 
     async function getProducts() {
@@ -56,7 +58,6 @@ useEffect(() => {
              res = await response.json();
              allProducts = allProducts.concat(res);
             setProducts(products.concat(res)); // la prima volta è 5
-            // setProducts([...products,res]);
             setLoading(true)
       }catch(error)
       {
@@ -69,9 +70,10 @@ useEffect(() => {
     getProducts();
     setSearchBar();
     
-  }, []);
+}, []);
 
-  return ( <div id="main">
+return ( <div id="main">
+
       <div id="searchWrapper">
                 <input
                     type="text"
@@ -82,8 +84,9 @@ useEffect(() => {
             </div>
 
     <div className="content" id="content"> 
-  {loading ? rendering() :  <p>Vuoto</p>}     
+  {loading ? rendering() :  <p>No products available</p>}     
     </div>
+
     </div>
   )
 }
