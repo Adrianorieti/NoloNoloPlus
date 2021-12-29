@@ -9,14 +9,22 @@ const router = express.Router();
 /** Get all categories in database */
 router.get('/', (req, res) => {
    
-    category.find({})
-        .exec()
-        .then((categories) => {
-            res.status(200).json(categories)
-        })
-        .catch((err) => {
+    category.find({}, function(err, docs){
+        if(err)
             res.status(500).json({ message: 'Internal error', error: err })
-        })
+        else
+        {
+            console.log(docs.length);
+            res.status(200).json(docs);
+        }
+    })
+        // .exec()
+        // .then((categories) => {
+        //     res.status(200).json(categories);
+        // })
+        // .catch((err) => {
+        //     res.status(500).json({ message: 'Internal error', error: err })
+        // })
 })
 
 /** Get a single category by name */

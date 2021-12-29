@@ -7,12 +7,12 @@ const checkAvailability = require('../functions/checkAvailability');
 const router = express.Router();
 
 /** Get all products in database */
-router.get('/',  (req, res) => {
+router.get('/', (req, res) => {
    
-    product.find({})
+     product.find({})
         .exec()
         .then((products) => {
-            res.status(200).json(products);
+            res.status(200).json({productList: products});
         })
         .catch((err) => {
             res.status(500).json({ message: 'Internal error', error: err })
