@@ -23,7 +23,7 @@ import FutureReservations from './pages/FutureReservations';
 import ModifyReservation from './pages/ModifyReservation';
 import ActiveReservations from "./pages/ActiveReservations";
 import PastReservations from "./pages/PastReservations";
-
+import Rental from './pages/Rental';
 
 function App() {
 
@@ -104,6 +104,9 @@ function App() {
 
         <Route path="/hypothesis" exact >
           <Hypothesis />
+        </Route>
+        <Route path="/rental" exact >
+          <Rental />
         </Route>
 
         <Route path="/test" exact >
