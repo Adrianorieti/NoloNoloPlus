@@ -53,14 +53,19 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
                 if (checkAvailability.checkAvailability(products[i], start, end)) {
                     availableProducts.push(products[i]);
                     let x = await computePrice.computePrice(collection, products[i], email, start, end);
+                    console.log(typeof x);
                     prices.push(x);
                 }
             }
             if(availableProducts.length > 0) {
+                
                 let price = Math.min(...prices);
-                let index = prices.indexOf(price.toString());
-                let winner = availableProducts[index]; //le posizioni sono le stesse 
-                res.status(200).json({finalPrice: price, product: winner});
+                console.log(price);
+                let index = prices.indexOf(price);
+                console.log(index);
+                // let winner = availableProducts[index]; //le posizioni sono le stesse 
+                // devo comunque ritornare la categoria secondo i dettami del prof
+                res.status(200).json({finalPrice: price, category: collection});
             } else {
                 res.status(500).json({message: "No products available for those dates"});
             }      

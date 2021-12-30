@@ -80,7 +80,9 @@ module.exports = {
             }
             if (totalDiscount < 0)
                 totalDiscount = 0; // cioè non abbiamo fatto nessuno sconto bensì una maggiorazione
-            return (finalPrice.toFixed(2));
+                finalPrice = parseInt(finalPrice.toFixed(2));
+           console.log(typeof finalPrice);
+            return (finalPrice);
         }
 
     }

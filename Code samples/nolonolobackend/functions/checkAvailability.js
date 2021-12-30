@@ -6,7 +6,7 @@ module.exports = {
     checkAvailability: function(product, startDate, endDate)
     {
         let available = true;
-        if(product.futureReservations)
+        if(product.futureReservations && product.futureReservations.length > 0)
         {
             console.log(product.futureReservations);
             if(product.activeReservation)
