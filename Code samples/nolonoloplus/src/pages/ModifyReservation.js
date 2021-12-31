@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import RangeDaysPicker from "../components/RangeDaysPicker";
-import Rental from '../components/Rental';
+import Rental from './Rental';
 import { useHistory } from "react-router";
 
 export default function ModifyReservation(props) {
@@ -146,8 +146,8 @@ export default function ModifyReservation(props) {
                     }
                     else {
                         //abbiamo qualcosa di disponibile.
-                        return (<Rental categoryName={formDataProduct.name} productName={prodName} startDate={formObj.startingDate} endDate={formObj.endingDate}
-                            price={price} description={formDataProduct.description} oldStartDate={props.res.start} oldEndDate={props.res.end} oldProdName={props.res.name} />)
+                    //     return (<Rental categoryName={formDataProduct.name} productName={prodName} startDate={formObj.startingDate} endDate={formObj.endingDate}
+                    //         price={price} description={formDataProduct.description} oldStartDate={props.res.start} oldEndDate={props.res.end} oldProdName={props.res.name} />)
                     }
                 }
                 else {

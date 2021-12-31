@@ -42,6 +42,7 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
   let email = req.email;
   // pensare di spostare il segno sui prodotti per non dover fare questa call al database
   let collection = await category.findOne({name: name})
+  console.log("sono dentro l'api");
   if(collection)
     {
         product.find({type: name})
@@ -49,26 +50,26 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
         .then(async (products) => {
             let availableProducts = [];
             let prices = [];
+            let available;
+            let price = 0;
             for (let i in products) {
                 if (checkAvailability.checkAvailability(products[i], start, end)) {
                     availableProducts.push(products[i]);
-                    let x = await computePrice.computePrice(collection, products[i], email, start, end);
-                    console.log(typeof x);
-                    prices.push(x);
                 }
+                let x = await computePrice.computePrice(collection, products[i], email, start, end);
+                prices.push(x);
             }
-            if(availableProducts.length > 0) {
-                
-                let price = Math.min(...prices);
-                console.log(price);
-                let index = prices.indexOf(price);
-                console.log(index);
+            price = Math.min(...prices); // calcolo comunque il prezzo minore
+            if(availableProducts.length > 0) { // abbiamo prodotti disponibili
+                available = true;
                 // let winner = availableProducts[index]; //le posizioni sono le stesse 
                 // devo comunque ritornare la categoria secondo i dettami del prof
-                res.status(200).json({finalPrice: price, category: collection});
-            } else {
-                res.status(500).json({message: "No products available for those dates"});
+            } else { // non abbiamo prodotti disponibili
+                available = false;
             }      
+            res.status(200).json({finalPrice: price, category: collection, available: available});
+        }).catch((err) => {
+            res.status(500).json({ message: 'Internal error', error: err })
         })
     }else
     {

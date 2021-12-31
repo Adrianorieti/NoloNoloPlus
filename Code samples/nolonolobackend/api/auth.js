@@ -9,19 +9,15 @@ const employee = require('../schemas/moduleEmployee');
 function verifyToken(req, res, next)
 {
     //retrieve the token from request header
-    console.log("entra qui");
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
    console.log(token);
    if(token != 'null') 
    {
-       console.log("SE ENTRA QUI PORCODDIO");
        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
        {
-           console.log("dentro verify");
            if(err) 
            {
-               console.log("dentro errore");
                return res.status(403).send(` ${err.name} `);
            }
            req.email = decoded.email;
@@ -29,7 +25,6 @@ function verifyToken(req, res, next)
        })
    }else
    {
-    console.log("ok");
     req.email= 'defaultUser@nolonolo.com';
      next();
    }

@@ -8,8 +8,6 @@ function Hypothesis()
     const [loading, setLoading] = useState(true);
     const [category, setCategory] = useState('');
     const [price, setPrice] = useState(0);
-    const [available, setAvailable] = useState(false);
-    const [token, setToken] = useState('');
     
     useEffect(() => 
     {
@@ -35,11 +33,8 @@ function Hypothesis()
                     setLoading(false);
                     setCategory(data.category);
                     setPrice(data.finalPrice);
-                    setToken(tokn);
-                    setAvailable(true);
             }).catch(error => {
-                setAvailable(false);
-                console.log(error);
+                console.log(error.message);
               });
         }
         let query = JSON.parse(sessionStorage.getItem('form_obj'));
@@ -50,15 +45,12 @@ function Hypothesis()
     },[])
 
     return(<div className="main">
-        {loading ? <Spinner /> : (available ? (
+        {loading ? <Spinner /> : 
         <div>
-            <div id="avail"><p>Available!</p></div>
+            <div id="notavail">Login to check availability</div>
             <Product products={category} price={price} />
-        </div>
-        )
-         :  
-         <div id="notavail">
-            <p>Non disponibile</p></div>)}
+            </div>
+        }
          </div>
     );
 }
