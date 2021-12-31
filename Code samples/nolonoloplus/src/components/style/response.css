@@ -1,0 +1,14 @@
+#avail
+{
+    margin: 3rem;
+    padding: 1rem;
+    border: 1px solid lightgreen;
+    border-radius: 2px;
+    background-color: lightgreen;
+}
+#notavail
+{
+    margin: 3rem;
+    padding: 1rem;
+    background-color: lightsalmon;
+}

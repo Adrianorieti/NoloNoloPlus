@@ -3,10 +3,11 @@ import { useEffect, useState} from "react";
 import Spinner from './Spinner';
 import { useHistory } from "react-router";
 import { chooseImage } from '../functions/helper';
-
+import './style/response.css';
 function Response(props){
 
     const [loading, setLoading] = useState(true);
+    const [confirmed, setConfirmed] = useState(false);
 
     useEffect(() => 
     {
@@ -35,7 +36,11 @@ function Response(props){
                 }
             }).then((data) =>{
                 console.log(data);
+                setConfirmed(true);
+                setLoading(false);
+
             }).catch(error => {
+                setLoading(false);
                 console.log(error.message);
             });
         }
@@ -48,7 +53,19 @@ function Response(props){
     
 
     return(<div>
-        {loading ? <Spinner /> : <p>Arrivo arrivo n'attimo</p>}
+        {loading ? <Spinner /> 
+        : 
+        (confirmed ? <div id="avail">
+            <h4>Reservation succesfully added</h4>
+            <p>You can check it on your personal page.</p>
+            <p>Thanks for choosing us !</p>
+        </div> 
+        :
+         <div id="notavail">
+             <h4>An error occurred</h4>
+            <p>Probably there is no more availability on the choosen category</p>
+            <p>Please try again later</p>
+         </div>)}
         </div>
     )
 }

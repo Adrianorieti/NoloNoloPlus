@@ -56,18 +56,6 @@ function verifyAdmin(req, res, next)
        })
         }
     }
-    
-    /* Queste sono solamente prove */
-router.get("/authLog", verifyToken, (req, res) => {
-    res.sendStatus(200);
-});
-
-router.post("/dashboard", verifyAdmin, (req, res) => {
-    console.log("Prima di renderizzare la pagina di merda");
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-
 
 module.exports = router
 module.exports.verifyToken = verifyToken
