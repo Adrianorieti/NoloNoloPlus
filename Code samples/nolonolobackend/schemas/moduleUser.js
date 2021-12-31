@@ -1,32 +1,33 @@
 /* Creates user schema for database */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const reserveSchema = require('./moduleReservation').schema;
 
 /* Sub Schema for product map */
-const reserveSchema = new Schema({
+// const reserveSchema = new Schema({
 
-    usermail: {
-        type: String
-    },
-    start: {
-        type: Date,
-        required: true
-    },
-    end: {
-        type: Date,
-        required: true
-    },
-    product: { //nome del prodotto singolo
-        type: String,
-        required: true
-    },
-    employee: {
-        type: String
-    },
-    expense: { // costo del noleggio
-        type: Number
-    }
-})
+//     usermail: {
+//         type: String
+//     },
+//     start: {
+//         type: Date,
+//         required: true
+//     },
+//     end: {
+//         type: Date,
+//         required: true
+//     },
+//     product: { //nome del prodotto singolo
+//         type: String,
+//         required: true
+//     },
+//     employee: {
+//         type: String
+//     },
+//     expense: { // costo del noleggio
+//         type: Number
+//     }
+// })
 
 const UserSchema = new Schema({
     name: {
@@ -67,8 +68,8 @@ const UserSchema = new Schema({
     },
     communications: [String],
     //prenotazioni future modificabili
-    futureReservations: [reserveSchema],
-    //prenotazioni attive e non modificabili
+    futureReservations: [reserveSchema], // let newRes = new Reservation(ecc..)
+    //prenotazioni attive e non modificabili // user.futureReservation.push(newres)
     activeReservations: [reserveSchema],
     //prenotazioni completate
     pastReservations: [reserveSchema],

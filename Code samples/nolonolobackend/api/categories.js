@@ -49,25 +49,31 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
         .exec()
         .then(async (products) => {
             let availableProducts = [];
+            let availPrices =[];
             let prices = [];
             let available;
+            let availPrice = 0;
             let price = 0;
+            let winner;
             for (let i in products) {
+                let x = await computePrice.computePrice(collection, products[i], email, start, end);
                 if (checkAvailability.checkAvailability(products[i], start, end)) {
                     availableProducts.push(products[i]);
+                    availPrices.push(x)
                 }
-                let x = await computePrice.computePrice(collection, products[i], email, start, end);
                 prices.push(x);
             }
             price = Math.min(...prices); // calcolo comunque il prezzo minore
             if(availableProducts.length > 0) { // abbiamo prodotti disponibili
+                availPrice = Math.min(...availPrices);
                 available = true;
-                // let winner = availableProducts[index]; //le posizioni sono le stesse 
+                let index = availPrices.indexOf(availPrice)
+                 winner = availableProducts[index]; //le posizioni sono le stesse 
                 // devo comunque ritornare la categoria secondo i dettami del prof
             } else { // non abbiamo prodotti disponibili
                 available = false;
             }      
-            res.status(200).json({finalPrice: price, category: collection, available: available});
+            res.status(200).json({hypothesisPrice: price, category: collection, available: available, product: winner, availPrice: availPrice});
         }).catch((err) => {
             res.status(500).json({ message: 'Internal error', error: err })
         })

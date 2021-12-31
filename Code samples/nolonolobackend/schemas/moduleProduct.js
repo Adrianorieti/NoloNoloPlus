@@ -1,34 +1,35 @@
 /* Creates products schema for database */
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const reserveSchema = require('./moduleReservation').schema;
 
 
 /* Sub Schema for product map */
-const reserveSchema = new Schema({
+// const reserveSchema = new Schema({
 
-    usermail: {
-        type: String,
-        required: true
-    },
-    employee: {
-        type: String
-    },
-    product: {
-        type: String,
-        required: true
-    },
-    start: {
-        type: Date,
-        required: true
-    },
-    end: {
-        type: Date,
-        required: true
-    },
-    expense: { // costo del noleggio
-        type: Number
-    }
-})
+//     usermail: {
+//         type: String,
+//         required: true
+//     },
+//     employee: {
+//         type: String
+//     },
+//     product: {
+//         type: String,
+//         required: true
+//     },
+//     start: {
+//         type: Date,
+//         required: true
+//     },
+//     end: {
+//         type: Date,
+//         required: true
+//     },
+//     expense: { // costo del noleggio
+//         type: Number
+//     }
+// })
 
 const ProductSchema = new Schema({
 

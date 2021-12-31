@@ -33,4 +33,5 @@ const reserveSchema = new Schema({
 })
 
 const reservation = mongoose.model('reservation', reserveSchema)
-module.exports = reservation;
+module.exports.model = reservation;
+module.exports.schema = reserveSchema;

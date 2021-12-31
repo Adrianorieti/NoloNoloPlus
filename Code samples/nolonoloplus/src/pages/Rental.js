@@ -3,6 +3,7 @@ import { useEffect, useState} from "react";
 import Spinner from '../components/Spinner';
 import { useHistory } from "react-router";
 import { chooseImage } from '../functions/helper';
+import Response from '../components/Response';
 import './style/rental.css';
 
 function Rental()
@@ -13,6 +14,8 @@ function Rental()
     const [available, setAvailable] = useState(false);
     const [start, setStart] = useState();
     const [end, setEnd] = useState();
+    const [response, setResponse] = useState(false);
+    const [product, setProduct] = useState();
 
     const history = useHistory();
 
@@ -30,7 +33,6 @@ function Rental()
               let end = query.endingDate;
               setEnd(end);
             const url = `http://localhost:8001/api/categories/${name}/available/?start=${start}&end=${end}`;
-            console.log("sono qui");
             fetch(url, options)
             .then(response => {
                 if (response.status === 200) {
@@ -38,8 +40,9 @@ function Rental()
                 }
                 }).then((data) =>{
                     setCategory(data.category);
-                    setPrice(data.finalPrice);
+                    setPrice(data.availPrice);
                     setAvailable(data.available);
+                    setProduct(data.product);
                     setLoading(false);
             }).catch(error => {
                 console.log(error.message);
@@ -53,7 +56,9 @@ function Rental()
     },[])
     
     return(<div className="main">
-            {loading ? <Spinner /> : (available ? (<div>
+            {response ? <div><Response product={product} price={price} start={start} end={end}/></div> 
+            :
+             (loading ? <Spinner /> : (available ? (<div>
                 <div id="summary">
                 <div id="left">
                     {chooseImage(category.name)}
@@ -68,8 +73,8 @@ function Rental()
                         <p>Total Price: ${price}</p>
                     </div>
                     <div id="control">
-                        <a className="btn btn-success" onClick={history.push('/rentalResponse')}>Confirm</a>
-                        <a className="btn btn-warning" onClick={history.push('/')}>Go Back</a>
+                        <button className="btn btn-success" onClick={() => {setResponse(true)}}>Confirm</button>
+                        <a className="btn btn-warning" onClick={() => {history.push('/')}}>Go Back</a>
                     </div>
                 </div>
                 </div>
@@ -78,10 +83,10 @@ function Rental()
             :
             (<div id="notavail">
                 No products available on those dates
-                <a className="btn btn-warnign" onClick={history.push('/')}>Back</a>
+                <a className="btn btn-warnign" onClick={() => {history.push('/')}}>Back</a>
             </div>)
              )
-            }
+            )}
             </div>
 );
 

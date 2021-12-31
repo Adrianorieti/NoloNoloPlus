@@ -32,7 +32,7 @@ function Hypothesis()
                     console.log("dentro data");
                     setLoading(false);
                     setCategory(data.category);
-                    setPrice(data.finalPrice);
+                    setPrice(data.hypothesisPrice);
             }).catch(error => {
                 console.log(error.message);
               });

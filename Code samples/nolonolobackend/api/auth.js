@@ -11,6 +11,7 @@ function verifyToken(req, res, next)
     //retrieve the token from request header
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
+   console.log("ARRIVOOO");
    console.log(token);
    if(token != 'null') 
    {
