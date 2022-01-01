@@ -99,7 +99,7 @@ function Navbar (props){
             <i className="fa fa-fw fa-user fa-2x"></i><Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
             </li>
             <li className="nav-item">
-            <i className="fa fa-fw fa-envelope fa-2x"></i><Link className="nav-link" to={'/footer'} >Contacts</Link>
+            <i className="fa fa-fw fa-envelope fa-2x"></i><Link className="nav-link" to={'/about'} >About and Rules</Link>
             </li>
             <li className="nav-item" id="logout"  >
             <Link className="nav-link" onClick={logout}>Logout</Link>

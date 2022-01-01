@@ -23,7 +23,7 @@ import FutureReservations from './pages/FutureReservations';
 import ModifyReservation from './pages/ModifyReservation';
 import ActiveReservations from "./pages/ActiveReservations";
 import PastReservations from "./pages/PastReservations";
-
+import About from './pages/About';
 import Howitworks from './components/Howitworks'
 import { Link } from 'react-router-dom';
 
@@ -51,7 +51,6 @@ function App() {
 
   return (
     <div className="App" >
-      {<Navbar name={data} queryToParent={queryToParent} />}
       <Switch>
 
         <Route path="/" exact >
@@ -219,7 +218,23 @@ function App() {
               </div>
             </div>
           </section>
-          <Footer />
+
+        </Route>
+
+        <Route path='/about' exact >
+        <Navbar name={data} queryToParent={queryToParent} />
+          <section>
+            <div className="row">
+              <div className="col-md-12">
+                <ul class="breadcrumb">
+                  <li><Link aria-current="page" to="/">Home</Link></li>
+                  <li>About</li>
+                </ul>
+              </div>
+            </div>
+      <About />
+          </section>
+        
         </Route>
       </Switch>
 
