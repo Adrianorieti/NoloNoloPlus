@@ -3,10 +3,7 @@ const discount = require('../schemas/moduleDiscount');
 
 
 module.exports = {
-    // prende in input la categoria del prodotto, il prodotto, la mail dello user (dentro il token) per cercarlo nel database e prenderne i pf e la spesa totale
-    //le date di inizio e fine
     computePrice: async function (category, product, userMail, startDate, endDate) {
-        // Cerco l'utente tramite mail
         let usr = await user.findOne({ email: userMail });
         if (!usr) {
             //nessuno è stato trovato con la mail che stiamo per inserire.
@@ -35,15 +32,14 @@ module.exports = {
             {
                 dailyPrice -= ((dailyPrice * discountRate) / 100);
                 totalDiscount += discountRate;
-
             }
             // Prezzo basico del periodo (quindi di alta o bassa stagione ecc)
-            let period = endDate.getDate() - startDate.getDate();
-            // period = period / (1000 * 3600 * 24);
+            
+            let period = endDate.getTime() - startDate.getTime();
+             period = period / (1000 * 3600 * 24);
             //così mi prende  anche il giorno finale altrimenti non me lo prende
-            period -= 1;
+             period += 1;
             finalPrice = dailyPrice * period;
-
 
             // Se inizio il venerdì e la prenotazione dura 3 o + giorni allora sconto
             if (startDate.getDay() === 6) {
@@ -84,7 +80,9 @@ module.exports = {
             }
             if (totalDiscount < 0)
                 totalDiscount = 0; // cioè non abbiamo fatto nessuno sconto bensì una maggiorazione
-            return (finalPrice.toFixed(2));
+                finalPrice = parseInt(finalPrice.toFixed(2));
+           console.log(typeof finalPrice);
+            return (finalPrice);
         }
 
     }

@@ -7,39 +7,33 @@ function RentForm({ queryToParent }) {
 
   let history = useHistory();
 
-  function submit() {
-    // prendiamo i dati che ci servono
+  function checkInput() {
 
     let form_obj = ``;
-    //TO-DO se qualcuno  dei campi non è selezionato allora c'è un errore da mostrare
-    //perchè sono richiesti 
     const radioInput = document.querySelector("input[name='products']:checked");
     let bikeType;
     if (radioInput) {
       bikeType = radioInput.value;
-      let startingDate = document.querySelector("#fromDate").innerHTML;
-      let endingDate = document.querySelector("#toDate").innerHTML;
+      let start = document.querySelector("#fromDate").innerHTML;
+      let end = document.querySelector("#toDate").innerHTML;
       form_obj += `{
     "name": "${bikeType}",
-    "startingDate": "${startingDate}",
-    "endingDate": "${endingDate}"
+    "startingDate": "${start}",
+    "endingDate": "${end}"
    }`;
-      sessionStorage.setItem('form_obj', form_obj);
-      //passiamo il testimone a Products
-      history.push('/products');
+   sessionStorage.setItem('form_obj', form_obj);
+   let token = sessionStorage.getItem('token');
+   if(token)
+    history.push('/rental');
+   else
+    history.push('/hypothesis')
     }
     else {
       alert("Please select a field");
     }
   }
 
-  // useEffect(() =>
-  // {
-  //   sessionStorage.removeItem('form_obj');
-  // })
-
   return (
-
     <main className="App-rent ">
       <div className="container App-rent">
         <div classname="row container-properties">
@@ -81,13 +75,13 @@ function RentForm({ queryToParent }) {
                 </section>
               </fieldset>
 
-              <button id="rentFormButton" type="button" className="btn btn-success" onClick={submit}>Click to submit</button>
+              <button id="rentFormButton" type="button" className="btn btn-success" onClick={checkInput}>Click to submit</button>
             </form>
           </div>
         </div>
-      </div>
-    </main>
-
+         </div>
+      </main>
+     
   );
 }
 

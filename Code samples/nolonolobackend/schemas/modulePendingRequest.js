@@ -1,31 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const reserveSchema = require('./moduleReservation').schema;
 
 const pendingRequestSchema = new Schema({
 
-  
-    usermail: {
-        type: String,
-        required: true
-    },
-    product: {
-        type: String,
-        required: true
-    },
-    employee: {
-        type: String
-    },
-    start: {
-        type: Date,
-        required: true
-    },
-    end: {
-        type: Date,
-        required: true
-    },
-    expense: {
-        type: Number
-    }
+    reserve: reserveSchema
 });
 
 const pendingRequest = mongoose.model('pendingRequest', pendingRequestSchema)

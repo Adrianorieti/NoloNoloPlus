@@ -11,17 +11,24 @@ function verifyToken(req, res, next)
     //retrieve the token from request header
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
-   if(token == null) return res.sendStatus(401);
-
-   jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
+   console.log("ARRIVOOO");
+   console.log(token);
+   if(token != 'null') 
    {
-       if(err) 
+       jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function(err, decoded)
        {
-           return res.status(403).send(` ${err.name} `);
-       }
-       req.email = decoded.email;
-       next();
-   })
+           if(err) 
+           {
+               return res.status(403).send(` ${err.name} `);
+           }
+           req.email = decoded.email;
+           next();
+       })
+   }else
+   {
+    req.email= 'defaultUser@nolonolo.com';
+     next();
+   }
 }
 
 function verifyAdmin(req, res, next)
@@ -49,18 +56,6 @@ function verifyAdmin(req, res, next)
        })
         }
     }
-    
-    /* Queste sono solamente prove */
-router.get("/authLog", verifyToken, (req, res) => {
-    res.sendStatus(200);
-});
-
-router.post("/dashboard", verifyAdmin, (req, res) => {
-    console.log("Prima di renderizzare la pagina di merda");
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-
 
 module.exports = router
 module.exports.verifyToken = verifyToken

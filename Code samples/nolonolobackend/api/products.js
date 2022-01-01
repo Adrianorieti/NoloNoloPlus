@@ -26,7 +26,6 @@ router.get('/:name', (req, res) => {
     product.find({name: name})
         .exec()
         .then((doc) => {
-            console.log(doc);
             res.status(200).json(doc);
         })
         .catch((err) => {
@@ -40,7 +39,7 @@ router.get('/:name/available', async (req, res) => {
   let start = new Date(req.query.start);
   let end = new Date(req.query.end);
   let email = req.email;
-      product.find({name: name})
+      product.findOne({name: name})
       .exec()
       .then(async (prod) => {
             let collection = await category.findOne({name: prod.type})

@@ -9,21 +9,16 @@ function Test(){
 
     function test()
     {
-        // let field = $('#changeMenu').val();
-        // let newValue = $('#newValue').val();
-        // console.log(name);
-        // console.log(field);
-        // console.log(newValue);
+        
+        console.log("parto");
+        let name = 'Electric S_300';
+        let start= "2021-12-15";
+        let end = "2021-12-17";
 
-        const obj = `{
-            "name": "accalappialappia"
-        }`;
         const options = {
             method: 'GET',
-            // headers: new Headers({ 'Content-type': 'application/json'}),
-            // body: obj
           };
-            const url = `http://localhost:8001/api/products/`;
+            const url = `http://localhost:8001/api/categories/${name}/available/?start=${start}&end=${end}`;
             fetch(url, options)
         .then(response => {
             if (response.status === 200) {

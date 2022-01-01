@@ -1,16 +1,24 @@
-const reservation = require('../schemas/moduleReservation');
+// const reservation = require('../schemas/moduleReservation').model;
 
 module.exports = {
     createReservation: function(userMail, employeeMail, productName, expense, startDate, endDate)
     {
-        const newReserve = new reservation({
+        // const newReserve = new reservation({
+        //     usermail: userMail,
+        //     employee: employeeMail,
+        //     product: productName,
+        //     expense: expense,
+        //     start: startDate,
+        //     end: endDate
+        // })
+        const newReserve =  {
             usermail: userMail,
             employee: employeeMail,
             product: productName,
             expense: expense,
             start: startDate,
             end: endDate
-        })
+        }
         return newReserve;
     },
     searchReservation: function(reservations, toChange, x, start, end)

@@ -4,9 +4,10 @@ const path = require('path');
 const mongoose = require('mongoose');
 const employee = require('./schemas/moduleEmployee');
 const pending = require('./schemas/modulePendingRequest');
-const services = require('./api/services');
+const bcrypt = require('bcrypt');
+const user = require('./schemas/moduleUser');
 const account = require('./api/account');
-const rental = require('./api/rental');
+const pendingRequest = require('./api/pending');
 const customer = require('./api/customer');
 const auth = require('./api/auth');
 const employeeRoutes = require('./routes/empRoutes');
@@ -40,8 +41,8 @@ app.use(express.static(path.join(__dirname, 'backoffice')));
 
 /* Actual API server routes */
 app.use('/api/account/', account);
-app.use('/api/services/', services);
-app.use('/api/rental/', rental);
+// app.use('/api/services/', services);
+app.use('/api/pending/', pendingRequest);
 app.use('/api/customer/', customer);
 app.use('/api/auth/', auth);
 app.use('/api/employee/', emp);
@@ -85,18 +86,22 @@ app.get('/products', function (req, res) {
 
 // bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
 
-//     let emp = new employee({
-//         name: "Magalli",
-//         surname: "Crudista",
-//         phone: 123445678,
-//         email: "magalli.crudista123@nolonolo.com",
+//     let def = new user({
+//         name: "default",
+//         surname: "user",
+//         phone: 000000000,
+//         email: "defaultUser@nolonolo.com",
 //         password: hash,
-//         role: 'admin'
+//         role: 'user',
+//         paymentMethod: 'none',
+//         fidelityPoints: 0,
+//          amountPaid: 0
 //     });
 
-//    emp.save();
+//    def.save();
 // })
 
+// ATTENZIONE NON VA BENE BISOGNA CREARE L'OGGETTO DI RESERVATION E POI METTERGLIELO
 // let newPending = new pending({
 //     usermail: "lorenzotozzi98@gmail.com",
 //     product: "stocastico",
