@@ -500,45 +500,45 @@ router.post('/confirmBeginOfRental',  async (req, res) => {
  * @param {userMail, productName, message, start and end date}
  * @summary the rental is erased from product and a message is inserted in the user communication area
  */
-router.post('/denyBeginOfRental', async (req, res) => {
-    const userMail = req.body.email;
-    const productName = req.body.product;
-    const message = req.body.message;
-    let startDate = new Date(req.body.start);
-    let endDate = new Date(req.body.end);
-    let id = req.body.id;
+// router.post('/denyBeginOfRental', async (req, res) => {
+//     const userMail = req.body.email;
+//     const productName = req.body.product;
+//     const message = req.body.message;
+//     let startDate = new Date(req.body.start);
+//     let endDate = new Date(req.body.end);
+//     let id = req.body.id;
 
-    const usr = await user.findOne({email: userMail});
-    const prod = await product.findOne({name: productName});
+//     const usr = await user.findOne({email: userMail});
+//     const prod = await product.findOne({name: productName});
 
-    if(usr && prod)
-    {
-        // Inserisco il messaggio nelle comunicazioni dell'utente
-        usr.communications.push(message);
-        usr.save();
+//     if(usr && prod)
+//     {
+//         // Inserisco il messaggio nelle comunicazioni dell'utente
+//         usr.communications.push(message);
+//         usr.save();
         
-        let x;
-        let toChange;
-        [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, startDate, endDate);
-        // elimino la reservation dal product
-        if(toChange)
-        {
-            prod.futureReservations.splice(x, 1);
-            prod.save();
-        }
-        console.log(id);
-        await pending.deleteOne({_id: id}, function(err)
-        {
-            if(err)
-                res.status(500).json({message: err});
-            else
-                res.status(200).json({message: "Succesful operation"})
-        }).clone().catch(function(err){
-             res.status(500).json({message: "error while deleting pending req"})
-            });      
-    }else
-        res.status(500).json({message: "Error occurred"});
-})
+//         let x;
+//         let toChange;
+//         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, startDate, endDate);
+//         // elimino la reservation dal product
+//         if(toChange)
+//         {
+//             prod.futureReservations.splice(x, 1);
+//             prod.save();
+//         }
+//         console.log(id);
+//         await pending.deleteOne({_id: id}, function(err)
+//         {
+//             if(err)
+//                 res.status(500).json({message: err});
+//             else
+//                 res.status(200).json({message: "Succesful operation"})
+//         }).clone().catch(function(err){
+//              res.status(500).json({message: "error while deleting pending req"})
+//             });      
+//     }else
+//         res.status(500).json({message: "Error occurred"});
+// })
 
 /** Whit this function we actually confirm that the rent started, so 
  * the future res gets cancelled and is moved to the active, in the user and in the employee
@@ -673,6 +673,8 @@ router.get('/getAllReservations', async (req, res) => {
         for(i in prods) 
         {
             available=true;
+            if(prods[i].activeReservation != null)
+                toSend.push(prods[i].activeReservation)
             //Per tutte le reservations dei prodotti
             for(j in prods[i].futureReservations)
             {
@@ -682,10 +684,7 @@ router.get('/getAllReservations', async (req, res) => {
               {
                   toSend.push(x);
                   //Se è attiva in questo momento
-              }else if(x.start.getTime() < today.getTime() && x.end.getTime() > today.getTime())
-               {
-                   toSend.push(x);
-               }
+              }
             }   
         } 
          res.status(200).json({reservations: toSend});

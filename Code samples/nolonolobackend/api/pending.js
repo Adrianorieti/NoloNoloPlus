@@ -1,4 +1,3 @@
-const category = require('../schemas/moduleCategory');
 const user = require('../schemas/moduleUser');
 const product = require('../schemas/moduleProduct');
 const computePrice = require('../functions/computePrice');
@@ -21,7 +20,7 @@ router.get('/', (req, res) => {
         res.status(500).json({ message: 'Internal error', error: err })
     })
 })
-/** Creates a temporary reservation on a  product and insert a new pending request */
+/** Add pending request : creates a temporary reservation on a  product and insert a new pending request */
 router.post('/:name', auth.verifyToken, (req, res) => {
     let userMail = req.email;
     let price = req.body.price;
@@ -55,7 +54,8 @@ router.post('/:name', auth.verifyToken, (req, res) => {
         }
     })
 })
-/** Deletes the reservation on the product and also the pensing request from database */
+
+/** Deletes the reservation on the product and also the pending request from database */
 router.delete('/:id', async (req, res) => {
     const userMail = req.body.email;
     const productName = req.body.product;

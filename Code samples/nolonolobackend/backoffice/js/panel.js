@@ -283,12 +283,12 @@ function confirmPendingRequest(x)
 {
   console.log(x);
   console.log("dentro confirm", requests[x]);
-  let userMail = requests[x].usermail;
+  let userMail = requests[x].reserve.usermail;
   let employeeMail = sessionStorage.getItem('email');
-  let start = requests[x].start;
-  let end = requests[x].end;
-  let product = requests[x].product;
-  let price = requests[x].expense;
+  let start = requests[x].reserve.start;
+  let end = requests[x].reserve.end;
+  let product = requests[x].reserve.product;
+  let price = requests[x].reserve.expense;
   let id = requests[x]._id;
   const obj =`{
     "email": "${userMail}",
@@ -299,9 +299,11 @@ function confirmPendingRequest(x)
     "expense": "${price}",
     "id": "${id}"
   }`;
+  // VADO A CHIAMARE LA DELETE PER LE PENDING E QUANDO LO FÀ CHIAMO QUELLA CHE AGGIUNGE
+  //LA PRENOTAZIONE OVUNQUE
   $.post({
     type: 'POST',
-      url: 'http://localhost:8001/api/employee/confirmBeginOfRental',
+      url: `http://localhost:8001/api/rental/${id}`,
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       data: obj
@@ -472,34 +474,61 @@ function showDelete(x)
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>`;
   $('#content').html(toInsert);
 }
-function showReservations(reservations)
+
+function showReservations(actives, future)
 {
-  console.log(reservations);
-  let toInsert = '';
-  allReservations = allReservations.concat(reservations);
-  for(let x in reservations)
+  $('#content').html('');
+  let allActives = '';
+  let allFuture = '';
+  allReservations = allReservations.concat(future);
+  for(let x in actives)
     {
-        toInsert += `
+        allActives += `
         <div class="card">
         <h5 class="card-header">${x}</h5>
         <div class="card-body">
-        <h5 class="card-title">User: ${reservations[x].usermail}</h5>
-        <p class="card-text">Product: ${reservations[x].name}</p>
-        <p class="card-text">From: ${reservations[x].start}</p>
-        <p class="card-text">To: ${reservations[x].end} </p>
-        <p class="card-text">Expense: ${reservations[x].expense} </p>
-        <a href="#" class="btn btn-primary" onclick="showModify(${x})">Modify rental</a>
-        <a href="#" class="btn btn-danger" onclick="showDelete(${x})">Delete</a>
-
+        <h5 class="card-title">User: ${actives[x].usermail}</h5>
+        <p class="card-text">Product: ${actives[x].product}</p>
+        <p class="card-text">From: ${actives[x].start}</p>
+        <p class="card-text">To: ${actives[x].end} </p>
+        <p class="card-text">Expense: ${actives[x].expense} </p>
       </div>
       </div>
         `
     }
-    if(toInsert === '')
-      $('#content').html("No reservations");
-    else
-      $('#content').html(toInsert);
+  for(let x in future)
+  {
+    allFuture += `
+    <div class="card">
+    <h5 class="card-header">${x}</h5>
+    <div class="card-body">
+    <h5 class="card-title">User: ${future[x].usermail}</h5>
+    <p class="card-text">Product: ${future[x].showProducts}</p>
+    <p class="card-text">From: ${future[x].start}</p>
+    <p class="card-text">To: ${future[x].end} </p>
+    <p class="card-text">Expense: ${future[x].expense} </p>
+    <a href="#" class="btn btn-primary" onclick="showModify(${x})">Modify rental</a>
+    <a href="#" class="btn btn-danger" onclick="showDelete(${x})">Delete</a>
+  </div>
+  </div>`
+  }
+  if(allActives === '')
+    allActives = 'No active reservations'
+  if(allFuture === '')
+    allFuture = 'No future reservations'
+  let toInsert =`
+  <div id="active">
+  <h3>Actives</h3>
+  ${allActives}
+  </div>
+  
+  <div id="future">
+  <h3>Future</h3>
+  ${allFuture}
+  </div>
+  `
 
+      $('#reservations').html(toInsert);
 }
 
 function getAllReservations()
@@ -508,9 +537,11 @@ function getAllReservations()
   $('#title').html('');
     $.get({
     type: 'GET',
-      url: 'http://localhost:8001/api/employee/getAllReservations',
+      url: 'http://localhost:8001/api/rental/',
     }, function(data){
-      showReservations(data.reservations);
+      console.log("data.actives", data.actives);
+      console.log("futures", data.future);
+      showReservations(data.actives, data.future);
     }).fail(function(err)
     {
         $('#content').html("Try again later please");

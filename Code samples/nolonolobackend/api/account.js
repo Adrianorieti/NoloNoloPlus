@@ -11,47 +11,6 @@ const express = require('express');
 const router = express.Router();
 
 /**
- *  Verify if the user exists in the database. If yes, the user receives a token
- * @param {email, password}
- * @return {token}
- */
-// router.post('/login', async (req, res) => {
-//     const mail = req.body.email;
-
-//     //We check if user exists in database
-//     const source = await user.findOne({ email: mail });
-
-//     if (source) {
-
-//         const password = req.body.password;
-
-//         const buff = Buffer.from(password, 'base64');
-
-//         const decodedpass = buff.toString('utf-8');
-
-//         // If user exists we compare the password
-//         if (await bcrypt.compare(decodedpass, source.password)) {
-
-//             console.log("Success");
-
-//             //CREATE  JWT
-//             const user = { email: `${source.email}` };
-//             const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '1h' });
-
-//             //Send token back to client 
-//             res.json({ accessToken: accessToken, name: `${source.name}` });
-
-//         } else {
-//             console.log("Password doesn't match");
-//         }
-//     } else {
-//         console.log('Errore la mail non esiste');
-//         res.status(500).send({ error: 'Mail not exists' });
-//     }
-
-// });
-
-/**
  * Create a new user inside the database.
  * @param {name, surname, email, password, phone, paymentMethod}
  */
