@@ -239,7 +239,6 @@ function denyPendingRequest(x)
           "product": "${product}",
           "message": "${message}"
         }`;
-        
         $.post({
           type: 'DELETE',
           url: `http://localhost:8001/api/pending/${id}/?start=${start}&end=${end}`,
@@ -281,39 +280,51 @@ $('#content').html(toInsert);
 
 function confirmPendingRequest(x)
 {
-  console.log(x);
-  console.log("dentro confirm", requests[x]);
   let userMail = requests[x].reserve.usermail;
   let employeeMail = sessionStorage.getItem('email');
   let start = requests[x].reserve.start;
   let end = requests[x].reserve.end;
   let product = requests[x].reserve.product;
-  let price = requests[x].reserve.expense;
+  let expense = requests[x].reserve.expense;
   let id = requests[x]._id;
   const obj =`{
     "email": "${userMail}",
+    "product": "${product}",
+    "message": ""
+  }`;
+  const obj2 = `{
+    "email": "${userMail}",
+    "product": "${product}",
     "employee": "${employeeMail}",
     "start": "${start}",
     "end": "${end}",
-    "product": "${product}",
-    "expense": "${price}",
-    "id": "${id}"
+    "expense": "${expense}"
   }`;
   // VADO A CHIAMARE LA DELETE PER LE PENDING E QUANDO LO FÀ CHIAMO QUELLA CHE AGGIUNGE
   //LA PRENOTAZIONE OVUNQUE
   $.post({
-    type: 'POST',
-      url: `http://localhost:8001/api/rental/${id}`,
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      data: obj
-    }, function(){
-
-      $(`#card-${x}`).html("Succesfully added");
-    }).fail(function(){
-      $(`#card-${x}`).html("Error, please try again");
-
+    type: 'DELETE',
+    url: `http://localhost:8001/api/pending/${id}/?start=${start}&end=${end}`,
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json',
+    data: obj
+  }, function(data){  
+    console.log("ALMENO LA PRIMA È ANDATAAAA");
+      $.post({
+        type: 'POST',
+        url: `http://localhost:8001/api/rental/false`,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: obj2
+      }, function(data){
+        $('#content').html(data.message);   
+      }).fail(function(data){
+        $('#content').html(data.message);   
     })
+    
+  }).fail(function(data){
+    $('#content').html(data.message);   
+})
 }
 
 function showPendingRequests(data)
@@ -503,7 +514,7 @@ function showReservations(actives, future)
     <h5 class="card-header">${x}</h5>
     <div class="card-body">
     <h5 class="card-title">User: ${future[x].usermail}</h5>
-    <p class="card-text">Product: ${future[x].showProducts}</p>
+    <p class="card-text">Product: ${future[x].product}</p>
     <p class="card-text">From: ${future[x].start}</p>
     <p class="card-text">To: ${future[x].end} </p>
     <p class="card-text">Expense: ${future[x].expense} </p>

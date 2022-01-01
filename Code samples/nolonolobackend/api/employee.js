@@ -396,6 +396,7 @@ router.post('/makeRental',  async (req, res) => {
     const userMail = req.body.email;
     const employeeMail = req.body.employee;
     const productName = req.body.name;
+
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
     const usr = await user.findOne({email: userMail});

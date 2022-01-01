@@ -59,19 +59,21 @@ router.post('/:name', auth.verifyToken, (req, res) => {
 router.delete('/:id', async (req, res) => {
     const userMail = req.body.email;
     const productName = req.body.product;
-    const message = req.body.message;
+    let message = req.body.message;
     console.log(req.query);
     let startDate = new Date(req.query.start);
     console.log(startDate);
     let endDate = new Date(req.query.end);
     console.log(endDate);
     let id = req.params.id;
-
+    
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
 
     if(usr && prod)
     {
+        if(message === '')
+            message = 'Your rental has been accepted, thank you for choosing us !';
         // Inserisco il messaggio nelle comunicazioni dell'utente
         usr.communications.push(message);
         usr.save();

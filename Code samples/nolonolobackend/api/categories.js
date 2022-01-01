@@ -40,10 +40,13 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
   let end = new Date(req.query.end);
   end.setDate(end.getDate() +1);
   let email = req.email;
+  console.log(req.query);
+  console.log(start);
   // pensare di spostare il segno sui prodotti per non dover fare questa call al database
   let collection = await category.findOne({name: name})
   if(collection)
     {
+        console.log(name);
         product.find({type: name})
         .exec()
         .then(async (products) => {
@@ -55,7 +58,7 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
             let price = 0;
             let winner;
             for (let i in products) {
-                let x = await computePrice.computePrice(collection, products[i], email, start, end);
+                let x = await computePrice.computePrice(collection, products[i], email, '', start, end);
                 if (checkAvailability.checkAvailability(products[i], start, end)) {
                     availableProducts.push(products[i]);
                     availPrices.push(x)
@@ -74,6 +77,7 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
             }      
             res.status(200).json({hypothesisPrice: price, category: collection, available: available, product: winner, availPrice: availPrice});
         }).catch((err) => {
+            console.log(err);
             res.status(500).json({ message: 'Internal error', error: err })
         })
     }else

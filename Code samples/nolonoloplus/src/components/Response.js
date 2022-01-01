@@ -9,8 +9,11 @@ function Response(props){
     const [loading, setLoading] = useState(true);
     const [confirmed, setConfirmed] = useState(false);
 
+    const history = useHistory();
+  
     useEffect(() => 
     {
+        
         console.log("sono dentro response !");
        
         function addPendingRequest(token)
