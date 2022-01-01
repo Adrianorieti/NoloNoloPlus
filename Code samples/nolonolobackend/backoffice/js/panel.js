@@ -25,54 +25,40 @@ function logout(){
 
 function sendRentalHypothesis(x, event)
 {
-  event.preventDefault();
+    event.preventDefault();
     let email = $('#email').val();
     let startDate = $('#startDate').val();
     let endDate = $('#endDate').val();
-
-    let obj = `{
-        "categoryName": "${categoriesNames[x]}",
-        "productName": "${productsNames[x]}",
-        "email": "${email}",
-        "startingDate": "${startDate}",
-        "endingDate": "${endDate}"
-    }`;
-    console.log(obj);
-    $.post({
-        type: 'POST',
-          url: 'http://localhost:8001/api/employee/makeRentalHypothesis',
-          contentType: 'application/json; charset=utf-8',
-          dataType: 'json',
-          data: obj
-        }, function(data){
-            let toInsert = '';
-            if(data.availability)
-            {
-                 toInsert = `<div id="available">
-                <h5>The product is available !</h5>
-                <p>Final price: ${data.finalPrice}€</p>
-                <p>Product chosen by system: ${data.currProdName}</p>
-                <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
-                </div>`
-            }else
-            {
-                 toInsert = `<div id="unavailable">
+    if(startDate && endDate && email)
+      {
+        $.post({
+          type: 'GET',
+          url: `http://localhost:8001/api/products/${productsNames[x]}/available/?start=${startDate}&end=${endDate}&email=${email}`
+            }, function(data){
+              console.log(data.status);
+                let toInsert = '';
+                    toInsert = `<div id="available">
+                    <h5>The product is available !</h5>
+                    <p>Final price: ${data.price}€</p>
+                    <p>Product chosen by system: ${data.product.name}</p>
+                    <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
+                    </div>`
+            
+                $('#info').html(toInsert);   
+              }).fail(function(data)
+              {
+                toInsert = `<div id="unavailable">
                 <h5>The product is unavailable in these dates!</h5>
-                <p>Product chosen by system: ${data.currProdName}</p>
+                <p>Product chosen by system: ${data.product.name}</p>
                 <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
-                </div>`
-            }
-            $('#info').html(toInsert);   
-        }).fail(function(data)
+                </div>`     
+              $('#info').html(toInsert);   
+              
+            });
+      }else
         {
-          toInsert = `<div id="unavailable">
-          <h5>The product is unavailable in these dates!</h5>
-          <p>Product chosen by system: ${data.currProdName}</p>
-          <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
-          </div>`     
-          $('#info').html(toInsert);   
-
-           });
+          $('#hypError').html("please insert all fields correctly");
+        }
 }
 /** Make a rental hypothesis on a product , there is no need to be logged */
 function makeRentalHypothesis(x)
@@ -93,6 +79,7 @@ function makeRentalHypothesis(x)
   <label class="form-check-label" for="endDate">End Date</label>
     <input type="date" class="form-control" id="endDate">
   </div>
+  <span id="hypError"></span>
   <button type="submit" class="btn btn-primary" onclick="sendRentalHypothesis(${x}, event)">Send</button>
 </form>
     </div>`;
@@ -181,7 +168,7 @@ function getAllproducts()
   $('#reservations').html('');
     $.get({
         type: 'GET',
-          url: 'http://localhost:8001/api/employee/products',
+          url: 'http://localhost:8001/api/products/',
         }, function(data){
             showProducts(data.productList);     
         }).fail(function(err)
@@ -239,50 +226,56 @@ function getAllcostumers()
 
 function denyPendingRequest(x)
 {
- let message = $('#text').val();
- let email = $('#email').val();
- let start = requests[x].start;
- let end = requests[x].end;
- let product = requests[x].product;
- let id = requests[x]._id;
-
- const obj =`{
-  "email": "${email}",
-  "start": "${start}",
-  "end": "${end}",
-  "product": "${product}",
-  "message": "${message}",
-  "id": "${id}"
-}`;
-
-$.post({
-  type: 'POST',
-    url: 'http://localhost:8001/api/employee/denyBeginOfRental',
-    contentType: 'application/json; charset=utf-8',
-    dataType: 'json',
-    data: obj
-  }, function(){
-    $('#content').html("Succesful operation");
-  }).fail(function(){
-    $('#content').html("error");
-
-  })
-
+  let message = $('#text').val();
+  let email = $('#email').val();
+  let start = requests[x].reserve.start;
+  let end = requests[x].reserve.end;
+  let product = requests[x].reserve.product;
+  let id = requests[x]._id;
+    if(message)
+    {
+        const obj =`{
+          "email": "${email}",
+          "product": "${product}",
+          "message": "${message}"
+        }`;
+        
+        $.post({
+          type: 'DELETE',
+          url: `http://localhost:8001/api/pending/${id}/?start=${start}&end=${end}`,
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          data: obj
+        }, function(data){
+          $('#content').html(data.message);
+        }).fail(function(data){
+          $('#content').html(data.message);   
+      })
+}
+  
 
 }
 
 function showDenyPendingRequest(x)
 {
   let toInsert = `
+  <div id="deny">
+  <h2>Deny a pending request</h2>
+  <p>We take care of our customers, remember to insert a message to let them know </p>
+  <label for="email" class="form-label">User: </label>
+  <div class="input-group mb-3" id="message">
+  <input class="form-control" type="text" id='email' value="${requests[x].reserve.usermail}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3">
-  <input class="form-control" type="text" id='email' value="${requests[x].usermail}" aria-label="readonly input example" readonly></div>
-  <div class="input-group mb-3">
-<div class="mb-3">
+<div class="mb-3" >
   <label for="text" class="form-label">Message to send</label>
   <textarea class="form-control" id="text" rows="3"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="denyPendingRequest(${x})" >Insert</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
+  </div>
+  </div>
+</div>
 </div>`
+$('#title').html(' ')
 $('#content').html(toInsert);
 }
 
@@ -323,22 +316,23 @@ function confirmPendingRequest(x)
 
 function showPendingRequests(data)
 {
+  console.log(data);
   let toInsert= '';
   requests = [];
   requests = requests.concat(data);
   console.log("requests", requests);
   for(let x in requests)
   {
-    console.log(requests[x]);
+    console.log(requests[x].reserve);
     toInsert += `
     <div class="card" id="card-${x}">
     <h5 class="card-header">${x}</h5>
     <div class="card-body">
-    <h5 class="card-title">Product: ${requests[x].product}</h5>
-    <p class="card-text">User: ${requests[x].usermail}</p>
-    <p class="card-text">From: ${requests[x].start} </p>
-    <p class="card-text">TO: ${requests[x].end} </p>
-    <p class="card-text">Price: ${requests[x].expense} </p>
+    <h5 class="card-title">Product: ${requests[x].reserve.product}</h5>
+    <p class="card-text">User: ${requests[x].reserve.usermail}</p>
+    <p class="card-text">From: ${requests[x].reserve.start} </p>
+    <p class="card-text">TO: ${requests[x].reserve.end} </p>
+    <p class="card-text">Price: ${requests[x].reserve.expense} </p>
     <a href="#" class="btn btn-primary" onclick="confirmPendingRequest(${x})">Accept</a>
     <a href="#" class="btn btn-danger" onclick="showDenyPendingRequest(${x})">Deny</a>
     </div>
@@ -360,9 +354,9 @@ function getPendingRequests()
 
   $.get({
     type: 'GET',
-      url: 'http://localhost:8001/api/employee/pendingRequests',
+      url: 'http://localhost:8001/api/pending/',
     }, function(data){
-      showPendingRequests(data.pendingList);
+      showPendingRequests(data.requests);
     }).fail(function(err)
     {
         $('#content').html("Try again later please");

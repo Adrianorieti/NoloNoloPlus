@@ -53,3 +53,12 @@ li
     justify-content: space-between ;
     padding: 2rem;
 }
+
+#deny
+{
+    justify-content: center;
+}
+#message
+{
+    justify-content: center;
+}

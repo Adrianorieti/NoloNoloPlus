@@ -19,8 +19,8 @@ function Product(props)
                 <h5 className="card-title">{product.name}</h5>
                 <p className="card-text">{product.description}</p>
                 <p className="card-text">Price per day {product.price}$</p>
-                {props.token ? <button className="btn btn-primary" onClick={(()=>{history.push('/')})}>Rent this product</button> :
-                <button className="btn btn-primary" onClick={(()=>{history.push('/')})}>Make a rental hypothesis</button>}
+                {props.token ? <button className="btn btn-primary" onClick={(()=>{history.push('/#rentForm')})}>Rent this product</button> :
+                <button className="btn btn-primary" onClick={(()=>{history.push('/#rentForm')})}>Make a rental hypothesis</button>}
             </div>
             </div>
             )})

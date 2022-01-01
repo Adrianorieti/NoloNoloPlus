@@ -520,11 +520,13 @@ router.post('/denyBeginOfRental', async (req, res) => {
         let x;
         let toChange;
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, startDate, endDate);
+        // elimino la reservation dal product
         if(toChange)
         {
-            prod.reservations.splice(x, 1);
+            prod.futureReservations.splice(x, 1);
             prod.save();
         }
+        console.log(id);
         await pending.deleteOne({_id: id}, function(err)
         {
             if(err)

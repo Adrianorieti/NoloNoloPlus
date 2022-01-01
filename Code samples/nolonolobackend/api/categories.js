@@ -42,7 +42,6 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
   let email = req.email;
   // pensare di spostare il segno sui prodotti per non dover fare questa call al database
   let collection = await category.findOne({name: name})
-  console.log("sono dentro l'api");
   if(collection)
     {
         product.find({type: name})
