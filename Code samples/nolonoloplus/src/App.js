@@ -51,11 +51,11 @@ function App() {
 
   return (
     <div className="App" >
+          <Header />
+          <Navbar name={data} queryToParent={queryToParent} />
       <Switch>
 
         <Route path="/" exact >
-          <Header />
-          <Navbar name={data} queryToParent={queryToParent} />
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -90,7 +90,7 @@ function App() {
         </Route>
 
         <Route path="/login" exact >
-          <Navbar name={data} queryToParent={queryToParent} />
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -106,7 +106,7 @@ function App() {
 
         <Route path="/personalpage" exact>
 
-          <Navbar name={data} queryToParent={queryToParent} />
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -124,7 +124,7 @@ function App() {
         <Route path="/newpersonalpage" exact>
           <NewUserPage />
 
-          <Navbar name={data} queryToParent={queryToParent} />
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -140,7 +140,7 @@ function App() {
         </Route>
 
         <Route path="/futurereservations" exact>
-          <Navbar name={data} queryToParent={queryToParent} />
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -163,7 +163,7 @@ function App() {
         </Route>
 
         <Route path="/modifyreservation" exact>
-          <Navbar name={data} queryToParent={queryToParent} />
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -190,7 +190,7 @@ function App() {
 
 
         <Route path='/products' exact >
-          <Navbar name={data} queryToParent={queryToParent} />
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -207,7 +207,7 @@ function App() {
 
 
         <Route path='/contatts' exact >
-          <Navbar name={data} queryToParent={queryToParent} />
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -222,7 +222,7 @@ function App() {
         </Route>
 
         <Route path='/about' exact >
-        <Navbar name={data} queryToParent={queryToParent} />
+        {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -239,7 +239,7 @@ function App() {
       </Switch>
 
 
-      {<Footer companyName="NoloNoloPlus" prod1="Biciclette" prod2="Monopattini" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
+      {<Footer companyName="NoloNoloPlus" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
 
 
 

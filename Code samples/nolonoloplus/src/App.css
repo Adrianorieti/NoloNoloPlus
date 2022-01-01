@@ -3,6 +3,7 @@
   }*/
 
 .App {
+  margin-top: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -181,9 +182,10 @@ label {
 
 /* Breadcrumb style */
 ul.breadcrumb {
-  padding: 10px 16px;
+  padding: 10px 10px;
   list-style: none;
   background-color: #bbe0ac;
+  margin-bottom: 0;
   /*background-color: #eee;
   min-height: 5vh;*/
 }

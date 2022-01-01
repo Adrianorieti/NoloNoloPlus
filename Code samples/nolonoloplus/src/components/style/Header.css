@@ -1,27 +1,28 @@
 .App-header {
+  margin-top: 0;
   background-color: white;
-  min-height: 10vh;
+  min-height: 5vh;
   color: black;
-  border: 6px solid white;
+  border: 3px solid white;
 }  
 
 .logo {
   height: 10vh;
   max-height: 10vh;
   margin-top: 2%;
-  margin-bottom: 20px;
+  margin-bottom: 3rem;
 }
 
 @media only screen and (max-width: 992px) {
   .logo {
-    height: 12vh;
+    height: 10vh;
   }
 }
 
 .sponsor {
   height: 8vh;
   margin-top: 2%;
-  margin-bottom: 20px;
+  margin-bottom: 4rem;
 }
 
 strong {

@@ -35,24 +35,24 @@ function Footer(props) {
                 <div className="col-md-4">
                     <h6>{props.companyName}</h6>
                     <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, labore. Voluptate consectetur dolorem
-                    </p>
+                        This year, join a multicolor family !
+                        </p>
                 </div>
                 <div className="col-md-4">
                     <h6>
                         Products
                     </h6>
                     <p>
-                        <a href="#!" className="text-reset">{props.prod1}</a>
+                        <a href="#!" className="text-reset">City bikes</a>
                     </p>
                     <p>
-                        <a href="#!" className="text-reset">{props.prod2}</a>
+                        <a href="#!" className="text-reset">Electric Scooter</a>
                     </p>
                     <p>
-                        <a href="#!" className="text-reset">{props.prod3}</a>
+                        <a href="#!" className="text-reset">Special Bikes</a>
                     </p>
                     <p>
-                        <a href="#!" className="text-reset">{props.prod4}</a>
+                        <a href="#!" className="text-reset">Mountain bikes</a>
                     </p>
                 </div>
                 <div className="col-md-4">
