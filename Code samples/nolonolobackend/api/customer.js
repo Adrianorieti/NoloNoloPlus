@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const user = require('../schemas/moduleUser');
 const product = require('../schemas/moduleProduct');
-
+const category = require('../schemas/moduleCategory');
+const employee = require('../schemas/moduleEmployee');
 const express = require('express');
 const router = express.Router();
 
@@ -329,14 +330,11 @@ router.post("/removeReservation", async (req, res) => {
  * @param {email, password}
  * @return {token}
  */
-router.get('/:attribute', async (req, res) => {
-    const attribute = req.params.attribute;
+router.get('/user', async (req, res) => {
     //trovo tutti gli user del sistema
     let users = await user.find();
     if (users) {
-        if (attribute !== 'all') {
-            users = users.map(user => ({ attribute: user[attribute] }));
-        }
+        users = users.filter(user => user.email !== 'defaultUser@nolonolo.com');
         res.status(200).json({ users: users });
     }
     else {
@@ -347,14 +345,10 @@ router.get('/:attribute', async (req, res) => {
 //RICORDARSI CHE POI BISOGNA FARE PIÙ LAVORO CLIENT SIDE
 
 //METTO ANCHE QUI QUELLA DELL'EMPLOYEE
-router.get('/:attribute', async (req, res) => {
-    const attribute = req.params.attribute;
+router.get('/employee', async (req, res) => {
     //trovo tutti gli user del sistema
     let employees = await employee.find();
     if (employees) {
-        if (attribute !== 'all') {
-            employees = employees.map(employee => ({ attribute: employee[attribute] }));
-        }
         res.status(200).json({ employees: employees });
     }
     else {
@@ -364,11 +358,21 @@ router.get('/:attribute', async (req, res) => {
 });
 
 router.get('/category', async (req, res) => {
-
+    let cat = await category.find();
+    if (cat) {
+        res.status(200).json({ category: cat });
+    } else {
+        res.status(500).send();
+    }
 });
 
-router.get('/category/:prod', async (req, res) => {
-
+router.get('/product', async (req, res) => {
+    let prod = await product.find();
+    if (prod) {
+        res.status(200).json({ products: prod });
+    } else {
+        res.status(500).send();
+    }
 });
 
 

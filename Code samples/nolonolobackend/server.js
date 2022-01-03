@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const employee = require('./schemas/moduleEmployee');
+const user = require('./schemas/moduleUser');
 const pending = require('./schemas/modulePendingRequest');
 const services = require('./api/services');
 const account = require('./api/account');
@@ -12,7 +13,7 @@ const auth = require('./api/auth');
 const employeeRoutes = require('./routes/empRoutes');
 const emp = require('./api/employee');
 const app = express();
-//const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 
 require('dotenv').config();
@@ -81,16 +82,18 @@ app.get('/products', function (req, res) {
 
 // bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
 
-//     let emp = new employee({
-//         name: "Magalli",
-//         surname: "Crudista",
+//     let usr = new user({
+//         name: "paletto",
+//         surname: "forte",
 //         phone: 123445678,
-//         email: "magalli.crudista123@nolonolo.com",
+//         email: "palo.forte@nolonolo.com",
 //         password: hash,
-//         role: 'admin'
+//         paymentMethod: 'Paypal',
+//         role: 'user',
+//         amountPaid: 125
 //     });
 
-//    emp.save();
+//     usr.save();
 // })
 
 // let newPending = new pending({
