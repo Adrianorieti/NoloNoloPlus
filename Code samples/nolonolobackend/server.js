@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const employee = require('./schemas/moduleEmployee');
+const user = require('./schemas/moduleUser');
 const pending = require('./schemas/modulePendingRequest');
 const bcrypt = require('bcrypt');
 const user = require('./schemas/moduleUser');
@@ -16,7 +17,7 @@ const emp = require('./api/employee');
 const categories = require('./api/categories');
 const products = require('./api/products');
 const app = express();
-//const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 
 require('dotenv').config();
@@ -88,19 +89,18 @@ app.get('/products', function (req, res) {
 
 // bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
 
-//     let def = new user({
-//         name: "default",
-//         surname: "user",
-//         phone: 000000000,
-//         email: "defaultUser@nolonolo.com",
+//     let usr = new user({
+//         name: "paletto",
+//         surname: "forte",
+//         phone: 123445678,
+//         email: "palo.forte@nolonolo.com",
 //         password: hash,
+//         paymentMethod: 'Paypal',
 //         role: 'user',
-//         paymentMethod: 'none',
-//         fidelityPoints: 0,
-//          amountPaid: 0
+//         amountPaid: 125
 //     });
 
-//    def.save();
+//     usr.save();
 // })
 
 // ATTENZIONE NON VA BENE BISOGNA CREARE L'OGGETTO DI RESERVATION E POI METTERGLIELO

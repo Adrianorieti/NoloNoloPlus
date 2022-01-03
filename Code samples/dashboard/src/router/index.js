@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import LoginComponent from "../views/login.vue"
 
 Vue.use(VueRouter)
 
@@ -15,7 +13,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: LoginComponent
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
     path: '/about',
@@ -28,7 +26,36 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: Home
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+  },
+  {
+    path: '/userCharts/:chartView',
+    name: 'userCharts',
+    component: () => import(/* webpackChunkName: "userCharts" */ '../views/UserCharts.vue'),
+    props: true
+  },
+  {
+    path: '/categoryCharts/:chartView',
+    name: 'categoryCharts',
+    component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/CategoryCharts.vue'),
+    props: true
+  },
+  {
+    path: '/productCharts/:chartView',
+    name: 'productCharts',
+    component: () => import(/* webpackChunkName: "productCharts" */ '../views/ProductCharts.vue'),
+    props: true
+  },
+  {
+    path: '/employeeCharts/:chartView',
+    name: 'employeeCharts',
+    component: () => import(/* webpackChunkName: "employeeCharts" */ '../views/EmployeeCharts.vue'),
+    props: true
+  },
+  {
+    path: '/reservationCharts',
+    name: 'reservationCharts',
+    component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/ReservationCharts.vue')
   }
 ]
 
