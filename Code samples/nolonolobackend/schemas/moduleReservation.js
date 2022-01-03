@@ -30,7 +30,7 @@ const reserveSchema = new Schema({
         type: Number,
         required: true
     }
-})
+}, { _id : false })
 
 const reservation = mongoose.model('reservation', reserveSchema)
 module.exports.model = reservation;

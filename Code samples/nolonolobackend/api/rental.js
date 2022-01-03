@@ -1,68 +1,141 @@
-const pendingRequest = require('../schemas/modulePendingRequest');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const user = require('../schemas/moduleUser');
+const employee = require('../schemas/moduleEmployee');
+const category = require('../schemas/moduleCategory');
 const product = require('../schemas/moduleProduct');
-const reservation = require('../schemas/moduleReservation');
-const reservations = require('../functions/reservationsHelper');
-
+const computePrice = require('../functions/computePrice');
+const auth = require('./auth');
 const express = require('express');
 const checkAvailability = require('../functions/checkAvailability');
+const reservations = require('../functions/reservationsHelper');
 const router = express.Router();
 
-//Prende il token dell'utente che ha fatto la prenotazione, il nome del prodotto, inizio e fine prenotazione
-// Inizialmente il campo employee della prenotazione è null, prima deve essere accettata
-// 1) Aggiunge la prenotazione al prodotto
-// 2) Aggiunge alla collezione di richieste pendenti dei dipendenti la prenotazione
-// Quando un qualsiasi dipendente accetterà la richiesta allora questa verrà messa nell'array dello user ( verde, rossa)
-// Se non viene accettata la cancelliamo anche dal prodotto, la mettiamo nel prodotto così diciamo viene " bloccato per quella data"
-router.post('/addRent', async (req, res) => {
+/**Get all futures and active reservations */
+router.get('/', (req, res) => {
 
-    //CONTROLLO IL TOKEN PER PRIMA COSA, DAL QUALE ESTRAGGO LA MAIL
-    const authHeader = req.headers['authorization'];
-    let token;
-    if (authHeader != null) {
-        token = authHeader && authHeader.split(' ')[1];
+    let actives = [];
+    let future = [];
+   product.find({})
+    .exec()
+    .then((prods) => {
+        for(i in prods) 
+        {
+            if(prods[i].activeReservation != null) // mi salvo le attive
+                actives.push(prods[i].activeReservation)
+            if(prods[i].futureReservations) // mi salvo le future
+                future =  future.concat(prods[i].futureReservations);
+        } 
+         res.status(200).json({future: future, actives: actives});
+    }).catch((err) => {
+        res.status(400).json({ message: 'Internal server error'});
+    })
+})
+
+/** Insert the reservation on the product, the employee and the user 
+ * if bool = true the expense must be computed
+ * if bool = false expense is already been computed
+*/
+router.post('/:bool', async (req, res) => {
+    let bool = req.params.bool;
+    const userMail = req.body.email;
+    const productName = req.body.product;
+    const employeeMail = req.body.employee;
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    let expense = req.body.expense;
+    const usr = await user.findOne({email: userMail});
+    if(usr)
+    {
+        const prod = await product.findOne({name: productName});
+        const emp = await employee.findOne({email: employeeMail});
+        if(prod)
+        {   
+            console.log("arrivato sin qui");
+            if(checkAvailability.checkAvailability(prod, startDate, endDate))
+            {
+                try{
+                    let collection = await category.findOne({name: prod.type});
+                    if(bool) // expense deve essere calcolata
+                        expense = await computePrice.computePrice(collection, prod, userMail, usr, startDate, endDate);
+                        // altrimenti veniamo da una pending request e non dobbiamo calcolarla di nuovo
+                    let newReserve = reservations.createReservation(userMail,employeeMail, productName, expense, startDate, endDate);
+                    console.log(newReserve);
+                    //salvo nel prodotto
+                    prod.futureReservations.push(newReserve);
+                    prod.save();
+                    //salvo nello user
+                    usr.futureReservations.push(newReserve);
+                    usr.save();
+                    //salvo nell'employee
+                    emp.futureReservations.push(newReserve);
+                    emp.save();
+
+                    res.status(200).json({message: "Succesful operation"});
+                }catch(err)
+                {
+                    res.status(500).json({message: err});
+                }
+            }
+        }else
+        {
+            res.status(500).json({message: "Product unavailable on these dates"});
+        }
+    }else
+    {
+        res.status(500).json({message: "Invalid email inserted"});
     }
-    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
-        let userMail = decoded.email;
-        let productName = req.body.name;
-        let startDate = new Date(req.body.startingDate);
-        let endDate = new Date(req.body.endingDate);
-        let price = req.body.price;
-        startDate.setDate(startDate.getDate() + 1);
-        endDate.setDate(endDate.getDate() + 1);
-       
-       //cerco il prodotto
-    let prod = await product.findOne({name: productName});
-    // Controllo se nel frattempo non si sono fregati il prodotto
-    if(checkAvailability.checkAvailability(prod, startDate, endDate))
+})
+/** Send a product to mantainance */
+router.post('/:name/mantainance', async (req, res) => {
+
+    const productName = req.params.name;
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    let reservationsToChange = [];
+
+    const prod = await product.findOne({name: productName});
+    if(prod)
     {
-        //creo una nuova reservation
-        let newReserve = reservations.createReservation(userMail," ",productName, price, startDate, endDate);
-        prod.reservations.push(newReserve);
-        prod.save();
-        //ora vado ad inserire la reservation nelle richieste pending
-        // così i dipendenti avranno la richiesta pendente
-        let newPendingReq = new pendingRequest({
-            usermail: userMail,
-            product: prod.name,
-            start: `${startDate}`,
-            end: `${endDate}`,
-            expense: `${price}`
-        })  
-        // Controlliamo se la pending request esiste già prima di inserirla
-    let exist = await pendingRequest.findOne({ usermail: userMail, product: prod.name, start: `${startDate}`,}) 
-    if(exist)
-    {
-        res.status(400).json({message: "The reserve is already present"});
+        if(prod.futureReservations)
+            {
+                // Ordino le prenotazioni per data di inizio
+                sortBy.sortByTime(prod.futureReservations, 'start');
+                // Se la data di inizio della prenotazione è <= della data di fine della nostra
+                // prenotazione speciale allora và eliminata, e va ritornata 
+                for(let i in prod.futureReservations)
+                {
+                    // SE INIZIA PRIMA CHE DOVREBBE FINIRE LA MANUTENZIONE
+                if(prod.futureReservations[i].start.getTime() <= endDate.getTime())
+                    {
+                        // Salvo la prenotazione
+                        reservationsToChange.push(prod.futureReservations[i]);
+                        // La elimino dal prodotto
+                        prod.futureReservations.splice(i, 1);
+
+                    }else if(prod.futureReservations[i].start.getTime() > endDate.getTime())
+                    {
+                        // Esco dal for perchè ho superato il periodo di mio interesse
+                        break;
+                    }
+                }
+            }
+            
+            // Creo la nuova reservation da aggiungere al prodotto
+            
+            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate);
+            
+            prod.futureReservations.unshift(newReserve);
+            
+            // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
+            
+            prod.save();
+            
+            res.status(200).json({reservations: reservationsToChange});
+        
     }else{
-        console.log("lo metto");    
-        newPendingReq.save();    
-        res.status(200).json({message: "All went good :)"});
+         
+        res.status(500).send("Error, please try again later");
     }
-}
-})
-})
 
+})
 
 module.exports = router;

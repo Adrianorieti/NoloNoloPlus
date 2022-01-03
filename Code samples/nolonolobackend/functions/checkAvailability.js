@@ -8,7 +8,6 @@ module.exports = {
         let available = true;
         if(product.futureReservations && product.futureReservations.length > 0)
         {
-            console.log(product.futureReservations);
             if(product.activeReservation)
                 product.futureReservations.push(product.activeReservation); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
             if(product.futureReservations.length > 1)

@@ -1,3 +1,4 @@
+
 a{
     text-decoration: none;
     color: white;
@@ -52,4 +53,17 @@ li
     display: flex;
     justify-content: space-between ;
     padding: 2rem;
+}
+
+#deny
+{
+    justify-content: center;
+}
+#message
+{
+    justify-content: center;
+}
+#resToChange
+{
+    background-color: bisque;
 }

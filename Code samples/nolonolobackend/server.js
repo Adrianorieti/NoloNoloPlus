@@ -6,6 +6,7 @@ const employee = require('./schemas/moduleEmployee');
 const pending = require('./schemas/modulePendingRequest');
 const bcrypt = require('bcrypt');
 const user = require('./schemas/moduleUser');
+const rental = require('./api/rental');
 const account = require('./api/account');
 const pendingRequest = require('./api/pending');
 const customer = require('./api/customer');
@@ -42,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'backoffice')));
 /* Actual API server routes */
 app.use('/api/account/', account);
 // app.use('/api/services/', services);
+app.use('/api/rental/', rental);
 app.use('/api/pending/', pendingRequest);
 app.use('/api/customer/', customer);
 app.use('/api/auth/', auth);

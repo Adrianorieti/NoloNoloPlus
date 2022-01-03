@@ -74,7 +74,7 @@ function App() {
             </div>
           </section>
 
-          <section className="App-content bg-image container-properties">
+          <section className="App-content bg-image container-properties" id="rentForm">
             <div className="row">
               <div className="col-md-6 rentform">
                 <RentForm queryToParent={queryToParent} />

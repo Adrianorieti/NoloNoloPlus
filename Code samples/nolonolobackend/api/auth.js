@@ -37,23 +37,24 @@ function verifyAdmin(req, res, next)
         const current_url = new URL(`http://${req.get('host')}` + req.originalUrl);
         const search_params = current_url.searchParams;
         const token = search_params.get('token');
-        if(token == null) return res.sendStatus(401);
-        else if(token)
+        if(token === 'null') return res.sendStatus(401);
+        else
         {
-            jwt.verify(token, process.env.TOKEN_EMPLOYEE_KEY, async function(err, decoded)
-        {
-           if(err) 
-           {
-               console.log(err.name);
-               return res.status(403).send(` ${err.name} `);
-           }
-           const source =  await employee.findOne({ email: decoded.email });
-           if(source.role !== 'admin')
-           {
-               return res.status(403).send(` Only an admin can access this page`);
-           }
-           next();
-       })
+                jwt.verify(token, process.env.TOKEN_EMPLOYEE_KEY, async function(err, decoded)
+                {
+                    if(err) 
+                    {
+                        console.log(err.name);
+                        return res.status(403).send(` ${err.name} `);
+                    }
+                    const source =  await employee.findOne({ email: decoded.email });
+                    if(source.role !== 'admin')
+                    {
+                        return res.status(403).send(` Only an admin can access this page`);
+                    }
+                    req.emp = source;
+                    next();
+                })
         }
     }
 

@@ -3,8 +3,12 @@ const discount = require('../schemas/moduleDiscount');
 
 
 module.exports = {
-    computePrice: async function (category, product, userMail, startDate, endDate) {
-        let usr = await user.findOne({ email: userMail });
+    computePrice: async function (category, product, userMail, userObject, startDate, endDate) {
+        let usr;
+        if(userObject === '')
+             usr = await user.findOne({ email: userMail });
+        else
+            usr = userObject;
         if (!usr) {
             //nessuno è stato trovato con la mail che stiamo per inserire.
             res.status(401).send("User non trovato");
@@ -81,7 +85,7 @@ module.exports = {
             if (totalDiscount < 0)
                 totalDiscount = 0; // cioè non abbiamo fatto nessuno sconto bensì una maggiorazione
                 finalPrice = parseInt(finalPrice.toFixed(2));
-           console.log(typeof finalPrice);
+           console.log("fine compute price");
             return (finalPrice);
         }
 

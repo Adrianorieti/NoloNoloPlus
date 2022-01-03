@@ -34,42 +34,55 @@ router.get('/:name', (req, res) => {
 })
 
 /** Verify if the product is available on a given period */
-router.get('/:name/available', async (req, res) => {
-  let name = req.params.name; 
-  let start = new Date(req.query.start);
-  let end = new Date(req.query.end);
-  let email = req.email;
-      product.findOne({name: name})
+router.get('/:name/available', (req, res) => {
+    let name = req.params.name; 
+    let start = new Date(req.query.start);
+    start.setDate(start.getDate() +1);
+    let end = new Date(req.query.end);
+    end.setDate(end.getDate() +1);
+    let email = req.query.email;
+    console.log(req.query);
+    console.log("nome", name);
+
+       product.findOne({name: name})
       .exec()
       .then(async (prod) => {
+          console.log("sono dentro");
             let collection = await category.findOne({name: prod.type})
                 if(checkAvailability.checkAvailability(prod, start, end)) {
-                  let price = await computePrice.computePrice(collection, prod, email, start, end);
+                  let price = await computePrice.computePrice(collection, prod, email,'', start, end);
                   res.status(200).json({price: price, product: prod});
+                }else
+                {
+                    res.status(400).json({ message: 'Not available', product: prod })
                 }
         }).catch((err) => {
+            console.log(err);       
             res.status(400).json({ message: 'Bad input parameter', error: err })
         })
     
 })
 /** Add a product */
 router.post('/', (req, res) => {
+
     const newProduct = new product({
         name: req.body.name,
         type: req.body.type,
         status: 'new',
         price: req.body.price,
         futureReservations: [],
-        activeReservation: [],
+        activeReservation: '',
         pastReservations: [],
         numberOfRents: 0
     })
+
+    console.log(newProduct);
     newProduct
         .save()
-        .then((result) => {
+        .then(() => {
+            console.log("ok");
             res.status(200).json({
-                message: 'Item created',
-                product: newProduct,
+                message: 'Item created'
             })
         })
         .catch((err) => {
@@ -80,7 +93,7 @@ router.post('/', (req, res) => {
 router.post('/:name', (req, res) => {
     let name = req.params.name;
     let newData = req.body; // deve essere un json {key: value}
- 
+    console.log(newData);
     product.findOneAndUpdate(
         { name: name },
         { $set: newData },
@@ -88,11 +101,11 @@ router.post('/:name', (req, res) => {
     ).exec()
     .then((result) => {
         console.log(result);
-        res.status(200).json(result);
+        res.status(200).json({message: "Succesfuly changed"});
     })
     .catch((err) => {
-        console.log("nope");
-        res.status(400).json({ message: 'Bad input parameter', error: err })
+        console.log(err);
+        res.status(400).json({ message: 'Bad input parameter'})
     })
 })
 

@@ -3,12 +3,17 @@
     justify-content: center;
     padding: 1rem;
 }
+#battòn
+{
+    display: flex;
+}
 #content
 {
     text-align: center;
+    justify-content: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
+    gap: 2rem;
 }
 #summary
 {

@@ -62,7 +62,6 @@ function sendProduct(event)
     event.preventDefault();
     let name = $('#name').val();
     let price = $('#price').val();
-    let status = $('#status').val();
     let category =$('#category').val();
     if(!name || !price)
         $('#error').html("Please insert all fields");
@@ -71,19 +70,18 @@ function sendProduct(event)
         let obj = `{
             "name": "${name}",
             "price": "${price}",
-            "status": "${status}",
-            "category": "${category}"
+            "type": "${category}"
           }`
           $.post({
             type: 'POST',
-              url: 'http://localhost:8001/api/employee/addProduct',
+              url: 'http://localhost:8001/api/products/',
               contentType: 'application/json; charset=utf-8',
               dataType: 'json',
               data: obj
-            }, function(){
-                $('#add').html("Successful added");
-            }).fail(function(){
-                $('#add').html("Error, maybe the element already exists");
+            }, function(data){
+                $('#content').html(data.message);
+            }).fail(function(data){
+                $('#content').html(data.message);
 
             })
     }
@@ -109,21 +107,13 @@ function showAddProduct()
   </select>
 </div>
 <div class="input-group mb-3">
-<label class="input-group-text" for="status">Status</label>
-<select class="form-select" id="status">
-  <option selected value="New">New</option>
-  <option value="Broken">Broken</option>
-  <option value="Used">Used</option>
-</select>
-</div>
-<div class="input-group mb-3">
 <label class="input-group-text" for="price">Price</label>
   <span class="input-group-text">€</span>
   <input type="text" class="form-control" id="price" aria-label="Amount (to the nearest euro)">
   <span class="input-group-text">.00</span>
 </div>
 <span id="error"></span> <br>
-<button type="submit" class="btn btn-lg btn-primary btn-block" >Add product</button>
+<button type="submit" class="btn btn-lg btn-primary btn-block" onclick="sendProduct(event)">Add product</button>
 <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
 </form>
 
@@ -133,31 +123,27 @@ function showAddProduct()
 
 }
 
-function sendChange()
+function sendChange(event)
 {
+  event.preventDefault();
   let name = $('#oldname').val();
   let field = $('#changeMenu').val();
   let newValue = $('#newValue').val();
-  console.log(name);
-  console.log(field);
-  console.log(newValue);
 
   const obj = `{
-    "name": "${name}",
-    "type": "${field}",
-    "data": "${newValue}"
+    "${field}": "${newValue}"
   }`;
 
   $.post({
     type: 'POST',
-      url: 'http://localhost:8001/api/employee/updateProduct',
+      url: `http://localhost:8001/api/products/${name}`,
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       data: obj
     }, function(data){
-        $('#change').html(data.message);
+        $('#content').html(data.message);
     }).fail(function(data){
-        $('#change').html(data.message);
+        $('#content').html(data.message);
     })
   
 }
@@ -182,8 +168,8 @@ function showChangeProduct(x, products)
   <input type="text" class="form-control" id="newValue">
 </div>
 <span id="changeErr"></span>
-<button class="btn btn-outline-primary " type="button" onclick="sendChange()" >Confirm</button>
-<button class="btn btn-outline-warning" type="button" onclick="reset()" >Close</button>
+<button class="btn btn-primary " type="button" onclick="sendChange(event)" >Confirm</button>
+<button class="btn btn-warning" type="button" onclick="reset()" >Close</button>
 
   `
   $('#title').html("");
@@ -191,24 +177,38 @@ function showChangeProduct(x, products)
   $('#content').html(toInsert);
 }
 
+function showDeletedReservations(reservations)
+{
+  let toInsert= '';
+  for(let x in reservations)
+  {
+    toInsert += `
+    <div id="resToChange">
+    <p>Reservation n. ${x}</p>
+    <p>User: ${reservations[x].usermail}</p>
+    <p>Product: ${reservations[x].product}</p>
+    <p>Employee: ${reservations[x].employee}</p>
+    <p>Expense: ${reservations[x].expense}</p>
+    <p>Start: ${reservations[x].start}</p>
+    <p>End: ${reservations[x].end}</p>
+    </div>
+    `;
+  }
+}
 /** TODO GESTIRE GRAFICAMENTE LA LISTA DI RESERVATIONS RITORNATA DAL SERVER QUANDO CANCELLIAMO IL PRODOTTO */
 function sendDelete()
 {
   let toDelete = $('#product').val();
-  console.log(toDelete);
-  const obj =`{
-    "name": "${toDelete}"
-  }`
+
   $.post({
-    type: 'POST',
-      url: 'http://localhost:8001/api/employee/deleteProduct',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      data: obj
-    }, function(){
-        $('#delete').html("Successful deletion");
+    type: 'DELETE',
+      url: `http://localhost:8001/api/products/${toDelete}`,
+    }, function(data){
+      $('#content').html(data.message);
+      if(data.reservations != null)
+        showDeletedReservations(data.reservations);
     }).fail(function(){
-        $('#delete').html("Error, maybe the element doesn't exists");
+        $('#content').html("Error, maybe the element doesn't exists");
     })
 }
 
