@@ -29,6 +29,7 @@ function sendRentalHypothesis(x, event)
     let email = $('#email').val();
     let startDate = $('#startDate').val();
     let endDate = $('#endDate').val();
+    console.log(productsNames[x]);
     if(startDate && endDate && email)
       {
         $.post({

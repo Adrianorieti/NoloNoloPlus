@@ -34,26 +34,30 @@ router.get('/:name', (req, res) => {
 })
 
 /** Verify if the product is available on a given period */
-router.get('/:name/available', async (req, res) => {
+router.get('/:name/available', (req, res) => {
     let name = req.params.name; 
     let start = new Date(req.query.start);
     start.setDate(start.getDate() +1);
     let end = new Date(req.query.end);
     end.setDate(end.getDate() +1);
     let email = req.query.email;
+    console.log(req.query);
+    console.log("nome", name);
 
-      product.findOne({name: name})
+       product.findOne({name: name})
       .exec()
       .then(async (prod) => {
+          console.log("sono dentro");
             let collection = await category.findOne({name: prod.type})
                 if(checkAvailability.checkAvailability(prod, start, end)) {
-                  let price = await computePrice.computePrice(collection, prod, email, start, end);
+                  let price = await computePrice.computePrice(collection, prod, email,'', start, end);
                   res.status(200).json({price: price, product: prod});
                 }else
                 {
                     res.status(400).json({ message: 'Not available', product: prod })
                 }
         }).catch((err) => {
+            console.log(err);       
             res.status(400).json({ message: 'Bad input parameter', error: err })
         })
     
