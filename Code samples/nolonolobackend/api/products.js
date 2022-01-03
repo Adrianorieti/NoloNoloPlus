@@ -64,22 +64,25 @@ router.get('/:name/available', (req, res) => {
 })
 /** Add a product */
 router.post('/', (req, res) => {
+
     const newProduct = new product({
         name: req.body.name,
         type: req.body.type,
         status: 'new',
         price: req.body.price,
         futureReservations: [],
-        activeReservation: [],
+        activeReservation: '',
         pastReservations: [],
         numberOfRents: 0
     })
+
+    console.log(newProduct);
     newProduct
         .save()
-        .then((result) => {
+        .then(() => {
+            console.log("ok");
             res.status(200).json({
-                message: 'Item created',
-                product: newProduct,
+                message: 'Item created'
             })
         })
         .catch((err) => {
@@ -90,7 +93,7 @@ router.post('/', (req, res) => {
 router.post('/:name', (req, res) => {
     let name = req.params.name;
     let newData = req.body; // deve essere un json {key: value}
- 
+    console.log(newData);
     product.findOneAndUpdate(
         { name: name },
         { $set: newData },
@@ -98,11 +101,11 @@ router.post('/:name', (req, res) => {
     ).exec()
     .then((result) => {
         console.log(result);
-        res.status(200).json(result);
+        res.status(200).json({message: "Succesfuly changed"});
     })
     .catch((err) => {
-        console.log("nope");
-        res.status(400).json({ message: 'Bad input parameter', error: err })
+        console.log(err);
+        res.status(400).json({ message: 'Bad input parameter'})
     })
 })
 

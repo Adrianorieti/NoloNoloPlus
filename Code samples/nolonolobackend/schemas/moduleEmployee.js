@@ -3,33 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const reserveSchema = require('./moduleReservation').schema;
 
-/* Sub Schema for product map */
-// const reserveSchema = new Schema({
-
-//     usermail: {
-//         type: String,
-//         required: true
-//     },
-//     product: { //nome dell'oggetto che andiamo a noleggiare!
-//         type: String,
-//         required: true
-//     },
-//     employee:
-//     {
-//         type: String
-//     },
-//     start: {
-//         type: Date,
-//         required: true
-//     },
-//     end: {
-//         type: Date,
-//         required: true
-//     },
-//     expense: { // costo del noleggio
-//         type: Number
-//     }
-// })
 
 const employeeSchema = new Schema({
     name: {

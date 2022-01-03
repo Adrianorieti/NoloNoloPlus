@@ -9,7 +9,7 @@ const checkAvailability = require('../functions/checkAvailability');
 const reservations = require('../functions/reservationsHelper');
 const router = express.Router();
 
-/**Get all futures and active resevations */
+/**Get all futures and active reservations */
 router.get('/', (req, res) => {
 
     let actives = [];
@@ -84,4 +84,58 @@ router.post('/:bool', async (req, res) => {
         res.status(500).json({message: "Invalid email inserted"});
     }
 })
+/** Send a product to mantainance */
+router.post('/:name/mantainance', async (req, res) => {
+
+    const productName = req.params.name;
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    let reservationsToChange = [];
+
+    const prod = await product.findOne({name: productName});
+    if(prod)
+    {
+        if(prod.futureReservations)
+            {
+                // Ordino le prenotazioni per data di inizio
+                sortBy.sortByTime(prod.futureReservations, 'start');
+                // Se la data di inizio della prenotazione è <= della data di fine della nostra
+                // prenotazione speciale allora và eliminata, e va ritornata 
+                for(let i in prod.futureReservations)
+                {
+                    // SE INIZIA PRIMA CHE DOVREBBE FINIRE LA MANUTENZIONE
+                if(prod.futureReservations[i].start.getTime() <= endDate.getTime())
+                    {
+                        // Salvo la prenotazione
+                        reservationsToChange.push(prod.futureReservations[i]);
+                        // La elimino dal prodotto
+                        prod.futureReservations.splice(i, 1);
+
+                    }else if(prod.futureReservations[i].start.getTime() > endDate.getTime())
+                    {
+                        // Esco dal for perchè ho superato il periodo di mio interesse
+                        break;
+                    }
+                }
+            }
+            
+            // Creo la nuova reservation da aggiungere al prodotto
+            
+            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate);
+            
+            prod.futureReservations.unshift(newReserve);
+            
+            // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
+            
+            prod.save();
+            
+            res.status(200).json({reservations: reservationsToChange});
+        
+    }else{
+         
+        res.status(500).send("Error, please try again later");
+    }
+
+})
+
 module.exports = router;
