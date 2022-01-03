@@ -1,105 +1,95 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import './style/newUserPage.css';
+import Spinner from '../components/Spinner'
 
 export default function newUserPage() {
 
+    const [user, setUser] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function getEmail() {
+            let token = JSON.parse(sessionStorage.getItem("token"));
+            const options = {
+                method: 'GET'
+            };
+            fetch(`http://localhost:8001/api/auth/${token}`, options)
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    }
+                }).then(data => {
+                    return (data.email);
+                })
+                .catch(data => { console.log('abbiamo un errore', data.message); setError(data.message); });
+        };
+        async function getUser() {
+            let email = await getEmail();
+            const options = {
+                method: 'GET'
+            };
+            fetch(`http://localhost:8001/api/user/${email}`, options)
+                .then(response => {
+                    if (response.status == 200) {
+                        return response.json();
+                    }
+                }).then((data) => {
+                    console.log(data);
+                    setUser(data.user);
+                    setLoading(false);
+                })
+                .catch((err) => { console.log(err); setError(err.message); });
+        };
+        getUser();
+    }, [])
 
     return (
-        <div className="container">
-            <div className="row gutters">
-                <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
-                    <div className="card h-100">
-                        <div className="card-body">
-                            <div className="account-settings">
-                                <div className="user-profile">
-                                    <div className="user-avatar">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin" />
-                                    </div>
-                                    <h5 className="user-name">Yuki Hayashi</h5>
-                                    <h6 className="user-email">yuki@Maxwell.com</h6>
-                                </div>
-                                <div className="about">
-                                    <h5>About</h5>
-                                    <p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
-                                </div>
+        <div id="wrapper" >
+            {error ? <span> {error}</span> :
+                (loading ? <div><Spinner /></div> :
+                    <div className="row">
+                        <div className="col-md-3 border-right">
+                            <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                                <img className="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" />
+                                <span className="font-weight-bold">{user.name + ' ' + user.surname}</span><span className="text-black-50">{user.email}</span><span> </span>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div className="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
-                    <div className="card h-100">
-                        <div className="card-body">
-                            <div className="row gutters">
-                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <h6 className="mb-2 text-primary">Personal Details</h6>
+                        <div className="col-md-5 border-right">
+                            <div className="p-3 py-5">
+                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 className="text-right">Profile Settings</h4>
                                 </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="fullName">Full Name</label>
-                                        <input type="text" className="form-control" id="fullName" placeholder="Enter full name" />
-                                    </div>
+                                <div className="row mt-2">
+                                    <div className="col-md-6"><label className="labels">Name</label><input type="text" className="form-control" placeholder="first name" value="" /></div>
+                                    <div className="col-md-6"><label className="labels">Surname</label><input type="text" className="form-control" value="" placeholder="surname" /></div>
                                 </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="eMail">Email</label>
-                                        <input type="email" className="form-control" id="eMail" placeholder="Enter email ID" />
-                                    </div>
+                                <div className="row mt-3">
+                                    <div className="col-md-12"><label className="labels">Mobile Number</label><input type="text" className="form-control" placeholder="enter phone number" value="" /></div>
+                                    <div className="col-md-12"><label className="labels">Address Line 1</label><input type="text" className="form-control" placeholder="enter address line 1" value="" /></div>
+                                    <div className="col-md-12"><label className="labels">Address Line 2</label><input type="text" className="form-control" placeholder="enter address line 2" value="" /></div>
+                                    <div className="col-md-12"><label className="labels">Postcode</label><input type="text" className="form-control" placeholder="enter address line 2" value="" /></div>
+                                    <div className="col-md-12"><label className="labels">State</label><input type="text" className="form-control" placeholder="enter address line 2" value="" /></div>
+                                    <div className="col-md-12"><label className="labels">Area</label><input type="text" className="form-control" placeholder="enter address line 2" value="" /></div>
+                                    <div className="col-md-12"><label className="labels">Email ID</label><input type="text" className="form-control" placeholder="enter email id" value="" /></div>
+                                    <div className="col-md-12"><label className="labels">Education</label><input type="text" className="form-control" placeholder="education" value="" /></div>
                                 </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="phone">Phone</label>
-                                        <input type="text" className="form-control" id="phone" placeholder="Enter phone number" />
-                                    </div>
+                                <div className="row mt-3">
+                                    <div className="col-md-6"><label className="labels">Country</label><input type="text" className="form-control" placeholder="country" value="" /></div>
+                                    <div className="col-md-6"><label className="labels">State/Region</label><input type="text" className="form-control" value="" placeholder="state" /></div>
                                 </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="website">Website URL</label>
-                                        <input type="url" className="form-control" id="website" placeholder="Website url" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row gutters">
-                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <h6 className="mt-3 mb-2 text-primary">Address</h6>
-                                </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="Street">Street</label>
-                                        <input type="name" className="form-control" id="Street" placeholder="Enter Street" />
-                                    </div>
-                                </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="ciTy">City</label>
-                                        <input type="name" className="form-control" id="ciTy" placeholder="Enter City" />
-                                    </div>
-                                </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="sTate">State</label>
-                                        <input type="text" className="form-control" id="sTate" placeholder="Enter State" />
-                                    </div>
-                                </div>
-                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                                    <div className="form-group">
-                                        <label for="zIp">Zip Code</label>
-                                        <input type="text" className="form-control" id="zIp" placeholder="Zip Code" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row gutters">
-                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                    <div className="text-right">
-                                        <button type="button" id="submit" name="submit" className="btn btn-secondary">Cancel</button>
-                                        <button type="button" id="submit" name="submit" className="btn btn-primary">Update</button>
-                                    </div>
-                                </div>
+                                <div className="mt-5 text-center"><button className="btn btn-primary profile-button" type="button">Save Profile</button></div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                        <div className="col-md-4">
+                            <div className="p-3 py-5">
+                                <div className="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span className="border px-3 p-1 add-experience"><i className="fa fa-plus"></i>&nbsp;Experience</span></div><br />
+                                <div className="col-md-12"><label className="labels">Experience in Designing</label><input type="text" className="form-control" placeholder="experience" value="" /></div> <br />
+                                <div className="col-md-12"><label className="labels">Additional Details</label><input type="text" className="form-control" placeholder="additional details" value="" /></div>
+                            </div>
+                        </div>
+                    </div>)}
         </div>
     );
 }

@@ -3,9 +3,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const employee = require('./schemas/moduleEmployee');
-const user = require('./schemas/moduleUser');
 const pending = require('./schemas/modulePendingRequest');
-const bcrypt = require('bcrypt');
 const user = require('./schemas/moduleUser');
 const rental = require('./api/rental');
 const account = require('./api/account');
@@ -16,6 +14,7 @@ const employeeRoutes = require('./routes/empRoutes');
 const emp = require('./api/employee');
 const categories = require('./api/categories');
 const products = require('./api/products');
+const userApi = require('./api/user');
 const app = express();
 const bcrypt = require('bcrypt');
 
@@ -47,10 +46,11 @@ app.use('/api/account/', account);
 app.use('/api/rental/', rental);
 app.use('/api/pending/', pendingRequest);
 app.use('/api/customer/', customer);
-app.use('/api/auth/', auth);
+app.use('/api/auth', auth);
 app.use('/api/employee/', emp);
 app.use('/api/categories', categories);
 app.use('/api/products', products);
+app.use('/api/user', userApi);
 
 /* Alternative routes for static files */
 app.use('/employee/', employeeRoutes);

@@ -51,8 +51,8 @@ function App() {
 
   return (
     <div className="App" >
-          <Header />
-          <Navbar name={data} queryToParent={queryToParent} />
+      <Header />
+      <Navbar name={data} queryToParent={queryToParent} />
       <Switch>
 
         <Route path="/" exact >
@@ -135,7 +135,6 @@ function App() {
               </div>
             </div>
           </section>
-          <UpdatePage nameToParent={nameToParent} />
 
         </Route>
 
@@ -222,7 +221,7 @@ function App() {
         </Route>
 
         <Route path='/about' exact >
-        {/* <Navbar name={data} queryToParent={queryToParent} /> */}
+          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -232,9 +231,9 @@ function App() {
                 </ul>
               </div>
             </div>
-      <About />
+            <About />
           </section>
-        
+
         </Route>
       </Switch>
 

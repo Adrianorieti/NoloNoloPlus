@@ -5,34 +5,32 @@ import { useHistory } from "react-router";
 import './style/Navbar.css';
 
 
-function Navbar (props){
+function Navbar(props) {
 
   console.log("render");
 
   let history = useHistory();
 
   const [loggato, setloggato] = useState(false);
-  
 
-  function checkLog(token)
-  {
-       fetch('http://localhost:8001/api/auth/authLog',{
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-       }).then(response =>{
-         if(response.status == 200)
-         {
-             setloggato(true);
-         }else{
-           console.log("Errore, login non effettuato correttamente");
-         }
-       }).catch(err =>{console.log(err)});
+
+  function checkLog(token) {
+    fetch('http://localhost:8001/api/auth/', {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    }).then(response => {
+      if (response.status == 200) {
+        console.log("siamo nel 200 della navbar");
+        setloggato(true);
+      } else {
+        console.log("Errore, login non effettuato correttamente");
+      }
+    }).catch(err => { console.log(err) });
 
   }
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     console.log("effect");
     const token = JSON.parse(sessionStorage.getItem("token"));
     if (token) {
@@ -80,7 +78,7 @@ function Navbar (props){
   return (
     <nav className="App-navbar navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
-      
+
         <h3><i class="fa fa-renren fa-2x"></i>&nbsp; NoloNoloPlus</h3>
 
         <button id="burger" onClick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,19 +88,20 @@ function Navbar (props){
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
           <ul className="navbar-nav">
             <li className="nav-item">
-            <i className="fa fa-fw fa-home fa-2x"></i><Link className="nav-link active" aria-current="page" to="/">Home</Link>
+              <i className="fa fa-fw fa-home fa-2x"></i><Link className="nav-link active" aria-current="page" to="/">Home</Link>
             </li>
             <li className="nav-item">
-            <i class="fa fa-bicycle fa-2x"></i><Link className="nav-link" to={'/products'} >Products</Link>
+              <i class="fa fa-bicycle fa-2x"></i><Link className="nav-link" to={'/products'} >Products</Link>
             </li>
             <li className="nav-item">
-            <i className="fa fa-fw fa-user fa-2x"></i><Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
+              <i className="fa fa-fw fa-user fa-2x"></i><Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
             </li>
             <li className="nav-item">
-            <i className="fa fa-fw fa-envelope fa-2x"></i><Link className="nav-link" to={'/about'} >About and Rules</Link>
+              <i class="fa fa-info-circle fa-2x" aria-hidden="true"></i><Link className="nav-link" to={'/about'} >About and Rules</Link>
             </li>
-            <li className="nav-item" id="logout"  >
-            <Link className="nav-link" onClick={logout}>Logout</Link>
+            <li className="nav-item" id="logout" >
+              <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+              <Link className="nav-link" onClick={logout}>Logout</Link>
             </li>
           </ul>
         </div>
