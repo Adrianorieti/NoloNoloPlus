@@ -62,7 +62,7 @@ const UserSchema = new Schema({
         type: Number,
         required: true
     },
-    amountPaid: { 
+    amountPaid: {
         type: Number,
         required: true
     },
@@ -70,7 +70,7 @@ const UserSchema = new Schema({
     //prenotazioni future modificabili
     futureReservations: [reserveSchema], // let newRes = new Reservation(ecc..)
     //prenotazioni attive e non modificabili // user.futureReservation.push(newres)
-    activeReservations: [reserveSchema],
+    activeReservation: reserveSchema,
     //prenotazioni completate
     pastReservations: [reserveSchema],
 });
