@@ -21,4 +21,22 @@ router.get('/:email', (req, res) => {
         })
 })
 
+router.patch('/:email', (req, res) => {
+    let email = req.params.email;
+    let newData = req.body;
+    console.log("email: ", email);
+    console.log("newdata: ", newData);
+    user.findOneAndUpdate(
+        { email: email },
+        { $set: newData },
+        { runValidators: true, new: false, useFindAndModify: false }
+    ).exec()
+        .then((result) => {
+            res.status(200).json(result);
+        })
+        .catch((err) => {
+            res.status(400).json({ message: 'Bad input parameter', error: err })
+        })
+})
+
 module.exports = router;

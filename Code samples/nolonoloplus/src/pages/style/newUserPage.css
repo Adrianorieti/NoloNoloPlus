@@ -42,3 +42,8 @@
     cursor: pointer;
     border: solid 1px #BA68C8
 }
+
+.communications-wrapper{
+    padding: 1em;
+    border: solid 1px black;
+}

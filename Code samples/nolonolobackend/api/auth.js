@@ -42,7 +42,7 @@ router.get('/:token', (req, res) => {
         else {
             res.status(200).json({ email: decoded.email });
         }
-    })
+    });
 })
 
 function verifyAdmin(req, res, next) {
