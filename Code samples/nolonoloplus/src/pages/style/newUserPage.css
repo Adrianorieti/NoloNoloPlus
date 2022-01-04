@@ -56,3 +56,7 @@ input[type="file"] {
     padding: 6px 12px;
     cursor: pointer;
 }
+
+#newValue::after{
+    content: '<i class="fa fa-eye" aria-hidden="true"></i>';
+}

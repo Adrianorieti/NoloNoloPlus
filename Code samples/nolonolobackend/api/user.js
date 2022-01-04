@@ -1,14 +1,16 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const fs =require('fs');
+const fs = require('fs');
 const user = require('../schemas/moduleUser');
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const bcrypt = require('bcrypt');
+const changeEmail = require('../functions/emailCascade');
 
 const userImagesPath = path.join(
     global.rootDir,
-    '/images/users' 
+    '/images/users'
 )
 // Initialize local storage
 var storage = multer.diskStorage({
@@ -49,29 +51,35 @@ router.get('/:email', (req, res) => {
 })
 //quando creiamo uno user inseriamo l'immagine di default
 
-router.post('/:email', upload.single('img'),(req, res) => {
+router.patch('/:email', upload.single('img'), async (req, res) => {
     let email = req.params.email;
     let newData = {};
-    if(!req.file)    
-    {
-         newData = req.body;
-    }else
-    {
-         newData.image = path.join('/images/users', req.file.filename)
+    if (!req.file) {
+        newData = req.body;
+        if (newData.password) {
+            await bcrypt.hash(newData.password, 10, function (err, hash) {
+                newData.password = hash;
+            });
+        }
+        else if (newData.email) {
+            changeEmail.emailCascadeChange(newData.email, email);
+        }
+    } else {
+        newData.image = path.join('/images/users', req.file.filename)
     }
-    console.log(newData);
-    user.findOneAndUpdate(
-        { email: email },
-        { $set: newData },
-        { runValidators: true, new: false, useFindAndModify: false }
-    ).exec()
-        .then((result) => {
-                 res.status(200).json(result);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(400).json({ message: 'Bad input parameter', error: err })
-        })
+    // console.log(newData);
+    // user.findOneAndUpdate(
+    //     { email: email },
+    //     { $set: newData },
+    //     { runValidators: true, new: false, useFindAndModify: false }
+    // ).exec()
+    //     .then((result) => {
+    //         res.status(200).json(result);
+    //     })
+    //     .catch((err) => {
+    //         console.log(err);
+    //         res.status(400).json({ message: 'Bad input parameter', error: err })
+    //     })
 })
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const employee = require('../schemas/moduleEmployee');
+const user = require('../schemas/moduleUser');
 const product = require('../schemas/moduleProduct');
 const pendingRequest = require('../schemas/modulePendingRequest');
 
@@ -7,14 +8,14 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
     //per tutti gli impiegati del database
     for await (let emp of employee.find()) {
         // Se trovo un match con quelli che sto cercando
-        if (emps.include(emp.email)) {
+        if (emps.includes(emp.email)) {
             if (emp.futureReservations) // se il dipendente ha delle future res
             {
                 for (let x in emp.futureReservations) // per tutte le sue future res
                 {
                     // se la mail è quella vecchia dello usr 
-                    if (emp.futureReservations[x].userMail === oldMail) {
-                        emp.futureReservations[x].userMail = newMail;
+                    if (emp.futureReservations[x].usermail === oldMail) {
+                        emp.futureReservations[x].usermail = newMail;
                     }
                 }
             }
@@ -23,8 +24,8 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
                 for (let x in emp.activeReservations) // per tutte le sue active res
                 {
                     // se la mail è quella vecchia dello usr 
-                    if (emp.activeReservations[x].userMail === oldMail) {
-                        emp.activeReservations[x].userMail = newMail;
+                    if (emp.activeReservations[x].usermail === oldMail) {
+                        emp.activeReservations[x].usermail = newMail;
                     }
                 }
             }
@@ -33,8 +34,8 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
                 for (let x in emp.pastReservations) // per tutte le sue past res
                 {
                     // se la mail è quella vecchia dello usr 
-                    if (emp.pastReservations[x].userMail === oldMail) {
-                        emp.pastReservations[x].userMail = newMail;
+                    if (emp.pastReservations[x].usermail === oldMail) {
+                        emp.pastReservations[x].usermail = newMail;
                     }
                 }
             }
@@ -44,11 +45,36 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
 }
 async function changeCascadeProds(prods, newMail, oldMail) {
     for await (let prod of product.find()) { // per tutti i prodotti del database
-        if (prods.include(prod.name)) // se c'è match con quelli che cerco
+        if (prods.includes(prod.name)) // se c'è match con quelli che cerco
         {
-            for (let x in prod.reservations) {
-                if (prod.reservations[x].userMail === oldMail) {
-                    prod.reservations[x].userMail = newMail;
+            if (prod.futureReservations) // se il dipendente ha delle future res
+            {
+                for (let x in prod.futureReservations) // per tutte le sue future res
+                {
+                    // se la mail è quella vecchia dello usr 
+                    if (prod.futureReservations[x].usermail === oldMail) {
+                        prod.futureReservations[x].usermail = newMail;
+                    }
+                }
+            }
+            if (prod.activeReservations) // se il dipendente ha delle acrive res
+            {
+                for (let x in prod.activeReservations) // per tutte le sue active res
+                {
+                    // se la mail è quella vecchia dello usr 
+                    if (prod.activeReservations[x].usermail === oldMail) {
+                        prod.activeReservations[x].usermail = newMail;
+                    }
+                }
+            }
+            if (prod.pastReservations) // se il dipendente ha delle past res
+            {
+                for (let x in prod.pastReservations) // per tutte le sue past res
+                {
+                    // se la mail è quella vecchia dello usr 
+                    if (prod.pastReservations[x].usermail === oldMail) {
+                        prod.pastReservations[x].usermail = newMail;
+                    }
                 }
             }
             prod.save();
@@ -59,45 +85,61 @@ async function changeCascadeProds(prods, newMail, oldMail) {
 }
 
 async function checkPendingReqs(newMail, oldMail) {
-    for await (let req of pendingRequest.find({ userMail: oldMail })) {
+    for await (let req of pendingRequest.find({ usermail: oldMail })) {
         req.userMail = newMail;
         req.save();
     }
 
 }
 
+function pushElements(array, element) {
+    if (!array.includes(element))
+        array.push(element);
+}
 
 module.exports = {
     // prodotti che lui ha prenotato, e in quelle del dipendente, ma anche nelle pending request
-    emailCascadeChange: async function (usr, newMail, oldMail) {
-        // Dalle prenotazioni dell'utente in question prendo prodotti e dipendenti
-        let emps = [];
-        let prods = [];
-        if (usr.futureReservations) {
-            for (let x in usr.futureReservations) {
-                if (usr.futureReservations[x].employee) // potrebbe essere ancora in pending
-                    emps.push(usr.futureReservations[x].employee)
-                prods.push(usr.futureReservations[x].name) // prendo nome del prodotto
+    emailCascadeChange: async function (newMail, oldMail) {
+        console.log('sono dentro cascade email');
+        let usr = await user.findOne({ email: oldMail });
+        if (usr) {
+            // Dalle prenotazioni dell'utente in question prendo prodotti e dipendenti
+            let emps = [];
+            let prods = [];
+            if (usr.futureReservations) {
+                for (let res of usr.futureReservations) {
+                    if (res.employee) // potrebbe essere ancora in pending
+                    {
+                        pushElements(emps, res.employee);
+                        pushElements(prods, res.product);
+                        res.email = newMail;
+                    }
+                }
             }
-        }
-        if (usr.activeReservations) {
-            for (let x in usr.activeReservations) {
-                if (usr.futureReservations[x].employee)
-                    emps.push(usr.futureReservations[x].employee)
-                prods.push(usr.futureReservations[x].name)
+            if (usr.activeReservation) {
+                res = usr.activeReservation;
+                if (res.employee) // potrebbe essere ancora in pending
+                {
+                    pushElements(emps, res.employee);
+                    pushElements(prods, res.product);
+                    res.email = newMail;
+                }
             }
-        }
-        if (usr.pastReservations) {
-            for (let x in usr.pastReservations) {
-                if (usr.futureReservations[x].employee)
-                    emps.push(usr.futureReservations[x].employee)
-                prods.push(usr.futureReservations[x].name)
+            if (usr.pastReservations) {
+                for (let res of usr.pastReservations) {
+                    if (res.employee) // potrebbe essere ancora in pending
+                    {
+                        pushElements(emps, res.employee);
+                        pushElements(prods, res.product);
+                        res.email = newMail;
+                    }
+                }
             }
+            if (emps)
+                await changeCascadeEmps(emps, newMail, oldMail);
+            if (prods)
+                await changeCascadeProds(prods, newMail, oldMail);
+            checkPendingReqs(newMail, oldMail);
         }
-        if (emps)
-            await changeCascadeEmps(emps, newMail, oldMail);
-        if (prods)
-            await changeCascadeProds(prods, newMail, oldMail);
-        checkPendingReqs(newMail, oldMail);
     }
 }
