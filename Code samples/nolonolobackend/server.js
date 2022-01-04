@@ -1,3 +1,6 @@
+
+global.rootDir = __dirname;
+
 /* Server requirements */
 const express = require('express');
 const path = require('path');
@@ -42,7 +45,6 @@ app.use(express.static(path.join(__dirname, 'backoffice')));
 
 /* Actual API server routes */
 app.use('/api/account/', account);
-// app.use('/api/services/', services);
 app.use('/api/rental/', rental);
 app.use('/api/pending/', pendingRequest);
 app.use('/api/customer/', customer);
@@ -85,7 +87,6 @@ app.get("/futurereservations", function (req, res) {
 app.get('/products', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-
 
 // bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
 

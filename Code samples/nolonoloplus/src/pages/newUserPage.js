@@ -9,6 +9,7 @@ export default function newUserPage() {
     const [communications, setCommunications] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    const [image, setImage] = useState('');
 
     useEffect(() => {
         async function getEmail() {
@@ -62,8 +63,37 @@ export default function newUserPage() {
             .catch(err => {
                 console.log(err.message);
             })
-
     };
+
+    function handleImageUpload()
+    {
+        let photo = document.getElementById("file-upload").files[0];
+        let formData = new FormData();
+
+        formData.append("img", photo);
+        
+        // for(let pair of formData.entries()) {
+        //     console.log(pair);
+        //   }
+        fetch(`http://localhost:8001/api/user/${user.email}`, {method: "POST", body: formData})
+        .then(response => {
+            return response.json()
+        })
+        .then(data => {
+            console.log("Ok andato tutto liscio");
+            //qui facciamo setImage così renderizza di nuovo il componente e cambia l'imamgine da solo
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+
+    function changeInfo()
+    {
+        let field = document.getElementById('changeInfo').value;
+        let newValue = document.getElementById('newValue').value;
+        console.log(newValue);
+    }
 
 
     return (
@@ -73,7 +103,20 @@ export default function newUserPage() {
                     <div className="row">
                         <div className="col-md-3 border-right">
                             <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                <img className="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg" />
+                                <img className="rounded-circle mt-5" width="150px" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
+
+                                {/* <form  id="form" method="POST" action={'http://localhost:8001/api/user/' + user.email} enctype='multipart/form-data'> */}
+                                
+                                <label for="file-upload" class="custom-file-upload">
+                                        <i class="fa fa-cloud-upload"></i> 
+                                    </label>
+                                    <input id="file-upload" type="file" name="img"/>
+
+                                    <button className="btn btn-primary" onClick={handleImageUpload}>
+                                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                    </button>
+                                    
+                                {/* </form> */}
                                 <span className="font-weight-bold">{user.name + ' ' + user.surname}</span>
                                 <span className="text-black-50">{user.email}</span>
                                 <span className="text-black-50">{'phone number: ' + user.phone}</span>
@@ -101,7 +144,7 @@ export default function newUserPage() {
                                     <input type="text" className="form-control" id="newValue" />
                                     <span id="onErr"></span>
                                     <div className="d-flex justify-content-between">
-                                        <button className="btn btn-success " type="button" onClick="sendInfo()">Confirm</button>
+                                        <button className="btn btn-success " type="button" onClick={changeInfo}>Confirm</button>
                                         <button className="btn btn-warning " type="button" onClick={() => { document.getElementById("newValue").value = ' '; }} >clear</button>
                                     </div>
                                 </div>
