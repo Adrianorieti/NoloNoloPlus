@@ -1,0 +1,17 @@
+#contentLogin
+{
+  margin: 2rem;
+  padding: 2rem; 
+}
+
+#newLink
+{
+  color: #0645AD;
+}
+
+#newLink:hover
+{
+  color: black;
+  cursor: pointer;
+
+}

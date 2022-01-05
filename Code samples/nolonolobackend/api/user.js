@@ -49,7 +49,49 @@ router.get('/:email', (req, res) => {
             res.status(500).json({ message: "internal server error" });
         })
 })
-//quando creiamo uno user inseriamo l'immagine di default
+
+
+router.post('/:email', async (req, res) => {
+    const email = req.params.email;
+    const source = await user.findOne({ email: email });
+
+    if (!(source)) {
+        //password arrives in base-64
+        const password = req.body.password;
+
+        //password is decoded
+        const buff = Buffer.from(password, 'base64');
+        const decodedpass = buff.toString('utf-8');
+
+
+        //password is hashed and salted
+        const hash = await bcrypt.hash(decodedpass, 10, function (err, hash) {
+
+            let newUser = new user({
+                name: req.body.name,
+                surname: req.body.surname,
+                phone: req.body.phone,
+                email: email,
+                password: hash,
+                image: "/images/user/default",
+                paymentMethod: 'Paypal',
+                role: 'customer',
+                fidelityPoints: 5,
+                amountPaid: 0,
+                communications: [],
+                futureReservations: [],
+                activeReservation: {},
+                pastReservations: []
+            });
+            //user is saved in mongodb
+            newUser.save();
+            res.status(200).json({ message: "success" });
+
+        })
+    } else {
+        res.status(500).send({ error: 'Mail already exists' });
+    }
+});
 
 router.patch('/:email', upload.single('img'), async (req, res) => {
     let email = req.params.email;
@@ -67,19 +109,19 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
     } else {
         newData.image = path.join('/images/users', req.file.filename)
     }
-    // console.log(newData);
-    // user.findOneAndUpdate(
-    //     { email: email },
-    //     { $set: newData },
-    //     { runValidators: true, new: false, useFindAndModify: false }
-    // ).exec()
-    //     .then((result) => {
-    //         res.status(200).json(result);
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    //         res.status(400).json({ message: 'Bad input parameter', error: err })
-    //     })
+    console.log(newData);
+    user.findOneAndUpdate(
+        { email: email },
+        { $set: newData },
+        { runValidators: true, new: false, useFindAndModify: false }
+    ).exec()
+        .then((result) => {
+            res.status(200).json(result);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({ message: 'Bad input parameter', error: err })
+        })
 })
 
 module.exports = router;

@@ -102,7 +102,7 @@ function App() {
               </div>
             </div>
           </section>
-          <NewLoginPage />
+          <NewLoginPage nameToParent={nameToParent} />
           {/* <LoginPage nameToParent={nameToParent} /> */}
         </Route>
 

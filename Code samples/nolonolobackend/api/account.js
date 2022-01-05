@@ -62,7 +62,6 @@ router.post('/register', async (req, res) => {
  * @return {token}
  */
 router.post('/login/:role', async (req, res) => {
-
     const email = req.body.email;
     const role = req.params.role;
     let source;
@@ -90,7 +89,7 @@ router.post('/login/:role', async (req, res) => {
             if (role != 'manager') {
                 //CREATE  JWT
                 const user = { email: `${source.email}` };
-                const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '1h' });
+                const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '2h' });
 
                 //Send token back to client 
                 res.json({ accessToken: accessToken, name: `${source.name}` });
@@ -107,7 +106,7 @@ router.post('/login/:role', async (req, res) => {
             }
 
         } else {
-            res.status(404).send('Error, the requested account may not exists or your credentials are not correct');
+            res.status(500).send('Error, the requested account may not exists or your credentials are not correct');
             console.log("Password doesn't match");
         }
     } else {

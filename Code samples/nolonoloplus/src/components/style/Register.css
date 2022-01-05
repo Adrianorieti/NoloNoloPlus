@@ -1,0 +1,10 @@
+#contentRegister
+{
+  margin: 2rem;
+  padding: 2rem; 
+}
+
+#arrow:hover{
+  cursor : pointer;
+  color: rgba(255,255,255,0.6);
+}
