@@ -8,6 +8,7 @@ export default function Register({ stateToParent }) {
     const [firstName, setfirstName] = useState('');
     const [secondName, setsecondName] = useState('');
     const [phone, setphone] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState('Paypal');
     const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
     const [repeatPassword, setrepeatPassword] = useState('');
@@ -25,6 +26,9 @@ export default function Register({ stateToParent }) {
             case 'phone':
                 setphone(event.target.value);
                 break;
+            case 'paymentMethod':
+                setPaymentMethod(event.target.value);
+                break;
             case 'email':
                 setemail(event.target.value);
                 break;
@@ -41,6 +45,7 @@ export default function Register({ stateToParent }) {
 
     function handleRegister(event) {
         event.preventDefault();
+        console.log(paymentMethod);
 
         const buff = Buffer.from(password, 'utf-8');
         const encodedpass = buff.toString('base64');
@@ -53,6 +58,7 @@ export default function Register({ stateToParent }) {
             "name": "${firstName}" ,
             "surname": "${secondName}",
             "phone": "${phone}",
+            "paymentMethod" : "${paymentMethod}",
             "email": "${email}",
             "password": "${encodedpass}"
             }`;
@@ -62,8 +68,14 @@ export default function Register({ stateToParent }) {
                 body: obj
             };
             fetch(`http://localhost:8001/api/user/${email}`, options)
-                .then(response => {
-                    return response.json();
+                .then(async response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    }
+                    else {
+                        let data = await response.json();
+                        throw new Error(data.message);
+                    }
                 }).then(data => {
                     console.log(data.message);
                     history.go(0);
@@ -95,15 +107,27 @@ export default function Register({ stateToParent }) {
                     <label for="email" className="form-label">Email</label>
                     <input onChange={handleChange} id="email" type="email" className="form-control" name="email"
                         placeholder="username@studio.unibo.it" required="required" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                        title="not valid email format" />
-                    <label id='registermail-error' for="email" style={{ fontSize: 12, color: 'red' }}></label>
+                        title="not valid email" />
+                    <label id='registermail-error' for="email" style={{ fontSize: "1em", color: 'red' }}></label>
 
                 </div>
 
                 <div className="mb-3">
                     <label for="phone" className="form-label">Phone Number</label>
                     <input onChange={handleChange} id="phone" type="tel" className="form-control" name="phone" required="required"
-                        pattern="[0-9]{10}" />
+                        pattern="[0-9]{10}" title="not a valid phone number" />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label" for="paymentMethod">Payment Method</label>
+                    <select className="form-control" id="paymentMethod" name="paymentMethod" onChange={handleChange} >
+                        <option value="MasterCard">MasterCard</option>
+                        <option selected value="Paypal">Paypal</option>
+                        <option value="PostePay">PostePay</option>
+                        <option value="Satispay">Satispay</option>
+                        <option value="Mooney">Mooney</option>
+                        <option value="Visa">Visa</option>
+                    </select>
                 </div>
 
                 <div className="mb-3">
@@ -116,7 +140,7 @@ export default function Register({ stateToParent }) {
                 <div className="mb-3">
                     <label for="repeatPassword" className="form-label">Repeat Password</label>
                     <input onChange={handleChange} id="repeatPassword" type="password" className="form-control" name="repeatPassword"
-                        required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" />
+                        required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password must contain a number, a capital letter and a length of at least 8 characters" />
                     <label for="repeatPassword" style={{ fontSize: 12, color: 'red' }}>{repeatpassError}</label>
                 </div>
 

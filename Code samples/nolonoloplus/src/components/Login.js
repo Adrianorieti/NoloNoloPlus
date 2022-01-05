@@ -36,12 +36,13 @@ export default function Login({ stateToParent, nameToParent }) {
             body: obj
         };
         fetch(`http://localhost:8001/api/account/login/user`, options)
-            .then(response => {
+            .then(async response => {
                 if (response.status === 200) {
                     return response.json();
                 }
                 else {
-                    throw new Error()
+                    let data = await response.json();
+                    throw new Error(data.message);
                 }
             }).then(data => {
                 const username = data.name;
@@ -54,10 +55,8 @@ export default function Login({ stateToParent, nameToParent }) {
             })
             .catch(err => {
                 document.getElementById('loginmail-error').innerHTML = err;
-                console.log(err.message);
+                console.log(err);
             })
-
-
     }
 
     return (

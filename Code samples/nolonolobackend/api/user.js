@@ -74,13 +74,12 @@ router.post('/:email', async (req, res) => {
                 email: email,
                 password: hash,
                 image: "/images/user/default",
-                paymentMethod: 'Paypal',
+                paymentMethod: req.body.paymentMethod,
                 role: 'customer',
                 fidelityPoints: 5,
                 amountPaid: 0,
                 communications: [],
                 futureReservations: [],
-                activeReservation: {},
                 pastReservations: []
             });
             //user is saved in mongodb
@@ -89,7 +88,7 @@ router.post('/:email', async (req, res) => {
 
         })
     } else {
-        res.status(500).send({ error: 'Mail already exists' });
+        res.status(500).json({ message: 'Mail already exists' });
     }
 });
 

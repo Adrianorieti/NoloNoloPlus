@@ -106,11 +106,11 @@ router.post('/login/:role', async (req, res) => {
             }
 
         } else {
-            res.status(500).send('Error, the requested account may not exists or your credentials are not correct');
+            res.status(500).json({ message: 'The requested account may not exists or your credentials are not correct' });
             console.log("Password doesn't match");
         }
     } else {
-        res.status(404).send('Error, the requested account may not exists or your credentials are not correct');
+        res.status(404).json({ message: 'The requested account may not exists or your credentials are not correct' });
     }
 });
 

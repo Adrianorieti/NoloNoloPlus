@@ -97,12 +97,13 @@ export default function newUserPage() {
         switch (field) {
             case 'phone':
                 newValue.type = 'tel';
-                newValue.pattern = "[0-9]{10}"
+                newValue.pattern = "[0-9]{10}";
+                newValue.title = "not valid phone number";
                 break;
             case 'email':
                 newValue.type = 'email';
                 newValue.pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
-                newValue.title = "not valid email format"
+                newValue.title = "not valid email format";
                 break;
             case 'password':
                 newValue.type = 'password';
@@ -162,90 +163,90 @@ export default function newUserPage() {
 
     return (
         <div id="wrapper" >
-        {isReservations ? <div>
-            <button className="btn btn-warning m-3"onClick={() => {setIsReservations(false)}}>Back</button>
-            <div id="reservations">
-            <Reservations user={user}/>
+            {isReservations ? <div>
+                <button className="btn btn-warning m-3" onClick={() => { setIsReservations(false) }}>Back</button>
+                <div id="reservations">
+                    <Reservations user={user} />
+                </div>
             </div>
-        </div> 
-       
-        : 
-            (error ? <span> {error}</span> :
-                (loading ? <div><Spinner /></div> :
-                    <div className="row">
-                        <div className="col-md-3 border-right">
-                            <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                <img className="rounded-circle mt-5" width="150px" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
-                                <form>
-                                    <label for="file-upload" class="custom-file-upload">
-                                        <i class="fa fa-cloud-upload"></i>
-                                    </label>
-                                    <input id="file-upload" type="file" name="img" />
+                :
+                (error ? <span> {error}</span> :
+                    (loading ? <div><Spinner /></div> :
+                        <div className="row">
+                            <div className="col-md-3 border-right">
+                                <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                                    <img className="rounded-circle mt-5" width="150px" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
-                                    <button className="btn btn-primary" onClick={handleImageUpload}>
-                                        <i class="fa fa-check-circle" aria-hidden="true"></i>
-                                    </button>
+                                    <form>
+                                        <label for="file-upload" class="custom-file-upload">
+                                            <i class="fa fa-cloud-upload"></i>
+                                        </label>
+                                        <input id="file-upload" type="file" name="img" />
 
-                                </form>
-                                <span className="font-weight-bold">{user.name + ' ' + user.surname}</span>
-                                <span className="text-black-50">{user.email}</span>
-                                <span className="text-black-50">{'phone number: ' + user.phone}</span>
-                                <span className="text-black-50">{'fidelity points: ' + user.fidelityPoints}</span>
-                                <span className="text-black-50">{'Payment method: ' + user.paymentMethod}</span>
+                                        <button className="btn btn-primary" onClick={handleImageUpload}>
+                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                        </button>
+
+                                    </form>
+                                    <span className="font-weight-bold">{user.name + ' ' + user.surname}</span>
+                                    <span className="text-black-50">{user.email}</span>
+                                    <span className="text-black-50">{'phone number: ' + user.phone}</span>
+                                    <span className="text-black-50">{'fidelity points: ' + user.fidelityPoints}</span>
+                                    <span className="text-black-50">{'Payment method: ' + user.paymentMethod}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-md-5 border-right">
-                            <div className="p-3 py-5">
-                                <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <h4 className="text-right">Change Settings</h4>
-                                </div>
-                                <div className="input-group mb-3">
-                                    <label className="input-group-text" for="changeInfo">Info</label>
-                                    <select className="form-select" id="changeInfo" onChange={changePattern}>
-                                        <option selected value="name">Name</option>
-                                        <option value="surname">Surname</option>
-                                        <option value="phone">Phone</option>
-                                        <option value="email">Email</option>
-                                        <option value="password">Password</option>
-                                    </select>
-                                </div>
-                                <form className="mb-3" onSubmit={(event) => { event.preventDefault(); changeInfo(); }}>
-                                    <label for="newValue" className="form-label">New Value</label>
-                                    <input type="text" className="form-control" id="newValue" required />
-                                    <input type="checkbox" onClick={showPassw} />Show Password
-                                    <span id="onErr"></span>
-                                    <div className="d-flex justify-content-between">
-                                        <button className="btn btn-success " type="submit">Confirm</button>
-                                        <button className="btn btn-warning " type="button" onClick={() => { document.getElementById("newValue").value = ' '; }} >clear</button>
+                            <div className="col-md-5 border-right">
+                                <div className="p-3 py-5">
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <h4 className="text-right">Change Settings</h4>
                                     </div>
-                                </form>
-                            </div>
-                                <div id="reservationsEnter">
-                                    <button className="btn btn-primary " type="submit" onClick={() => { setIsReservations(true)}}>Show all reservations</button>
-                                </div>
-                        </div>
-                        <div className="col-md-4">
-                            <div className="p-3 py-5">
-                                <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <h4 className="text-right">Communications from agency</h4>
-                                </div>
-                                {communications.length <= 1 ? <div> No communications</div> :
-                                    (() => {
-                                        let commDivs = []
-                                        for (let com of communications) {
-                                            commDivs.push(<div className="communications-wrapper">{com}</div>)
-                                        }
-                                        return (<div>
-                                            <div>{commDivs}</div>
-                                            <button type="button" className="btn btn-danger" onClick={clearCommunications}>clear</button>
+                                    <div className="input-group mb-3">
+                                        <label className="input-group-text" for="changeInfo">Info</label>
+                                        <select className="form-select" id="changeInfo" onChange={changePattern}>
+                                            <option selected value="name">Name</option>
+                                            <option value="surname">Surname</option>
+                                            <option value="phone">Phone</option>
+                                            <option value="email">Email</option>
+                                            <option value="password">Password</option>
+                                        </select>
+                                    </div>
+                                    <form className="mb-3" onSubmit={(event) => { event.preventDefault(); changeInfo(); }}>
+                                        <label for="newValue" className="form-label">New Value</label>
+                                        <input type="text" className="form-control" id="newValue" required />
+                                        <input type="checkbox" onClick={showPassw} />Show Password
+                                        <span id="onErr"></span>
+                                        <div className="d-flex justify-content-between">
+                                            <button className="btn btn-success " type="submit">Confirm</button>
+                                            <button className="btn btn-warning " type="button" onClick={() => { document.getElementById("newValue").value = ' '; }} >clear</button>
                                         </div>
-                                        )
-                                    })()
-                                }
+                                    </form>
+                                </div>
+                                <div id="reservationsEnter">
+                                    <button className="btn btn-primary " type="submit" onClick={() => { setIsReservations(true) }}>Show all reservations</button>
+                                </div>
+                            </div>
+                            <div className="col-md-4">
+                                <div className="p-3 py-5">
+                                    <div className="d-flex justify-content-between align-items-center mb-3">
+                                        <h4 className="text-right">Communications from agency</h4>
+                                    </div>
+                                    {communications.length <= 1 ? <div> No communications</div> :
+                                        (() => {
+                                            let commDivs = []
+                                            for (let com of communications) {
+                                                commDivs.push(<div className="communications-wrapper">{com}</div>)
+                                            }
+                                            return (<div>
+                                                <div>{commDivs}</div>
+                                                <button type="button" className="btn btn-danger" onClick={clearCommunications}>clear</button>
+                                            </div>
+                                            )
+                                        })()
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
                     ))}
         </div>
     );
