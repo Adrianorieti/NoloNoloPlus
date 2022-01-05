@@ -1,0 +1,19 @@
+#mainReservations
+{
+    padding: 2rem;
+    display: flex;
+    justify-content: space-around;
+}
+#active
+{
+    gap: 1rem;
+}
+#future
+{
+    gap: 1rem;
+}
+
+#past
+{
+    gap: 1rem;
+}

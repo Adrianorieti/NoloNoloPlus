@@ -1,0 +1,40 @@
+#mainLogin
+{
+  padding: 3rem;
+  justify-content: center;
+  align-items: center;
+ 
+}
+
+#loginContainer
+{
+  display: flex;
+  justify-content: space-around;
+  margin: 3rem;
+  background: rgba(228, 236, 229, 0.8)    /*  40% opaque green */ 
+}
+
+#contentLogin
+{
+  margin: 2rem;
+  padding: 2rem; 
+}
+
+#contentRegister
+{
+  margin: 2rem;
+  padding: 2rem; 
+}
+
+#newLink
+{
+  color: #0645AD;
+}
+
+#newLink:hover
+{
+  color: black;
+  cursor: pointer;
+
+}
+

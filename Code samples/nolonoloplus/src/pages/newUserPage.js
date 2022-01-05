@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import './style/newUserPage.css';
 import Spinner from '../components/Spinner'
+import Reservations from "../components/Reservations";
 
 export default function newUserPage() {
 
@@ -11,6 +12,7 @@ export default function newUserPage() {
     const [communications, setCommunications] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+    const [isReservations, setIsReservations] = useState(false);
     const [image, setImage] = useState('');
 
     useEffect(() => {
@@ -160,7 +162,15 @@ export default function newUserPage() {
 
     return (
         <div id="wrapper" >
-            {error ? <span> {error}</span> :
+        {isReservations ? <div>
+            <button className="btn btn-warning m-3"onClick={() => {setIsReservations(false)}}>Back</button>
+            <div id="reservations">
+            <Reservations user={user}/>
+            </div>
+        </div> 
+       
+        : 
+            (error ? <span> {error}</span> :
                 (loading ? <div><Spinner /></div> :
                     <div className="row">
                         <div className="col-md-3 border-right">
@@ -211,6 +221,9 @@ export default function newUserPage() {
                                     </div>
                                 </form>
                             </div>
+                                <div id="reservationsEnter">
+                                    <button className="btn btn-primary " type="submit" onClick={() => { setIsReservations(true)}}>Show all reservations</button>
+                                </div>
                         </div>
                         <div className="col-md-4">
                             <div className="p-3 py-5">
@@ -232,7 +245,8 @@ export default function newUserPage() {
                                 }
                             </div>
                         </div>
-                    </div>)}
+                    </div>
+                    ))}
         </div>
     );
 }

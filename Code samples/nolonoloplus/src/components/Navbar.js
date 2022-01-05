@@ -76,15 +76,14 @@ function Navbar(props) {
   }
 
   return (
+
+    
     <nav className="App-navbar navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
-
         <h3><i class="fa fa-renren fa-2x"></i>&nbsp; NoloNoloPlus</h3>
-
         <button id="burger" onClick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon "></span>
         </button>
-
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
           <ul className="navbar-nav">
             <li className="nav-item">

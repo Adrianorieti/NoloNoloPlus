@@ -28,6 +28,7 @@ import Howitworks from './components/Howitworks'
 import { Link } from 'react-router-dom';
 
 import Rental from './pages/Rental';
+import NewLoginPage from "./pages/NewLoginPage";
 
 function App() {
 
@@ -101,7 +102,8 @@ function App() {
               </div>
             </div>
           </section>
-          <LoginPage nameToParent={nameToParent} />
+          <NewLoginPage />
+          {/* <LoginPage nameToParent={nameToParent} /> */}
         </Route>
 
         <Route path="/personalpage" exact>
@@ -117,63 +119,7 @@ function App() {
               </div>
             </div>
           </section>
-          <PersonalPage />
-
-        </Route>
-
-        <Route path="/newpersonalpage" exact>
           <NewUserPage />
-
-          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
-          <section>
-            <div className="row">
-              <div className="col-md-12">
-                <ul class="breadcrumb">
-                  <li><Link aria-current="page" to="/">Home</Link></li>
-                  <li>Update page</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-        </Route>
-
-        <Route path="/futurereservations" exact>
-          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
-          <section>
-            <div className="row">
-              <div className="col-md-12">
-                <ul class="breadcrumb">
-                  <li><Link aria-current="page" to="/">Home</Link></li>
-                  <li>Future reservation</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-          <FutureReservations resToParent={resToParent} />
-        </Route>
-
-        <Route path="/activereservations" exact>
-          <ActiveReservations />
-        </Route>
-
-        <Route path="/pastreservations" exact>
-          <PastReservations />
-        </Route>
-
-        <Route path="/modifyreservation" exact>
-          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
-          <section>
-            <div className="row">
-              <div className="col-md-12">
-                <ul class="breadcrumb">
-                  <li><Link aria-current="page" to="/">Home</Link></li>
-                  <li>My reservations</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-          <ModifyReservation res={reservation} />
         </Route>
 
         <Route path="/hypothesis" exact >

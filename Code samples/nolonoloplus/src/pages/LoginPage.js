@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router";
+// import './style/loginpage.css';
 const server_url = process.env.REACT_APP_SERVER_URL;
 const account_url = process.env.REACT_APP_API_ACCOUNT;
 const login_url = process.env.REACT_APP_LOGIN;
@@ -178,7 +179,6 @@ function LoginPage({ nameToParent }) {
           <li className="nav-item" role="presentation">
             <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Register</button>
           </li>
-
         </ul>
 
         <div className="tab-content" id="myTabContent">

@@ -73,7 +73,7 @@ useEffect(() =>
 }, []);
 
 return ( <div id="main">
-
+  <div>
       <div id="searchWrapper">
                 <input
                     type="text"
@@ -82,7 +82,7 @@ return ( <div id="main">
                     placeholder="search for name or price"
                 />
             </div>
-
+</div>
     <div className="content" id="content"> 
   {loading ? rendering() :  <p>No products available</p>}     
     </div>
