@@ -14,6 +14,8 @@ export default function newUserPage() {
     const [loading, setLoading] = useState(true);
     const [isReservations, setIsReservations] = useState(false);
     const [image, setImage] = useState('');
+    const [isPaymentMethod, setIsPaymentMethod] = useState(false);
+    const [valToChange, setValToChange] = useState('name');
 
     useEffect(() => {
         async function getEmail() {
@@ -91,8 +93,9 @@ export default function newUserPage() {
             })
     }
 
-    function changePattern() {
+    function changeForm() {
         let field = document.getElementById('changeInfo').value;
+        setValToChange(field);
         let newValue = document.getElementById('newValue');
         switch (field) {
             case 'phone':
@@ -104,6 +107,10 @@ export default function newUserPage() {
                 newValue.type = 'email';
                 newValue.pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
                 newValue.title = "not valid email format";
+                break;
+            case 'paymentMethod':
+                setValToChange('payment method');
+                setIsPaymentMethod(true);
                 break;
             case 'password':
                 newValue.type = 'password';
@@ -176,7 +183,7 @@ export default function newUserPage() {
                         <div className="row">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="150px" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
+                                    <img className="rounded-circle mt-5" width="150px" alt="profile image" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
                                     <form>
                                         <label for="file-upload" class="custom-file-upload">
@@ -203,24 +210,45 @@ export default function newUserPage() {
                                     </div>
                                     <div className="input-group mb-3">
                                         <label className="input-group-text" for="changeInfo">Info</label>
-                                        <select className="form-select" id="changeInfo" onChange={changePattern}>
+                                        <select className="form-select" id="changeInfo" onChange={changeForm}>
                                             <option selected value="name">Name</option>
                                             <option value="surname">Surname</option>
                                             <option value="phone">Phone</option>
                                             <option value="email">Email</option>
                                             <option value="password">Password</option>
+                                            <option value="paymentMethod">Payment Method</option>
                                         </select>
                                     </div>
-                                    <form className="mb-3" onSubmit={(event) => { event.preventDefault(); changeInfo(); }}>
-                                        <label for="newValue" className="form-label">New Value</label>
-                                        <input type="text" className="form-control" id="newValue" required />
-                                        <input type="checkbox" onClick={showPassw} />Show Password
-                                        <span id="onErr"></span>
-                                        <div className="d-flex justify-content-between">
-                                            <button className="btn btn-success " type="submit">Confirm</button>
-                                            <button className="btn btn-warning " type="button" onClick={() => { document.getElementById("newValue").value = ' '; }} >clear</button>
-                                        </div>
-                                    </form>
+                                    {isPaymentMethod
+                                        ?
+                                        <form className="mb-3" onSubmit={(event) => { event.preventDefault(); changeInfo(); }}>
+                                            <label className="form-label" for="newValue">New {valToChange}</label>
+                                            <select className="form-control" id="newValue" name="paymentMethod" >
+                                                <option value="MasterCard">MasterCard</option>
+                                                <option selected value="Paypal">Paypal</option>
+                                                <option value="PostePay">PostePay</option>
+                                                <option value="Satispay">Satispay</option>
+                                                <option value="Mooney">Mooney</option>
+                                                <option value="Visa">Visa</option>
+                                            </select>
+                                            <span id="onErr"></span>
+                                            <div className="d-flex justify-content-between">
+                                                <button className="btn btn-success " type="submit">Confirm</button>
+                                            </div>
+                                        </form>
+
+                                        :
+                                        <form className="mb-3" onSubmit={(event) => { event.preventDefault(); changeInfo(); }}>
+                                            <label for="newValue" className="form-label">New {valToChange}</label>
+                                            <input type="text" className="form-control" id="newValue" required />
+                                            <input type="checkbox" onClick={showPassw} />Show Password
+                                            <span id="onErr"></span>
+                                            <div className="d-flex justify-content-between">
+                                                <button className="btn btn-success " type="submit">Confirm</button>
+                                                <button className="btn btn-warning " type="button" onClick={() => { document.getElementById("newValue").value = ' '; }} >clear</button>
+                                            </div>
+                                        </form>
+                                    }
                                 </div>
                                 <div id="reservationsEnter">
                                     <button className="btn btn-primary " type="submit" onClick={() => { setIsReservations(true) }}>Show all reservations</button>
