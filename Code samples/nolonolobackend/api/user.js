@@ -37,6 +37,19 @@ const upload = multer({ storage: storage })
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+    //trovo tutti gli user del sistema
+    let users = await user.find();
+    if (users) {
+        users = users.filter(user => user.email !== 'defaultUser@nolonolo.com');
+        res.status(200).json({ users: users });
+    }
+    else {
+        //non ci sono utenti 
+        res.status(500).send("no active users");
+    }
+});
+
 router.get('/:email', (req, res) => {
     let email = req.params.email;
     user.findOne({ email: email })

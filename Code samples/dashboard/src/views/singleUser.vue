@@ -1,0 +1,235 @@
+<template>
+  <div>
+    <div>
+      <HorizontalCard
+        :title="userEmail"
+        :text="text"
+        :isEmployee="false"
+        :key="key"
+      />
+    </div>
+    <div class="chart-wrapper">
+      <chart :type="pie" :id="'pieChart'" :chartdata="pieData" :key="key" />
+    </div>
+    <div class="chart-wrapper">
+      <chart :type="line" :id="'lineChart'" :chartdata="lineData" :key="key" />
+    </div>
+    <div class="chart-wrapper">
+      <chart :type="bar" :id="'barChart'" :chartdata="barData" :key="key" />
+    </div>
+  </div>
+</template>
+
+<script>
+import chart from "../components/chart";
+import HorizontalCard from "../components/horizontalImageCard";
+
+export default {
+  name: "singleUser",
+  data() {
+    return {
+      key: 0,
+      user: {},
+      pieData: {},
+      barData: {},
+      lineData: {},
+      pie: "pie",
+      bar: "bar",
+      line: "line",
+      text: "",
+    };
+  },
+  props: ["userEmail"],
+  watch: {
+    userMail() {
+      this.getSingleUser();
+    },
+  },
+  components: {
+    chart,
+    HorizontalCard,
+  },
+  mounted() {
+    this.getSingleUser();
+  },
+  methods: {
+    getSingleUser() {
+      let fetch_options = {
+        method: "GET",
+        headers: new Headers({ "Content-type": "application/json" }),
+      };
+      let url = "http://localhost:8001/api/user/" + this.userEmail;
+      fetch(url, fetch_options)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          this.user = data.user;
+          this.gatherStatistics();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    gatherStatistics() {
+      let numOfRes = this.user.pastReservations.length;
+      let amountPaid = this.user.amountPaid;
+      let averagePrice = 0,
+        averageLength = 0;
+      let maxPrice = 0,
+        minPrice = 0;
+      let numOfDaysOfRes = 0;
+      let maxDaysOfRents = 0,
+        minDaysOfRent = 0;
+      if (numOfRes > 0) {
+        averagePrice = amountPaid / numOfRes;
+        maxPrice = this.user.pastReservations[0].expense;
+        minPrice = this.user.pastReservations[0].expense;
+        for (let res of this.user.pastReservations) {
+          //expense part
+          if (maxPrice < res.expense) maxPrice = res.expense;
+          if (minPrice > res.expense) minPrice = res.expense;
+          //rental part
+          let lengthOfRes = this.getLengthRes(res);
+          numOfDaysOfRes += lengthOfRes;
+          if (maxDaysOfRents < lengthOfRes) maxDaysOfRents = lengthOfRes;
+          if (minDaysOfRent > lengthOfRes) minDaysOfRent = lengthOfRes;
+        }
+        averageLength = numOfDaysOfRes / numOfRes;
+      }
+      this.text =
+        `Number of reservations ended: ${numOfRes} \n` +
+        `Total paid for reservations: ${amountPaid} \n ` +
+        `Average price for reservation: ${averagePrice} \n` +
+        `Max price for reservations: ${maxPrice} \n` +
+        `Min price for reservation: ${minPrice} \n` +
+        `Average length for reservation: ${averageLength} \n` +
+        `Max length for reservation: ${maxDaysOfRents} \n ` +
+        `Min length for reservation: ${minDaysOfRent} \n `;
+      this.createPieResChart();
+      this.createLineSpendingTimeChart();
+      this.createBarNumOfResPerCat();
+      this.key += 1;
+    },
+    createPieResChart() {
+      //reservations pie chart!
+      let labels = ["past", "active", "future"];
+      let chartData = [
+        this.user.pastReservations.length,
+        0,
+        this.user.futureReservations,
+      ];
+      let colors = [
+        this.getRandomColor(),
+        this.getRandomColor(),
+        this.getRandomColor,
+      ];
+      if (this.user.activeReservation) {
+        chartData[1] = 1;
+      }
+      this.pieData = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Type of reservations",
+            backgroundColor: colors,
+            borderColor: colors,
+            data: chartData,
+          },
+        ],
+      };
+    },
+    createLineSpendingTimeChart() {
+      let labels = [];
+      let chartData = [];
+      let colors = [];
+      for (let res of this.user.pastReservations) {
+        let end = new Date(res.end);
+        labels.push(
+          end.getDate() + "-" + (end.getMonth() + 1) + "-" + end.getFullYear()
+        );
+        chartData.push(res.expense);
+        colors.push(this.getRandomColor());
+      }
+      this.lineData = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Spending time",
+            backgroundColor: colors,
+            borderColor: colors,
+            data: chartData,
+          },
+        ],
+      };
+    },
+    createBarNumOfResPerCat() {
+      //Bisogna fare richiesta per avere i prodotti, da cui mi ricavo tutte le categorie e poi paragono prodotto al tipo di categoria. Devo creare una specie di dizionario.
+      let fetch_options = {
+        method: "GET",
+        headers: new Headers({ "Content-type": "application/json" }),
+      };
+      let url = "http://localhost:8001/api/products/";
+      fetch(url, fetch_options)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          let prod = data.productList;
+          let mapProdToCat = {};
+          let category = [];
+          let catVal = [];
+          let colors = [];
+          for (let p of prod) {
+            mapProdToCat[p.name] = p.type;
+            if (!category.includes(p.type)) {
+              category.push(p.type);
+              catVal.push(0);
+              colors.push(this.getRandomColor());
+            }
+          }
+          for (let res of this.user.pastReservations) {
+            let cat = mapProdToCat[res.product];
+            catVal[category.indexOf(cat)] += 1;
+          }
+          this.barData = {
+            labels: category,
+            datasets: [
+              {
+                label: "Category rented",
+                backgroundColor: colors,
+                borderColor: colors,
+                data: catVal,
+              },
+            ],
+          };
+          this.key += 1;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getRandomColor() {
+      return "#" + (Math.random().toString(16) + "0000000").slice(2, 8);
+    },
+    getLengthRes(res) {
+      const msPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds per day
+      let end = new Date(res.end);
+      let start = new Date(res.start);
+      let daysLeft = (end.getTime() - start.getTime()) / msPerDay;
+      return Math.round(daysLeft);
+    },
+  },
+};
+</script>
+
+<style>
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+}
+</style>

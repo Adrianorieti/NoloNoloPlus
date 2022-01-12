@@ -1,69 +1,101 @@
 <template>
-<div id="app">
-  <div id="nav">
-    <b-navbar toggleable="lg" type="light" variant="light">
-    <b-navbar-brand href="#"><img src="./assets/NoloNoloLogo.png" alt="logo di Nolo Nolo Plus"></b-navbar-brand>
+  <div id="app">
+    <div id="nav">
+      <b-navbar toggleable="lg" type="light" variant="light">
+        <b-navbar-brand href="#"
+          ><img src="./assets/NoloNoloLogo.png" alt="logo di Nolo Nolo Plus"
+        /></b-navbar-brand>
 
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-          <b-nav-item v-if="authenticated" to="/home" >Home</b-nav-item>
-          <b-nav-item v-if="authenticated" to="/about">About</b-nav-item>     
-          <b-nav-item-dropdown  v-if="authenticated" text="Users Charts">
-            <b-dropdown-item to="/userCharts/sales">Sales volume</b-dropdown-item>
-            <b-dropdown-item to="/userCharts/rental">Number of rentals</b-dropdown-item>
-          </b-nav-item-dropdown>
-          <b-nav-item-dropdown  v-if="authenticated" text="Category Charts">
-            <b-dropdown-item to="/categoryCharts/totalSales">Sales volume</b-dropdown-item>
-            <b-dropdown-item to="/categoryCharts/numberOfRents">Number of rentals</b-dropdown-item>
-            <b-dropdown-item to="/categoryCharts/numberOfObjects">Nunber of objects</b-dropdown-item>
-          </b-nav-item-dropdown>
-           <b-nav-item-dropdown  v-if="authenticated" text="Products Charts">
-            <b-dropdown-item to="/productCharts/sales">Sales volume</b-dropdown-item>
-            <b-dropdown-item to="/productCharts/rental">Number of rentals</b-dropdown-item>
-            <b-dropdown-item to="/productCharts/condition">Conditions</b-dropdown-item>
-          </b-nav-item-dropdown>
-          <b-nav-item-dropdown  v-if="authenticated" text="Employees Charts">
-            <b-dropdown-item to="/employeeCharts/sales">Sales volume</b-dropdown-item>
-            <b-dropdown-item to="/employeeCharts/rental">Number of rentals</b-dropdown-item>
-          </b-nav-item-dropdown>
-           <b-nav-item v-if="authenticated" to="/reservationCharts"> Reservations Charts </b-nav-item>
-          <b-nav-item href="http://localhost:8001/employee/login" >BackOffice</b-nav-item>
-      </b-navbar-nav>
-      
-      <b-navbar-nav class="ml-auto">
-       <b-nav-item v-if="authenticated" to="/login" @click="logout()" replace>Logout</b-nav-item>
-      </b-navbar-nav>
-    </b-collapse>
-    </b-navbar>
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <b-nav-item v-if="authenticated" to="/home">Home</b-nav-item>
+            <b-nav-item v-if="authenticated" to="/users">Users</b-nav-item>
+            <b-nav-item-dropdown v-if="authenticated" text="Users Charts">
+              <b-dropdown-item to="/userCharts/sales"
+                >Sales volume</b-dropdown-item
+              >
+              <b-dropdown-item to="/userCharts/rental"
+                >Number of rentals</b-dropdown-item
+              >
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown v-if="authenticated" text="Category Charts">
+              <b-dropdown-item to="/categoryCharts/totalSales"
+                >Sales volume</b-dropdown-item
+              >
+              <b-dropdown-item to="/categoryCharts/numberOfRents"
+                >Number of rentals</b-dropdown-item
+              >
+              <b-dropdown-item to="/categoryCharts/numberOfObjects"
+                >Nunber of objects</b-dropdown-item
+              >
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown v-if="authenticated" text="Products Charts">
+              <b-dropdown-item to="/productCharts/sales"
+                >Sales volume</b-dropdown-item
+              >
+              <b-dropdown-item to="/productCharts/rental"
+                >Number of rentals</b-dropdown-item
+              >
+              <b-dropdown-item to="/productCharts/condition"
+                >Conditions</b-dropdown-item
+              >
+            </b-nav-item-dropdown>
+            <b-nav-item-dropdown v-if="authenticated" text="Employees Charts">
+              <b-dropdown-item to="/employeeCharts/sales"
+                >Sales volume</b-dropdown-item
+              >
+              <b-dropdown-item to="/employeeCharts/rental"
+                >Number of rentals</b-dropdown-item
+              >
+            </b-nav-item-dropdown>
+            <b-nav-item v-if="authenticated" to="/reservationCharts">
+              Reservations Charts
+            </b-nav-item>
+            <b-nav-item href="http://localhost:8001/employee/login"
+              >BackOffice</b-nav-item
+            >
+          </b-navbar-nav>
+
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item
+              v-if="authenticated"
+              to="/login"
+              @click="logout()"
+              replace
+              >Logout</b-nav-item
+            >
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
+    </div>
+    <router-view @authenticated="setAuthenticated" />
   </div>
-  <router-view @authenticated="setAuthenticated" />
-</div>
 </template>
 
 <script>
-    export default {
-        name: 'App',
-        data() {
-            return {
-                authenticated: false
-            }
-        },
-        mounted() {
-            if(!this.authenticated) {
-                this.$router.replace({ name: "login" });
-            }
-        },
-        methods: {
-            setAuthenticated(status) {
-                this.authenticated = status;
-            },
-            logout() {
-                this.authenticated = false;
-            }
-        }
+export default {
+  name: "App",
+  data() {
+    return {
+      authenticated: false,
+    };
+  },
+  mounted() {
+    if (!this.authenticated) {
+      this.$router.replace({ name: "login" });
     }
+  },
+  methods: {
+    setAuthenticated(status) {
+      this.authenticated = status;
+    },
+    logout() {
+      this.authenticated = false;
+    },
+  },
+};
 </script>
 
 <style>
@@ -85,10 +117,10 @@
 }
 
 #nav a.router-link-exact-active {
-  color: #4BD35A;
+  color: #4bd35a;
 }
 
-.chart-wrapper{
+.chart-wrapper {
   display: flex;
   justify-content: center;
   align-content: center;
