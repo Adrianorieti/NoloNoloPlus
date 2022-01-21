@@ -5,7 +5,7 @@ import { chooseImage } from "../functions/helper";
 import './style/products.css';
 import Product from '../components/Product';
 
-function Products() {
+function Products({focusToParent}) {
 
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
@@ -40,7 +40,7 @@ function setSearchBar()
 function rendering()
 {
     return(
-         <Product products={products} token={token} />                 
+         <Product focusToParent={focusToParent} products={products} token={token} />                 
          )
        
 }

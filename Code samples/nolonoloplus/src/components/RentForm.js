@@ -1,22 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
 import './style/RentForm.css';
 
-function RentForm({ queryToParent }) {
+function RentForm( props ) {
 
   let history = useHistory();
+
+  console.log("LOCAAAATION", props.location);
 
   function checkInput() {
 
     let form_obj = ``;
-    const radioInput = document.querySelector("input[name='products']:checked");
+    const select = document.getElementById('form-sel');
     let bikeType;
-    if (radioInput) {
-      bikeType = radioInput.value;
-      let start = document.querySelector("#fromDate").innerHTML;
-      let end = document.querySelector("#toDate").innerHTML;
-      form_obj += `{
+    bikeType = select.value;
+    let start = document.querySelector("#fromDate").innerHTML;
+    let end = document.querySelector("#toDate").innerHTML;
+    let today = new Date();
+    let toCompare = new Date(start);
+  
+    if(toCompare.getTime() < today.getTime())
+    {
+      document.getElementById('date-err').innerHTML ="Please insert a valid date";
+    }
+    form_obj += `{
     "name": "${bikeType}",
     "startingDate": "${start}",
     "endingDate": "${end}"
@@ -27,11 +35,36 @@ function RentForm({ queryToParent }) {
     history.push('/rental');
    else
     history.push('/hypothesis')
-    }
-    else {
-      alert("Please select a field");
-    }
+    
   }
+
+  useEffect(() => {
+
+    props.focusToParent(false);
+    let parameter = props.location.state;
+    let index=0;
+    if(parameter != null || parameter != undefined)
+    {
+      console.log(parameter);
+
+      switch (parameter.data) {
+        case 'Mountain Bike':
+          index=1;
+          break;
+        case 'Scooter':
+          index=2;
+          break;
+        case 'Electric S_300':
+          index=3;
+          break;
+        case 'Special Bike':
+          index=4;
+          break;
+          }
+          
+      document.getElementById('form-sel').selectedIndex=index;
+    }
+  },[])
 
   return (
     <main className="App-rent ">
@@ -39,7 +72,7 @@ function RentForm({ queryToParent }) {
         <div classname="row container-properties">
           <div classname="col-md-12">
             <form className="rentForm" >
-
+{/* 
               <fieldset id="Bikes_Types" aria-required="true">
                 <legend>Bikes types</legend>
                 <hr></hr>
@@ -65,16 +98,33 @@ function RentForm({ queryToParent }) {
                     <label htmlFor="Special-Bike" className="form-label">Special Bike</label>
                   </div>
                 </section>
-              </fieldset>
-
+              </fieldset> */}
+              <div id="formTitle">
+              <h3>Start a rental</h3>
+              <p className="step">Step 1</p>
+              </div>
+              
+                <div id="selectProduct">
+                  <p><b>Choose a product</b></p>
+              <select id="form-sel" className="form-select" aria-label="Default select example">
+              <option  id="City-Bike" name="products" className="form-select" type="radio" value="City Bike">City Bike</option>
+              <option id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" >Mountain Bike</option>
+              <option id="Scooter" name="products" className="form-select" type="radio" value="Scooter">Scooter</option>
+              <option  id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric S_300">Electric Bike</option>
+              <option  id="Special-Bike" name="products" className="form-select" type="radio" value="Special Bike">Special Bike</option>
+            </select>
+            </div>
+            <div className="step">Step 2</div>
               <fieldset aria-required="true">
-                <legend>Renting dates inputs</legend>
+              <div>
+                <legend>Select a date</legend>
+                </div>
                 <hr></hr>
                 <section className="mb-3">
                   <RangeDaysPicker />
                 </section>
               </fieldset>
-
+                <span id="date-err"></span>
               <button id="rentFormButton" type="button" className="btn btn-success" onClick={checkInput}>Click to submit</button>
             </form>
           </div>

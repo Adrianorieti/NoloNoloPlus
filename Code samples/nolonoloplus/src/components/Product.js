@@ -13,14 +13,25 @@ function Product(props)
          props.products.map((product) => 
          {
              return(
-                 <div className="card m-3" style={{width: "18rem"}}>
+                 <div className="card m-3" style={{width: "18rem", border: 'none'}}>
                 {chooseImage(product.name)}
-                <div className="card-body">
+                <div className="card-body" style={{backgroundColor: '#e5f5c6'}}>
                 <h5 className="card-title">{product.name}</h5>
                 <p className="card-text">{product.description}</p>
-                <p className="card-text">Price per day {product.price}$</p>
-                {props.token ? <button className="btn btn-primary" onClick={(()=>{history.push('/#rentForm')})}>Rent this product</button> :
-                <button className="btn btn-primary" onClick={(()=>{history.push('/#rentForm')})}>Make a rental hypothesis</button>}
+                <p className="card-text">Price per day {product.price}$<span><i className="fa fa-info-circle"></i></span></p>
+                {props.token ? <button className="btn btn-primary" onClick={(()=>{props.focusToParent(true);history.push({
+                pathname: '/',
+                state: {
+                    data: product.name,
+                },
+            })
+        })}>Rent this product</button> :
+                <button className="btn btn-primary" onClick={(()=>{props.focusToParent(true);history.push({
+                    pathname: '/',
+                    state: {
+                        data: product.name,
+                    },
+                })})}>Make a rental hypothesis</button>}
             </div>
             </div>
             )})
@@ -33,7 +44,7 @@ function Product(props)
             <div className="card-body">
             <h5 className="card-title">{props.products.name}</h5>
             <p className="card-text">{props.products.description}</p>
-            <p className="card-text">Estimated price {props.price}$</p>
+            <p className="card-text">Estimated price {props.price}$<span><i className="fa fa-info-circle"></i></span>   </p>
         </div>
         </div>
         )// quando rimando indietro vabè nessun problema, magari elimino form_obj dal session storage

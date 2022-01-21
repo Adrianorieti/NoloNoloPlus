@@ -235,32 +235,6 @@ router.post('/addProduct', async (req, res) => {
     }
 })  
 
-// REPLACED WITH NEW APIS
-// router.post('/deleteProduct', async (req, res) => {
-
-//     const toDelete = req.body.name;
-//     const reservations = [];
-//     const prod = await product.findOne({name : toDelete})
-//     if(prod)
-//     {
-//         if(prod.activeReservations.length <= 0)
-//         {
-//             let futureRes = [];
-//             futureRes = futureRes.concat(prod.futureReservations);
-//             await product.remove({name: toDelete}, function(err)
-//             {
-//                 if(err)
-//                     res.status(500).send(err);
-//                 else
-//                     res.status(200).json({reservationList: futureRes})
-//             })
-//         }else
-//         {
-//             res.status(400).json({message: "The product has active reservations"});
-//         }
-//     }
-// }) 
-
 /**
  * Add a message in the user's comunication area.
  * @param {userMail, message to add}

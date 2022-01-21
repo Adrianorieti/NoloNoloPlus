@@ -1,4 +1,7 @@
-import React from "react";
+import React from 'react';
+import { 
+  useState, useRef, useEffect
+} from 'react';
 import './App.css';
 import CarouselContainer from './components/Carousel';
 import Header from './components/Header';
@@ -10,9 +13,6 @@ import {
 import RentForm from './components/RentForm';
 import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
-import {
-  useState
-} from 'react';
 import Test from './components/Test';
 import Hypothesis from './pages/Hypothesis';
 import Products from './pages/Products';
@@ -29,12 +29,16 @@ import { Link } from 'react-router-dom';
 
 import Rental from './pages/Rental';
 import NewLoginPage from "./pages/NewLoginPage";
+import { useLocation } from "react-router-dom";
 
 function App() {
+  const location = useLocation();
+  const mainRef = useRef(null);
 
   //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
   const [data, setData] = useState(JSON.parse(sessionStorage.getItem('username')) || '');
   const [query, setQuery] = useState(null);
+  const [focus, setFocus] = useState(false);
   const [reservation, setReservation] = useState('');
 
   const nameToParent = (childdata) => {
@@ -45,9 +49,21 @@ function App() {
     setQuery(rentFormData);
   }
 
+  const focusToParent = (focused) => {
+    setFocus(focused);
+  }
   const resToParent = (resData) => {
     setReservation(resData);
   }
+
+  useEffect(() => {
+    if(focus)
+    {
+      mainRef.current.focus();
+    }
+
+    
+  }, [focus]);
 
 
   return (
@@ -77,9 +93,11 @@ function App() {
 
           <section className="App-content bg-image container-properties" id="rentForm">
             <div className="row">
-              <div className="col-md-6 rentform">
-                <RentForm queryToParent={queryToParent} />
+              <div className="col-md-6 rentform" ref={mainRef} tabIndex='-1'>
+       
+                <RentForm focusToParent={focusToParent} location={location} />
               </div>
+           
               <div className="col-md-6 banner">
                 <h4>We provide the mean you choose the place</h4>
               </div>
@@ -146,7 +164,7 @@ function App() {
               </div>
             </div>
           </section>
-          <Products />
+          <Products focusToParent={focusToParent}/>
           {/* <Products /> */}
         </Route>
 
