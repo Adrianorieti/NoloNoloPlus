@@ -7,8 +7,6 @@ function RentForm( props ) {
 
   let history = useHistory();
 
-  console.log("LOCAAAATION", props.location);
-
   function checkInput() {
 
     let form_obj = ``;
@@ -17,13 +15,20 @@ function RentForm( props ) {
     bikeType = select.value;
     let start = document.querySelector("#fromDate").innerHTML;
     let end = document.querySelector("#toDate").innerHTML;
+    console.log(start);
+    if(start == null || end== null || start == 'undefined' || end == 'undefined')
+    {      
+      document.getElementById('date-err').innerHTML ="Please insert a valid date";
+      return;
+    }
     let today = new Date();
     let toCompare = new Date(start);
   
     if(toCompare.getTime() < today.getTime())
-    {
-      document.getElementById('date-err').innerHTML ="Please insert a valid date";
-    }
+     {
+        document.getElementById('date-err').innerHTML ="Please insert a valid date";
+        return;
+      }
     form_obj += `{
     "name": "${bikeType}",
     "startingDate": "${start}",

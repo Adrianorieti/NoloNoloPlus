@@ -1,7 +1,10 @@
 import React from 'react';
-
+import { useEffect } from 'react';
 function About()
 {
+    useEffect(() => {
+        document.getElementById('main').scrollIntoView({behavior: "smooth"})
+      },[])
     return(
         <div id="main">
             <h3>Who we are</h3>

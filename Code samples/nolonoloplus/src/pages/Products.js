@@ -48,6 +48,8 @@ function rendering()
 /** Prendiamo le categorie di oggetti dal server */
 useEffect(() => 
 {
+  document.getElementById('content').scrollIntoView({behavior: "smooth"})
+
     let res = [];
 
     async function getProducts() {

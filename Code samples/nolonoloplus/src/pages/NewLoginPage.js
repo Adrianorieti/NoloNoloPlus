@@ -1,12 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useHistory } from "react-router";
+import React, { useState, useEffect} from "react";
 import './style/newloginpage.css';
 import Login from '../components/Login';
 import Register from '../components/Register';
 
 
 function NewLoginPage({ nameToParent }) {
-  const loginRef = useRef(null);
+  
 
   const [isLogin, setIsLogin] = useState(true);
 
@@ -14,19 +13,19 @@ function NewLoginPage({ nameToParent }) {
     setIsLogin(bool);
   }
 
-  // useEffect(() => {
-  //   console.log(loginRef.current)
-  //   loginRef.current.focus();
-  // },[])
+  useEffect(() => {
+    document.getElementById('LogRegContainer').scrollIntoView({behavior: "smooth"})
+  },[])
   return (
     <div id="mainLogin" className='bg-image'>
-      <div id="LogRegContainer" ref={loginRef}>
+      <div id="LogRegContainer" >
         {isLogin ?
 
           <Login stateToParent={setStateToParent} nameToParent={nameToParent} />
           :
           <Register stateToParent={setStateToParent} />
         }
+       
       </div>
     </div>
   )

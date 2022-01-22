@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './style/Howitworks.css';
 
 
 function Howitworks() {
+    useEffect(() => {
+        document.getElementById('howitworks').scrollIntoView({behavior: "smooth"})
+
+    },[])
+    
     return (
 
-        <div class="container-fluid">
+        <div class="container-fluid" id="howitworks">
             <div class="row App-how">
                 <div className="howitworks col-lg-12">
                     <div className="container">
@@ -41,7 +46,7 @@ function Howitworks() {
                                         <span className="stepnumber">3</span>
                                         <img src="https://cdn.bimbimbikes.com/images/icons/how-it-works-3.svg?v1.1.28" />
                                     </div>
-                                    <span className="steptitle">You have your bike!</span>
+                                    <span className="steptitle">Retire your bike in the shop!</span>
                                     <span className="stepdesc">Enjoy the holiday. Any problems? Our team is ready to help you! </span>
                                 </div>
                             </div>

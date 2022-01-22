@@ -70,7 +70,7 @@ function Rental()
                         <p>Description: {category.description}</p>
                         <p>Start: {start}</p>
                         <p>End: {end}</p>
-                        <p>Total Price: ${price}</p>
+                        <p>Total Price: ${price}<span><i className="fa fa-info-circle"></i></span></p>
                     </div>
                     <div id="control">
                         <button className="btn btn-success" onClick={() => {setResponse(true)}}>Confirm</button>
