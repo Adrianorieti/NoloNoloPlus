@@ -93,6 +93,7 @@ li
 }
 #resToChange
 {
+    display: flex;
     background-color: bisque;
 }
 
@@ -104,4 +105,24 @@ li
 h3
 {
     text-align: center;
+}
+
+#changeErr
+{
+    color: red;
+}
+
+#deleted
+{
+    display: flex;
+    flex-direction: column;
+}
+
+#rentErr
+{
+    color: red;
+}
+
+#maintErr{
+    color: red;
 }

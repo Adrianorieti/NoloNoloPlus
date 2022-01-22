@@ -14,7 +14,7 @@ module.exports = {
                 sortBy.sortByTime(product.futureReservations, 'start');
                 for(let i in product.futureReservations)
                 {
-                    console.log(product.futureReservations[i])
+                    console.log("dentro check", product.futureReservations[i])
                     if( startDate.getTime() >= product.futureReservations[i].start.getTime() && startDate.getTime() <= product.futureReservations[i].end.getTime() )
                     {
                         //comprende tutto
@@ -39,6 +39,7 @@ module.exports = {
                     }
                 }
         }   
+        console.log("arrivo qui", available)
         return available;
     }
 

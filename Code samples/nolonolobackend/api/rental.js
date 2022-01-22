@@ -3,7 +3,6 @@ const employee = require('../schemas/moduleEmployee');
 const category = require('../schemas/moduleCategory');
 const product = require('../schemas/moduleProduct');
 const computePrice = require('../functions/computePrice');
-const auth = require('./auth');
 const express = require('express');
 const checkAvailability = require('../functions/checkAvailability');
 const reservations = require('../functions/reservationsHelper');
@@ -36,12 +35,20 @@ router.get('/', (req, res) => {
 */
 router.post('/:bool', async (req, res) => {
     let bool = req.params.bool;
-    const userMail = req.body.email;
+    const userMail = req.body.user;
     const productName = req.body.product;
     const employeeMail = req.body.employee;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
     let expense = req.body.expense;
+   
+    //In case dates are swapped
+    if(startDate.getTime() > endDate.getTime())
+    {
+        startDate = new Date(req.body.end);
+        endDate = new Date(req.body.start);
+    }
+  
     const usr = await user.findOne({email: userMail});
     if(usr)
     {
@@ -52,6 +59,7 @@ router.post('/:bool', async (req, res) => {
             console.log("arrivato sin qui");
             if(checkAvailability.checkAvailability(prod, startDate, endDate))
             {
+                console.log("qui dentro");
                 try{
                     let collection = await category.findOne({name: prod.type});
                     if(bool) // expense deve essere calcolata
@@ -62,22 +70,28 @@ router.post('/:bool', async (req, res) => {
                     //salvo nel prodotto
                     prod.futureReservations.push(newReserve);
                     prod.save();
+                    console.log("qui");
+
                     //salvo nello user
                     usr.futureReservations.push(newReserve);
                     usr.save();
+                    console.log("qui ");
+
                     //salvo nell'employee
                     emp.futureReservations.push(newReserve);
                     emp.save();
-
+                    console.log("arrivo qui");
                     res.status(200).json({message: "Succesful operation"});
                 }catch(err)
                 {
+                    console.log(err);
                     res.status(500).json({message: err});
                 }
+            }else
+            {
+                console.log("not available")
+                res.status(500).json({message: "Product unavailable on these dates"});
             }
-        }else
-        {
-            res.status(500).json({message: "Product unavailable on these dates"});
         }
     }else
     {

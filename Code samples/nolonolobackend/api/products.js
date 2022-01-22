@@ -93,7 +93,6 @@ router.post('/', (req, res) => {
 router.post('/:name', (req, res) => {
     let name = req.params.name;
     let newData = req.body; // deve essere un json {key: value}
-    console.log(newData);
     product.findOneAndUpdate(
         { name: name },
         { $set: newData },
