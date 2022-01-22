@@ -21,8 +21,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Users.vue'),
-    props: true
+    component: () => import(/* webpackChunkName: "about" */ '../views/Users.vue')
   },
   {
     path: '/users/:userEmail',
@@ -31,6 +30,23 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/singleUser.vue'),
+    props: true
+  },
+  {
+    path: '/employees',
+    name: 'employees',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Employees.vue')
+  },
+  {
+    path: '/employees/:employeeEmail',
+    name: 'singleEmployee',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/singleEmployee.vue'),
     props: true
   },
   {
@@ -65,7 +81,7 @@ const routes = [
   {
     path: '/reservationCharts',
     name: 'reservationCharts',
-    component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/ReservationCharts.vue')
+    component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/provaReservations.vue')
   }
 ]
 

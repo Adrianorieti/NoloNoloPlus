@@ -1,0 +1,3 @@
+Cambiare i grafici di user con le carte e personalizzare i grafici di ogni user.
+Fare la stessa cosa anche per gli employee.
+Implementare la parte di aggiunta categoria, prodotto, employee nella Home.

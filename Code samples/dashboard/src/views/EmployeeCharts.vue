@@ -1,67 +1,73 @@
 <template>
-<div>
-  <div class="button-wrapper">
-    <button @click="changeType('bar')">bar</button>
-    <button @click="changeType('line')">line</button>
+  <div>
+    <div class="button-wrapper">
+      <button @click="changeType('bar')">bar</button>
+      <button @click="changeType('line')">line</button>
+    </div>
+    <div class="chart-wrapper">
+      <chart :type="type" :chartdata="data" :id="'employee'" :key="key" />
+    </div>
   </div>
-  <div class="chart-wrapper"> 
-    <chart :type="type" :chartdata="data" :key="key" />
-  </div>
-</div>
 </template>
 
 <script>
-import chart from "../components/chart"
+import chart from "../components/chart";
 
 export default {
-  name: 'EmployeeCharts',
+  name: "EmployeeCharts",
   data() {
-    return{
+    return {
       key: 0,
       employees: [],
       data: {},
-      type: 'bar'
-    }
+      type: "bar",
+    };
   },
   props: ["chartView"],
   watch: {
-    'chartView'(){
+    chartView() {
       this.changeChart();
-    }
+    },
   },
   components: {
-    chart
+    chart,
   },
-  mounted(){
+  mounted() {
     let fetch_options = {
-      method: 'GET',
-      headers: new Headers({ 'Content-type': 'application/json'})
-    }
-    let url = 'http://localhost:8001/api/customer/employee';
+      method: "GET",
+      headers: new Headers({ "Content-type": "application/json" }),
+    };
+    let url = "http://localhost:8001/api/customer/employee";
     fetch(url, fetch_options)
-    .then(response => {
-      if (response.status === 200){
-        return response.json();
-      } 
-    }).then(data => {
-      this.employees = data.employees;
-      this.changeChart();
-    })
-    .catch(error => {
-      console.log(error);
-    })  
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        this.employees = data.employees;
+        this.changeChart();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   methods: {
-    changeChart(){
+    changeChart() {
       let mappedEmp;
-      if(this.chartView === 'rental'){
-        mappedEmp = this.employees.map(emp => ({ email: emp.email, attribute: emp.pastReservations.length }));
-      }
-      else{
-        mappedEmp = this.employees.map(emp => ({ email: emp.email, attribute: emp.pastReservations }));
-        for (let emp of mappedEmp){
+      if (this.chartView === "rental") {
+        mappedEmp = this.employees.map((emp) => ({
+          email: emp.email,
+          attribute: emp.pastReservations.length,
+        }));
+      } else {
+        mappedEmp = this.employees.map((emp) => ({
+          email: emp.email,
+          attribute: emp.pastReservations,
+        }));
+        for (let emp of mappedEmp) {
           let sum = 0;
-          for(let res of emp.attribute){
+          for (let res of emp.attribute) {
             sum += res.expense;
           }
           emp.attribute = sum;
@@ -70,19 +76,21 @@ export default {
       let labels = [];
       let chartData = [];
       let colors = [];
-      for (let emp of mappedEmp){
+      for (let emp of mappedEmp) {
         labels.push(emp.email);
         chartData.push(emp.attribute);
         colors.push(this.getRandomColor());
       }
       this.data = {
         labels: labels,
-        datasets: [{
-          label: 'PEr ora la metto a caso',
-          backgroundColor: colors,
-          borderColor: colors,
-          data: chartData
-        }]
+        datasets: [
+          {
+            label: "PEr ora la metto a caso",
+            backgroundColor: colors,
+            borderColor: colors,
+            data: chartData,
+          },
+        ],
       };
       this.key += 1;
     },
@@ -91,15 +99,15 @@ export default {
       this.key += 1;
     },
     getRandomColor() {
-      return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
-    }
-  }
-}
+      return "#" + (Math.random().toString(16) + "0000000").slice(2, 8);
+    },
+  },
+};
 </script>
 
 <style scoped>
-.button-wrapper{
+.button-wrapper {
   display: flex;
-  justify-Content: center;
+  justify-content: center;
 }
 </style>

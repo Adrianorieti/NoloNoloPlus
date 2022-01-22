@@ -1,21 +1,21 @@
 <template>
   <div>
     <div>
-      <HorizontalCard
-        :title="userEmail"
-        :text="text"
-        :isEmployee="false"
+      <HorizontalCard :title="userEmail" :text="text" :key="key" />
+    </div>
+    <div class="chart-wrapper">
+      <chart :type="'pie'" :id="'pieChart'" :chartdata="pieData" :key="key" />
+    </div>
+    <div class="chart-wrapper">
+      <chart
+        :type="'line'"
+        :id="'lineChart'"
+        :chartdata="lineData"
         :key="key"
       />
     </div>
     <div class="chart-wrapper">
-      <chart :type="pie" :id="'pieChart'" :chartdata="pieData" :key="key" />
-    </div>
-    <div class="chart-wrapper">
-      <chart :type="line" :id="'lineChart'" :chartdata="lineData" :key="key" />
-    </div>
-    <div class="chart-wrapper">
-      <chart :type="bar" :id="'barChart'" :chartdata="barData" :key="key" />
+      <chart :type="'bar'" :id="'barChart'" :chartdata="barData" :key="key" />
     </div>
   </div>
 </template>
@@ -33,9 +33,6 @@ export default {
       pieData: {},
       barData: {},
       lineData: {},
-      pie: "pie",
-      bar: "bar",
-      line: "line",
       text: "",
     };
   },
@@ -101,13 +98,13 @@ export default {
       }
       this.text =
         `Number of reservations ended: ${numOfRes} \n` +
-        `Total paid for reservations: ${amountPaid} \n ` +
-        `Average price for reservation: ${averagePrice} \n` +
-        `Max price for reservations: ${maxPrice} \n` +
-        `Min price for reservation: ${minPrice} \n` +
-        `Average length for reservation: ${averageLength} \n` +
-        `Max length for reservation: ${maxDaysOfRents} \n ` +
-        `Min length for reservation: ${minDaysOfRent} \n `;
+        `Total paid for reservations: ${amountPaid}$ \n ` +
+        `Average price for reservation: ${averagePrice}$ \n` +
+        `Max price for reservations: ${maxPrice}$ \n` +
+        `Min price for reservation: ${minPrice}$ \n` +
+        `Average length for reservation: ${averageLength} days\n` +
+        `Max length for reservation: ${maxDaysOfRents}  days\n ` +
+        `Min length for reservation: ${minDaysOfRent}  days\n `;
       this.createPieResChart();
       this.createLineSpendingTimeChart();
       this.createBarNumOfResPerCat();
@@ -116,10 +113,14 @@ export default {
     createPieResChart() {
       //reservations pie chart!
       let labels = ["past", "active", "future"];
+      let active = 0;
+      if (this.user.activeReservation) {
+        active = 1;
+      }
       let chartData = [
         this.user.pastReservations.length,
-        0,
-        this.user.futureReservations,
+        active,
+        this.user.futureReservations.length,
       ];
       let colors = [
         this.getRandomColor(),
@@ -157,7 +158,7 @@ export default {
         labels: labels,
         datasets: [
           {
-            label: "Spending time",
+            label: "Spending over time",
             backgroundColor: colors,
             borderColor: colors,
             data: chartData,
@@ -227,9 +228,3 @@ export default {
 };
 </script>
 
-<style>
-.button-wrapper {
-  display: flex;
-  justify-content: center;
-}
-</style>

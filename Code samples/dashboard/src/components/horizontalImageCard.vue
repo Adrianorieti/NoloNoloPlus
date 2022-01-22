@@ -11,7 +11,7 @@
         </b-col>
         <b-col md="6">
           <b-card-body :title="this.title">
-            <b-card-text v-if="isUser">
+            <b-card-text>
               <pre>{{ this.text }}</pre>
             </b-card-text>
           </b-card-body>
@@ -24,17 +24,7 @@
 <script>
 export default {
   name: "horizontalimageCard",
-  props: ["title", "text", "isEmployee"],
-  data() {
-    return {
-      isUser: true,
-    };
-  },
-  mounted() {
-    if (this.isEmployee === true) {
-      this.isUser = false;
-    }
-  },
+  props: ["title", "text"],
 };
 </script>
 

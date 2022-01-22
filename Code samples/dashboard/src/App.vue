@@ -12,6 +12,9 @@
           <b-navbar-nav>
             <b-nav-item v-if="authenticated" to="/home">Home</b-nav-item>
             <b-nav-item v-if="authenticated" to="/users">Users</b-nav-item>
+            <b-nav-item v-if="authenticated" to="/employees">
+              Employees
+            </b-nav-item>
             <b-nav-item-dropdown v-if="authenticated" text="Users Charts">
               <b-dropdown-item to="/userCharts/sales"
                 >Sales volume</b-dropdown-item

@@ -106,6 +106,7 @@ router.post('/:email', async (req, res) => {
 });
 
 router.patch('/:email', upload.single('img'), async (req, res) => {
+    console.log("siamo qui");
     let email = req.params.email;
     let newData = {};
     if (!req.file) {

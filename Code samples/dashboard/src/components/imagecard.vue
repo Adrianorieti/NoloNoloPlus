@@ -10,12 +10,12 @@
       class="mb-2"
     >
       <b-card-text>
-        email: {{ this.email }}
+        Email: {{ this.email }}
         <br />
-        payment: {{ this.payment }}
+        {{ this.text }}
       </b-card-text>
 
-      <b-button @click="route()" variant="primary">Go somewhere</b-button>
+      <b-button @click="route()" variant="primary">Go to Persona Page</b-button>
     </b-card>
   </div>
 </template>
@@ -23,11 +23,12 @@
 <script>
 export default {
   name: "imagecard",
-  props: ["title", "email", "payment"],
+  props: ["email", "title", "text", "path"],
   methods: {
     route() {
       //questo per ora è fisso ma non rimarrà così a lungo
-      this.$router.push({ path: `users/${this.email}` });
+      //this.$router.push({ path: `users/${this.email}` });
+      this.$router.push({ path: this.path });
     },
   },
 };
