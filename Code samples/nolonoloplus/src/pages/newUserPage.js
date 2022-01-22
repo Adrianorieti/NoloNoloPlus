@@ -75,14 +75,12 @@ export default function newUserPage() {
 
         formData.append("img", photo);
 
-        // for(let pair of formData.entries()) {
-        //     console.log(pair);
-        //   }
-        fetch(`http://localhost:8001/api/user/${user.email}`, { method: "POST", body: formData })
+        fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
             .then(response => {
                 return response.json()
             })
             .then(data => {
+                console.log(data);
                 console.log("Ok andato tutto liscio");
                 //qui facciamo setImage così renderizza di nuovo il componente e cambia l'imamgine da solo
             })

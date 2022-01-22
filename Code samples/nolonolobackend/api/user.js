@@ -37,6 +37,17 @@ const upload = multer({ storage: storage })
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    user.find({})
+    .exec()
+    .then((users) => {
+        res.status(200).json({users: users});
+    })
+    .catch((err) => {
+        res.status(500).json({ message: 'Internal error', error: err })
+    })
+})
+
 router.get('/:email', (req, res) => {
     let email = req.params.email;
     user.findOne({ email: email })
@@ -93,6 +104,7 @@ router.post('/:email', async (req, res) => {
 });
 
 router.patch('/:email', upload.single('img'), async (req, res) => {
+    console.log("qui dentro");
     let email = req.params.email;
     let newData = {};
     if (!req.file) {
@@ -108,7 +120,6 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
     } else {
         newData.image = path.join('/images/users', req.file.filename)
     }
-    console.log(newData);
     user.findOneAndUpdate(
         { email: email },
         { $set: newData },

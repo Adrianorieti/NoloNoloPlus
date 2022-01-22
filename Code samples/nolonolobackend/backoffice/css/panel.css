@@ -1,3 +1,23 @@
+html
+{
+    background-color: #e5f5c6;
+}
+#main{
+    background-color: #e5f5c6;
+}
+#content{
+    background-color: #e5f5c6;
+}
+#title{
+    background-color: #e5f5c6;
+}
+#left{
+    background-color: #e5f5c6;
+}
+#right
+{
+    background-color: #e5f5c6;
+}
 
 a{
     text-decoration: none;
@@ -8,7 +28,10 @@ li
     text-decoration: none;
     color: white;
 }
-
+.navbar
+{
+    background-color: #636e3e;
+}
 .App-navbar {
     /*font-size: calc(6px + 2vmin);*/
     font-size: 3vh;
@@ -33,9 +56,14 @@ li
     width: 100%;
     justify-content: center;
 }
-#title>h2
+#title>h2 
 {
     text-align: center;
+}
+#title>h1
+{
+    text-align: center;
+
 }
 #content
 {
@@ -66,4 +94,14 @@ li
 #resToChange
 {
     background-color: bisque;
+}
+
+#spinner
+{
+    text-align: center;
+}
+
+h3
+{
+    text-align: center;
 }

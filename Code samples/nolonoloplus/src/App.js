@@ -11,22 +11,14 @@ import {
   Switch
 } from 'react-router-dom';
 import RentForm from './components/RentForm';
-import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
 import Test from './components/Test';
 import Hypothesis from './pages/Hypothesis';
 import Products from './pages/Products';
-import UpdatePage from './pages/UpdatePage';
-import PersonalPage from './pages/PersonalPage';
 import NewUserPage from './pages/newUserPage';
-import FutureReservations from './pages/FutureReservations';
-import ModifyReservation from './pages/ModifyReservation';
-import ActiveReservations from "./pages/ActiveReservations";
-import PastReservations from "./pages/PastReservations";
 import About from './pages/About';
 import Howitworks from './components/Howitworks'
 import { Link } from 'react-router-dom';
-
 import Rental from './pages/Rental';
 import NewLoginPage from "./pages/NewLoginPage";
 import { useLocation } from "react-router-dom";
@@ -39,7 +31,7 @@ function App() {
   const [data, setData] = useState(JSON.parse(sessionStorage.getItem('username')) || '');
   const [query, setQuery] = useState(null);
   const [focus, setFocus] = useState(false);
-  const [reservation, setReservation] = useState('');
+  const [about, setAbout] = useState(false);
 
   const nameToParent = (childdata) => {
     setData(childdata);
@@ -52,10 +44,11 @@ function App() {
   const focusToParent = (focused) => {
     setFocus(focused);
   }
-  const resToParent = (resData) => {
-    setReservation(resData);
-  }
 
+  const aboutToParent = (abt) => {
+    setAbout(abt);
+  }
+ 
   useEffect(() => {
     if(focus)
     {
@@ -141,10 +134,10 @@ function App() {
         </Route>
 
         <Route path="/hypothesis" exact >
-          <Hypothesis />
+          <Hypothesis aboutToParent={aboutToParent}/>
         </Route>
         <Route path="/rental" exact >
-          <Rental />
+          <Rental aboutToParent={aboutToParent}/>
         </Route>
 
         <Route path="/test" exact >
@@ -164,7 +157,7 @@ function App() {
               </div>
             </div>
           </section>
-          <Products focusToParent={focusToParent}/>
+          <Products focusToParent={focusToParent} aboutToParent={aboutToParent}/>
           {/* <Products /> */}
         </Route>
 
@@ -195,7 +188,7 @@ function App() {
                 </ul>
               </div>
             </div>
-            <About />
+            <About aboutFocus={about}/>
           </section>
 
         </Route>

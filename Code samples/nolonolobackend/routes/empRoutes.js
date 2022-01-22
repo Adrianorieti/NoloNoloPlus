@@ -8,7 +8,7 @@ router.get('/login', (req, res) => {
     res.sendFile(path.join(process.env.ABSOLUTE_PATH, '/html', 'login.html'));
 });
 
-router.get('/panel',auth.verifyAdmin, (req, res) => {
+router.get('/panel', (req, res) => {
     res.sendFile(path.join(process.env.ABSOLUTE_PATH, '/html', 'panel.html'));
 });
 

@@ -1,5 +1,3 @@
-let activeRes = [];
-let futureRes = [];
 let allCostumers = [];
 let productsNames = [];
 let categoriesNames = [];
@@ -216,7 +214,7 @@ function getAllcostumers()
   $('#reservations').html('');
     $.get({
         type: 'GET',
-          url: 'http://localhost:8001/api/employee/getUsersInfo',
+          url: 'http://localhost:8001/api/user/',
         }, function(data){
             showCostumers(data.users);     
         }).fail(function(err)
@@ -354,7 +352,8 @@ function showPendingRequests(data)
     
     `
   }
-  $('#title').html('<h2>Pending requests</h2>')
+  $('#spinner').html('');
+  $('#title').append('<h2>Pending requests</h2>')
   if(requests.length === 0)
     $('#content').html("<p>There are no pending requests waiting for approval</p>");
   else
@@ -365,6 +364,10 @@ function showPendingRequests(data)
 function getPendingRequests()
 {
   $('#reservations').html('');
+  $('#title').html(`<h1>Welcome to the Admin Panel</h1>`)
+  $('#spinner').html(` <div id="spinner" class="spinner-border" role="status">
+  </div>`)
+ 
 
   $.get({
     type: 'GET',
@@ -373,13 +376,13 @@ function getPendingRequests()
       showPendingRequests(data.requests);
     }).fail(function(err)
     {
+      $('#title').html('');
         $('#content').html("Try again later please");
     })
 }
 
 function sendModifyRental(x)
 {
-  console.log("SONO QUIIII");
   let oldStart = allReservations[x].start;
   let oldEnd = allReservations[x].end;
   let oldProduct = allReservations[x].name;
@@ -624,110 +627,3 @@ function confirmLending(x)
     })
 }
 
-function showMyReservations(emp)
-{
-  activeRes = activeRes.concat(emp.activeReservations);
-  futureRes = futureRes.concat(emp.futureReservations);
-  let active = '';
-  let future = '';
-  let past = '';
-  for(x in emp.activeReservations)
-  {
-    active += `
-    <div class="card">
-        <h5 class="card-header">${x}</h5>
-        <div class="card-body">
-        <h5 class="card-title">User: ${emp.activeReservations[x].usermail}</h5>
-        <p class="card-text">Product: ${emp.activeReservations[x].product}</p>
-        <p class="card-text">From: ${emp.activeReservations[x].start}</p>
-        <p class="card-text">To: ${emp.activeReservations[x].end} </p>
-        <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
-        label class="input-group-text" for="points">Insert points</label>
-        <input type="text" class="form-control" id="points" aria-label="Insert the points to add or subtract">
-        <span id="pointsError></span>
-        <a href="#" class="btn btn-primary" onclick="confirmEndOfRental(${x})">Confirm restitution</a>
-
-        </div>
-        </div>
-
-    `
-  }
-  for(x in emp.futureReservations)
-  {
-    future += `
-    <div class="card">
-        <h5 class="card-header">${x}</h5>
-        <div class="card-body">
-        <h5 class="card-title">User: ${emp.futureReservations[x].usermail}</h5>
-        <p class="card-text">Product: ${emp.futureReservations[x].product}</p>
-        <p class="card-text">From: ${emp.futureReservations[x].start}</p>
-        <p class="card-text">To: ${emp.futureReservations[x].end} </p>
-        <p class="card-text">Expense: ${emp.futureReservations[x].expense} </p>
-        <a href="#" class="btn btn-primary" onclick="confirmLending(${x})">Confirm lending</a>
-
-        </div>
-        </div>
-    `
-  }
-  for(x in emp.pastReservations)
-  {
-    past += `
-    <div class="card">
-        <h5 class="card-header">${x}</h5>
-        <div class="card-body">
-        <h5 class="card-title">User: ${emp.pastReservations[x].usermail}</h5>
-        <p class="card-text">Product: ${emp.pastReservations[x].product}</p>
-        <p class="card-text">From: ${emp.pastReservations[x].start}</p>
-        <p class="card-text">To: ${emp.pastReservations[x].end} </p>
-        <p class="card-text">Expense: ${emp.pastReservations[x].expense} </p>
-        </div>
-        </div>
-
-    `
-  }
-  let toInsert =`
-  <div id="active">
-  <h3>Active</h3>
-  ${active}
-  </div>
-  
-  <div id="future">
-  <h3>Future</h3>
-  ${future}
-  </div>
-  
-  <div id="past">
-  <h3>Past</h3>
-  ${past}
-
-  </div>
- 
-  `
-  $('#reservations').html(toInsert);
-}
-
-function getMyReservations()
-{
-  $('#reservations').html('');
-
-  $('#title').html('');
-  $('#content').html('');
-
-  let email = sessionStorage.getItem('email');
-  let obj = `{
-    "email": "${email}"
-  }`;
-  $.post({
-    type: 'POST',
-      url: `http://localhost:8001/api/employee/singleEmp`,
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      data: obj 
-    }, function(data){
-      console.log(data.emp);
-      showMyReservations(data.emp);
-    }).fail(function(err)
-    {
-        $('#content').html("Try again later please");
-    })
-}

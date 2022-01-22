@@ -5,7 +5,7 @@ import { chooseImage } from "../functions/helper";
 import './style/products.css';
 import Product from '../components/Product';
 
-function Products({focusToParent}) {
+function Products(props) {
 
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
@@ -40,7 +40,7 @@ function setSearchBar()
 function rendering()
 {
     return(
-         <Product focusToParent={focusToParent} products={products} token={token} />                 
+         <Product aboutToParent={props.aboutToParent} focusToParent={props.focusToParent} products={products} token={token} />                 
          )
        
 }
@@ -59,7 +59,7 @@ useEffect(() =>
           let response = await fetch(url);
              res = await response.json();
              allProducts = allProducts.concat(res);
-            setProducts(products.concat(res)); // la prima volta è 5
+            setProducts(products.concat(res)); 
             setLoading(true)
       }catch(error)
       {

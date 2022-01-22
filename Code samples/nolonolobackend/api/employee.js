@@ -123,22 +123,6 @@ router.post('/makeRentalHypothesis', async (req,res) =>{
 }
 });
 
-/**
- * Get all users info from database.
- * @params null
- * @return {users list}
- */
-router.get('/getUsersInfo', async (req, res) => {
-
-    const usersList = await user.find();
-    if(usersList)
-    {
-        res.status(200).json({users: usersList});
-    }else
-    {
-        res.status(500).send("Database error");
-    }
-});
 
 /**
  * Change the defined by email user's entry with the new informations

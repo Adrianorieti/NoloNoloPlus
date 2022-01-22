@@ -12,7 +12,6 @@ function sendRent()
  let start = $('#start').val();
  let end = $('#end').val();
 
-
  let obj = `{
     "name": "${prodName}",
     "employee": "${employee}",

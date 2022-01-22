@@ -5,7 +5,7 @@ import { useEffect, useState} from "react";
 import Product from '../components/Product';
 import Spinner from '../components/Spinner';
 import './style/hypothesis.css';
-function Hypothesis()
+function Hypothesis(props)
 {
     const [loading, setLoading] = useState(true);
     const [category, setCategory] = useState('');
@@ -50,7 +50,7 @@ function Hypothesis()
         {loading ? <Spinner /> : 
         <div>
             <div id="notavail"><Link to='/login'>Login</Link> to check availability</div>
-            <Product products={category} price={price} />
+            <Product products={category} price={price} aboutToParent={props.aboutToParent}/>
             </div>
         }
          </div>

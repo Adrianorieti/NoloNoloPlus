@@ -23,6 +23,17 @@ function verifyToken(req, res, next) {
         next();
     }
 }
+router.get('/:token', (req, res) => {
+    let token = req.params.token;
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
+        if (err) {
+            res.status(500).json({ message: "Not valid token" });
+        }
+        else {
+            res.status(200).json({ email: decoded.email });
+        }
+    });
+})
 
 router.get('/', verifyToken, (req, res) => {
     if (req.email !== 'defaultUser@nolonolo.com') {
@@ -33,17 +44,6 @@ router.get('/', verifyToken, (req, res) => {
     }
 })
 
-router.get('/:token', (req, res) => {
-    let token = req.params.token;
-    jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
-        if (err) {
-            res.status(500).json({ message: "Not valid token" });
-        }
-        else {
-            res.status(200).json({ email: decoded.email });
-        }
-    });
-})
 
 function verifyAdmin(req, res, next) {
     /* We retrieve the full url of the request so we can extract the parameters */
@@ -52,7 +52,7 @@ function verifyAdmin(req, res, next) {
     const token = search_params.get('token');
     if (token === 'null') return res.sendStatus(401);
     else {
-        jwt.verify(token, process.env.TOKEN_EMPLOYEE_KEY, async function (err, decoded) {
+        jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
             if (err) {
                 console.log(err.name);
                 return res.status(403).send(` ${err.name} `);
