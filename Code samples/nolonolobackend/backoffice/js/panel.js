@@ -199,7 +199,7 @@ function showCostumers(costumers)
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
               <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
-              <li><a class="dropdown-item" href="#"></a></li>
+              <li><a class="dropdown-item" href="#" onclick="showDeleteCostumer(${x}, allCostumers)">Delete user</a></li>
             </ul>
           </div>
         </div>

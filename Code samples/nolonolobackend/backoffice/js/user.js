@@ -79,7 +79,8 @@ function sendInfo()
         data: obj
       }, function(data)
       {
-        $('#onErr').html(data.message);
+        $('#content').html("Succesful operation");
+        reset();
       }).fail(function()
       {
         $('#onErr').html(data.message);
@@ -164,14 +165,47 @@ function sendComunication()
 function showAddComunication(x, allCostumers)
 {
   let toInsert = `
-  <div class="input-group mb-3">
-  <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3 text-center">
+  <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
+  <div class="input-group mb-3 text-center justify-content-center">
 <div class="mb-3 ">
   <label for="text" class="form-label">Message to send</label>
   <textarea class="form-control" id="text" rows="3"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Insert</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
+  </div>
+</div>
+</div>
+  `
+  $('#content').html(toInsert);
+}
+
+function deleteUser(x, allCostumers)
+{
+  let email = allCostumers[x].email;
+  $.post({
+    type: 'DELETE',
+    url: `http://localhost:8001/api/user/${email}`
+  }, function(data)
+  {
+    $('#content').html("Succesfuly deleted");
+    getAllcostumers();
+  }).fail(function()
+  {
+    $('#onErr').html(data.message);
+  })
+}
+
+function showDeleteCostumer(x, allCostumers)
+{
+  let toInsert = `
+  <div class="input-group mb-3 text-center">
+  <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
+  <div class="input-group mb-3 text-center justify-content-center">
+<div class="mb-3 ">
+  <button type="button" class="btn btn-lg btn-danger btn-block" onclick="deleteUser(${x}, allCostumers)" >Delete</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Back</button>
+  </div>
 </div>
 </div>
   `

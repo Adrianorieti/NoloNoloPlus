@@ -135,4 +135,22 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
         })
 })
 
+router.delete('/:email', (req, res) => {
+    let email = req.params.email;
+    console.log(email);
+    user.exists({email: email}, function (err, doc) {
+        if (err){
+            res.status(404).json({message: "User not found", error: err})
+        }else{
+                user.findOneAndDelete({ email: email })
+                        .exec()
+                        .then((result) => {
+                            console.log(result)
+                            res.status(200).json({ message: 'user deleted'})
+                })
+           
+    }
+    })
+})
+
 module.exports = router;
