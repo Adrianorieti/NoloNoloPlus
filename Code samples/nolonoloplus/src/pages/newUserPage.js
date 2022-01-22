@@ -7,8 +7,8 @@ import Reservations from "../components/Reservations";
 export default function newUserPage() {
 
     const history = useHistory();
-
-    const [user, setUser] = useState('');
+    const imagePath='../../../nolonolobackend';
+    const [user, setUser] = useState('');   
     const [communications, setCommunications] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
@@ -31,6 +31,7 @@ export default function newUserPage() {
                 })
                 .catch(data => { console.log('abbiamo un errore', data.message); setError(data.message); });
         };
+
         function getUser(email) {
             const options = {
                 method: 'GET'
@@ -43,6 +44,7 @@ export default function newUserPage() {
                 }).then((data) => {
                     console.log(data);
                     setUser(data.user);
+                    setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
                 })
@@ -72,8 +74,13 @@ export default function newUserPage() {
     function handleImageUpload() {
         let photo = document.getElementById("file-upload").files[0];
         let formData = new FormData();
-
         formData.append("img", photo);
+        let picName;
+        console.log(user.email)
+        for(var x of formData.entries())
+        {
+            picName=x[1].name;
+        }
 
         fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
             .then(response => {
@@ -81,8 +88,10 @@ export default function newUserPage() {
             })
             .then(data => {
                 console.log(data);
-                console.log("Ok andato tutto liscio");
-                //qui facciamo setImage così renderizza di nuovo il componente e cambia l'imamgine da solo
+                console.log(picName);
+                console.log(imagePath + image);
+            
+                setImage(`/images/users/${picName}`)
             })
             .catch(err => {
                 console.log(err);
@@ -174,15 +183,15 @@ export default function newUserPage() {
                         <div className="row">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="150px" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
+                                    <img  width="150px"  src={image ? "../../../nolonolobackend/images/users/tree.jpeg" : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
-                                    <form>
+                                    <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
                                         <label for="file-upload" class="custom-file-upload">
                                             <i class="fa fa-cloud-upload"></i>
                                         </label>
                                         <input id="file-upload" type="file" name="img" />
 
-                                        <button className="btn btn-primary" onClick={handleImageUpload}>
+                                        <button className="btn btn-primary" type="submit">
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         </button>
 

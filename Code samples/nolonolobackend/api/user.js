@@ -12,6 +12,7 @@ const userImagesPath = path.join(
     global.rootDir,
     '/images/users'
 )
+
 // Initialize local storage
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
