@@ -60,3 +60,8 @@ input[type="file"] {
 #newValue::after{
     content: '<i class="fa fa-eye" aria-hidden="true"></i>';
 }
+
+.rounded-image{
+    border-radius: 50%;
+    max-width: 60%;
+}

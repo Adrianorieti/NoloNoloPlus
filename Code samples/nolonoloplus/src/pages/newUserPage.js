@@ -7,7 +7,6 @@ import Reservations from "../components/Reservations";
 export default function newUserPage() {
 
     const history = useHistory();
-    const imagePath = '../../../nolonolobackend';
     const [user, setUser] = useState('');
     const [communications, setCommunications] = useState('');
     const [error, setError] = useState('');
@@ -46,12 +45,13 @@ export default function newUserPage() {
                 }).then((data) => {
                     console.log(data);
                     setUser(data.user);
-                    setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
+                    setImage("default.jpeg");
                 })
                 .catch((err) => { console.log(err); setError(err.message); });
         };
+
         getEmail();
     }, [])
 
@@ -91,9 +91,8 @@ export default function newUserPage() {
             .then(data => {
                 console.log(data);
                 console.log(picName);
-                console.log(imagePath + image);
 
-                setImage(`/images/users/${picName}`)
+                setImage(`${picName}`);
             })
             .catch(err => {
                 console.log(err);
@@ -190,10 +189,10 @@ export default function newUserPage() {
                         <div className="row">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-circle mt-5" width="150px" alt="profile image" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
+                                    <img className="rounded-image" alt="profile image" src={image ? `http://localhost:8001/images/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
                                     <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
-                                        <label for="file-upload" class="custom-file-upload">
+                                        <label htmlFor="file-upload" class="custom-file-upload">
                                             <i class="fa fa-cloud-upload"></i>
                                         </label>
                                         <input id="file-upload" type="file" name="img" />
@@ -216,7 +215,7 @@ export default function newUserPage() {
                                         <h4 className="text-right">Change Settings</h4>
                                     </div>
                                     <div className="input-group mb-3">
-                                        <label className="input-group-text" for="changeInfo">Info</label>
+                                        <label className="input-group-text" htmlFor="changeInfo">Info</label>
                                         <select className="form-select" id="changeInfo" onChange={changeForm}>
                                             <option selected value="name">Name</option>
                                             <option value="surname">Surname</option>
@@ -229,7 +228,7 @@ export default function newUserPage() {
                                     {isPaymentMethod
                                         ?
                                         <form className="mb-3" onSubmit={(event) => { event.preventDefault(); changeInfo(); }}>
-                                            <label className="form-label" for="newValue">New {valToChange}</label>
+                                            <label className="form-label" htmlFor="newValue">New {valToChange}</label>
                                             <select className="form-control" id="newValue" name="paymentMethod" >
                                                 <option value="MasterCard">MasterCard</option>
                                                 <option selected value="Paypal">Paypal</option>
@@ -246,7 +245,7 @@ export default function newUserPage() {
 
                                         :
                                         <form className="mb-3" onSubmit={(event) => { event.preventDefault(); changeInfo(); }}>
-                                            <label for="newValue" className="form-label">New {valToChange}</label>
+                                            <label htmlFor="newValue" className="form-label">New {valToChange}</label>
                                             <input type="text" className="form-control" id="newValue" required />
                                             <input type="checkbox" onClick={showPassw} />Show Password
                                             <span id="onErr"></span>

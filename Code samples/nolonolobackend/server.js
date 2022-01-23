@@ -41,7 +41,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.static(path.join(__dirname, 'backoffice')));
-
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 /* Actual API server routes */
 app.use('/api/account/', account);
@@ -86,6 +86,11 @@ app.get("/futurereservations", function (req, res) {
 
 app.get('/products', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.get('/images/:name', (req, res) => {
+    const name = req.params.name;
+    res.sendFile(path.join(__dirname, 'images', 'users', name));
 });
 
 // bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
