@@ -4,8 +4,9 @@ import './style/newUserPage.css';
 import Spinner from '../components/Spinner'
 import Reservations from "../components/Reservations";
 
-export default function newUserPage() {
-
+export default function newUserPage({ nameToParent }) {
+    //COSE DA CAMBIARE:
+    //1) QUANDO CAMBIO NOME SI DEVE VISUALIZZARE SUBITO SU NAVBAR.
     const history = useHistory();
     const [user, setUser] = useState('');
     const [communications, setCommunications] = useState('');
@@ -45,9 +46,9 @@ export default function newUserPage() {
                 }).then((data) => {
                     console.log(data);
                     setUser(data.user);
+                    setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
-                    setImage("default.jpeg");
                 })
                 .catch((err) => { console.log(err); setError(err.message); });
         };
@@ -76,30 +77,33 @@ export default function newUserPage() {
 
     function handleImageUpload() {
         let photo = document.getElementById("file-upload").files[0];
-        let formData = new FormData();
-        formData.append("img", photo);
-        let picName;
-        console.log(user.email)
-        for (var x of formData.entries()) {
-            picName = x[1].name;
+        if (photo != null) {
+            let formData = new FormData();
+            formData.append("img", photo);
+            let picName;
+            console.log(user.email)
+            for (var x of formData.entries()) {
+                picName = x[1].name;
+            }
+
+            fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data);
+                    console.log(picName);
+
+                    setImage(`${picName}`);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         }
-
-        fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                console.log(data);
-                console.log(picName);
-
-                setImage(`${picName}`);
-            })
-            .catch(err => {
-                console.log(err);
-            })
     }
 
     function changeForm() {
+        setIsPaymentMethod(false);
         let field = document.getElementById('changeInfo').value;
         setValToChange(field);
         let newValue = document.getElementById('newValue');
@@ -125,7 +129,7 @@ export default function newUserPage() {
                 break;
             default:
                 newValue.type = 'text';
-                newValue.pattern = '';
+                newValue.pattern = "";
                 newValue.title = 'empty input not valid'
                 break;
 
@@ -163,6 +167,10 @@ export default function newUserPage() {
                 if (field === 'email') {
                     sessionStorage.clear();
                     history.push('/login');
+                }
+                else if (field === 'name') {
+                    nameToParent(newValue);
+                    history.go(0);
                 }
                 else {
                     history.go(0);
