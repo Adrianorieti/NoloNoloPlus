@@ -328,7 +328,8 @@ function confirmPendingRequest(x)
 
 function showPendingRequests(data)
 {
-  console.log(data);
+  console.log("entro qui");
+  $('#body a').removeClass('disabled');
   let toInsert= '';
   requests = [];
   requests = requests.concat(data);
@@ -377,7 +378,7 @@ function getPendingRequests()
     }).fail(function(err)
     {
       $('#title').html('');
-        $('#content').html("Try again later please");
+        $('#content').html("Please refresh the page");
     })
 }
 
@@ -498,14 +499,18 @@ function showReservations(actives, future)
   allReservations = allReservations.concat(future);
   for(let x in actives)
     {
+      let start = new Date(actives[x].start);
+      let end = new Date(actives[x].end);
+
         allActives += `
         <div class="card">
         <h5 class="card-header">${x}</h5>
         <div class="card-body">
         <h5 class="card-title">User: ${actives[x].usermail}</h5>
+        <h5 class="card-title">Employee: ${actives[x].employee}</h5>
         <p class="card-text">Product: ${actives[x].product}</p>
-        <p class="card-text">From: ${actives[x].start}</p>
-        <p class="card-text">To: ${actives[x].end} </p>
+        <p class="card-text">From: ${start.toDateString()}</p>
+        <p class="card-text">To: ${end.toDateString()} </p>
         <p class="card-text">Expense: ${actives[x].expense} </p>
       </div>
       </div>
@@ -513,14 +518,18 @@ function showReservations(actives, future)
     }
   for(let x in future)
   {
+    let start = new Date(future[x].start);
+    let end = new Date(future[x].end);
+
     allFuture += `
     <div class="card">
     <h5 class="card-header">${x}</h5>
     <div class="card-body">
     <h5 class="card-title">User: ${future[x].usermail}</h5>
+    <h5 class="card-title">Employee: ${future[x].employee}</h5>
     <p class="card-text">Product: ${future[x].product}</p>
-    <p class="card-text">From: ${future[x].start}</p>
-    <p class="card-text">To: ${future[x].end} </p>
+    <p class="card-text">From: ${start.toDateString()}</p>
+    <p class="card-text">To: ${end.toDateString()} </p>
     <p class="card-text">Expense: ${future[x].expense} </p>
     <a href="#" class="btn btn-primary" onclick="showModify(${x})">Modify rental</a>
     <a href="#" class="btn btn-danger" onclick="showDelete(${x})">Delete</a>
@@ -598,32 +607,5 @@ function confirmEndOfRental(x)
       $('#pointsError').html("You must insert points to add");
 }
 
-function confirmLending(x)
-{
-  let employee = sessionStorage.getItem('email');
-  let product = futureRes[x].product;
-  let user = futureRes[x].usermail;
-  let start = futureRes[x].start;
-  let end = futureRes[x].end;
 
-  let obj = `{
-    "user": "${user}", 
-    "product": "${product}",
-    "employee": "${employee}",
-    "start": "${start}",
-    "end": "${end}"
-  }`;
-  $.post({
-    type: 'POST',
-      url: 'http://localhost:8001/api/employee/confirmLending',
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      data: obj
-    }, function(){
-        $('#content').html("Successful operation");
-        location.reload();
-    }).fail(function(){
-        $('#content').html("Error, maybe the element doesn't exists");
-    })
-}
 

@@ -152,4 +152,63 @@ router.post('/:name/mantainance', async (req, res) => {
 
 })
 
+/** Whit this function we actually confirm that the rent started, so 
+ * the future res gets cancelled and is moved to the active, in the user and in the employee
+ * the amount paid gets updated 
+ */
+ router.post('/active/confirm', async (req, res) => {
+    // Ricevo la prenotazione dalla lista delle future res dei dipendenti
+    const userMail = req.body.user;
+    const employeeMail = req.body.employee;
+    let productName = req.body.product;
+    let start = new Date(req.body.start);
+    let end = new Date(req.body.end);
+    const emp = await employee.findOne({email: employeeMail});
+    const usr = await user.findOne({email: userMail});
+    const prod = await product.findOne({name: productName});
+    
+
+    if(usr && emp && prod)
+    {
+        // Sposto la prenotazione da future ad active in modo che lo user non possa
+        // modificarla in corso
+
+            let toChange ;
+            let x;
+            //USER
+            [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, start, end);
+
+            if(toChange)
+            {
+             //sposto da future ad active
+             usr.activeReservation = toChange;
+             usr.futureReservations.splice(x, 1);
+             usr.save();
+            }
+             // DIPENDENTE
+             [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, start, end);
+
+
+            if(toChange)
+            {
+             emp.futureReservations.splice(x,  1);
+             emp.activeReservations.push(toChange); 
+             emp.save();
+            }
+            //PRODOTTO
+
+            [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, start, end);
+            if(toChange)
+            {
+                prod.futureReservations.splice(x,  1);
+                prod.activeReservation = toChange;
+                prod.save();
+                res.status(200).json({message:"Succesful operation"});
+            }
+    }else
+        {
+            console.log("errore");
+            res.status(500).json({message: "Internal Database error"});
+        }
+})
 module.exports = router;

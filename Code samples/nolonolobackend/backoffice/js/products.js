@@ -2,29 +2,42 @@ let prodName;
 allProducts = [];
 
 
-function changePattern() {
+function changeProductPattern() {
   let field = document.getElementById('changeMenu').value;
   let newValue = document.getElementById('newValue');
   switch (field) {
-    case 'name':
-      newValue.type = 'text';
-      newValue.pattern = "[a-z0-9._%+-]";
-      newValue.title = "Not valid text format";
+      case 'name':
+        $('#descr').hide();
+        $('#newval').show();
+        newValue.type = 'text';
+        newValue.pattern = "[a-z0-9._%+-]";
+        newValue.title = "Not valid text format";
       break;
       case 'type':
+        $('#descr').hide();
+        $('#newval').show();
         newValue.type = 'text';
-          newValue.pattern = "[a-z0-9._%+-]";
-          newValue.title = "Not valid text format";
-          break;
-          case 'status':
-            newValue.type = 'text';
-          newValue.pattern = "[a-z0-9._%+-]";
-          newValue.title = "Not valid text format";
-          break;
+        newValue.pattern = "[a-z0-9._%+-]";
+        newValue.title = "Not valid text format";
+        break;
+      case 'status':
+        $('#descr').hide();
+        $('#newval').show();
+        newValue.type = 'text';
+        newValue.pattern = "[a-z0-9._%+-]";
+        newValue.title = "Not valid text format";
+        break;
       case 'price':
+        $('#descr').hide();
+        $('#newval').show();
         newValue.type = 'tel';
         newValue.pattern = "[0-9]{10}";
         newValue.title = "Not valid price number";
+        break;
+      case 'description':
+        console.log("Qui");
+        $('#newval').hide();
+        $('#descr').show();
         break;
       }
     }
@@ -208,12 +221,17 @@ function showChangeProduct(x, products)
     <option value="type">Type</option>
     <option value="status">Status</option>
     <option value="price">Price</option>
+    <option value="description">Description</option>
   </select>
 </div>
 <form onsubmit="sendChange(event)">
-<div class="mb-3">
+<div class="mb-3" id="newval">
   <label for="newValue" class="form-label">New value</label>
   <input type="text" class="form-control" id="newValue">
+</div>
+<div id="descr">
+<label for="text" class="form-label">New description</label>
+<textarea class="form-control"  rows="3"></textarea>
 </div>
 <span id="changeErr"></span>
 <button class="btn btn-primary " type="submit"  >Confirm</button>
@@ -223,10 +241,12 @@ function showChangeProduct(x, products)
   $('#title').html("");
 
   $('#content').html(toInsert);
+  $('#descr').hide();
+
 
   $( "#changeMenu" ).change(function() {
     console.log("changed");
-        changePattern();
+    changeProductPattern();
       });
 }
 
