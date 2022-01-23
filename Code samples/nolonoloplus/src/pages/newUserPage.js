@@ -268,9 +268,10 @@ export default function newUserPage() {
                                     {communications.length === 0 ? <div> No communications</div> :
                                         (() => {
                                             let commDivs = []
-                                            for (let com of communications) {
-                                                if (com != '') {
-                                                    commDivs.push(<div>{com}</div>)
+                                            for (let x = communications.length; x >= 0; x--) {
+                                                console.log(communications[x])
+                                                if (communications[x] != '') {
+                                                    commDivs.push(<div>{communications[x]}</div>)
                                                     commDivs.push(<div><hr /></div>)
 
                                                 }

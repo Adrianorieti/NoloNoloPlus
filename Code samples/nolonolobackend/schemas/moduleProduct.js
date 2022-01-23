@@ -23,10 +23,14 @@ const ProductSchema = new Schema({
         required: true
     },
     futureReservations: [reserveSchema],
-    activeReservation: reserveSchema,
+    activeReservation:{
+        type: reserveSchema,
+        default: {}
+    },
     pastReservations: [reserveSchema],
     totalSales: {
         type: Number,
+        required: true
     },
     numberOfRents: {
         type: Number,

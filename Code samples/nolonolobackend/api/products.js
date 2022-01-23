@@ -42,9 +42,7 @@ router.get('/:name/available', (req, res) => {
     let end = new Date(req.query.end);
     end.setDate(end.getDate() +1);
     let email = req.query.email;
-    console.log(req.query);
-    console.log("nome", name);
-
+   
        product.findOne({name: name})
       .exec()
       .then(async (prod) => {
@@ -72,8 +70,9 @@ router.post('/', (req, res) => {
         status: 'new',
         price: req.body.price,
         futureReservations: [],
-        activeReservation: '',
+        activeReservation: {},
         pastReservations: [],
+        totalSales: 0,
         numberOfRents: 0
     })
 

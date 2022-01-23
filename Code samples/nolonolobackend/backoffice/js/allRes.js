@@ -13,7 +13,6 @@ function sendModifyRental(x)
   // devo comunque mandare i vecchi dati
   if(start != '' && end != '')
   {
-    console.log(allReservations[x])
       let obj = `{
         "user": "${email}", 
         "employee": "${employee}",
@@ -23,7 +22,6 @@ function sendModifyRental(x)
         "start": "${start}",
         "end": "${end}"
       }`;
-      console.log(obj);
 
       $.post({
         type: 'PATCH',
@@ -36,7 +34,6 @@ function sendModifyRental(x)
           getAllReservations();
         }).fail(function(data)
         {
-          console.log(data.message);
             $('#content').html(data.responseJSON.message);
         })
 
@@ -54,7 +51,6 @@ function showModify(x)
     start.getMonth() == today.getMonth() &&
     start.getFullYear() == today.getFullYear())
     {
-      console.log("sono qui dentro");
       $('#error').html("Can't modify reservation anymore");
       return;
     }
@@ -115,7 +111,6 @@ function rentDeletion(x)
     "start": "${start}",
     "end": "${end}"
   }`;
-  console.log(obj);
   
   $.post({
     type: 'DELETE',

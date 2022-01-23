@@ -2,6 +2,7 @@ const user = require('../schemas/moduleUser');
 const employee = require('../schemas/moduleEmployee');
 const category = require('../schemas/moduleCategory');
 const product = require('../schemas/moduleProduct');
+const reserveSchema = require('../schemas/moduleReservation').model;
 const computePrice = require('../functions/computePrice');
 const express = require('express');
 const checkAvailability = require('../functions/checkAvailability');
@@ -65,7 +66,6 @@ router.post('/:bool', async (req, res) => {
                         expense = await computePrice.computePrice(collection, prod, userMail, usr, startDate, endDate);
                         // altrimenti veniamo da una pending request e non dobbiamo calcolarla di nuovo
                     let newReserve = reservations.createReservation(userMail,employeeMail, productName, expense, startDate, endDate);
-                    console.log(newReserve);
                     //salvo nel prodotto
                     prod.futureReservations.push(newReserve);
                     prod.save();
@@ -177,7 +177,7 @@ router.post('/:name/mantainance', async (req, res) => {
             if(toChange)
             {
              //sposto da future ad active
-             usr.activeReservation = toChange;
+             usr.activeReservations.push(toChange);
              usr.futureReservations.splice(x, 1);
              usr.save();
             }
@@ -201,13 +201,64 @@ router.post('/:name/mantainance', async (req, res) => {
                 prod.save();
                 res.status(200).json({message:"Succesful operation"});
             }
-    }else
+        }else
         {
-            console.log("errore");
             res.status(500).json({message: "Internal Database error"});
         }
-})
+    })
 
+router.post('/:product/restitution', async (req, res) => {
+    const userMail = req.body.user;
+    const employeeMail = req.body.employee;
+    let productName = req.params.product;
+    let start = new Date(req.body.start);
+    let end = new Date(req.body.end);
+    let expense = req.body.expense;
+    const emp = await employee.findOne({ email: employeeMail });
+    const usr = await user.findOne({ email: userMail });
+    const prod = await product.findOne({ name: productName });
+    if (usr && emp && prod) {
+        let toChange;
+        let x;
+        // USER
+        [toChange, x] = reservations.searchReservation(usr.activeReservations, toChange, x,  end, start)
+
+        if (toChange) {
+            //sposto da active a past
+            usr.pastReservations.push(toChange);
+            usr.activeReservations.splice(x, 1);
+            //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+            usr.amountPaid += expense;
+            usr.fidelitypoints += computePrice.fidelityPoints(end, start, expense);
+            usr.save();
+        }
+        // DIPENDENTE
+        [toChange, x] = reservations.searchReservation(emp.activeReservations, toChange, x, end, start)
+
+            if (toChange) {
+                emp.activeReservations.splice(x, 1);
+                emp.pastReservations.push(toChange);
+                //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+                emp.totalReservations += 1;
+                emp.save();
+            }
+
+        //PRODOTTO
+        toChange = prod.activeReservation;
+        if (toChange) {
+            prod.activeReservation = undefined;
+            prod.pastReservations.push(toChange);
+            //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+            prod.totalSales += expense;
+            prod.numberOfRents += 1;
+            prod.save();
+            res.status(200).json({ message: "Succesful operation" });
+        }
+    } else {
+        res.status(500).send("Internal server error");
+    }
+})
+    
 /** Modify a rental on the product, the employee and the user */
 router.patch('/:product/modify', async(req, res) => {
         const productName = req.body.product; // il nuovo prodotto !
@@ -218,14 +269,12 @@ router.patch('/:product/modify', async(req, res) => {
         const oldEnd = new Date(req.body.oldEnd);
         let startDate = new Date(req.body.start);
         let endDate = new Date(req.body.end);
-        console.log("1");
         if(startDate.getTime() > endDate.getTime())
         {
             startDate = new Date(req.body.start);
             endDate = new Date(req.body.end);
         }
-        console.log("start", startDate.getDate());
-        console.log("end", endDate.getDate());
+        
         //vecchio prodotto per andargli a cambiare le cose
         let prod = await product.findOne({name: oldProduct});
         //user in questione
@@ -248,7 +297,6 @@ router.patch('/:product/modify', async(req, res) => {
                 
                     // CONTROLLO SE SUL NUOVO PRODOTTO C'È DISPONIBILITÀ
                     // ALTRIMENTI NON SI FA NULLA
-                    console.log("2");
 
                     if(newProd.futureReservations.length > 0)
                     {
@@ -256,7 +304,6 @@ router.patch('/:product/modify', async(req, res) => {
                         {  
                             newProd.futureReservations.push(newReserve);
                             newProd.save();
-                            console.log("3");
 
     
                         }else
@@ -273,26 +320,21 @@ router.patch('/:product/modify', async(req, res) => {
                 }
 
             // Cambio dentro il prodotto originale (cancello la vecchia prenotazione)
-            console.log("5");
-
             let toChange;
             let x;
             // cerco la vecchia prenotazione nel vecchio prodotto
             [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, oldStart, oldEnd)
-            console.log("6");
 
             if(toChange)
             {  
                 // ... se la trovo la cancello
                 prod.futureReservations.splice(x, 1);
                 prod.save();
-                console.log("7");
 
             } 
          
             // Vado a cancellarla nello user ed ad aggiungere quella nuova
                    [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, oldStart, oldEnd);
-                   console.log("8");
 
              if(toChange)
             {

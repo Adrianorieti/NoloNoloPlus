@@ -91,5 +91,37 @@ module.exports = {
             return (finalPrice);
         }
 
+    },
+    fidelityPoints: async function(end, start, expense){
+        let points=0;
+        let period = end.getTime() - start.getTime();
+        period = period / (1000 * 3600 * 24);
+        if(period > 10)
+        {
+            points = 25;
+        }else if(period > 7)
+        {
+            points= 15;
+        }else if(period > 3)
+        {
+            points = 10;
+        }else
+            points = 5;
+        if(expense >= 150)
+        {
+            points += 30;
+        }
+        else if(expense >= 100)
+        {
+            points += 15;
+        }else if(expense >= 70)
+        {
+            points += 10;
+        }else if(expense >= 40)
+        {
+            points += 8;
+        }
+
+        return points;
     }
 }

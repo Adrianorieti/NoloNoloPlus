@@ -38,12 +38,10 @@ router.post('/:name', auth.verifyToken, (req, res) => {
             let newReserve = reservations.createReservation(userMail," ",productName, price, start, end);
             prod.futureReservations.push(newReserve);
             prod.save();
-            console.log(newReserve);
             // aggiungo la pending request
             let newPendingReq = new pendingRequest({
                 reserve: newReserve
             })  
-            console.log(newPendingReq);
             newPendingReq.save()
             res.status(200).json({message: "Succesful operation"});
         }else
@@ -55,32 +53,25 @@ router.post('/:name', auth.verifyToken, (req, res) => {
 
 /** Deletes the reservation on the product and also the pending request from database */
 router.delete('/:id', async (req, res) => {
-    console.log("1")
     const userMail = req.body.email;
     const productName = req.body.product;
     let message = req.body.message;
-    console.log(req.query);
     let startDate = new Date(req.query.start);
-    console.log(startDate);
     let endDate = new Date(req.query.end);
-    console.log(endDate);
     let id = req.params.id;
-    console.log("2")
 
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
-    console.log("3")
 
     if(usr && prod)
     {
         if(message === '')
         {  
-              message = `Your rental with start ${startDate.toDateString()} and end ${endDate.toDateString()} has been accepted, thank you for choosing us !`;
+              message = `Your rental of ${productName} with start ${startDate.toDateString()} and end ${endDate.toDateString()} has been accepted, thank you for choosing us !`;
         }    
         // Inserisco il messaggio nelle comunicazioni dell'utente
         usr.communications.push(message);
         usr.save();
-        console.log(usr);
         let x;
         let toChange;
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x,endDate, startDate);

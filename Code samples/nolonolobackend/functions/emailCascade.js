@@ -113,13 +113,14 @@ module.exports = {
                     }
                 }
             }
-            if (usr.activeReservation) {
-                res = usr.activeReservation;
-                if (res.employee) // potrebbe essere ancora in pending
-                {
-                    pushElements(emps, res.employee);
-                    pushElements(prods, res.product);
-                    res.email = newMail;
+            if (usr.activeReservations) {
+                for (let res of usr.activeReservations) {
+                    if (res.employee) // potrebbe essere ancora in pending
+                    {
+                        pushElements(emps, res.employee);
+                        pushElements(prods, res.product);
+                        res.email = newMail;
+                    }
                 }
             }
             if (usr.pastReservations) {

@@ -1,9 +1,46 @@
 let activeRes = [];
 let futureRes = [];
 
+
+
+function confirmEndOfRental(x)
+{
+  let employee = sessionStorage.getItem('email');
+  let product = activeRes[x].product;
+  let user = activeRes[x].usermail;
+  let start = activeRes[x].start;
+  let end = activeRes[x].end;
+  let expense = activeRes[x].expense;
+ 
+     let obj = `{
+      "user": "${user}", 
+      "expense": "${expense}",
+      "employee": "${employee}",
+      "start": "${start}",
+      "end": "${end}"
+    }`;
+
+
+    console.log(obj);
+    $.post({
+      type: 'POST',
+        url: `http://localhost:8001/api/rental/${product}/restitution`,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: obj
+      }, function(data){
+          $('#content').html(data.message);
+          getMyReservations();
+      }).fail(function(data){
+          $('#content').html(data.responseJSON.message);
+      })
+}
+
+
+
+
 function confirmLending(x)
 {
-  console.log("entro qui");
   let employee = sessionStorage.getItem('email');
   let product = futureRes[x].product;
   let user = futureRes[x].usermail;
@@ -51,9 +88,6 @@ function showMyReservations(emp)
         <p class="card-text">From: ${start.toDateString()}</p>
         <p class="card-text">To: ${end.toDateString()} </p>
         <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
-        label class="input-group-text" for="points">Insert points</label>
-        <input type="text" class="form-control" id="points" aria-label="Insert the points to add or subtract">
-        <span id="pointsError></span>
         <a href="#" class="btn btn-primary" onclick="confirmEndOfRental(${x})">Confirm restitution</a>
 
         </div>

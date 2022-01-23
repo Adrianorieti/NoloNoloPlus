@@ -40,9 +40,7 @@ function changeProductPattern() {
         $('#descr').show();
         break;
       }
-    }
-
-
+}
     /** Refresh page */
 function reset()
 {

@@ -74,7 +74,7 @@ const UserSchema = new Schema({
     //prenotazioni future modificabili
     futureReservations: [reserveSchema], // let newRes = new Reservation(ecc..)
     //prenotazioni attive e non modificabili // user.futureReservation.push(newres)
-    activeReservation: reserveSchema,
+    activeReservations: [reserveSchema],
     //prenotazioni completate
     pastReservations: [reserveSchema],
 });
