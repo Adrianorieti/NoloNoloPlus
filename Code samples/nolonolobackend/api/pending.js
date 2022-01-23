@@ -26,9 +26,7 @@ router.post('/:name', auth.verifyToken, (req, res) => {
     let price = req.body.price;
     let productName = req.params.name;
     let start = new Date(req.body.start);
-    start.setDate(start.getDate() +1);
     let end = new Date(req.body.end);
-    end.setDate(end.getDate() +1);
 
     product.findOne({name: productName}) // cerco il prodotto in questione
     .exec()

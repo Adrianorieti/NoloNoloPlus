@@ -250,6 +250,7 @@ function denyPendingRequest(x)
           data: obj
         }, function(data){
           $('#content').html(data.message);
+          location.reload();
         }).fail(function(data){
           $('#content').html(data.message);   
       })
