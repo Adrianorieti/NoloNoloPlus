@@ -87,7 +87,7 @@ function Rental(props)
             </div> )
             :
             (<div id="notavail">
-                No products available on those dates
+                <div>No products available on those dates</div>
                 <a className="btn btn-warnign" onClick={() => {history.push('/')}}>Back</a>
             </div>)
              )

@@ -21,18 +21,23 @@ module.exports = {
         }
         return newReserve;
     },
-    searchReservation: function(reservations, toChange, x, start, end)
+    searchReservation: function(reservations, toChange, x, end, start)
     {
+        console.log("DENTRO SEARCH RESERVATION ")
+        console.log("start", start.getDate());
+        console.log("end",end.getDate());
         toChange= '';
          x = 0;
         for(x in reservations)
         { 
-            if(reservations[x].end.getDate() === end.getDate() && reservations[x].start.getDate() === start.getDate())
+            console.log("reservation x",reservations[x])
+            if(reservations[x].end.getTime() === end.getTime() && reservations[x].start.getTime() === start.getTime())
                { 
                    toChange = reservations[x];
                    break;
                 }
         }    
+        console.log(toChange);
         return([toChange, x])
     }
 }

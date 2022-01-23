@@ -23,23 +23,34 @@ function RentForm( props ) {
     }
     let today = new Date();
     let toCompare = new Date(start);
-  
-    if(toCompare.getTime() < today.getTime())
+    console.log(toCompare.getTime());
+    console.log(today.getTime());
+    if((toCompare.getDate() == today.getDate() &&
+    toCompare.getMonth() == today.getMonth() &&
+    toCompare.getFullYear() == today.getFullYear()) || toCompare.getTime() > today.getTime())
+    {
+      form_obj += `{
+        "name": "${bikeType}",
+        "startingDate": "${start}",
+        "endingDate": "${end}"
+       }`;
+       sessionStorage.setItem('form_obj', form_obj);
+       let token = sessionStorage.getItem('token');
+       if(token)
+          {       
+            history.push('/rental');
+          }       
+        else
+          {       
+            history.push('/hypothesis');
+          } 
+   }
+    else if(toCompare.getTime() < today.getTime())
      {
+       
         document.getElementById('date-err').innerHTML ="Please insert a valid date";
         return;
       }
-    form_obj += `{
-    "name": "${bikeType}",
-    "startingDate": "${start}",
-    "endingDate": "${end}"
-   }`;
-   sessionStorage.setItem('form_obj', form_obj);
-   let token = sessionStorage.getItem('token');
-   if(token)
-    history.push('/rental');
-   else
-    history.push('/hypothesis')
     
   }
 

@@ -57,6 +57,7 @@ router.post('/:name', auth.verifyToken, (req, res) => {
 
 /** Deletes the reservation on the product and also the pending request from database */
 router.delete('/:id', async (req, res) => {
+    console.log("1")
     const userMail = req.body.email;
     const productName = req.body.product;
     let message = req.body.message;
@@ -66,20 +67,25 @@ router.delete('/:id', async (req, res) => {
     let endDate = new Date(req.query.end);
     console.log(endDate);
     let id = req.params.id;
-    
+    console.log("2")
+
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
+    console.log("3")
 
     if(usr && prod)
     {
         if(message === '')
-            message = 'Your rental has been accepted, thank you for choosing us !';
+        {  
+              message = `Your rental with start ${startDate.toDateString()} and end ${endDate.toDateString()} has been accepted, thank you for choosing us !`;
+        }    
         // Inserisco il messaggio nelle comunicazioni dell'utente
         usr.communications.push(message);
         usr.save();
+        console.log(usr);
         let x;
         let toChange;
-        [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, startDate, endDate);
+        [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x,endDate, startDate);
         // elimino la reservation dal product
         if(toChange)
         {

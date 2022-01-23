@@ -57,9 +57,9 @@ function Response(props){
         {loading ? <Spinner /> 
         : 
         (confirmed ? <div id="avail">
-            <h4>Reservation succesfully added</h4>
-            <p>You can check it on your personal page.</p>
-            <p>Thanks for choosing us !</p>
+            <h4>Thank you for your reservation !</h4>
+            <p>An employee will as soon as possible check for your rental.</p>
+            <p>When accepted, the rental is goint to be visible on your <a id="personalpage" href="http://localhost:3000/personalpage"> personal page</a></p>
         </div> 
         :
          <div id="notavail">

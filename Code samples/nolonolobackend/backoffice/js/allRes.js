@@ -95,7 +95,7 @@ function rentDeletion(x)
       {
         let start = allReservations[x].start;
         let end = allReservations[x].end;
-        let product = allReservations[x].name;
+        let product = allReservations[x].product;
         let email = allReservations[x].usermail; // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
         let employee = sessionStorage.getItem('email');
         

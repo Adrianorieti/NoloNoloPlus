@@ -82,7 +82,7 @@ function makeRentalHypothesis(x)
 </form>
     </div>`;
     $("#content").html("");
-    $('#info').html(toInsert);
+    $('#content').html(toInsert);
 }
 
 /** Renders all products in the content div */ 
@@ -164,15 +164,16 @@ function showProducts(products)
 function getAllproducts()
 {
   $('#reservations').html('');
+  $('#content').html('');
     $.get({
         type: 'GET',
           url: 'http://localhost:8001/api/products/',
         }, function(data){
             showProducts(data.productList);     
-        }).fail(function(err)
+        }).fail(function(data)
         {
-            // change this
-            alert('error');
+          $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+
         })
 }
 
@@ -184,27 +185,31 @@ function showCostumers(costumers)
     let image = '../images/user.jpeg';
     for(let x in costumers)
     {
+      if(costumers[x].email != 'defaultUser@nolonolo.com')
+      {
+
         toInsert += `<div class="card" style="width: 18rem;">
         <img src="../images/${image}" class="card-img-top" alt="Product image">
         <div class="card-body">
-          <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
-          <p class="card-text">Email :${costumers[x].email}</p>
-          <p class="card-text">Phone :${costumers[x].phone}</p>
-          <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>
-          <p class="card-text">Fidelity point: ${costumers[x].fidelityPoints}</p>
-          <p class="card-text">Amount paid: ${costumers[x].amountPaid}</p>
-           <div class="input-group mb-3">
-            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
-              <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
-              <li><a class="dropdown-item" href="#" onclick="showDeleteCostumer(${x}, allCostumers)">Delete user</a></li>
-            </ul>
-          </div>
+        <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
+        <p class="card-text">Email: ${costumers[x].email}</p>
+        <p class="card-text">Phone: ${costumers[x].phone}</p>
+        <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>
+        <p class="card-text">Fidelity point: ${costumers[x].fidelityPoints}</p>
+        <p class="card-text">Amount paid: ${costumers[x].amountPaid}</p>
+        <div class="input-group mb-3">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+        <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
+        <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
+        <li><a class="dropdown-item" href="#" onclick="showDeleteCostumer(${x}, allCostumers)">Delete user</a></li>
+        </ul>
         </div>
-      </div>`
-    }
-    $('#title').html("");
+        </div>
+        </div>`
+      }
+      }
+      $('#title').html("");
     $('#content').html(toInsert);
 }
 
@@ -263,7 +268,7 @@ function showDenyPendingRequest(x)
   <div class="input-group mb-3" id="message">
   <input class="form-control" type="text" id='email' value="${requests[x].reserve.usermail}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3">
-<div class="mb-3" >
+<div class="mb-3 text-center justify-content-center" >
   <label for="text" class="form-label">Message to send</label>
   <textarea class="form-control" id="text" rows="3"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="denyPendingRequest(${x})" >Insert</button>
@@ -291,13 +296,14 @@ function confirmPendingRequest(x)
     "message": ""
   }`;
   const obj2 = `{
-    "email": "${userMail}",
+    "user": "${userMail}",
     "product": "${product}",
     "employee": "${employeeMail}",
     "start": "${start}",
     "end": "${end}",
     "expense": "${expense}"
   }`;
+  console.log(obj2);
   // VADO A CHIAMARE LA DELETE PER LE PENDING E QUANDO LO FÀ CHIAMO QUELLA CHE AGGIUNGE
   //LA PRENOTAZIONE OVUNQUE
   $.post({
@@ -307,7 +313,7 @@ function confirmPendingRequest(x)
     dataType: 'json',
     data: obj
   }, function(data){  
-    console.log("ALMENO LA PRIMA È ANDATAAAA");
+
       $.post({
         type: 'POST',
         url: `http://localhost:8001/api/rental/false`,
@@ -316,6 +322,7 @@ function confirmPendingRequest(x)
         data: obj2
       }, function(data){
         $('#content').html(data.message);   
+        location.reload();
       }).fail(function(data){
         $('#content').html(data.message);   
     })
@@ -327,23 +334,22 @@ function confirmPendingRequest(x)
 
 function showPendingRequests(data)
 {
-  console.log("entro qui");
   $('#body a').removeClass('disabled');
   let toInsert= '';
   requests = [];
   requests = requests.concat(data);
-  console.log("requests", requests);
   for(let x in requests)
   {
-    console.log(requests[x].reserve);
+    let start = new Date(requests[x].reserve.start);
+    let end = new Date(requests[x].reserve.end)
     toInsert += `
     <div class="card" id="card-${x}">
     <h5 class="card-header">${x}</h5>
     <div class="card-body">
     <h5 class="card-title">Product: ${requests[x].reserve.product}</h5>
     <p class="card-text">User: ${requests[x].reserve.usermail}</p>
-    <p class="card-text">From: ${requests[x].reserve.start} </p>
-    <p class="card-text">TO: ${requests[x].reserve.end} </p>
+    <p class="card-text">From: ${start.toDateString()} </p>
+    <p class="card-text">TO: ${end.toDateString()} </p>
     <p class="card-text">Price: ${requests[x].reserve.expense} </p>
     <a href="#" class="btn btn-primary" onclick="confirmPendingRequest(${x})">Accept</a>
     <a href="#" class="btn btn-danger" onclick="showDenyPendingRequest(${x})">Deny</a>
