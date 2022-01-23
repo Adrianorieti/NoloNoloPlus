@@ -12,6 +12,7 @@ const userImagesPath = path.join(
     global.rootDir,
     '/images/users'
 )
+
 // Initialize local storage
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -122,19 +123,44 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
     } else {
         newData.image = path.join('/images/users', req.file.filename)
     }
-    console.log(newData);
     user.findOneAndUpdate(
         { email: email },
         { $set: newData },
         { runValidators: true, new: false, useFindAndModify: false }
     ).exec()
         .then((result) => {
-            res.status(200).json(result);
+            res.status(200).json({ message: "Comunication Succesfuly added" });
         })
         .catch((err) => {
             console.log(err);
             res.status(400).json({ message: 'Bad input parameter', error: err })
         })
+})
+
+router.delete('/:email', async (req, res) => {
+    let email = req.params.email;
+    console.log(email);
+    user.exists({ email: email }, async function (err, doc) {
+        if (err) {
+            res.status(404).json({ message: "User not found", error: err })
+        } else {
+            let usr = await user.findOne({ email: email });
+            console.log(usr);
+            if (usr.activeReservation === '' || usr.activeReservation === null ||
+                usr.activeReservation === 'null' || usr.futureReservations.length != 0) {
+                res.status(500).json({ message: "Impossible, there are future or active reservations" })
+            } else {
+
+                user.findOneAndDelete({ email: email })
+                    .exec()
+                    .then((result) => {
+                        console.log(result)
+                        res.status(200).json({ message: 'User deleted' })
+                    })
+            }
+
+        }
+    })
 })
 
 module.exports = router;

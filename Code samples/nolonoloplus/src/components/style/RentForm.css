@@ -6,7 +6,6 @@
 
 .App-rent {
   /*border: 6px solid #bbe0ac;*/
-
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -17,11 +16,27 @@
   background-color: white;
   color: black;
   opacity: 0.9;
-  max-height: 110vh;
   /*border: 6px solid #bbe0ac;*/
   width: 60vh;
   height: auto;
-  overflow: scroll;
+  /* overflow: scroll; */
   justify-content: center;
   padding: 3vh 3vh;
+  display: inline-block;
+}
+
+.step
+{
+  padding: 1rem;
+}
+#formTitle{
+  padding: 1rem;
+}
+
+#date-err{
+  color: red;
+}
+#selectProduct
+{
+  padding-bottom: 1rem;
 }

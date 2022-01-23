@@ -6,7 +6,7 @@ import { chooseImage } from '../functions/helper';
 import Response from '../components/Response';
 import './style/rental.css';
 
-function Rental()
+function Rental(props)
 {
     const [loading, setLoading] = useState(true);
     const [category, setCategory] = useState('');
@@ -18,6 +18,11 @@ function Rental()
     const [product, setProduct] = useState();
 
     const history = useHistory();
+
+    const goToAbout = () => {
+        props.aboutToParent(true);
+        history.push('/about');
+    }
 
     useEffect(() => 
     {
@@ -70,7 +75,7 @@ function Rental()
                         <p>Description: {category.description}</p>
                         <p>Start: {start}</p>
                         <p>End: {end}</p>
-                        <p>Total Price: ${price}</p>
+                        <p>Total Price: ${price}<span><a className="fa fa-info-circle"  onClick={goToAbout}></a></span></p>
                     </div>
                     <div id="control">
                         <button className="btn btn-success" onClick={() => {setResponse(true)}}>Confirm</button>

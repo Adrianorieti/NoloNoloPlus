@@ -16,11 +16,11 @@ fi
 
 echo "### Building finished ###"
 
-echo "### Moving file inside nolonolobackend/  folder"
+echo "### Moving file inside Backend/  folder"
 
-rm -r ../nolonolobackend/build
+rm -r ../Backend/build
 
-mv  build  ../nolonolobackend/
+mv  build  ../Backend/
 
 if [ $? -eq 0 ]
 then

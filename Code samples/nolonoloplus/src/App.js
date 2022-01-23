@@ -1,4 +1,7 @@
-import React from "react";
+import React from 'react';
+import { 
+  useState, useRef, useEffect
+} from 'react';
 import './App.css';
 import CarouselContainer from './components/Carousel';
 import Header from './components/Header';
@@ -8,34 +11,27 @@ import {
   Switch
 } from 'react-router-dom';
 import RentForm from './components/RentForm';
-import LoginPage from './pages/LoginPage';
 import Footer from './components/Footer';
-import {
-  useState
-} from 'react';
 import Test from './components/Test';
 import Hypothesis from './pages/Hypothesis';
 import Products from './pages/Products';
-import UpdatePage from './pages/UpdatePage';
-import PersonalPage from './pages/PersonalPage';
 import NewUserPage from './pages/newUserPage';
-import FutureReservations from './pages/FutureReservations';
-import ModifyReservation from './pages/ModifyReservation';
-import ActiveReservations from "./pages/ActiveReservations";
-import PastReservations from "./pages/PastReservations";
 import About from './pages/About';
 import Howitworks from './components/Howitworks'
 import { Link } from 'react-router-dom';
-
 import Rental from './pages/Rental';
 import NewLoginPage from "./pages/NewLoginPage";
+import { useLocation } from "react-router-dom";
 
 function App() {
+  const location = useLocation();
+  const mainRef = useRef(null);
 
   //Uso questa roba per passarmi dati da LoginPage a qui e passarli quindi poi alla navbar come props
   const [data, setData] = useState(JSON.parse(sessionStorage.getItem('username')) || '');
   const [query, setQuery] = useState(null);
-  const [reservation, setReservation] = useState('');
+  const [focus, setFocus] = useState(false);
+  const [about, setAbout] = useState(false);
 
   const nameToParent = (childdata) => {
     setData(childdata);
@@ -45,9 +41,22 @@ function App() {
     setQuery(rentFormData);
   }
 
-  const resToParent = (resData) => {
-    setReservation(resData);
+  const focusToParent = (focused) => {
+    setFocus(focused);
   }
+
+  const aboutToParent = (abt) => {
+    setAbout(abt);
+  }
+ 
+  useEffect(() => {
+    if(focus)
+    {
+      mainRef.current.focus();
+    }
+
+    
+  }, [focus]);
 
 
   return (
@@ -77,9 +86,11 @@ function App() {
 
           <section className="App-content bg-image container-properties" id="rentForm">
             <div className="row">
-              <div className="col-md-6 rentform">
-                <RentForm queryToParent={queryToParent} />
+              <div className="col-md-6 rentform" ref={mainRef} tabIndex='-1'>
+       
+                <RentForm focusToParent={focusToParent} location={location} />
               </div>
+           
               <div className="col-md-6 banner">
                 <h4>We provide the mean you choose the place</h4>
               </div>
@@ -123,10 +134,10 @@ function App() {
         </Route>
 
         <Route path="/hypothesis" exact >
-          <Hypothesis />
+          <Hypothesis aboutToParent={aboutToParent}/>
         </Route>
         <Route path="/rental" exact >
-          <Rental />
+          <Rental aboutToParent={aboutToParent}/>
         </Route>
 
         <Route path="/test" exact >
@@ -146,7 +157,7 @@ function App() {
               </div>
             </div>
           </section>
-          <Products />
+          <Products focusToParent={focusToParent} aboutToParent={aboutToParent}/>
           {/* <Products /> */}
         </Route>
 
@@ -177,7 +188,7 @@ function App() {
                 </ul>
               </div>
             </div>
-            <About />
+            <About aboutFocus={about}/>
           </section>
 
         </Route>

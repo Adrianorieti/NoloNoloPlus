@@ -1,5 +1,6 @@
 const user = require('../schemas/moduleUser');
 const manager = require('../schemas/moduleManager');
+const employee = require('../schemas/moduleEmployee');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 // Json web token 
@@ -78,21 +79,19 @@ router.post('/login/:role', async (req, res) => {
     if (source)  // L'account richiesto è stato trovato
     {
         const password = req.body.password;
-
         const buff = Buffer.from(password, 'base64');
 
         const decodedpass = buff.toString('utf-8');
-
         // We compare the passwords
         if (await bcrypt.compare(decodedpass, source.password)) {
-
             if (role != 'manager') {
                 //CREATE  JWT
                 const user = { email: `${source.email}` };
                 const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '2h' });
-
+                console.log("arrivo qui prima di crashare");
+                console.log(accessToken);
                 //Send token back to client 
-                res.json({ accessToken: accessToken, name: `${source.name}` });
+                res.status(200).json({ accessToken: accessToken, name: `${source.name}` });
             }
             else {
                 // Create the json web token

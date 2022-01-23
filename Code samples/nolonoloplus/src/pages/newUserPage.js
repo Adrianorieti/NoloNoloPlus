@@ -7,7 +7,7 @@ import Reservations from "../components/Reservations";
 export default function newUserPage() {
 
     const history = useHistory();
-
+    const imagePath = '../../../nolonolobackend';
     const [user, setUser] = useState('');
     const [communications, setCommunications] = useState('');
     const [error, setError] = useState('');
@@ -33,6 +33,7 @@ export default function newUserPage() {
                 })
                 .catch(data => { console.log('abbiamo un errore', data.message); setError(data.message); });
         };
+
         function getUser(email) {
             const options = {
                 method: 'GET'
@@ -45,6 +46,7 @@ export default function newUserPage() {
                 }).then((data) => {
                     console.log(data);
                     setUser(data.user);
+                    setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
                 })
@@ -54,8 +56,9 @@ export default function newUserPage() {
     }, [])
 
     function clearCommunications() {
+        let newArray = new Array();
         const body = `{
-            "communications": ""
+            "communications": "${newArray}"
         }`;
         const options = {
             method: 'PATCH',
@@ -74,19 +77,23 @@ export default function newUserPage() {
     function handleImageUpload() {
         let photo = document.getElementById("file-upload").files[0];
         let formData = new FormData();
-
         formData.append("img", photo);
+        let picName;
+        console.log(user.email)
+        for (var x of formData.entries()) {
+            picName = x[1].name;
+        }
 
-        // for(let pair of formData.entries()) {
-        //     console.log(pair);
-        //   }
-        fetch(`http://localhost:8001/api/user/${user.email}`, { method: "POST", body: formData })
+        fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
             .then(response => {
                 return response.json()
             })
             .then(data => {
-                console.log("Ok andato tutto liscio");
-                //qui facciamo setImage così renderizza di nuovo il componente e cambia l'imamgine da solo
+                console.log(data);
+                console.log(picName);
+                console.log(imagePath + image);
+
+                setImage(`/images/users/${picName}`)
             })
             .catch(err => {
                 console.log(err);
@@ -185,13 +192,13 @@ export default function newUserPage() {
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                                     <img className="rounded-circle mt-5" width="150px" alt="profile image" src={image ? image : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
-                                    <form>
+                                    <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
                                         <label for="file-upload" class="custom-file-upload">
                                             <i class="fa fa-cloud-upload"></i>
                                         </label>
                                         <input id="file-upload" type="file" name="img" />
 
-                                        <button className="btn btn-primary" onClick={handleImageUpload}>
+                                        <button className="btn btn-primary" type="submit">
                                             <i class="fa fa-check-circle" aria-hidden="true"></i>
                                         </button>
 
@@ -259,11 +266,15 @@ export default function newUserPage() {
                                     <div className="d-flex justify-content-between align-items-center mb-3">
                                         <h4 className="text-right">Communications from agency</h4>
                                     </div>
-                                    {communications.length <= 1 ? <div> No communications</div> :
+                                    {(communications.length === 0 || communications[0] === '') ? <div> No communications</div> :
                                         (() => {
                                             let commDivs = []
                                             for (let com of communications) {
-                                                commDivs.push(<div className="communications-wrapper">{com}</div>)
+                                                if (com != '') {
+                                                    commDivs.push(<div>{com}</div>)
+                                                    commDivs.push(<div><hr /></div>)
+
+                                                }
                                             }
                                             return (<div>
                                                 <div>{commDivs}</div>

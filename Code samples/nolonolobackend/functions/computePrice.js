@@ -38,12 +38,14 @@ module.exports = {
                 totalDiscount += discountRate;
             }
             // Prezzo basico del periodo (quindi di alta o bassa stagione ecc)
-            
+            console.log("finalPrice", finalPrice);
             let period = endDate.getTime() - startDate.getTime();
              period = period / (1000 * 3600 * 24);
             //così mi prende  anche il giorno finale altrimenti non me lo prende
              period += 1;
             finalPrice = dailyPrice * period;
+            console.log("period", period);
+            console.log("finalProce", finalPrice);
 
             // Se inizio il venerdì e la prenotazione dura 3 o + giorni allora sconto
             if (startDate.getDay() === 6) {
@@ -85,7 +87,7 @@ module.exports = {
             if (totalDiscount < 0)
                 totalDiscount = 0; // cioè non abbiamo fatto nessuno sconto bensì una maggiorazione
                 finalPrice = parseInt(finalPrice.toFixed(2));
-           console.log("fine compute price");
+           console.log("fine compute price", finalPrice);
             return (finalPrice);
         }
 

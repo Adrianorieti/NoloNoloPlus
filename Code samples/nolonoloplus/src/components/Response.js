@@ -14,8 +14,6 @@ function Response(props){
     useEffect(() => 
     {
         
-        console.log("sono dentro response !");
-       
         function addPendingRequest(token)
         {
             let toSend =`{
