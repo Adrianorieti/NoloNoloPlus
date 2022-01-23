@@ -13,15 +13,15 @@ router.get('/', (req, res) => {
 
     let actives = [];
     let future = [];
-   product.find({})
+   user.find({})
     .exec()
-    .then((prods) => {
-        for(i in prods) 
+    .then((usr) => {
+        for(i in usr) 
         {
-            if(prods[i].activeReservation != null) // mi salvo le attive
-                actives.push(prods[i].activeReservation)
-            if(prods[i].futureReservations) // mi salvo le future
-                future =  future.concat(prods[i].futureReservations);
+            if(usr[i].activeReservation != null) // mi salvo le attive
+                actives.push(usr[i].activeReservation)
+            if(usr[i].futureReservations) // mi salvo le future
+                future =  future.concat(usr[i].futureReservations);
         } 
          res.status(200).json({future: future, actives: actives});
     }).catch((err) => {
@@ -34,7 +34,6 @@ router.get('/', (req, res) => {
  * if bool = false expense is already been computed
 */
 router.post('/:bool', async (req, res) => {
-    console.log("ENTRATO QUA PORCODIOOOOO")
     let bool = req.params.bool;
     const userMail = req.body.user;
     const productName = req.body.product;
@@ -42,7 +41,8 @@ router.post('/:bool', async (req, res) => {
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
     let expense = req.body.expense;
-   
+
+
     //In case dates are swapped
     if(startDate.getTime() > endDate.getTime())
     {
@@ -57,10 +57,8 @@ router.post('/:bool', async (req, res) => {
         const emp = await employee.findOne({email: employeeMail});
         if(prod)
         {   
-            console.log("arrivato sin qui");
             if(checkAvailability.checkAvailability(prod, startDate, endDate))
             {
-                console.log("qui dentro");
                 try{
                     let collection = await category.findOne({name: prod.type});
                     if(bool) // expense deve essere calcolata
@@ -71,17 +69,14 @@ router.post('/:bool', async (req, res) => {
                     //salvo nel prodotto
                     prod.futureReservations.push(newReserve);
                     prod.save();
-                    console.log("qui");
 
                     //salvo nello user
                     usr.futureReservations.push(newReserve);
                     usr.save();
-                    console.log("qui ");
 
                     //salvo nell'employee
                     emp.futureReservations.push(newReserve);
                     emp.save();
-                    console.log("arrivo qui");
                     res.status(200).json({message: "Succesful operation"});
                 }catch(err)
                 {
@@ -333,13 +328,18 @@ router.delete('/:product', async (req, res) => {
     let employeeMail = req.body.employee;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
+    if(startDate.getTime() > endDate.getTime())
+    {
+        startDate = new Date(req.body.end);
+        endDate = new Date(req.body.start);
+
+    }
     //vecchio prodotto per andargli a cambiare le cose
     let prod = await product.findOne({name: oldProduct});
     //user in questione
     let usr = await user.findOne({email: userMail});
     // employee in questione
     let emp = await employee.findOne({email: employeeMail});
-  
     if(prod &&  usr && emp)
     {
         //elimino dal prodotto
@@ -347,7 +347,7 @@ router.delete('/:product', async (req, res) => {
         let toChange;
         // cerco la prenotazione nel prodotto
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
-
+       
         if(toChange)
         {
             prod.futureReservations.splice(x, 1);
@@ -355,7 +355,7 @@ router.delete('/:product', async (req, res) => {
         }     
         // elimino nello user
         [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, endDate, startDate);
-
+      
         if(toChange)
         {   
              usr.futureReservations.splice(x, 1);
@@ -363,7 +363,7 @@ router.delete('/:product', async (req, res) => {
         } 
         //elimino nel dipendente
         [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, endDate, startDate);
-
+       
         if(toChange)
         {    
             emp.futureReservations.splice(x, 1);

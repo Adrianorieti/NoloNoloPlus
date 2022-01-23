@@ -48,6 +48,16 @@ function sendModifyRental(x)
 
 function showModify(x)
 {
+  let start = new Date(allReservations[x].start); // faccio concat in showRes
+    let today = new Date();
+    if(start.getDate() == today.getDate() &&
+    start.getMonth() == today.getMonth() &&
+    start.getFullYear() == today.getFullYear())
+    {
+      console.log("sono qui dentro");
+      $('#error').html("Can't modify reservation anymore");
+      return;
+    }
   let allProducts = [];
     $.get({
         type: 'GET',
@@ -95,7 +105,7 @@ function rentDeletion(x)
       {
         let start = allReservations[x].start;
         let end = allReservations[x].end;
-        let product = allReservations[x].name;
+        let product = allReservations[x].product;
         let email = allReservations[x].usermail; // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
         let employee = sessionStorage.getItem('email');
         
@@ -159,10 +169,18 @@ function showReservations(actives, future)
   {
     let start = new Date(future[x].start);
     let end = new Date(future[x].end);
+    let today = new Date();
+    let isToday = false;
+    if(start.getDate() == today.getDate() &&
+    start.getMonth() == today.getMonth() &&
+    start.getFullYear() == today.getFullYear())
+    {
+      isToday=true;
 
+    }
     allFuture += `
     <div class="card">
-    <h5 class="card-header">${x}</h5>
+    <h5 class="card-header">${x}${isToday ?  " <b> TODAY</b>" : ''}</h5>
     <div class="card-body">
     <h5 class="card-title">User: ${future[x].usermail}</h5>
     <h5 class="card-title">Employee: ${future[x].employee}</h5>
@@ -170,6 +188,7 @@ function showReservations(actives, future)
     <p class="card-text">From: ${start.toDateString()}</p>
     <p class="card-text">To: ${end.toDateString()} </p>
     <p class="card-text">Expense: ${future[x].expense} </p>
+    <span id="error"></span>
     <a href="#" class="btn btn-primary" onclick="showModify(${x})">Modify rental</a>
     <a href="#" class="btn btn-danger" onclick="showDelete(${x})">Delete</a>
   </div>

@@ -65,9 +65,18 @@ function showMyReservations(emp)
   {
     let start = new Date(emp.futureReservations[x].start);
     let end = new Date(emp.futureReservations[x].end)
+    let today = new Date();
+    let isToday = false;
+    if(start.getDate() == today.getDate() &&
+    start.getMonth() == today.getMonth() &&
+    start.getFullYear() == today.getFullYear())
+    {
+      isToday=true;
+
+    }
     future += `
     <div class="card">
-        <h5 class="card-header">${x}</h5>
+        <h5 class="card-header">${x} ${isToday ? ' <b>TODAY</b>' : ''}</h5>
         <div class="card-body">
         <h5 class="card-title">User: ${emp.futureReservations[x].usermail}</h5>
         <p class="card-text">Product: ${emp.futureReservations[x].product}</p>

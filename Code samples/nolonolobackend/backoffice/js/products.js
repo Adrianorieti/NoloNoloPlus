@@ -44,8 +44,10 @@ function changeProductPattern() {
 
 
     /** Refresh page */
-    function reset()
+function reset()
 {
+  console.log("qui dentro");
+  history.go(0);
   location.reload();
 }
 
@@ -166,12 +168,13 @@ function showAddProduct()
   <span class="input-group-text">.00</span>
 </div>
 <span id="error"></span> <br>
-<button type="submit" class="btn btn-lg btn-primary btn-block" onclick="sendProduct(event)">Add product</button>
+<button type="submit" class="btn btn-lg btn-primary btn-block" ">Add product</button>
 <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
 </form>
 
     `;
     $('#title').html("");
+    $('#content').html("");
     $('#content').html(toInsert);
 
 }
@@ -234,9 +237,9 @@ function showChangeProduct(x, products)
 <textarea class="form-control"  rows="3"></textarea>
 </div>
 <span id="changeErr"></span>
-<button class="btn btn-primary " type="submit"  >Confirm</button>
-<button class="btn btn-warning" type="button" onclick="reset()" >Close</button>
+<button class="btn btn-primary" type="submit">Confirm</button>
 </form>
+<button class="btn btn-warning btn-block" type="button" onclick="reset()">Close</button>
   `
   $('#title').html("");
 
@@ -250,28 +253,7 @@ function showChangeProduct(x, products)
       });
 }
 
-function showDeletedReservations(reservations)
-{
-  let toInsert= '';
-  console.log("QUIIII");
-  for(let x in reservations)
-  {
-    toInsert += `
-    <div id="resToChange">
-    <p>Reservation n. ${x}</p>
-    <p>User: ${reservations[x].usermail}</p>
-    <p>Product: ${reservations[x].product}</p>
-    <p>Employee: ${reservations[x].employee}</p>
-    <p>Expense: ${reservations[x].expense}</p>
-    <p>Start: ${reservations[x].start}</p>
-    <p>End: ${reservations[x].end}</p>
-    </div>
-    `;
-  }
-  console.log("ANCHE QUIIII");
-  $('#content').html('The deleted product had these future reservations');
-  $('#content').append(`<div id="deleted">${toInsert}</div>`);
-}
+
 /** TODO GESTIRE GRAFICAMENTE LA LISTA DI RESERVATIONS RITORNATA DAL SERVER QUANDO CANCELLIAMO IL PRODOTTO */
 function sendDelete()
 {
@@ -283,8 +265,7 @@ function sendDelete()
     }, function(data){
       console.log(data);
       $('#content').html(data.message);
-      if(data.reservations != null)
-        showDeletedReservations(data.reservations);
+      location.reload();
     }).fail(function(data){
       console.log(data);
         $('#content').html( `<h3>${data.responseJSON.message}</h3> `);

@@ -15,7 +15,8 @@ router.get('/', (req, res) => {
             res.status(200).json({productList: products});
         })
         .catch((err) => {
-            res.status(500).json({ message: 'Internal error', error: err })
+            console.log(err);
+            res.status(500).json({ message: 'Internal error'})
         })
 })
 
@@ -76,7 +77,6 @@ router.post('/', (req, res) => {
         numberOfRents: 0
     })
 
-    console.log(newProduct);
     newProduct
         .save()
         .then(() => {
@@ -128,8 +128,7 @@ router.delete('/:name', async (req, res) => {
                 product.findOneAndDelete({ name: name })
                 .exec()
                 .then((result) => {
-                    console.log(result)
-                    res.status(200).json({ message: 'Product deleted', reservations: result.futureReservations})
+                    res.status(200).json({ message: 'Product deleted'})
                 })
                 
             }
