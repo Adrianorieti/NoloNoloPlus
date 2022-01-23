@@ -144,20 +144,19 @@ function sendComunication()
   let email = $('#email').val();
   let message = $('#text').val();
   const obj = `{
-    "email": "${email}",
-    "message": "${message}"
+    "communications": "${message}"
   }`;
   console.log(obj);
   $.post({
-    type: 'POST',
-      url: 'http://localhost:8001/api/employee/addComunication',
+    type: 'PATCH',
+      url: `http://localhost:8001/api/user/${email}`,
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       data: obj
     }, function(data){
-        $('#comunication').html(data.message);
+        $('#content').html(data.message);
     }).fail(function(data){
-        $('#comunication').html(data.message);
+        $('#content').html(data.responseJSON.message);
     })
 }
 
@@ -188,11 +187,11 @@ function deleteUser(x, allCostumers)
     url: `http://localhost:8001/api/user/${email}`
   }, function(data)
   {
-    $('#content').html("Succesfuly deleted");
+    $('#content').html(data.message);
     getAllcostumers();
-  }).fail(function()
+  }).fail(function(data)
   {
-    $('#onErr').html(data.message);
+    $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
   })
 }
 

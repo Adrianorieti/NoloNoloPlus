@@ -54,8 +54,9 @@ export default function newUserPage() {
     }, [])
 
     function clearCommunications() {
+        let newArray = new Array();
         const body = `{
-            "communications": ""
+            "communications": "${newArray}"
         }`;
         const options = {
             method: 'PATCH',
@@ -238,11 +239,16 @@ export default function newUserPage() {
                                     <div className="d-flex justify-content-between align-items-center mb-3">
                                         <h4 className="text-right">Communications from agency</h4>
                                     </div>
-                                    {communications.length <= 1 ? <div> No communications</div> :
+                                    {(communications.length === 0 || communications[0] ==='') ? <div> No communications</div> :
                                         (() => {
                                             let commDivs = []
                                             for (let com of communications) {
-                                                commDivs.push(<div className="communications-wrapper">{com}</div>)
+                                                if(com  != '')
+                                               { 
+                                                   commDivs.push(<div>{com}</div>)
+                                                   commDivs.push(<div><hr/></div>)
+
+                                                }
                                             }
                                             return (<div>
                                                 <div>{commDivs}</div>

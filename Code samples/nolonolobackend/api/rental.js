@@ -34,6 +34,7 @@ router.get('/', (req, res) => {
  * if bool = false expense is already been computed
 */
 router.post('/:bool', async (req, res) => {
+    console.log("ENTRATO QUA PORCODIOOOOO")
     let bool = req.params.bool;
     const userMail = req.body.user;
     const productName = req.body.product;
@@ -210,5 +211,169 @@ router.post('/:name/mantainance', async (req, res) => {
             console.log("errore");
             res.status(500).json({message: "Internal Database error"});
         }
+})
+
+/** Modify a rental on the product, the employee and the user */
+router.patch('/:product/modify', async(req, res) => {
+        const productName = req.body.product; // il nuovo prodotto !
+        const userMail = req.body.user;
+        const employeeMail = req.body.employee;
+        const oldProduct = req.params.product;
+        const oldStart = new Date(req.body.oldStart);
+        const oldEnd = new Date(req.body.oldEnd);
+        let startDate = new Date(req.body.start);
+        let endDate = new Date(req.body.end);
+        console.log("1");
+        if(startDate.getTime() > endDate.getTime())
+        {
+            startDate = new Date(req.body.start);
+            endDate = new Date(req.body.end);
+        }
+        console.log("start", startDate.getDate());
+        console.log("end", endDate.getDate());
+        //vecchio prodotto per andargli a cambiare le cose
+        let prod = await product.findOne({name: oldProduct});
+        //user in questione
+        let usr = await user.findOne({email: userMail});
+        // employee in questione
+        let emp = await employee.findOne({email: employeeMail});
+        if(prod && usr && emp)
+        {
+            let newProd = await product.findOne({name: productName});
+            let newExpense;
+            let newReserve;
+
+            if(newProd)
+                {
+                    // Creo la nuova reservation col  prezzo computato
+                     let collection = await category.findOne({name: newProd.type})
+                     newExpense = await computePrice.computePrice(collection, newProd, userMail, usr, startDate, endDate)
+    
+                     newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate);
+                
+                    // CONTROLLO SE SUL NUOVO PRODOTTO C'È DISPONIBILITÀ
+                    // ALTRIMENTI NON SI FA NULLA
+                    console.log("2");
+
+                    if(newProd.futureReservations.length > 0)
+                    {
+                        if( checkAvailability.checkAvailability(newProd, startDate, endDate))
+                        {  
+                            newProd.futureReservations.push(newReserve);
+                            newProd.save();
+                            console.log("3");
+
+    
+                        }else
+                        {
+                            res.status(500).json({message: "Product not available"});
+                        }
+                    }else
+                    {
+                        newProd.futureReservations.push(newReserve);
+                        newProd.save();
+                    }
+                }else{
+                   return(res.status(500).json({message: "Incorrect or non existent product inserted"}));         
+                }
+
+            // Cambio dentro il prodotto originale (cancello la vecchia prenotazione)
+            console.log("5");
+
+            let toChange;
+            let x;
+            // cerco la vecchia prenotazione nel vecchio prodotto
+            [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, oldStart, oldEnd)
+            console.log("6");
+
+            if(toChange)
+            {  
+                // ... se la trovo la cancello
+                prod.futureReservations.splice(x, 1);
+                prod.save();
+                console.log("7");
+
+            } 
+         
+            // Vado a cancellarla nello user ed ad aggiungere quella nuova
+                   [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, oldStart, oldEnd);
+                   console.log("8");
+
+             if(toChange)
+            {
+                //cancello quella vecchia
+                usr.futureReservations.splice(x, 1);
+                usr.futureReservations.push(newReserve);
+                usr.save();
+            }else
+            {
+                res.status(500).json({message: "not found in employee"});
+            }
+    
+            // Cambio nel dipendente
+             [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x , oldStart, oldEnd);         
+    
+             if(toChange)
+                emp.futureReservations.splice(x,  1);
+             
+             emp.futureReservations.push(newReserve);
+             emp.save();
+            
+             res.status(200).json({message: "Succesfuly changed"});
+        }else
+        {
+            res.status(500).json({message: "Product or employee or user non existent"});
+        
+}
+})
+
+router.delete('/:product', async (req, res) => {
+    let oldProduct = req.params.product;
+    let userMail = req.body.user;
+    let employeeMail = req.body.employee;
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+    //vecchio prodotto per andargli a cambiare le cose
+    let prod = await product.findOne({name: oldProduct});
+    //user in questione
+    let usr = await user.findOne({email: userMail});
+    // employee in questione
+    let emp = await employee.findOne({email: employeeMail});
+  
+    if(prod &&  usr && emp)
+    {
+        //elimino dal prodotto
+        let x;
+        let toChange;
+        // cerco la prenotazione nel prodotto
+        [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
+
+        if(toChange)
+        {
+            prod.futureReservations.splice(x, 1);
+            prod.save();
+        }     
+        // elimino nello user
+        [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, endDate, startDate);
+
+        if(toChange)
+        {   
+             usr.futureReservations.splice(x, 1);
+             usr.save();
+        } 
+        //elimino nel dipendente
+        [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, endDate, startDate);
+
+        if(toChange)
+        {    
+            emp.futureReservations.splice(x, 1);
+            emp.save();
+        }
+
+        res.status(200).json({message: 'Succesful operation'})
+    }else
+    {
+        res.status(500).json({message: "Internal server error"});
+    }
 })
 module.exports = router;

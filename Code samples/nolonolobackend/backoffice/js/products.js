@@ -285,8 +285,11 @@ function sendDelete()
       $('#content').html(data.message);
       if(data.reservations != null)
         showDeletedReservations(data.reservations);
-    }).fail(function(){
-        $('#content').html("Error, maybe the element doesn't exists");
+    }).fail(function(data){
+      console.log(data);
+        $('#content').html( `<h3>${data.responseJSON.message}</h3> `);
+      
+        
     })
 }
 

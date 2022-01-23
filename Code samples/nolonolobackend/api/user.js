@@ -105,7 +105,6 @@ router.post('/:email', async (req, res) => {
 });
 
 router.patch('/:email', upload.single('img'), async (req, res) => {
-    console.log("qui dentro");
     let email = req.params.email;
     let newData = {};
     if (!req.file) {
@@ -127,7 +126,7 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
         { runValidators: true, new: false, useFindAndModify: false }
     ).exec()
         .then((result) => {
-            res.status(200).json(result);
+            res.status(200).json({message: "Comunication Succesfuly added"});
         })
         .catch((err) => {
             console.log(err);
@@ -135,19 +134,29 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
         })
 })
 
-router.delete('/:email', (req, res) => {
+router.delete('/:email', async (req, res) => {
     let email = req.params.email;
     console.log(email);
-    user.exists({email: email}, function (err, doc) {
+    user.exists({email: email}, async function (err, doc) {
         if (err){
             res.status(404).json({message: "User not found", error: err})
         }else{
-                user.findOneAndDelete({ email: email })
-                        .exec()
-                        .then((result) => {
-                            console.log(result)
-                            res.status(200).json({ message: 'user deleted'})
-                })
+                let usr = await user.findOne({email: email});
+                console.log(usr);
+                if(usr.activeReservation === '' || usr.activeReservation === null ||
+                usr.activeReservation === 'null' || usr.futureReservations.length != 0)
+                {
+                    res.status(500).json({message: "Impossible, there are future or active reservations"})
+                }else
+                {
+
+                    user.findOneAndDelete({ email: email })
+                    .exec()
+                    .then((result) => {
+                        console.log(result)
+                        res.status(200).json({ message: 'User deleted'})
+                    })
+                }
            
     }
     })

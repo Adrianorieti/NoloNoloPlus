@@ -108,22 +108,32 @@ router.post('/:name', (req, res) => {
     })
 })
 
- /** Deletes a product if exists and return the list of future reservations */
-router.delete('/:name', (req, res) => {
+ /** Deletes a product if exists and if there are no future reservations */
+router.delete('/:name', async (req, res) => {
     let name = req.params.name;
     console.log(name);
-    product.exists({name: name}, function (err, doc) {
+    product.exists({name: name}, async function (err, doc) {
         if (err){
             res.status(404).json({message: "Product not found", error: err})
         }else{
+            console.log(doc);
+            let prod = await product.findOne({name: name});
+            console.log(prod);
+            if(prod.futureReservations.length != 0)
+            {
+                res.status(500).json({message: "Impossible, there are future reservations on the product"});
+            }else
+            {
+
                 product.findOneAndDelete({ name: name })
-                        .exec()
-                        .then((result) => {
-                            console.log(result)
-                            res.status(200).json({ message: 'Product deleted', reservations: result.futureReservations})
+                .exec()
+                .then((result) => {
+                    console.log(result)
+                    res.status(200).json({ message: 'Product deleted', reservations: result.futureReservations})
                 })
-           
-    }
+                
+            }
+            }
     });
 })
 
