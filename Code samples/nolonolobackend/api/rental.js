@@ -17,11 +17,12 @@ router.get('/', (req, res) => {
    user.find({})
     .exec()
     .then((usr) => {
-        for(i in usr) 
+        for(let i in usr) 
         {
-            if(usr[i].activeReservation != null) // mi salvo le attive
-                actives.push(usr[i].activeReservation)
-            if(usr[i].futureReservations) // mi salvo le future
+            console.log(usr)
+            if(usr[i].activeReservations.length > 0) // mi salvo le attive
+                actives = actives.concat(usr[i].activeReservations)
+            if(usr[i].futureReservations.length > 0) // mi salvo le future
                 future =  future.concat(usr[i].futureReservations);
         } 
          res.status(200).json({future: future, actives: actives});
@@ -194,10 +195,13 @@ router.post('/:name/mantainance', async (req, res) => {
             //PRODOTTO
 
             [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, start, end);
+            console.log("TO CHAAANGE", toChange);
             if(toChange)
             {
+
                 prod.futureReservations.splice(x,  1);
                 prod.activeReservation = toChange;
+                console.log("product active res", prod.activeReservation);
                 prod.save();
                 res.status(200).json({message:"Succesful operation"});
             }
@@ -223,13 +227,18 @@ router.post('/:product/restitution', async (req, res) => {
         // USER
         [toChange, x] = reservations.searchReservation(usr.activeReservations, toChange, x,  end, start)
 
-        if (toChange) {
+        if(toChange) {
+            console.log("entro dentro to change ??")
             //sposto da active a past
             usr.pastReservations.push(toChange);
             usr.activeReservations.splice(x, 1);
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
+            
             usr.amountPaid += expense;
+            console.log(usr.fidelitypoints);
+
             usr.fidelitypoints += computePrice.fidelityPoints(end, start, expense);
+            console.log(usr.fidelitypoints);
             usr.save();
         }
         // DIPENDENTE

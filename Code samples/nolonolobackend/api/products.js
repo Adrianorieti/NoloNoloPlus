@@ -70,7 +70,7 @@ router.post('/', (req, res) => {
         status: 'new',
         price: req.body.price,
         futureReservations: [],
-        activeReservation: {},
+        activeReservation: '',
         pastReservations: [],
         totalSales: 0,
         numberOfRents: 0

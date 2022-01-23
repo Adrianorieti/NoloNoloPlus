@@ -122,6 +122,7 @@ module.exports = {
             points += 8;
         }
 
+        console.log("points to add",points);
         return points;
     }
 }

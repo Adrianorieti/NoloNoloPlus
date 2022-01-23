@@ -8,10 +8,19 @@ module.exports = {
         let available = true;
         if(product.futureReservations && product.futureReservations.length > 0)
         {
-            if(product.activeReservation)
+            console.log("qui prima di crashare")
+            let active = product.activeReservation;
+            console.log(active);
+            if(active && Object.keys(active).length === 0
+            && Object.getPrototypeOf(active) === Object.prototype)
+              {  
+                  console.log("ENTRO QUIII");
                 product.futureReservations.push(product.activeReservation); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
+            }
             if(product.futureReservations.length > 1)
+                console.log("qui prima di crashare")
                 sortBy.sortByTime(product.futureReservations, 'start');
+                console.log("qui prima di crashare")
                 for(let i in product.futureReservations)
                 {
                     console.log("dentro check", product.futureReservations[i])

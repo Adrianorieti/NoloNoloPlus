@@ -20,7 +20,6 @@ function confirmEndOfRental(x)
       "end": "${end}"
     }`;
 
-
     console.log(obj);
     $.post({
       type: 'POST',

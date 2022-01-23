@@ -34,10 +34,13 @@ router.post('/:name', auth.verifyToken, (req, res) => {
 
         if(checkAvailability.checkAvailability(prod, start, end))
         {
+            console.log("superato cheeeeeeeeeck");
             //aggiungo la prenotazione sul prodotto momentaneamente
             let newReserve = reservations.createReservation(userMail," ",productName, price, start, end);
             prod.futureReservations.push(newReserve);
             prod.save();
+            console.log("superato save");
+
             // aggiungo la pending request
             let newPendingReq = new pendingRequest({
                 reserve: newReserve
