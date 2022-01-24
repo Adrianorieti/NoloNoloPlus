@@ -17,6 +17,7 @@ export default function newUserPage() {
     const [valToChange, setValToChange] = useState('name');
 
     useEffect(() => {
+
         async function getEmail() {
             let token = JSON.parse(sessionStorage.getItem("token"));
             const options = {
@@ -47,6 +48,8 @@ export default function newUserPage() {
                     setUser(data.user);
                     setCommunications(data.user.communications);
                     setLoading(false);
+                    document.getElementById('toFocus').scrollIntoView({behavior: "smooth"})
+
                     setImage("default.jpeg");
                 })
                 .catch((err) => { console.log(err); setError(err.message); });
@@ -186,7 +189,7 @@ export default function newUserPage() {
                 :
                 (error ? <span> {error}</span> :
                     (loading ? <div><Spinner /></div> :
-                        <div className="row">
+                        <div className="row" id="toFocus">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                                     <img className="rounded-image" alt="profile image" src={image ? `http://localhost:8001/images/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />

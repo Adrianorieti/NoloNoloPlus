@@ -252,7 +252,8 @@ router.post('/:product/restitution', async (req, res) => {
             }
 
         //PRODOTTO
-        toChange = prod.activeReservation[0];
+        toChange = prod.activeReservations[0];
+        console.log("PRIMA PRENOTAZIONE SUL PRODOTTO", toChange)
         if (toChange) {
             prod.activeReservations= [];
             prod.pastReservations.push(toChange);
@@ -263,7 +264,7 @@ router.post('/:product/restitution', async (req, res) => {
             res.status(200).json({ message: "Succesful operation" });
         }
     } else {
-        res.status(500).send("Internal server error");
+        res.status(500).json({message: "Internal server error"});
     }
 })
     

@@ -1,5 +1,12 @@
 let allReservations = [];
 
+function isSameDay(date1, date2)
+{
+  return(date1.getDate() == date2.getDate() &&
+  date1.getMonth() == date2.getMonth() &&
+  date1.getFullYear() == date2.getFullYear());
+}
+
 function sendModifyRental(x)
 {
   let oldStart = allReservations[x].start;
@@ -8,38 +15,47 @@ function sendModifyRental(x)
   let email = $('#user').val(); // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
   let employee = sessionStorage.getItem('email');
   let product = $('#products').val(); // nome del prodotto
-  let start = $('#start').val();
-  let end = $('#end').val();
+  let start = new Date($('#start').val());
+  let end = new Date($('#end').val());
   // devo comunque mandare i vecchi dati
-  if(start != '' && end != '')
-  {
-      let obj = `{
-        "user": "${email}", 
-        "employee": "${employee}",
-        "product": "${product}",
-        "oldStart": "${oldStart}",
-        "oldEnd": "${oldEnd}",
-        "start": "${start}",
-        "end": "${end}"
-      }`;
 
-      $.post({
-        type: 'PATCH',
-          url: `http://localhost:8001/api/rental/${oldProduct}/modify`,
-          contentType: 'application/json; charset=utf-8',
-          dataType: 'json',
-          data: obj
-        }, function(data){
-          $('#content').html(data.message);
-          getAllReservations();
-        }).fail(function(data)
-        {
-            $('#content').html(data.responseJSON.message);
-        })
+ 
+  if((start != '' && end != '') && (start.getTime() <= end.getTime()) )
+  {
+      console.log("entro qui comunque");
+
+      // let obj = `{
+      //   "user": "${email}", 
+      //   "employee": "${employee}",
+      //   "product": "${product}",
+      //   "oldStart": "${oldStart}",
+      //   "oldEnd": "${oldEnd}",
+      //   "start": "${start}",
+      //   "end": "${end}"
+      // }`;
+
+      // $.ajax({
+      //   type: 'PATCH',
+      //     url: `http://localhost:8001/api/rental/${oldProduct}/modify`,
+      //     contentType: 'application/json; charset=utf-8',
+      //     dataType: 'json',
+      //     data: obj
+      //   }).done(function(data){
+      //     $('#content').html(data.message);
+      //     getAllReservations();
+      //   }).fail(function(data)
+      //   {
+      //       $('#content').html(data.responseJSON.message);
+      //   })
 
   }else
   {
-    $('#error').html("Please enter all fields")
+    console.log(start.getTime())
+    console.log(end.getTime())
+    if(start.getTime() > end.getTime())
+    {
+      $('#error').html("Please insert date correctly");
+    }
   }
 }
 
@@ -150,7 +166,7 @@ function rentDeletion(x)
     
 }
       
-      function showDelete(x)
+function showDelete(x)
       {
         let toInsert = `</select></div>
   <button type="button" class="btn btn-lg btn-danger btn-block" onclick="rentDeletion(${x})" >Confirm Deletion</button>

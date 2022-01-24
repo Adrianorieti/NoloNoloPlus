@@ -13,6 +13,8 @@ function calculateFinalPrice(isLate, start, end, expense)
   
   let period = end.getTime() - start.getTime();
   period = period / (1000 * 3600 * 24);
+  period += 1;
+  //ATTENZIONE CONTA UN GIORNO IN MENO DA 22 A 26 DICE 4 GIORNI MA SONO 5
   if( isSameDay(end, start)) // se è di un giorno solo la prenotazione
   {
     period = 1;
@@ -25,10 +27,8 @@ function calculateFinalPrice(isLate, start, end, expense)
     console.log("IS LATE");
     let overPeriod =  today.getTime() - end.getTime(); // tempo in +
     overPeriod = overPeriod / (1000 * 3600 * 24);
-    if( isSameDay(end, start)) // se è di un giorno solo la prenotazione
-    {
-      overPeriod = 1;
-    }
+    overPeriod = Math.trunc(overPeriod);
+   
     let medium = expense / period; // la media giornaliera
     medium = medium * overPeriod; 
     expense = expense + medium ; //aggiungo in +
@@ -41,6 +41,10 @@ function calculateFinalPrice(isLate, start, end, expense)
     console.log("IS NOT LATE");
     let remaningPeriod =  end.getTime() - today.getTime();
     remaningPeriod = remaningPeriod / (1000 * 3600 * 24);
+    remaningPeriod += 1;
+    remaningPeriod = Math.trunc(remaningPeriod);
+    console.log("remaningPeriod", remaningPeriod);
+
     if( isSameDay(end, start)) // se è di un giorno solo la prenotazione
     {
       remaningPeriod = 1;
@@ -48,7 +52,6 @@ function calculateFinalPrice(isLate, start, end, expense)
     let medium = expense / period; // la media giornaliera
     medium = medium * remaningPeriod; // quanto mancava in fatto di soldi
     expense = Math.abs(expense - medium) ; //vado a levare la media dei giorni rimanenti a quello che deve pagare
-    console.log("remaningPeriod", remaningPeriod);
     console.log("medium", medium);
     console.log("expense", expense);
   }
@@ -56,6 +59,8 @@ function calculateFinalPrice(isLate, start, end, expense)
 }
 function confirmEndOfRental(x)
 {
+  console.log("dentro confirm", activeRes);
+
   let employee = sessionStorage.getItem('email');
   let product = activeRes[x].product;
   let user = activeRes[x].usermail;
@@ -79,6 +84,7 @@ function confirmEndOfRental(x)
 
       }else if(today.getTime() > end.getTime()) // SONO IN RITARDO
       {
+        console.log("ENTRO QUIIII");
         expense = calculateFinalPrice(true, start, end, expense);
       }
       end = new Date(today);
@@ -97,18 +103,18 @@ function confirmEndOfRental(x)
     }`;
 
     console.log(obj);
-    // $.post({
-    //   type: 'POST',
-    //     url: `http://localhost:8001/api/rental/${product}/restitution`,
-    //     contentType: 'application/json; charset=utf-8',
-    //     dataType: 'json',
-    //     data: obj
-    //   }, function(data){
-    //       $('#content').html(data.message);
-    //       getMyReservations();
-    //   }).fail(function(data){
-    //       $('#content').html(data.responseJSON.message);
-    //   })
+    $.post({
+      type: 'POST',
+        url: `http://localhost:8001/api/rental/${product}/restitution`,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: obj
+      }, function(data){
+          $('#content').html(`${data.message}`);
+          getMyReservations();
+      }).fail(function(data){
+          $('#content').html(`${data.responseJSON.message}`);
+      })
 }
 
 function confirmLending(x)
@@ -135,7 +141,7 @@ function confirmLending(x)
       data: obj
     }, function(data){
         $('#content').html(data.message);
-        location.reload();
+        getMyReservations();
     }).fail(function(data){
         $('#content').html(data.message);
     })
@@ -144,6 +150,7 @@ function confirmLending(x)
 function showMyReservations(emp)
 {
   activeRes = activeRes.concat(emp.activeReservations);
+  console.log(activeRes);
   futureRes = futureRes.concat(emp.futureReservations);
   let active = '';
   let future = '';
