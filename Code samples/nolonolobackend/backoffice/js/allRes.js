@@ -150,18 +150,7 @@ function rentDeletion(x)
 
 })
 
-// $.post({
-  //   type: 'DELETE',
-  //     url: `http://localhost:8001/api/rental/${product}`,
-  //     contentType: 'application/json; charset=utf-8',
-  //     dataType: 'json',
-  //     data: obj
-  //   }, function(data){
-    //       $('#content').html(data.message);
-    //       getAllReservations();
-    //   }).fail(function(data){
-      //       $('#content').html(data.responseJSON.message);
-      //   })
+
     
 }
       

@@ -65,7 +65,7 @@ function calculateFinalPrice(isLate, start, end, expense)
     overPeriod = Math.trunc(overPeriod);
    
     let medium = expense / period; // la media giornaliera
-    medium = medium * overPeriod; 
+    medium = Math.trunc(medium * overPeriod); 
     expense = expense + medium ; //aggiungo in +
     console.log("overPeriod", overPeriod);
     console.log("medium", medium);
@@ -85,7 +85,7 @@ function calculateFinalPrice(isLate, start, end, expense)
       remaningPeriod = 1;
     }
     let medium = expense / period; // la media giornaliera
-    medium = medium * remaningPeriod; // quanto mancava in fatto di soldi
+    medium = Math.trunc(medium * remaningPeriod); // quanto mancava in fatto di soldi
     expense = Math.abs(expense - medium) ; //vado a levare la media dei giorni rimanenti a quello che deve pagare
     console.log("medium", medium);
     console.log("expense", expense);
@@ -102,6 +102,7 @@ function confirmEndOfRental(x)
   let start = activeRes[x].start;
   let end = activeRes[x].end;
   let expense = activeRes[x].expense;
+  console.log("old expense", expense);
   let today = new Date();
   start = new Date(start);
   end = new Date(end);
@@ -126,6 +127,7 @@ function confirmEndOfRental(x)
     {
       console.log("È OGGI NON È NE IN RITARDO NE IN ANTICIPO")
     }
+
       console.log("new expense", expense);
       let obj = `{
       "user": "${user}", 
@@ -136,7 +138,6 @@ function confirmEndOfRental(x)
       "end": "${end}"
     }`;
 
-    console.log(obj);
     $.post({
       type: 'POST',
         url: `http://localhost:8001/api/rental/${product}/restitution`,
@@ -145,7 +146,7 @@ function confirmEndOfRental(x)
         data: obj
       }, function(data){
           $('#content').html(`<h3>${data.message}</h3>`);
-          getMyReservations();
+          location.reload();
       }).fail(function(data){
           $('#content').html(`${data.responseJSON.message}`);
       })

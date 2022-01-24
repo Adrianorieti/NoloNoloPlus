@@ -53,10 +53,10 @@ function sendRent()
 {
   let employee = sessionStorage.getItem('email');
  let email = $('#email').val();
- let start = $('#start').val();
+ let start = new Date($('#start').val());
  console.log(start);
- let end = $('#end').val();
- if(email == '' || !(start)  || !(end))
+ let end = new Date($('#end').val());
+ if(email == '' || start === ''  || end === '' || start.getTime() > end.getTime() )
  {
     $('#rentErr').html("Please check everything it's okay");
 
@@ -295,50 +295,60 @@ function showDeleteProduct(x, products)
 
 function sendMaintenance()
 {
-  let name = $('#name').val();
-  let start = $('#start').val();
-  let end = $('#end').val();
-  if(start != '' && end != '')
+  let product = $('#name').val();
+  let start = new Date($('#start').val());
+  let end = new Date($('#end').val());
+  if((start != '' && end != '') && (start.getTime() <= end.getTime()))
   {
 
     const obj =`{
-      "name": "${name}",
       "start": "${start}",
       "end": "${end}"
     }`;
-    
+    console.log(product);
+      console.log(obj)
     $.post({
       type: 'POST',
-      url: 'http://localhost:8001/api/employee/maintenance',
+      url: `http://localhost:8001/api/rental/${product}/mantainance`,
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       data: obj
     }, function(data){
-      if(data.message)
-      $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>${data.message}</div>`);
-      else if(data.list)
-      {
-        let toInsert = '';
-        for(let x in data.list)
+
+      $('#content').html(`<h3>${data.message}</h3>`);
+     
+        let toInsert = '<h3>Reservations that must be changed ASAP</h3><div id="mantainance">';
+        for(let x in data.reservations)
         {
-          toInsert += `<p><b>Reservation ${x}</b></p>
-          <p>From: ${data.list[x].start} </p>
-          <p>To: ${data.list[x].end}</p>
+          let start = new Date(data.reservations[x].start);
+          let end = new Date(data.reservations[x].end);
+
+          toInsert += `<div class="card">
+          <h5 class="card-header">${x}</h5>
+          <div class="card-body">
+          <h5 class="card-title">User: ${data.reservations[x].usermail}</h5>
+          <h5 class="card-title">Employee: ${data.reservations[x].employee}</h5>
+          <p class="card-text">Product: ${data.reservations[x].product}</p>
+          <p class="card-text">From: ${start.toDateString()}</p>
+          <p class="card-text">To: ${end.toDateString()} </p>
+          <p class="card-text">Expense: ${data.reservations[x].expense} </p>
+        </div>
+        </div>
           `
         }
-        $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>${toInsert}</div>`);
-        
-      }
+        toInsert += '</div>'
+        $('#content').html(toInsert);
+
       
     }).fail(function(data){
-      $('#content').html("Error occurred ,try again later");
+      $('#content').html(`<h3>${data.message}</h3>`);
     })
   }else
   {
     $('#maintErr').html('Please insert start and end correctly');
   }
   
-  }
+}
   /** Show the mainenance html form */
   function showMaintenance(x , products)
 {
