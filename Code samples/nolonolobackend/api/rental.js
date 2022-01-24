@@ -100,6 +100,7 @@ router.post('/:bool', async (req, res) => {
 router.post('/:product/mantainance', async (req, res) => {
     
     const productName = req.params.product;
+    let employeeMail = req.body.employee;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
     let reservationsToChange = [];
@@ -138,19 +139,26 @@ router.post('/:product/mantainance', async (req, res) => {
             
             // Creo la nuova reservation da aggiungere al prodotto
             
-            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate, 0);
+            let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
 
             prod.futureReservations.unshift(newReserve);
             // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
             
-            prod.save();
+            prod.update();
+            // aggiungo anche la maintenance come pening così è visibile da tutti gli
+            // employee
+            let newPendingReq = new pending({
+                reserve: newReserve
+            })  
+            newPendingReq.save()
+
             for(let x in reservationsToChange)
             {
                 let newPend = reservations.createReservation(reservationsToChange[x].usermail," ",reservationsToChange[x].product, reservationsToChange[x].expense, reservationsToChange[x].start, reservationsToChange[x].end, 1);
-                let newPendingReq = new pendingRequest({
+                 newPending = new pending({
                     reserve: newPend
                 })  
-                newPendingReq.save()
+                newPending.save()
             }
             
             res.status(200).json({message: "Succesful operation", reservations: reservationsToChange});
@@ -158,7 +166,6 @@ router.post('/:product/mantainance', async (req, res) => {
     }else{
         res.status(500).json({message: "Error, please try again later"});
     }
-
 })
 
 /** Whit this function we actually confirm that the rent started, so 
@@ -400,7 +407,8 @@ router.delete('/:product', async (req, res) => {
     let employeeMail = req.body.employee;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
-   
+    console.log(req.params);
+   console.log(req.body);
 
     // if(startDate.getTime() > endDate.getTime())
     // {
@@ -421,27 +429,26 @@ router.delete('/:product', async (req, res) => {
         let toChange;
         // cerco la prenotazione nel prodotto
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
+        console.log("DENTRO prod FUTURE", toChange);
+
         if(toChange)
         {
-            console.log("before splice", prod.futureReservations);
             prod.futureReservations.splice(x, 1);
-            console.log("after splice", prod.futureReservations);
             prod.save();
         }     
         // elimino nello user
         [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, endDate, startDate);
+        console.log("DENTRO usr FUTURE", toChange);
 
         if(toChange)
         {   
-            console.log("before splice", usr.futureReservations);
              usr.futureReservations.splice(x, 1);
-             console.log("after splice", usr.futureReservations);
 
              usr.save();
         } 
         //elimino nel dipendente
         [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, endDate, startDate);
-
+        console.log("DENTRO EMP FUTURE", toChange);
         if(toChange)
         {    
             emp.futureReservations.splice(x, 1);

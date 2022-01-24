@@ -295,6 +295,7 @@ function showDeleteProduct(x, products)
 
 function sendMaintenance()
 {
+  let employee = sessionStorage.getItem('email');
   let product = $('#name').val();
   let start = new Date($('#start').val());
   let end = new Date($('#end').val());
@@ -302,6 +303,7 @@ function sendMaintenance()
   {
 
     const obj =`{
+      "employee": "${employee}",
       "start": "${start}",
       "end": "${end}"
     }`;
@@ -320,26 +322,37 @@ function sendMaintenance()
         let toInsert = '<h3>Reservations that must be changed ASAP</h3><div id="mantainance">';
         for(let x in data.reservations)
         {
-          let start = new Date(data.reservations[x].start);
-          let end = new Date(data.reservations[x].end);
+          console.log(x)
+          // le cancello tutte tanto sono già come pending requests
+          // poi deve fare in modo che anche la maintenance sia cancellabile quindi 
+          // la aggiungo come pending request
+          let product = data.reservations[x].product;
+          let obj = `{
+            "user": "${data.reservations[x].usermail}", 
+            "employee": "${data.reservations[x].employee}",
+            "start": "${data.reservations[x].start}",
+            "end": "${data.reservations[x].end}"
+          }`;
+          console.log(obj);
+          $.ajax({
+            method: "DELETE",
+            url:`http://localhost:8001/api/rental/${product}`,
+            contentType: 'application/json',
+            dataType: 'json',
+            data: obj
+          }).fail(function(data){
+            if(data)
+              {     
+                $('#content').html(`<h3>Something went wrong</h3>`);
+                // $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+              }else
+              {
+                $('#content').html(`<h3>Something went wrong</h3>`);
+        
+              }
+            })
 
-          toInsert += `<div class="card">
-          <h5 class="card-header">${x}</h5>
-          <div class="card-body">
-          <h5 class="card-title">User: ${data.reservations[x].usermail}</h5>
-          <h5 class="card-title">Employee: ${data.reservations[x].employee}</h5>
-          <p class="card-text">Product: ${data.reservations[x].product}</p>
-          <p class="card-text">From: ${start.toDateString()}</p>
-          <p class="card-text">To: ${end.toDateString()} </p>
-          <p class="card-text">Expense: ${data.reservations[x].expense} </p>
-        </div>
-        </div>
-          `
-        }
-        toInsert += '</div>'
-        $('#content').html(toInsert);
-
-      
+          }
     }).fail(function(data){
       $('#content').html(`<h3>${data.message}</h3>`);
     })

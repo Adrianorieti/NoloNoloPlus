@@ -235,7 +235,10 @@ function getAllcostumers()
             alert('error');
         })
 }
+function endMantainance(x)
+{
 
+}
 function denyPendingRequest(x)
 {
   let message = $('#text').val();
@@ -352,21 +355,38 @@ function showPendingRequests(data)
   {
     let start = new Date(requests[x].reserve.start);
     let end = new Date(requests[x].reserve.end)
-    toInsert += `
-    <div class="card" id="card-${x}">
-    <h5 class="card-header">${x}</h5>
-    <div class="card-body">
-    <h5 class="card-title">Product: ${requests[x].reserve.product}</h5>
-    <p class="card-text">User: ${requests[x].reserve.usermail}</p>
-    <p class="card-text">From: ${start.toDateString()} </p>
+    if(requests[x].reserve.usermail === 'defaultUser@nolonolo.com')
+    {
+      toInsert += `
+      <div class="card" id="card-${x}">
+      <h5 class="card-header"><b>MANTAINANCE</b></h5>
+      <div class="card-body">
+      <h5 class="card-title">Product ${requests[x].reserve.product}</h5>
+      <p class="card-text">Set to mantainance</p>
+      <p class="card-text">From: ${start.toDateString()} </p>
+    <p class="card-text">TO: ${end.toDateString()} </p>
+    <p class="card-text">From employee: ${requests[x].reserve.employee} </p>
+    <a href="#" class="btn btn-primary" onclick="endMantainance(${x})">End mantainance</a>
+    </div>
+    </div> 
+    `
+    }else{
+
+      toInsert += `
+      <div class="card" id="card-${x}">
+      <h5 class="card-header">${x} ${(requests[x].reserve.modify === 1) ? '<h4><b>MANTAINANCE</b>' : '' }</h5>
+      <div class="card-body">
+      <h5 class="card-title">Product: ${requests[x].reserve.product}</h5>
+      <p class="card-text">User: ${requests[x].reserve.usermail}</p>
+      <p class="card-text">From: ${start.toDateString()} </p>
     <p class="card-text">TO: ${end.toDateString()} </p>
     <p class="card-text">Price: ${requests[x].reserve.expense} </p>
     <a href="#" class="btn btn-primary" onclick="confirmPendingRequest(${x})">Accept</a>
     <a href="#" class="btn btn-danger" onclick="showDenyPendingRequest(${x})">Deny</a>
     </div>
-    </div>
-    
+    </div> 
     `
+  }
   }
   $('#spinner').html('');
   $('#title').append('<h2>Pending requests</h2>')
