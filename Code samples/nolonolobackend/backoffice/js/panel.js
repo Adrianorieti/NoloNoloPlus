@@ -258,10 +258,10 @@ function denyPendingRequest(x)
           dataType: 'json',
           data: obj
         }, function(data){
-          $('#content').html(data.message);
+          $('#content').html(`<h3>${data.message}</h3>`);
           location.reload();
         }).fail(function(data){
-          $('#content').html(data.message);   
+          $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
       })
 }
   
@@ -331,14 +331,14 @@ function confirmPendingRequest(x)
         dataType: 'json',
         data: obj2
       }, function(data){
-        $('#content').html(data.message);   
+        $('#content').html(`<h3>${data.message}</h3>`);   
         location.reload();
       }).fail(function(data){
-        $('#content').html(data.message);   
+        $('#content').html(`<h3>${data.responseJSON.message}</h3>`);   
     })
     
   }).fail(function(data){
-    $('#content').html(data.message);   
+    $('#content').html(`<h3>${data.responseJSON.message}</h3>`);   
 })
 }
 

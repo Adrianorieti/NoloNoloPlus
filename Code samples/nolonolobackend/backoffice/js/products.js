@@ -139,9 +139,9 @@ function sendProduct(event)
               dataType: 'json',
               data: obj
             }, function(data){
-                $('#content').html(data.message);
+                $('#content').html(`<h3>${data.message}</h3>`);
             }).fail(function(data){
-                $('#content').html(data.message);
+                $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
 
             })
     }
@@ -205,9 +205,9 @@ function sendChange(event)
     dataType: 'json',
     data: obj
   }, function(data){
-    $('#content').html(data.message);
+    $('#content').html(`<h3>${data.message}</h3>`);
   }).fail(function(data){
-    $('#content').html(data.message);
+    $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
   })
 }else
 {
@@ -269,7 +269,7 @@ function sendDelete()
       url: `http://localhost:8001/api/products/${toDelete}`,
     }, function(data){
       console.log(data);
-      $('#content').html(data.message);
+      $('#content').html(`<h3>${data.message}</h3>`);
       location.reload();
     }).fail(function(data){
       console.log(data);

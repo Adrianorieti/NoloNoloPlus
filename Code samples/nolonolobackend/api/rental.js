@@ -219,35 +219,52 @@ router.post('/:product/restitution', async (req, res) => {
     let productName = req.params.product;
     let start = new Date(req.body.start);
     let end = new Date(req.body.end);
+    let points = req.body.points;
     let expense = req.body.expense;
     const emp = await employee.findOne({ email: employeeMail });
     const usr = await user.findOne({ email: userMail });
     const prod = await product.findOne({ name: productName });
+    console.log(points);
     if (usr && emp && prod) {
         let toChange;
         let x;
         // USER
         [toChange, x] = reservations.searchReservation(usr.activeReservations, toChange, x,  end, start)
+        console.log("NELLO USR ACTIVE RES", toChange)
 
         if(toChange) {
             //sposto da active a past
+            console.log("usr past res prima" ,usr.pastReservations);
             usr.pastReservations.push(toChange);
+            console.log("usr act res prima" ,usr.activeReservations);
+
             usr.activeReservations.splice(x, 1);
+            console.log("usr act res dopo" ,usr.activeReservations);
+
+            console.log("usr past res dopo" ,usr.pastReservations);
+
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
             
-            usr.amountPaid += expense;
+            // usr.amountPaid += expense;
 
-            usr.fidelitypoints += computePrice.fidelityPoints(end, start, expense);
+            // usr.fidelitypoints += computePrice.fidelityPoints(end, start, expense);
             usr.save();
         }
         // DIPENDENTE
         [toChange, x] = reservations.searchReservation(emp.activeReservations, toChange, x, end, start)
+        console.log("NELL'emp ACTIVE RES", toChange)
 
             if (toChange) {
+                console.log("emp active prima", emp.activeReservations);
                 emp.activeReservations.splice(x, 1);
+                console.log("emp active dopo", emp.activeReservations);
+                console.log("emp past prima", emp.pastReservations);
+
                 emp.pastReservations.push(toChange);
+                console.log("emp past DOPO", emp.pastReservations);
+
                 //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
-                emp.totalReservations += 1;
+                // emp.totalReservations += 1;
                 emp.save();
             }
 
@@ -255,11 +272,17 @@ router.post('/:product/restitution', async (req, res) => {
         toChange = prod.activeReservations[0];
         console.log("PRIMA PRENOTAZIONE SUL PRODOTTO", toChange)
         if (toChange) {
+            console.log("prod active prima ", prod.activeReservations)
             prod.activeReservations= [];
+            console.log("prod active dopo ", prod.activeReservations)
+            console.log("prod past prima ", prod.pastReservations)
+
             prod.pastReservations.push(toChange);
+            console.log("prod past dopo ", prod.pastReservations)
+
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
-            prod.totalSales += expense;
-            prod.numberOfRents += 1;
+            // prod.totalSales += expense;
+            // prod.numberOfRents += 1;
             prod.save();
             res.status(200).json({ message: "Succesful operation" });
         }

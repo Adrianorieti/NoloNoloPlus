@@ -41,7 +41,7 @@ function sendModifyRental(x)
           dataType: 'json',
           data: obj
         }).done(function(data){
-          $('#content').html(data.message);
+          $('#content').html(`<h3>${data.message}</h3>`);
           getAllReservations();
         }).fail(function(data)
         {
@@ -135,7 +135,7 @@ function rentDeletion(x)
     dataType: 'json',
     data: obj
   }).done(function(data){
-    $('#content').html(data.message);
+    $('#content').html(`<h3>${data.message}</h3>`);
     getAllReservations();
   }).fail(function(data){
     if(data)
