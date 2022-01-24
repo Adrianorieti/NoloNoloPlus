@@ -110,7 +110,7 @@ function showModify(x)
       {
           $('#content').html("<h3>Try again please</h3>")
       })
-      }
+}
 
 function rentDeletion(x)
 {

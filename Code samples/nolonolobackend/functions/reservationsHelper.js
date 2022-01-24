@@ -10,7 +10,8 @@ module.exports = {
             product: productName,
             expense: expense,
             start: startDate,
-            end: endDate
+            end: endDate,
+            modify: 0
         }
         return newReserve;
     },

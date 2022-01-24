@@ -103,9 +103,6 @@ router.post('/:product/mantainance', async (req, res) => {
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
     let reservationsToChange = [];
-    console.log(productName);
-    console.log(startDate);
-    console.log(endDate);
     const prod = await product.findOne({name: productName});
     if(prod)
     {
@@ -120,17 +117,17 @@ router.post('/:product/mantainance', async (req, res) => {
                 {
                     if( startDate.getTime() >= prod.futureReservations[i].start.getTime() && startDate.getTime() <= prod.futureReservations[i].end.getTime() )
                     {
-                        reservationsToChange.push(prod.futureReservations[i]);
+                        prod.futureReservations[i].modify= 1;
                        
 
                     }else if( endDate.getTime() >= prod.futureReservations[i].start.getTime() && endDate.getTime() <= prod.futureReservations[i].end.getTime())
                     {
-                        reservationsToChange.push(prod.futureReservations[i]);
+                        prod.futureReservations[i].modify= 1;
                         
 
                     }else if( startDate.getTime() <= prod.futureReservations[i].start.getTime()  &&  endDate.getTime() >=  prod.futureReservations[i].end.getTime())
                     {
-                        reservationsToChange.push(prod.futureReservations[i]);
+                        prod.futureReservations[i].modify= 1;
 
                     }else
                     {

@@ -29,6 +29,9 @@ const reserveSchema = new Schema({
     expense: {
         type: Number,
         required: true
+    },
+    modify: {
+        type: Number
     }
 }, { _id : false })
 
