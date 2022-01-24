@@ -21,7 +21,6 @@ function Navbar(props) {
       }
     }).then(response => {
       if (response.status == 200) {
-        console.log("siamo nel 200 della navbar");
         setloggato(true);
       } else {
         console.log("Errore, login non effettuato correttamente");
@@ -31,7 +30,6 @@ function Navbar(props) {
   }
 
   useEffect(() => {
-    console.log("effect");
     const token = JSON.parse(sessionStorage.getItem("token"));
     if (token) {
       checkLog(token);
@@ -77,7 +75,7 @@ function Navbar(props) {
 
   return (
 
-    
+
     <nav className="App-navbar navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
         <h3><i class="fa fa-renren fa-2x"></i>&nbsp; NoloNoloPlus</h3>
