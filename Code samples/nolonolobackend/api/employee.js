@@ -336,7 +336,7 @@ router.post('/maintenance', async (req, res) => {
                 }
             }
             // Creo la nuova reservation da aggiungere al prodotto
-            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate);
+            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate, 0);
             // Aggiungo in testa all'array perchè è già ordinato
             prod.reservations.unshift(newReserve);
 
@@ -345,7 +345,7 @@ router.post('/maintenance', async (req, res) => {
             res.status(200).json({ list: reservationsToChange });
         } else {
             // Creo la nuova reservation da aggiungere al prodotto
-            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate);
+            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate, 0);
             prod.futureReservations.push(newReserve);
             // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
             prod.save();
@@ -382,7 +382,7 @@ router.post('/makeRental', async (req, res) => {
                 let collection = await category.findOne({ name: prod.type });
                 let price = await computePrice.computePrice(collection, prod, userMail, startDate, endDate);
 
-                let newReserve = reservations.createReservation(userMail, employeeMail, productName, price, startDate, endDate);
+                let newReserve = reservations.createReservation(userMail, employeeMail, productName, price, startDate, endDate, 0);
 
                 //salvo nel prodotto
                 prod.futureReservations.push(newReserve);
@@ -435,7 +435,7 @@ router.post('/confirmBeginOfRental', async (req, res) => {
     const prod = await product.findOne({ name: productName });
     const emp = await employee.findOne({ email: employeeMail });
     if (usr && prod && emp) {
-        let newReserve = reservations.createReservation(userMail, employeeMail, productName, price, startDate, endDate);
+        let newReserve = reservations.createReservation(userMail, employeeMail, productName, price, startDate, endDate, 0);
 
         // Aggiungiamo la prenotazione allo user
         usr.futureReservations.push(newReserve);
@@ -683,7 +683,7 @@ router.post('/modifyRental', async (req, res) => {
                 let collection = await category.findOne({ name: newProd.type })
                 newExpense = await computePrice.computePrice(collection, newProd, userMail, startDate, endDate)
 
-                const newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate);
+                const newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate, 0);
 
                 //controllo che ci siano prenotazioni e se è disponibile sennò crasha
                 if (newProd.futureReservations.length > 0) {

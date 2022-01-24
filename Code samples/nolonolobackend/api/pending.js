@@ -36,7 +36,7 @@ router.post('/:name', auth.verifyToken, (req, res) => {
         {
             console.log("superato cheeeeeeeeeck");
             //aggiungo la prenotazione sul prodotto momentaneamente
-            let newReserve = reservations.createReservation(userMail," ",productName, price, start, end);
+            let newReserve = reservations.createReservation(userMail," ",productName, price, start, end, 0);
             prod.futureReservations.push(newReserve);
             prod.save();
             console.log("superato save");

@@ -2,7 +2,7 @@ const user = require('../schemas/moduleUser');
 const employee = require('../schemas/moduleEmployee');
 const category = require('../schemas/moduleCategory');
 const product = require('../schemas/moduleProduct');
-const reserveSchema = require('../schemas/moduleReservation').model;
+const pending = require('../schemas/modulePendingRequest');
 const computePrice = require('../functions/computePrice');
 const express = require('express');
 const checkAvailability = require('../functions/checkAvailability');
@@ -66,7 +66,7 @@ router.post('/:bool', async (req, res) => {
                     if(bool) // expense deve essere calcolata
                         expense = await computePrice.computePrice(collection, prod, userMail, usr, startDate, endDate);
                         // altrimenti veniamo da una pending request e non dobbiamo calcolarla di nuovo
-                    let newReserve = reservations.createReservation(userMail,employeeMail, productName, expense, startDate, endDate);
+                    let newReserve = reservations.createReservation(userMail,employeeMail, productName, expense, startDate, endDate, 0);
                     //salvo nel prodotto
                     prod.futureReservations.push(newReserve);
                     prod.save();
@@ -117,17 +117,17 @@ router.post('/:product/mantainance', async (req, res) => {
                 {
                     if( startDate.getTime() >= prod.futureReservations[i].start.getTime() && startDate.getTime() <= prod.futureReservations[i].end.getTime() )
                     {
-                        prod.futureReservations[i].modify= 1;
+                        reservationsToChange.push(prod.futureReservations[i]);
                        
 
                     }else if( endDate.getTime() >= prod.futureReservations[i].start.getTime() && endDate.getTime() <= prod.futureReservations[i].end.getTime())
                     {
-                        prod.futureReservations[i].modify= 1;
+                        reservationsToChange.push(prod.futureReservations[i]);
                         
 
                     }else if( startDate.getTime() <= prod.futureReservations[i].start.getTime()  &&  endDate.getTime() >=  prod.futureReservations[i].end.getTime())
                     {
-                        prod.futureReservations[i].modify= 1;
+                        reservationsToChange.push(prod.futureReservations[i]);
 
                     }else
                     {
@@ -138,13 +138,20 @@ router.post('/:product/mantainance', async (req, res) => {
             
             // Creo la nuova reservation da aggiungere al prodotto
             
-            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate);
-            console.log("quelle da cambiare", reservationsToChange);
+            let newReserve = reservations.createReservation('maintenance@nolonolo.com', "maintenance@nolonolo.com", productName, 0, startDate, endDate, 0);
+
             prod.futureReservations.unshift(newReserve);
-            console.log("con la nuova", prod.futureReservations);
             // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
             
             prod.save();
+            for(let x in reservationsToChange)
+            {
+                let newPend = reservations.createReservation(reservationsToChange[x].usermail," ",reservationsToChange[x].product, reservationsToChange[x].expense, reservationsToChange[x].start, reservationsToChange[x].end, 1);
+                let newPendingReq = new pendingRequest({
+                    reserve: newPend
+                })  
+                newPendingReq.save()
+            }
             
             res.status(200).json({message: "Succesful operation", reservations: reservationsToChange});
         
@@ -315,7 +322,7 @@ router.patch('/:product/modify', async(req, res) => {
                      let collection = await category.findOne({name: newProd.type})
                      newExpense = await computePrice.computePrice(collection, newProd, userMail, usr, startDate, endDate)
     
-                     newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate);
+                     newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate, 0);
                 
                     // CONTROLLO SE SUL NUOVO PRODOTTO C'È DISPONIBILITÀ
                     // ALTRIMENTI NON SI FA NULLA

@@ -1,7 +1,7 @@
 // const reservation = require('../schemas/moduleReservation').model;
 
 module.exports = {
-    createReservation: function(userMail, employeeMail, productName, expense, startDate, endDate)
+    createReservation: function(userMail, employeeMail, productName, expense, startDate, endDate, modify)
     {
       
         const newReserve =  {
@@ -11,7 +11,7 @@ module.exports = {
             expense: expense,
             start: startDate,
             end: endDate,
-            modify: 0
+            modify: modify
         }
         return newReserve;
     },

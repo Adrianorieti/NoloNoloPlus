@@ -191,14 +191,14 @@ function showCostumers(costumers)
     allCostumers = [];
     allCostumers = allCostumers.concat(costumers);
     let toInsert = '';
-    let image = '../images/user.jpeg';
     for(let x in costumers)
     {
+      let image = costumers[x].image;
       if(costumers[x].email != 'defaultUser@nolonolo.com')
       {
 
         toInsert += `<div class="card" style="width: 18rem;">
-        <img src="../images/${image}" class="card-img-top" alt="Product image">
+        <img src="../../images/users/${image}" class="card-img-top" alt="Product image">
         <div class="card-body">
         <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
         <p class="card-text">Email: ${costumers[x].email}</p>
