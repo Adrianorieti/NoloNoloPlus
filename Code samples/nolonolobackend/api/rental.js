@@ -319,7 +319,7 @@ router.patch('/:product/modify', async(req, res) => {
     
                         }else
                         {
-                            res.status(500).json({message: "Product not available"});
+                            return res.status(500).json({message: "Product not available"});
                         }
                     }else
                     {
@@ -327,7 +327,8 @@ router.patch('/:product/modify', async(req, res) => {
                         newProd.save();
                     }
                 }else{
-                   return(res.status(500).json({message: "Incorrect or non existent product inserted"}));         
+                   return res.status(500).json({message: "Incorrect or non existent product inserted"});         
+                   
                 }
 
             // Cambio dentro il prodotto originale (cancello la vecchia prenotazione)
@@ -367,12 +368,11 @@ router.patch('/:product/modify', async(req, res) => {
              emp.futureReservations.push(newReserve);
              emp.save();
             
-             res.status(200).json({message: "Succesfuly changed"});
+             return res.status(200).json({message: "Succesfuly changed"});
         }else
         {
-            res.status(500).json({message: "Product or employee or user non existent"});
-        
-}
+            return res.status(500).json({message: "Product or employee or user non existent"});
+        }
 })
 
 

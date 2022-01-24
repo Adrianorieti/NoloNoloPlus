@@ -24,34 +24,33 @@ function sendModifyRental(x)
   {
       console.log("entro qui comunque");
 
-      // let obj = `{
-      //   "user": "${email}", 
-      //   "employee": "${employee}",
-      //   "product": "${product}",
-      //   "oldStart": "${oldStart}",
-      //   "oldEnd": "${oldEnd}",
-      //   "start": "${start}",
-      //   "end": "${end}"
-      // }`;
+      let obj = `{
+        "user": "${email}", 
+        "employee": "${employee}",
+        "product": "${product}",
+        "oldStart": "${oldStart}",
+        "oldEnd": "${oldEnd}",
+        "start": "${start}",
+        "end": "${end}"
+      }`;
 
-      // $.ajax({
-      //   type: 'PATCH',
-      //     url: `http://localhost:8001/api/rental/${oldProduct}/modify`,
-      //     contentType: 'application/json; charset=utf-8',
-      //     dataType: 'json',
-      //     data: obj
-      //   }).done(function(data){
-      //     $('#content').html(data.message);
-      //     getAllReservations();
-      //   }).fail(function(data)
-      //   {
-      //       $('#content').html(data.responseJSON.message);
-      //   })
+      $.ajax({
+        method: 'PATCH',
+          url: `http://localhost:8001/api/rental/${oldProduct}/modify`,
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          data: obj
+        }).done(function(data){
+          $('#content').html(data.message);
+          getAllReservations();
+        }).fail(function(data)
+        {
+            $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+        })
 
-  }else
+  }else if (!isNaN(start) || isNaN(end) )
   {
-    console.log(start.getTime())
-    console.log(end.getTime())
+    console.log("entro qui");
     if(start.getTime() > end.getTime())
     {
       $('#error').html("Please insert date correctly");
