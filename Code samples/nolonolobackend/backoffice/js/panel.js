@@ -110,28 +110,28 @@ function showProducts(products)
         productsNames.push(products[x].name);
         productsPrices.push(products[x].price);
         categoriesNames.push(products[x].type);
-        image = '';
-        switch(products[x].type){
-            case 'Electric S_300':
-                image = 'electricBike.jpg';
-                break;
-            case 'Mountain Bike' :
-                image = 'mountainBike.jpg';
-                break;
-            case 'City Bike' :
-                image = 'cityBike.jpg' ;
-                break;
-            case 'Scooter' :
-                image = 'scooter.jpg' ;
-                break;
-            case 'Special Bike' :
-                image = 'specialBike.jpeg' ;
-                break;
-        }
+        image = products[x].image;
+        // switch(products[x].type){
+        //     case 'Electric S_300':
+        //         image = 'electricBike.jpg';
+        //         break;
+        //     case 'Mountain Bike' :
+        //         image = 'mountainBike.jpg';
+        //         break;
+        //     case 'City Bike' :
+        //         image = 'cityBike.jpg' ;
+        //         break;
+        //     case 'Scooter' :
+        //         image = 'scooter.jpg' ;
+        //         break;
+        //     case 'Special Bike' :
+        //         image = 'specialBike.jpeg' ;
+        //         break;
+        // }
         if(token)
         {
             toInsert += `<div class="card" style="width: 18rem;">
-            <img src="../images/${image}" class="card-img-top" alt="Product image">
+            <img src="../../images/categories/${image}" class="card-img-top" alt="Product image">
             <div class="card-body">
               <h5 class="card-title">${products[x].name}</h5>
               <p class="card-text">${products[x].price}$ per day</p>

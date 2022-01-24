@@ -62,8 +62,9 @@ router.get('/:name/available', (req, res) => {
     
 })
 /** Add a product */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
 
+    let collection = await category.findOne({name: req.body.type});
     const newProduct = new product({
         name: req.body.name,
         type: req.body.type,
@@ -73,7 +74,8 @@ router.post('/', (req, res) => {
         activeReservation: '',
         pastReservations: [],
         totalSales: 0,
-        numberOfRents: 0
+        numberOfRents: 0,
+        image: collection.imageName
     })
 
     newProduct
