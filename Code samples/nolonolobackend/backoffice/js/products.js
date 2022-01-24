@@ -78,11 +78,18 @@ function sendRent()
       data: obj
     }, function()
     {
-      $('#content').html("Succesful operation");
+      $('#content').html("<h3>Succesful operation</h3>");
       reset();
     }).fail(function(data)
     {
-      $('#content').html(data.responseJSON.message);
+      if(data)
+      {
+        console.log(data.responseJSON.message);
+        $('#content').html(`<h3>${data.responseJSON.message}</h3`);
+      }
+      else
+        $('#content').html("<h3Something went wrong</h3>");
+
     })
   }
 }

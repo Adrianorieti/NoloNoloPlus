@@ -6,6 +6,7 @@ function Reservations(props) {
     <div id="mainReservations">
       <div id="future"><h3>Future</h3>
         {props.user.futureReservations.map((res, index) => {
+              console.log("future", res); 
           return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
             <div className="card-body">
               <h5 className="card-title">Card title</h5>
@@ -18,9 +19,8 @@ function Reservations(props) {
         })}</div>
       <div id="active"><h3>Active </h3>
         {(() => {
-          if (props.user.activeReservations) {
-
             props.user.activeReservations.map((res, index) => {
+              console.log("active", res); // qui c'è correttamente
             return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
               <div className="card-body">
                 <h5 className="card-title">Card title</h5>
@@ -29,13 +29,15 @@ function Reservations(props) {
               </div>
             </div>)
           })
-        }
+        
         }
         )()}
       </div>
       <div id="past">
         <h3>Past</h3>
         {props.user.pastReservations.map((res, index) => {
+          console.log("past", res); 
+
           return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
             <div className="card-body">
               <h5 className="card-title">Card title</h5>

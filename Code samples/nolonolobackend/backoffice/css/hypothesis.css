@@ -36,3 +36,14 @@
 {
     background-color: rgb(238, 70, 70);
 }
+
+#hyperror
+{
+    color: red;
+}
+
+.hypothesis
+{
+    display: flex;
+    flex-direction: column;
+}

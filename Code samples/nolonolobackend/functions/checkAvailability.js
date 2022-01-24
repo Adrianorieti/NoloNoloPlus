@@ -1,29 +1,27 @@
 const sortBy = require('./sortBy');
 const computePrice = require('./computePrice');
-
+const _ = require('underscore');
 module.exports = {
 
     checkAvailability: function(product, startDate, endDate)
     {
+        console.log("DENTRO CHECK", product);
         let available = true;
-        if(product.futureReservations && product.futureReservations.length > 0)
-        {
-            console.log("qui prima di crashare")
-            let active = product.activeReservation;
-            console.log(active);
-            if(active && Object.keys(active).length === 0
-            && Object.getPrototypeOf(active) === Object.prototype)
-              {  
-                  console.log("ENTRO QUIII");
-                product.futureReservations.push(product.activeReservation); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
+        console.log(product.futureReservations.length);
+      
+            if(product.activeReservations.length > 0)
+            {     
+                console.log("non è vuoto")
+                product.futureReservations.push(product.activeReservations[0]); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
+            }else
+            {
+                console.log("è vuotooooooo")
             }
             if(product.futureReservations.length > 1)
-                console.log("qui prima di crashare")
                 sortBy.sortByTime(product.futureReservations, 'start');
-                console.log("qui prima di crashare")
                 for(let i in product.futureReservations)
                 {
-                    console.log("dentro check", product.futureReservations[i])
+                    console.log("product future Reservation", product.futureReservations)
                     if( startDate.getTime() >= product.futureReservations[i].start.getTime() && startDate.getTime() <= product.futureReservations[i].end.getTime() )
                     {
                         //comprende tutto
@@ -47,8 +45,8 @@ module.exports = {
                         break;
                     }
                 }
-        }   
-        console.log("arrivo qui", available)
+         
+        console.log("available è ", available)
         return available;
     }
 

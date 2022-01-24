@@ -19,7 +19,6 @@ router.get('/', (req, res) => {
     .then((usr) => {
         for(let i in usr) 
         {
-            console.log(usr)
             if(usr[i].activeReservations.length > 0) // mi salvo le attive
                 actives = actives.concat(usr[i].activeReservations)
             if(usr[i].futureReservations.length > 0) // mi salvo le future
@@ -82,7 +81,7 @@ router.post('/:bool', async (req, res) => {
                 }catch(err)
                 {
                     console.log(err);
-                    res.status(500).json({message: err});
+                    res.status(500).json({message: "Internal server error"});
                 }
             }else
             {
@@ -95,9 +94,10 @@ router.post('/:bool', async (req, res) => {
         res.status(500).json({message: "Invalid email inserted"});
     }
 })
+
 /** Send a product to mantainance */
 router.post('/:name/mantainance', async (req, res) => {
-
+    console.log("dentro mantainance");
     const productName = req.params.name;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
@@ -154,6 +154,8 @@ router.post('/:name/mantainance', async (req, res) => {
  * the amount paid gets updated 
  */
  router.post('/active/confirm', async (req, res) => {
+    console.log("dentro active/confirm");
+
     // Ricevo la prenotazione dalla lista delle future res dei dipendenti
     const userMail = req.body.user;
     const employeeMail = req.body.employee;
@@ -164,7 +166,7 @@ router.post('/:name/mantainance', async (req, res) => {
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
     
-
+   
     if(usr && emp && prod)
     {
         // Sposto la prenotazione da future ad active in modo che lo user non possa
@@ -173,9 +175,9 @@ router.post('/:name/mantainance', async (req, res) => {
             let toChange ;
             let x;
             //USER
-            [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, start, end);
-
-            if(toChange)
+            [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, end, start);
+            
+            if(toChange)    
             {
              //sposto da future ad active
              usr.activeReservations.push(toChange);
@@ -183,7 +185,7 @@ router.post('/:name/mantainance', async (req, res) => {
              usr.save();
             }
              // DIPENDENTE
-             [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, start, end);
+             [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x,  end, start);
 
 
             if(toChange)
@@ -194,14 +196,12 @@ router.post('/:name/mantainance', async (req, res) => {
             }
             //PRODOTTO
 
-            [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, start, end);
-            console.log("TO CHAAANGE", toChange);
+            [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, end, start);
             if(toChange)
             {
-
+                
                 prod.futureReservations.splice(x,  1);
-                prod.activeReservation = toChange;
-                console.log("product active res", prod.activeReservation);
+                prod.activeReservations.push(toChange);
                 prod.save();
                 res.status(200).json({message:"Succesful operation"});
             }
@@ -209,9 +209,11 @@ router.post('/:name/mantainance', async (req, res) => {
         {
             res.status(500).json({message: "Internal Database error"});
         }
-    })
+})
 
 router.post('/:product/restitution', async (req, res) => {
+    console.log("dentro restitution");
+
     const userMail = req.body.user;
     const employeeMail = req.body.employee;
     let productName = req.params.product;
@@ -228,17 +230,14 @@ router.post('/:product/restitution', async (req, res) => {
         [toChange, x] = reservations.searchReservation(usr.activeReservations, toChange, x,  end, start)
 
         if(toChange) {
-            console.log("entro dentro to change ??")
             //sposto da active a past
             usr.pastReservations.push(toChange);
             usr.activeReservations.splice(x, 1);
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
             
             usr.amountPaid += expense;
-            console.log(usr.fidelitypoints);
 
             usr.fidelitypoints += computePrice.fidelityPoints(end, start, expense);
-            console.log(usr.fidelitypoints);
             usr.save();
         }
         // DIPENDENTE
@@ -253,9 +252,9 @@ router.post('/:product/restitution', async (req, res) => {
             }
 
         //PRODOTTO
-        toChange = prod.activeReservation;
+        toChange = prod.activeReservation[0];
         if (toChange) {
-            prod.activeReservation = undefined;
+            prod.activeReservations= [];
             prod.pastReservations.push(toChange);
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
             prod.totalSales += expense;
@@ -270,6 +269,8 @@ router.post('/:product/restitution', async (req, res) => {
     
 /** Modify a rental on the product, the employee and the user */
 router.patch('/:product/modify', async(req, res) => {
+    console.log("dentro modify");
+
         const productName = req.body.product; // il nuovo prodotto !
         const userMail = req.body.user;
         const employeeMail = req.body.employee;
@@ -373,18 +374,27 @@ router.patch('/:product/modify', async(req, res) => {
 }
 })
 
+
 router.delete('/:product', async (req, res) => {
+    console.log("DENTRO DELETE");
     let oldProduct = req.params.product;
     let userMail = req.body.user;
     let employeeMail = req.body.employee;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
-    if(startDate.getTime() > endDate.getTime())
-    {
-        startDate = new Date(req.body.end);
-        endDate = new Date(req.body.start);
+    console.log(oldProduct);
+    console.log(userMail);
+    console.log(employeeMail);
+    console.log(startDate);
+    console.log(endDate);
 
-    }
+
+    // if(startDate.getTime() > endDate.getTime())
+    // {
+    //     startDate = new Date(req.body.end);
+    //     endDate = new Date(req.body.start);
+
+    // }
     //vecchio prodotto per andargli a cambiare le cose
     let prod = await product.findOne({name: oldProduct});
     //user in questione
@@ -398,26 +408,35 @@ router.delete('/:product', async (req, res) => {
         let toChange;
         // cerco la prenotazione nel prodotto
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
-       
+        console.log("tochange", toChange);
         if(toChange)
         {
+            console.log("before splice", prod.futureReservations);
             prod.futureReservations.splice(x, 1);
+            console.log("after splice", prod.futureReservations);
             prod.save();
         }     
         // elimino nello user
         [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, endDate, startDate);
-      
+        console.log("tochange", toChange);
+
         if(toChange)
         {   
+            console.log("before splice", usr.futureReservations);
              usr.futureReservations.splice(x, 1);
+             console.log("after splice", usr.futureReservations);
+
              usr.save();
         } 
         //elimino nel dipendente
         [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, endDate, startDate);
-       
+        console.log("tochange", toChange);
+
         if(toChange)
         {    
+            console.log("before splice", emp.futureReservations);
             emp.futureReservations.splice(x, 1);
+            console.log("after splice", emp.futureReservations);
             emp.save();
         }
 

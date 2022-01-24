@@ -193,12 +193,12 @@ export default function newUserPage() {
 
                                     <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
                                         <label htmlFor="file-upload" class="custom-file-upload">
-                                            <i class="fa fa-cloud-upload"></i>
+                                            <i className="fa fa-cloud-upload"></i>
                                         </label>
                                         <input id="file-upload" type="file" name="img" />
 
                                         <button className="btn btn-primary" type="submit">
-                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            <i className="fa fa-check-circle" aria-hidden="true"></i>
                                         </button>
 
                                     </form>

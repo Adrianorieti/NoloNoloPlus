@@ -118,7 +118,7 @@ router.delete('/:name', async (req, res) => {
             console.log(doc);
             let prod = await product.findOne({name: name});
             console.log(prod);
-            if(prod.futureReservations.length != 0)
+            if(prod.futureReservations.length != 0 || prod.activeReservations.length != 0)
             {
                 res.status(500).json({message: "Impossible, there are future reservations on the product"});
             }else

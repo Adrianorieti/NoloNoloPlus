@@ -26,8 +26,15 @@ function sendRentalHypothesis(x, event)
     let email = $('#email').val();
     let startDate = $('#startDate').val();
     let endDate = $('#endDate').val();
-    console.log(productsNames[x]);
-    if(startDate && endDate && email)
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+    console.log(endDate.getTime())
+    console.log(startDate.getTime());
+    if(endDate.getTime() < startDate.getTime())
+        { 
+            console.log("EH SI È COSÌ NÈ")
+        }  
+  if((startDate && endDate && email) && (endDate.getTime() >= startDate.getTime()) )
       {
         $.post({
           type: 'GET',
@@ -42,7 +49,7 @@ function sendRentalHypothesis(x, event)
                     <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
                     </div>`
             
-                $('#info').html(toInsert);   
+                $('#content').html(toInsert);   
               }).fail(function(data)
               {
                 toInsert = `<div id="unavailable">
@@ -55,7 +62,8 @@ function sendRentalHypothesis(x, event)
             });
       }else
         {
-          $('#hypError').html("please insert all fields correctly");
+          console.log("errore");
+          $('#hyperror').html("Please insert all fields correctly");
         }
 }
 /** Make a rental hypothesis on a product , there is no need to be logged */
@@ -65,7 +73,7 @@ function makeRentalHypothesis(x)
     <p>Name: ${productsNames[x]}</p>
     <p>Price: ${productsPrices[x]}$</p>
     <form>
-  <div class="mb-3">
+  <div class="mb-3 hypothesis">
     <label for="email" class="form-label">User Email address</label>
     <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
   </div>
@@ -77,9 +85,9 @@ function makeRentalHypothesis(x)
   <label class="form-check-label" for="endDate">End Date</label>
     <input type="date" class="form-control" id="endDate">
   </div>
-  <span id="hypError"></span>
   <button type="submit" class="btn btn-primary" onclick="sendRentalHypothesis(${x}, event)">Send</button>
-</form>
+  </form>
+  <div><span id="hyperror"></span></div>
     </div>`;
     $("#content").html("");
     $('#content').html(toInsert);
@@ -172,7 +180,8 @@ function getAllproducts()
             showProducts(data.productList);     
         }).fail(function(data)
         {
-          $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+          if(data.responseJSON.message)
+            $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
 
         })
 }

@@ -98,12 +98,12 @@ function showModify(x)
       }
 
 function rentDeletion(x)
-      {
-        let start = allReservations[x].start;
-        let end = allReservations[x].end;
-        let product = allReservations[x].product;
-        let email = allReservations[x].usermail; // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
-        let employee = sessionStorage.getItem('email');
+{
+    let start = allReservations[x].start;
+    let end = allReservations[x].end;
+    let product = allReservations[x].product;
+    let email = allReservations[x].usermail; // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
+    let employee = sessionStorage.getItem('email');
         
   let obj = `{
     "user": "${email}", 
@@ -111,24 +111,48 @@ function rentDeletion(x)
     "start": "${start}",
     "end": "${end}"
   }`;
+  console.log(obj);
   
-  $.post({
-    type: 'DELETE',
-      url: `http://localhost:8001/api/rental/${product}`,
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      data: obj
-    }, function(data){
-        $('#content').html(data.message);
-        getAllReservations();
-    }).fail(function(data){
-        $('#content').html(data.responseJSON.message);
-    })
-  }
+  $.ajax({
+    method: "DELETE",
+    url:`http://localhost:8001/api/rental/${product}`,
+    contentType: 'application/json',
+    dataType: 'json',
+    data: obj
+  }).done(function(data){
+    $('#content').html(data.message);
+    getAllReservations();
+  }).fail(function(data){
+    if(data)
+      {     
+        $('#content').html(`<h3>Something went wrong</h3>`);
+        // $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+      }else
+      {
+        $('#content').html(`<h3>Something went wrong</h3>`);
 
-function showDelete(x)
-{
-  let toInsert = `</select></div>
+      }
+
+})
+
+// $.post({
+  //   type: 'DELETE',
+  //     url: `http://localhost:8001/api/rental/${product}`,
+  //     contentType: 'application/json; charset=utf-8',
+  //     dataType: 'json',
+  //     data: obj
+  //   }, function(data){
+    //       $('#content').html(data.message);
+    //       getAllReservations();
+    //   }).fail(function(data){
+      //       $('#content').html(data.responseJSON.message);
+      //   })
+    
+}
+      
+      function showDelete(x)
+      {
+        let toInsert = `</select></div>
   <button type="button" class="btn btn-lg btn-danger btn-block" onclick="rentDeletion(${x})" >Confirm Deletion</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllReservations()" >Back</button>`;
   $('#reservations').html('');

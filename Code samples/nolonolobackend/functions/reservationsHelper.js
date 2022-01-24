@@ -27,7 +27,6 @@ module.exports = {
                    break;
                 }
         }    
-        console.log(toChange);
         return([toChange, x])
     }
 }
