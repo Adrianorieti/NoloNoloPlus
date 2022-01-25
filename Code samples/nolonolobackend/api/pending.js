@@ -34,12 +34,10 @@ router.post('/:name', auth.verifyToken, (req, res) => {
 
         if(checkAvailability.checkAvailability(prod, start, end))
         {
-            console.log("superato cheeeeeeeeeck");
             //aggiungo la prenotazione sul prodotto momentaneamente
             let newReserve = reservations.createReservation(userMail," ",productName, price, start, end, 0);
             prod.futureReservations.push(newReserve);
             prod.save();
-            console.log("superato save");
 
             // aggiungo la pending request
             let newPendingReq = new pendingRequest({
@@ -72,29 +70,46 @@ router.delete('/:id', async (req, res) => {
         {  
               message = `Your rental of ${productName} with start ${startDate.toDateString()} and end ${endDate.toDateString()} has been accepted, thank you for choosing us !`;
         }    
-        // Inserisco il messaggio nelle comunicazioni dell'utente
+        //Inserisco il messaggio nelle comunicazioni dell'utente
         usr.communications.push(message);
         usr.save();
+        console.log(usr);
         let x;
         let toChange;
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x,endDate, startDate);
         // elimino la reservation dal product
+        console.log(toChange);
         if(toChange)
         {
+            
             prod.futureReservations.splice(x, 1);
             prod.save();
         }
-        await pendingRequest.deleteOne({_id: id}, function(err)
+        let error = false;
+        // È UNDEFINED PORCODIO
+        console.log(id);
+        
+         await pendingRequest.deleteOne({_id: id}, function(err)
         {
             if(err)
-                res.status(500).json({message: err});
-            else
-                res.status(200).json({message: "Succesful operation"})
+                 {
+                     console.log("QUI");
+                     error= true;
+                   console.log(err) 
+                    }
+            
         }).clone().catch(function(err){
-             res.status(500).json({message: "error while deleting pending req"})
-            });      
+            console.log("QUIIIIIIIIII");
+            console.log(err)
+              return    res.status(500).json({message: "Error, maybe the element has already been changed."})
+            });  
+
+        if(!error)  
+            {           
+                res.status(200).json({message: "Succesful operation"})
+            }
     }else
-        res.status(500).json({message: "Error occurred"});
+        return res.status(500).json({message: "Error occurred"});
 })
 
 module.exports = router;

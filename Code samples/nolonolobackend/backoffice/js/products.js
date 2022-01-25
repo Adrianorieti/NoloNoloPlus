@@ -312,8 +312,7 @@ function sendMaintenance()
       "start": "${start}",
       "end": "${end}"
     }`;
-    console.log(product);
-      console.log(obj)
+  
     $.post({
       type: 'POST',
       url: `http://localhost:8001/api/rental/${product}/mantainance`,
@@ -324,41 +323,46 @@ function sendMaintenance()
 
       $('#content').html(`<h3>${data.message}</h3>`);
      
-        let toInsert = '<h3>Reservations that must be changed ASAP</h3><div id="mantainance">';
         for(let x in data.reservations)
         {
-          console.log(x)
-          // le cancello tutte tanto sono già come pending requests
-          // poi deve fare in modo che anche la maintenance sia cancellabile quindi 
-          // la aggiungo come pending request
-          let product = data.reservations[x].product;
-          let obj = `{
-            "user": "${data.reservations[x].usermail}", 
-            "employee": "${data.reservations[x].employee}",
-            "start": "${data.reservations[x].start}",
-            "end": "${data.reservations[x].end}"
-          }`;
-          console.log(obj);
-          $.ajax({
-            method: "DELETE",
-            url:`http://localhost:8001/api/rental/${product}`,
-            contentType: 'application/json',
-            dataType: 'json',
-            data: obj
-          }).fail(function(data){
-            if(data)
-              {     
-                $('#content').html(`<h3>Something went wrong</h3>`);
-                // $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
-              }else
-              {
-                $('#content').html(`<h3>Something went wrong</h3>`);
-        
-              }
-            })
-
+          if(data.reservations[x].usermail != 'defaultUser@nolonolo.com')
+          {
+            console.log(data.reservations[x])
+                  // le cancello tutte tanto sono già come pending requests
+                  // poi deve fare in modo che anche la maintenance sia cancellabile quindi 
+                  // la aggiungo come pending request
+                  let product = data.reservations[x].product;
+                let obj = `{
+                  "user": "${data.reservations[x].usermail}", 
+                  "employee": "${data.reservations[x].employee}",
+                  "start": "${data.reservations[x].start}",
+                  "end": "${data.reservations[x].end}"
+                }`;
+                console.log(obj);
+            
+                $.ajax({
+                  method: "DELETE",
+                  url:`http://localhost:8001/api/rental/${product}`,
+                  contentType: 'application/json',
+                  dataType: 'json',
+                  data: obj
+                }).done(function(){
+                   location.reload();
+                }).fail(function(data){
+                  if(data)
+                  {     
+                      $('#content').html(`<h3>Something went wrong</h3>`);
+                      // $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+                    }else
+                    {
+                      $('#content').html(`<h3>Something went wrong</h3>`);
+                      
+                    }
+                  })
+            
           }
-    }).fail(function(data){
+        }
+        }).fail(function(data){
       $('#content').html(`<h3>${data.message}</h3>`);
     })
   }else

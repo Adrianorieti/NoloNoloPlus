@@ -2,6 +2,7 @@ let productsNames = [];
 let categoriesNames = [];
 let productsPrices = [];
 let allProducts = [];
+let oldProducts = [];
 let requests= [];
 
 function reset()
@@ -95,9 +96,9 @@ function makeRentalHypothesis(x)
 function renderFilteredProducts(filtered)
 {
   let toInsert = ``;
+  // oldProducts  = oldProducts.concat(allProducts);
   allProducts = [];
   allProducts = allProducts.concat(filtered);
-  console.log(allProducts);
   for(let x in filtered)
   {
     console.log(filtered[x].name)
@@ -130,7 +131,8 @@ function setSearchBar()
     const searchBar = document.getElementById('searchBar');
     searchBar.addEventListener('keyup', (e) => {
     const searchString = e.target.value.toLowerCase();
-        
+    allProducts = [];
+    allProducts = allProducts.concat(oldProducts);
     let filtered = [];
     for(let x in allProducts)
     {
@@ -157,6 +159,7 @@ function showProducts(products)
     for(let x in products)
     {
         allProducts.push(products[x]);
+        oldProducts.push(products[x]);
         productsNames.push(products[x].name);
         productsPrices.push(products[x].price);
         categoriesNames.push(products[x].type);
@@ -233,11 +236,49 @@ function getAllproducts()
         })
 }
 
-
 function endMantainance(x)
 {
+  let id = requests[x]._id;
+  console.log(id);
+  console.log(requests[x].reserve);
+  let start = requests[x].reserve.start;
+  let end = requests[x].reserve.end;
+  let product = requests[x].reserve.product;
+  let email = requests[x].reserve.usermail;
 
+  const obj =`{
+    "message": "End of mantainance",
+    "email": "${email}",
+    "product": "${product}"
+  }`;
+  console.log(obj);
+  console.log(product);
+  $.post({
+    type: 'DELETE',
+    url: `http://localhost:8001/api/pending/${id}?start=${start}&end=${end}`,
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json',
+    data: obj
+  }, function(data){
+    $('#content').html(`<h3>${data.message}</h3>`);
+    location.reload();
+  }).fail(function(data){
+    $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+})
+    //   $.post({
+    //     type: 'DELETE',
+    //     url: `http://localhost:8001/api/rental/${product}/mantainance`,
+    //     contentType: 'application/json; charset=utf-8',
+    //     dataType: 'json',
+    //     data: obj
+    //   }, function(data){
+    //     $('#content').html(`<h3>${data.message}</h3>`);
+    //     location.reload();
+    //   }).fail(function(data){
+    //     $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+    // })
 }
+
 function denyPendingRequest(x)
 {
   let message = $('#text').val();

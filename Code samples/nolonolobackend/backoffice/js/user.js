@@ -1,6 +1,6 @@
 let email ;
 let allCostumers = [];
-
+let oldCostumers = [];
 
 function reset()
 {
@@ -221,13 +221,12 @@ function renderFilteredCostumers(filtered)
 {
   console.log("DENTRO RENDER FILTERED")
   let toInsert = ``;
+  console.log(allCostumers);
   allCostumers = [];
   allCostumers = allCostumers.concat(filtered);
-  console.log("all costumers", allCostumers);
-  console.log("filtered", filtered);
+
   for(let x in filtered)
   {
-    console.log(filtered[x].name)
     image = filtered[x].image;
     toInsert += `<div class="card" style="width: 18rem;">
     <img src="../../images/users/${image}" class="card-img-top" alt="Product image">
@@ -258,7 +257,8 @@ function setUsersSearchBar()
     const searchBar = document.getElementById('searchBar');
     searchBar.addEventListener('keyup', (e) => {
     const searchString = e.target.value.toLowerCase();
-        
+    allCostumers = [];
+    allCostumers = allCostumers.concat(oldCostumers);
     let filtered = [];
     for(let x in allCostumers)
     {
@@ -275,7 +275,7 @@ function showCostumers(costumers)
 {
     allCostumers = [];
     allCostumers = allCostumers.concat(costumers);
-    console.log("primo render", allCostumers)
+    oldCostumers = oldCostumers.concat(allCostumers);
     let toInsert = '';
     for(let x in costumers)
     {
