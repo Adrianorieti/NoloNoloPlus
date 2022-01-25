@@ -407,15 +407,7 @@ router.delete('/:product', async (req, res) => {
     let employeeMail = req.body.employee;
     let startDate = new Date(req.body.start);
     let endDate = new Date(req.body.end);
-    console.log(req.params);
-   console.log(req.body);
 
-    // if(startDate.getTime() > endDate.getTime())
-    // {
-    //     startDate = new Date(req.body.end);
-    //     endDate = new Date(req.body.start);
-
-    // }
     //vecchio prodotto per andargli a cambiare le cose
     let prod = await product.findOne({name: oldProduct});
     //user in questione
@@ -459,6 +451,34 @@ router.delete('/:product', async (req, res) => {
     }else
     {
         res.status(500).json({message: "Internal server error"});
+    }
+})
+/** Free a product from mantainance and make it available again */
+router.delete('/:product/mantainance', async (req, res) => {
+    let oldProduct = req.params.product;
+    let startDate = new Date(req.body.start);
+    let endDate = new Date(req.body.end);
+
+    //vecchio prodotto per andargli a cambiare le cose
+    let prod = await product.findOne({name: oldProduct});
+
+    if(prod)
+    {
+        let x;
+        let toChange;
+        // cerco la prenotazione nel prodotto
+        [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
+        console.log("DENTRO prod FUTURE", toChange);
+
+        if(toChange)
+        {
+            prod.futureReservations.splice(x, 1);
+            prod.save();
+            return res.status(200).json({message: "Succesful operation, product is now available"})
+        }else
+        {
+            return res.status(500).json({message: "Error, maybe the product has been already changed"})
+        }
     }
 })
 module.exports = router;
