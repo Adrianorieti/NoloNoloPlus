@@ -19,6 +19,10 @@ const CategorySchema = new Schema({
     discountCode: {
         type: String,
         required: true
+    },
+    imageName: {
+        type: String,
+        required: true
     }
 })
 

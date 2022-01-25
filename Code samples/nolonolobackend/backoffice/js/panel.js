@@ -1,4 +1,3 @@
-let allCostumers = [];
 let productsNames = [];
 let categoriesNames = [];
 let productsPrices = [];
@@ -93,6 +92,57 @@ function makeRentalHypothesis(x)
     $('#content').html(toInsert);
 }
 
+function renderFilteredProducts(filtered)
+{
+  let toInsert = ``;
+  allProducts = [];
+  allProducts = allProducts.concat(filtered);
+  console.log(allProducts);
+  for(let x in filtered)
+  {
+    console.log(filtered[x].name)
+    image = filtered[x].image;
+    toInsert += `<div class="card" style="width: 18rem;">
+    <img src="../../images/categories/${image}" class="card-img-top" alt="Product image">
+    <div class="card-body">
+      <h5 class="card-title">${filtered[x].name}</h5>
+      <p class="card-text">${filtered[x].price}$ per day</p>
+      <p class="card-text">Status: ${filtered[x].status}</p>
+      <div class="input-group mb-3">
+    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" onclick="showAddRent(${x}, allProducts)">Add Rent</a></li>
+      <li><a class="dropdown-item" onclick="showChangeProduct(${x}, allProducts)">Change product info</a></li>
+      <li><a class="dropdown-item" onclick="showDeleteProduct(${x}, allProducts)">Delete</a></li>
+      <li><a class="dropdown-item" onclick="showMaintenance(${x}, allProducts)">Mantainance</a></li>
+    </ul>
+  </div>
+    </div>
+  </div>`
+  }
+  console.log("sono qui");
+  $('#content').html('');
+  $('#content').html(toInsert);
+}
+
+function setSearchBar()
+{
+    const searchBar = document.getElementById('searchBar');
+    searchBar.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+        
+    let filtered = [];
+    for(let x in allProducts)
+    {
+        if(allProducts[x].name.toLowerCase().includes(searchString) || 
+        allProducts[x].price.toString().includes(searchString))
+            {
+                filtered.push(allProducts[x]);
+            }  
+    }
+   renderFilteredProducts(filtered);
+  })
+}
 /** Renders all products in the content div */ 
 function showProducts(products)
 {
@@ -111,23 +161,6 @@ function showProducts(products)
         productsPrices.push(products[x].price);
         categoriesNames.push(products[x].type);
         image = products[x].image;
-        // switch(products[x].type){
-        //     case 'Electric S_300':
-        //         image = 'electricBike.jpg';
-        //         break;
-        //     case 'Mountain Bike' :
-        //         image = 'mountainBike.jpg';
-        //         break;
-        //     case 'City Bike' :
-        //         image = 'cityBike.jpg' ;
-        //         break;
-        //     case 'Scooter' :
-        //         image = 'scooter.jpg' ;
-        //         break;
-        //     case 'Special Bike' :
-        //         image = 'specialBike.jpeg' ;
-        //         break;
-        // }
         if(token)
         {
             toInsert += `<div class="card" style="width: 18rem;">
@@ -162,10 +195,24 @@ function showProducts(products)
         }
        
     }
-    console.log(productsNames);
-    console.log(toInsert);
+ 
     $('#title').html("");
+    let searchBar = `
+    <div>
+    <div id="searchWrapper">
+              <input
+                  type="text"
+                  name="searchBar"
+                  id="searchBar"
+                  placeholder="search for name or price"
+              />
+          </div>
+</div>
+    `
+    $('#title').html(searchBar);
     $('#content').html(toInsert);
+    setSearchBar();
+
 }
 
 /** Get all single products from database */
@@ -186,55 +233,7 @@ function getAllproducts()
         })
 }
 
-function showCostumers(costumers)
-{
-    allCostumers = [];
-    allCostumers = allCostumers.concat(costumers);
-    let toInsert = '';
-    for(let x in costumers)
-    {
-      let image = costumers[x].image;
-      if(costumers[x].email != 'defaultUser@nolonolo.com')
-      {
 
-        toInsert += `<div class="card" style="width: 18rem;">
-        <img src="../../images/users/${image}" class="card-img-top" alt="Product image">
-        <div class="card-body">
-        <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
-        <p class="card-text">Email: ${costumers[x].email}</p>
-        <p class="card-text">Phone: ${costumers[x].phone}</p>
-        <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>
-        <p class="card-text">Fidelity point: ${costumers[x].fidelityPoints}</p>
-        <p class="card-text">Amount paid: ${costumers[x].amountPaid}</p>
-        <div class="input-group mb-3">
-        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-        <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
-        <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
-        <li><a class="dropdown-item" href="#" onclick="showDeleteCostumer(${x}, allCostumers)">Delete user</a></li>
-        </ul>
-        </div>
-        </div>
-        </div>`
-      }
-      }
-      $('#title').html("");
-    $('#content').html(toInsert);
-}
-
-function getAllcostumers()
-{
-  $('#reservations').html('');
-    $.get({
-        type: 'GET',
-          url: 'http://localhost:8001/api/user/',
-        }, function(data){
-            showCostumers(data.users);     
-        }).fail(function(err)
-        {
-            alert('error');
-        })
-}
 function endMantainance(x)
 {
 

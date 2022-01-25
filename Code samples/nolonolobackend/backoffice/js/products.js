@@ -96,6 +96,8 @@ function sendRent()
 
 function showAddRent(x, products)
 {
+  console.log(products);
+  console.log(x);
     allProducts = allProducts.concat(products);
     prodName = products[x].name;
     toInsert = `
@@ -111,7 +113,9 @@ function showAddRent(x, products)
   <input type="date" id="end" name="end">
     </div>
     <span id="rentErr"></span>
-    <button class="btn btn-outline-primary " type="button" onclick="sendRent()">Rent</button>
+    <button class="btn btn-primary " type="button" onclick="sendRent()">Rent</button>
+    <button class="btn btn-warning " type="button" onclick="reset()">Back</button>
+
     `
     $('#title').html("");
     $('#content').html(toInsert);
@@ -282,7 +286,8 @@ function sendDelete()
 /** Chiediamo al server tutti i prodotti e li mettiamo in un select per il dipendente così può cancellarli */
 function showDeleteProduct(x, products)
 {
-    
+  console.log(products);
+  console.log(x)   
      let toInsert = `
      <input class="form-control" type="text" id="product" value="${products[x].name}" aria-label="readonly input example" readonly>
       `
