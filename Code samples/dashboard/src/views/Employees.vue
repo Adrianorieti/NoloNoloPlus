@@ -42,6 +42,7 @@ export default {
           }
         })
         .then((data) => {
+          console.log(data);
           this.employees = data.employees;
         })
         .catch((error) => {

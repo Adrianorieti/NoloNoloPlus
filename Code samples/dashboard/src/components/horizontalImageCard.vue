@@ -3,8 +3,9 @@
     <b-card no-body class="overflow-hidden wdt">
       <b-row no-gutters>
         <b-col md="6">
+          <!-- qui va cambiato qualcosa perchè non prova a prendere subito l'immagine, invece non dovrebbe essere così. -->
           <b-card-img
-            src="https://picsum.photos/400/400/?image=20"
+            :src="this.imageSrc"
             alt="Image"
             class="rounded-0"
           ></b-card-img>
@@ -24,7 +25,7 @@
 <script>
 export default {
   name: "horizontalimageCard",
-  props: ["title", "text"],
+  props: ["title", "text", "imageSrc"],
 };
 </script>
 

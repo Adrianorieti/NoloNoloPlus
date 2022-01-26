@@ -29,7 +29,7 @@ router.post('/singleEmp', async (req, res) => {
 
 router.get('/rest/', async (req, res) => {
     //trovo tutti gli user del sistema
-    let employees = await employee.find();
+    let employees = await employee.find({});
     if (employees) {
         res.status(200).json({ employees: employees });
     }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card-list">
+    <b-card-group>
       <card
         v-for="user in users"
         :key="user.email"
@@ -8,8 +8,9 @@
         :email="user.email"
         :text="'Payment Method: ' + user.paymentMethod"
         :path="'users/' + user.email"
+        :imageSrc="'http://localhost:8001/images/users/' + user.image"
       />
-    </div>
+    </b-card-group>
   </div>
 </template>
 
@@ -54,7 +55,7 @@ export default {
 </script>
 
 <style scoped>
-.card-list {
+.deck {
   width: 100%;
   display: flex;
   justify-content: space-around;

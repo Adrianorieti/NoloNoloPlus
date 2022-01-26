@@ -2,7 +2,7 @@
   <div>
     <b-card
       :title="this.title"
-      img-src="https://picsum.photos/600/300/?image=25"
+      :img-src="this.imageSrc"
       :img-alt="this.title + ' profile pic'"
       img-top
       tag="article"
@@ -15,7 +15,9 @@
         {{ this.text }}
       </b-card-text>
 
-      <b-button @click="route()" variant="primary">Go to Persona Page</b-button>
+      <b-button @click="route()" variant="primary"
+        >Go to Personal Page</b-button
+      >
     </b-card>
   </div>
 </template>
@@ -23,11 +25,9 @@
 <script>
 export default {
   name: "imagecard",
-  props: ["email", "title", "text", "path"],
+  props: ["email", "title", "text", "path", "imageSrc"],
   methods: {
     route() {
-      //questo per ora è fisso ma non rimarrà così a lungo
-      //this.$router.push({ path: `users/${this.email}` });
       this.$router.push({ path: this.path });
     },
   },
