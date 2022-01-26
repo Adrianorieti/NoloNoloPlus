@@ -9,6 +9,10 @@ li
     color: white;
 }
 
+body {
+    background-image: url("../images/texture-of-bicycle.jpg");
+}
+
 .App-navbar {
     /*font-size: calc(6px + 2vmin);*/
     font-size: 3vh;
@@ -41,7 +45,7 @@ li
 {
     text-align: center;
     justify-content: center;
-
+    font-size: calc(10px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
