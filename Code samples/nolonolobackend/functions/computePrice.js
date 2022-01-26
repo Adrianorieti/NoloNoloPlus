@@ -64,7 +64,7 @@ module.exports = {
                 startDate.setDate(startDate.getDate() + 2);
                 if (startDate.getDate() <= endDate.getDate()) {
                     finalPrice -= (((finalPrice * 7) / 100));
-                    totalDiscount += 2;
+                    totalDiscount += 7;
                 }
                 startDate.setDate(startDate.getDate() - 2);
             }
