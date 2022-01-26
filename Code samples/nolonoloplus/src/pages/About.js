@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import './style/About.css';
 
 function About() {
+
+
+    useEffect(() => {
+        document.getElementById('about').scrollIntoView({ behavior: "smooth" })
+
+    }, [])
     return (
         <div id="main">
             <div className="container">
                 <div className="row">
-                    <div class="col-xl-10 App-about">
+                    <div class="col-xl-10 App-about" id="about">
                         <h1>Welcome</h1><br />
                         <p>Welcome to <b>Nolo Nolo plus</b>big family, the site that allows you to comfortably rent the most suitable bicycle for your
                             <b>green travels</b>. Our team is here to meet all your needs before, during and after the rental by offering you support,
