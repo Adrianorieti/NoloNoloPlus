@@ -67,6 +67,7 @@ export default class Example extends React.Component {
                     modifiers={modifiers}
                     onDayClick={this.handleDayClick}
                 />
+
             </div>
         );
     }

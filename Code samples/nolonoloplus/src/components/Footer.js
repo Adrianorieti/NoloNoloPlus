@@ -1,10 +1,10 @@
 import React from 'react';
-import mastercard from '../images/cards/mastercard.png'
-import paypal from '../images/cards/paypal.png'
-import postepay from '../images/cards/postepay.png'
-import satispay from '../images/cards/satispay.png'
-import sisalpay from '../images/cards/sisalpay.png'
-import visa from '../images/cards/visa.png'
+import mastercard from '../images/cards/mastercard.png';
+import paypal from '../images/cards/paypal.png';
+import postepay from '../images/cards/postepay.png';
+import satispay from '../images/cards/satispay.png';
+import sisalpay from '../images/cards/sisalpay.png';
+import visa from '../images/cards/visa.png';
 import './style/Footer.css';
 
 function Footer(props) {
@@ -35,8 +35,9 @@ function Footer(props) {
                 <div className="col-md-4">
                     <h6>{props.companyName}</h6>
                     <p>
-                        This year, join a multicolor family !
-                        </p>
+                    We are a rental agency specialized in green movement. 
+                    Our history begin in the far 1990 in this amazing territory.
+                    </p>
                 </div>
                 <div className="col-md-4">
                     <h6>
@@ -64,22 +65,25 @@ function Footer(props) {
                     <p>{props.number}</p>
                 </div>
             </div>
-
+            <div>
+                 <h2>Who we are</h2>
+                 <p>Our goal is always been and always will be the merge of our two passions, respect for the nature and enjoy life toghether with the people we love.</p>
+            </div>
             <div className="row cclicense d-flex justify-content-center text-center">
                 <div className="col-md-12 ccimage">
-                    <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+                    <p><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
                         <img id="commons" className="img-fluid" alt="Licenza Creative Commons" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
-                    </a>
-                    <span xmlnsDct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">
+                    </a></p>
+                    <p><span xmlnsDct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">
                         &nbsp; Nolo Nolo Plus &nbsp;
-                    </span>
-                    <a xmlnsCc="http://creativecommons.org/ns#" href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/432290" property="cc:attributionName" rel="cc:attributionURL" target="_blank">
+                    </span></p>
+                    <p><a xmlnsCc="http://creativecommons.org/ns#" href="https://www.unibo.it/it/didattica/insegnamenti/insegnamento/2020/432290" property="cc:attributionName" rel="cc:attributionURL" target="_blank">
                         Progetto per il Corso di Tecnologie Web Unibo prof. Vitali 2021,
                     </a>
                     &nbsp; è distribuito con Licenza
                     <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
                         &nbsp; Creative Commons Attribuzione - Non commerciale - Condividi allo stesso modo 4.0 Internazionale
-                    </a>.
+                    </a>.</p>
                 </div>
             </div>
         </footer>

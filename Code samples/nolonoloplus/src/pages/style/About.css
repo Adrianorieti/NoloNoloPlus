@@ -1,0 +1,10 @@
+.App-about {
+    /* font-size: 1rem;
+    color: white; */
+    font-size: calc(12px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+    padding: 5vh;
+  }
+
+  .score-image {
+    background-image: url("../../images/texture-of-bicycle.jpg");
+  }

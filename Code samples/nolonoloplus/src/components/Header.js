@@ -4,13 +4,13 @@ import './style/Header.css';
 
 function Header() {
     return (
-        <header classname="App-header container-properties center-block mt-0">
+        <header classname="App-header container-properties center-block mt-0 container">
 
             <div class="row">
-                <div className="col-lg-5">
+                <div className="col-lg-6">
                     <img className="logo img-fluid" src={NoloNoloLogo} alt="Prenotazioni NoloNolo" title="Prenotazioni NoloNolo" />
                 </div>
-                <div className="col-lg-5">
+                <div className="col-lg-6">
 
                     <span><h4>Welcome to NoloNoloPlus!</h4></span>
 

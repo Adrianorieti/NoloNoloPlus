@@ -57,9 +57,11 @@ function App() {
       <Switch>
 
         <Route path="/" exact >
+
+
           <section>
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-lg-12">
                 <ul class="breadcrumb">
                   <li>Home</li>
                 </ul>
@@ -69,26 +71,25 @@ function App() {
 
           <section>
             <div className="row">
-              <div className="col-md-12 rentform">
-                <Howitworks />
+              <div className="col-lg-6">
+                <p><Howitworks /></p>
+              </div>
+              <div className="col-lg-6 bg-image justify-content-center" id="rentForm">
+                <div>
+                  <RentForm queryToParent={queryToParent} />
+                </div>
+                <div className="banner">
+                  <h4>We provide the mean you choose the place</h4>
+                </div>
               </div>
             </div>
           </section>
 
-          <section className="App-content bg-image container-properties" id="rentForm">
-            <div className="row">
-              <div className="col-md-6 rentform">
-                <RentForm queryToParent={queryToParent} />
-              </div>
-              <div className="col-md-6 banner">
-                <h4>We provide the mean you choose the place</h4>
-              </div>
-            </div>
+          <section>
+            {<div> <CarouselContainer /> </div>}
           </section>
 
-          {<div> <CarouselContainer /> </div>}
-
-        </Route>
+        </Route >
 
         <Route path="/login" exact >
           {/* <Navbar name={data} queryToParent={queryToParent} /> */}
@@ -181,10 +182,10 @@ function App() {
           </section>
 
         </Route>
-      </Switch>
+      </Switch >
 
 
-      {<Footer companyName="NoloNoloPlus" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
+      {< Footer companyName="NoloNoloPlus" locality="Bologna, BO 40121, IT" mail="info@nolonolo.it" number="+39 051 268 80" copyright="nolonoloplus" />}
 
 
 

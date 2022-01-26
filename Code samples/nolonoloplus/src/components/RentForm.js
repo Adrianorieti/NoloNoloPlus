@@ -10,7 +10,8 @@ function RentForm({ queryToParent }) {
   function checkInput() {
 
     let form_obj = ``;
-    const radioInput = document.querySelector("input[name='products']:checked");
+    const radioInput = document.querySelector('#Mountain-Bike option:checked').value
+    console.log(radioInput);
     let bikeType;
     if (radioInput) {
       bikeType = radioInput.value;
@@ -21,12 +22,12 @@ function RentForm({ queryToParent }) {
     "startingDate": "${start}",
     "endingDate": "${end}"
    }`;
-   sessionStorage.setItem('form_obj', form_obj);
-   let token = sessionStorage.getItem('token');
-   if(token)
-    history.push('/rental');
-   else
-    history.push('/hypothesis')
+      sessionStorage.setItem('form_obj', form_obj);
+      let token = sessionStorage.getItem('token');
+      if (token)
+        history.push('/rental');
+      else
+        history.push('/hypothesis')
     }
     else {
       alert("Please select a field");
@@ -34,54 +35,44 @@ function RentForm({ queryToParent }) {
   }
 
   return (
-    <main className="App-rent ">
-      <div className="container App-rent">
-        <div classname="row container-properties">
-          <div classname="col-md-12">
-            <form className="rentForm" >
-
+    <main className="App-rent container-properties">
+      <div className="container">
+        <div classname="row">
+          <div classname="col-md-12 rentForm">
+            <form>
+              
               <fieldset id="Bikes_Types" aria-required="true">
-                <legend>Bikes types</legend>
-                <hr></hr>
-                <section className="mb-3 form-check">
-                  <div>
-                    <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
-                    <label htmlFor="City-Bike" className="form-label">City Bike</label>
+                <legend>Pick the Best Bike for You...</legend>
+                <section className="mb-3">
+                  <div className="input-group justify-content-center">
+                    <select name="products" id="Mountain-Bike" aria-label="Select a bike">
+                      
+                      <option selected></option>
+                      <option value="City Bike">City Bike</option>
+                      <option value="Mountain Bike">Mountain Bike</option>
+                      <option value="Scooter">Scooter</option>
+                      <option value="Scooter">Electric-Bike</option>
+                      <option value="Scooter">Special-Bike</option>
+                    </select>
                   </div>
-                  <div>
-                    <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" ></input>
-                    <label htmlFor="Mountain-Bike" className="form-label">Mountain Bike</label>
-                  </div>
-                  <div>
-                    <input id="City-Bike" name="products" className="form-select" type="radio" value="Scooter"></input>
-                    <label htmlFor="Scooter" className="form-label">Scooter</label>
-                  </div>
-                  <div>
-                    <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric S_300" ></input>
-                    <label htmlFor="Electric-Bike" className="form-label">Electric Bike</label>
-                  </div>
-                  <div>
-                    <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Special Bike" ></input>
-                    <label htmlFor="Special-Bike" className="form-label">Special Bike</label>
-                  </div>
+                  <hr></hr>
                 </section>
               </fieldset>
 
               <fieldset aria-required="true">
-                <legend>Renting dates inputs</legend>
-                <hr></hr>
+                <legend>Choose a date</legend>
                 <section className="mb-3">
                   <RangeDaysPicker />
                 </section>
               </fieldset>
 
-              <button id="rentFormButton" type="button" className="btn btn-success" onClick={checkInput}>Click to submit</button>
+              <button id="rentFormButton" type="button" className="btn btn-success" onClick={checkInput}><h3>Click to submit</h3></button>
             </form>
           </div>
         </div>
-         </div>
-      </main>
-     
+      </div>
+    </main>
+
   );
 }
 

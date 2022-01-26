@@ -1,9 +1,9 @@
 /*body {
     font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
   }*/
-  body{
-    background-color: #e5f5c6;
-  }
+body {
+  background-color: #e5f5c6;
+}
 
 .App {
   margin-top: 0;
@@ -79,8 +79,8 @@ a:active {
   /*  padding: 10px;*/
   /*  border: 6px solid #bbe0ac; */
   color: white;
-  padding: 20vh 20vh;
-  text-align: center;
+  /*padding: 20vh 20vh;
+  text-align: center;*/
 }
 /*
 @media only screen and (max-width: 768px) {
@@ -104,10 +104,21 @@ a:active {
   color: white;
   font-weight: 600;
   font-size: 42px;
-  text-shadow: 2px 0 0 #297c29, -2px 0 0 #297c29, 0 2px 0 #297c29, 0 -2px 0 #297c29,
-    1px 1px #297c29, -1px -1px 0 #297c29, 1px -1px 0 #297c29, -1px 1px 0 #297c29;
-  /*background-position: center center;
-  text-align: center;*/
+  text-shadow: 2px 0 0 #297c29, -2px 0 0 #297c29, 0 2px 0 #297c29,
+    0 -2px 0 #297c29, 1px 1px #297c29, -1px -1px 0 #297c29, 1px -1px 0 #297c29,
+    -1px 1px 0 #297c29;
+    padding-top: 10vh;
+  /*position : absolute;
+   bottom   : 0;
+  background-position: center center;
+  padding-top: 20vh;
+  text-align: bottom;*/
+}
+
+@media only screen and (max-width: 768px) {
+  .banner h4 {
+    padding-top: 3vh;
+  }
 }
 
 label {
@@ -171,8 +182,8 @@ label {
   background-image: url("./images/bikes.jpg");
   height: auto;
   background-size: cover;
-  background-attachment: fixed;
-  min-height: 100vh;
+
+  /*min-height: 100vh;*/
 }
 @media only screen and (max-width: 768px) {
   .bg-image {
@@ -202,7 +213,7 @@ ul.breadcrumb li {
 }
 
 /* Add a slash symbol (/) before/behind each list item */
-ul.breadcrumb li+li:before {
+ul.breadcrumb li + li:before {
   padding: 8px;
   color: #84bf45;
   content: "/\00a0";
@@ -218,4 +229,4 @@ ul.breadcrumb li a {
 ul.breadcrumb li a:hover {
   color: #447231;
   text-decoration: underline;
-} 
+}

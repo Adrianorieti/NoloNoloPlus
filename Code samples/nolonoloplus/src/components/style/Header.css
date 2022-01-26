@@ -8,6 +8,7 @@
 
 .logo {
   height: 10vh;
+  /*width: auto;*/
   max-height: 10vh;
   margin-top: 2%;
   margin-bottom: 3rem;
