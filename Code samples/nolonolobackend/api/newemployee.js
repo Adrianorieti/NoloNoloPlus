@@ -15,9 +15,19 @@ const checkAvailability = require('../functions/checkAvailability');
 const router = express.Router();
 const reservations = require('../functions/reservationsHelper');
 
+router.get('/', async (req, res) => {
+    //trovo tutti gli user del sistema
+    let employees = await employee.find({});
+    if (employees) {
+        res.status(200).json({ emp: employees });
+    }
+    else {
+        //non ci sono utenti 
+        res.status(500).send("no active employee");
+    }
+})
 
-router.get('/:email', async (req, res) =>
-{
+router.get('/:email', async (req, res) => {
     let email = req.params.email;
     employee.findOne({ email: email })
         .exec()
