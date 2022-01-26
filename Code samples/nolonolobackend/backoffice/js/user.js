@@ -71,7 +71,6 @@ function sendInfo()
         "${type}": "${newValue}"
       }`;
       
-      console.log(obj);
       $.post({
         type: 'PATCH',
         url: `http://localhost:8001/api/user/${email}`,
@@ -101,7 +100,6 @@ function changeUserInfo(x, event, costumers)
   costumersArray.concat(costumers);
   event.preventDefault();
   email = costumers[x].email;
-  console.log(email);
   let toInsert = `<div class="input-group mb-3">
   <label class="input-group-text" for="changeInfo">Field</label>
   <select class="form-select" id="changeInfo">
@@ -135,7 +133,6 @@ function changeUserInfo(x, event, costumers)
 $("#content").html(toInsert);
 $('#payments').hide();
 $( "#changeInfo" ).change(function() {
-  console.log("changed");
       changePattern();
     });
 }
@@ -148,7 +145,6 @@ function sendComunication()
   const obj = `{
     "communications": "${message}"
   }`;
-  console.log(obj);
   $.post({
     type: 'PATCH',
       url: `http://localhost:8001/api/user/${email}`,
@@ -175,7 +171,7 @@ function showAddComunication(x, allCostumers)
   <label for="text" class="form-label">Message to send</label>
   <textarea class="form-control" id="text" rows="3"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Insert</button>
-  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Close</button>
   </div>
 </div>
 </div>
@@ -219,9 +215,7 @@ function showDeleteCostumer(x, allCostumers)
 
 function renderFilteredCostumers(filtered)
 {
-  console.log("DENTRO RENDER FILTERED")
   let toInsert = ``;
-  console.log(allCostumers);
   allCostumers = [];
   allCostumers = allCostumers.concat(filtered);
 
@@ -273,7 +267,9 @@ function setUsersSearchBar()
 
 function showCostumers(costumers)
 {
+  console.log("costumers",costumers);
     allCostumers = [];
+    oldCostumers = [];
     allCostumers = allCostumers.concat(costumers);
     oldCostumers = oldCostumers.concat(allCostumers);
     let toInsert = '';

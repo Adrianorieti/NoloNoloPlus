@@ -11,7 +11,7 @@ function About() {
     return (
         <div id="main">
             <div className="container">
-                <div className="row">
+                <div className="row text-center justify-content-center">
                     <div class="col-xl-10 App-about" id="about">
                         <h1>Welcome</h1><br />
                         <p>Welcome to <b>Nolo Nolo plus</b>big family, the site that allows you to comfortably rent the most suitable bicycle for your

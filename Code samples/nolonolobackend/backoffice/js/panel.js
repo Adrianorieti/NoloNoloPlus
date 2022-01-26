@@ -388,6 +388,8 @@ function confirmPendingRequest(x)
 function showPendingRequests(data)
 {
   $('#body a').removeClass('disabled');
+  $('#body i').addClass('disabled');
+
   let toInsert= '';
   requests = [];
   requests = requests.concat(data);

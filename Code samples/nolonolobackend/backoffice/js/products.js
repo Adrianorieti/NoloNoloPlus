@@ -173,16 +173,16 @@ function showAddProduct()
 <div class="input-group mb-3">
 <label class="input-group-text" for="price">Price</label>
   <span class="input-group-text">€</span>
-  <input type="text" class="form-control" id="price" aria-label="Amount (to the nearest euro)">
+  <input type="text" class="form-control" pattern="[0-9]" id="price" aria-label="Amount (to the nearest euro)">
   <span class="input-group-text">.00</span>
 </div>
 <span id="error"></span> <br>
 <button type="submit" class="btn btn-lg btn-primary btn-block" ">Add product</button>
-<button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
 </form>
+<button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
 
     `;
-    $('#title').html("");
+    $('#title').html("<h3>Add a new product</h3>");
     $('#content').html("");
     $('#content').html(toInsert);
 

@@ -421,7 +421,6 @@ router.delete('/:product', async (req, res) => {
         let toChange;
         // cerco la prenotazione nel prodotto
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
-        console.log("DENTRO prod FUTURE", toChange);
 
         if(toChange)
         {
@@ -430,24 +429,20 @@ router.delete('/:product', async (req, res) => {
         }     
         // elimino nello user
         [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, endDate, startDate);
-        console.log("DENTRO usr FUTURE", toChange);
 
         if(toChange)
         {   
              usr.futureReservations.splice(x, 1);
-            console.log("DOPO AVERLO CANCELLATO", usr.futureReservations);
              usr.save();
         } 
         //elimino nel dipendente
         [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x, endDate, startDate);
-        console.log("DENTRO EMP FUTURE", toChange);
 
         if(toChange)
         {    
             emp.futureReservations.splice(x, 1);
             emp.save();
         }
-        console.log("ARRIVO QUI");
         res.status(200).json({message: 'Succesful operation'})
     }else
     {
