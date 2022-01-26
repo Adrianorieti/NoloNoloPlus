@@ -113,7 +113,8 @@ function confirmEndOfRental(x)
    //CONSEGNA IN RITARDO
    if(!(isSameDay(end, today)) ) // SE OGGI NON È QUANDO AVREBBE DOVUTO CONSEGNARE
    {
-
+    console.log("sono qui");
+    console.log("expense prima di essere ricalcolata", expense);
      if(today.getTime() < end.getTime()) // SONO IN ANTICIPO
      {
        expense = calculateFinalPrice(false, start, end, expense);

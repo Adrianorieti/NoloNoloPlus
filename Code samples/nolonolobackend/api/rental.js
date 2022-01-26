@@ -255,7 +255,7 @@ router.post('/:product/restitution', async (req, res) => {
             usr.activeReservations.splice(x, 1);
 
             usr.fidelityPoints += parseInt(points);
-            // usr.amountPaid += parseInt(expense);
+            usr.amountPaid += parseInt(expense);
 
             usr.save();
         }
@@ -269,7 +269,7 @@ router.post('/:product/restitution', async (req, res) => {
                 emp.pastReservations.push(toChange);
 
                 //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
-                // emp.totalReservations += parseInt(1);
+                emp.totalReservations += parseInt(1);
                 emp.save();
             }
 
@@ -283,8 +283,8 @@ router.post('/:product/restitution', async (req, res) => {
             prod.pastReservations.push(toChange);
 
             //TO-DO AGGIUNGERE LE ROBE PER STATISTICHE
-            // prod.totalSales += parseInt(expense);
-            // prod.numberOfRents += parseInt(1);
+            prod.totalSales += parseInt(expense);
+            prod.numberOfRents += parseInt(1);
             prod.save();
             res.status(200).json({ message: "Succesful operation" });
         }
