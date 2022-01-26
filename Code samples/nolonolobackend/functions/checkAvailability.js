@@ -1,20 +1,23 @@
 const sortBy = require('./sortBy');
 const computePrice = require('./computePrice');
-
+const _ = require('underscore');
 module.exports = {
 
     checkAvailability: function(product, startDate, endDate)
     {
         let available = true;
-        if(product.futureReservations && product.futureReservations.length > 0)
-        {
-            if(product.activeReservation)
-                product.futureReservations.push(product.activeReservation); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
+        console.log(product.futureReservations.length);
+      
+            if(product.activeReservations.length > 0)
+            {     
+                product.futureReservations.push(product.activeReservations[0]); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
+            }else
+            {
+            }
             if(product.futureReservations.length > 1)
                 sortBy.sortByTime(product.futureReservations, 'start');
                 for(let i in product.futureReservations)
                 {
-                    console.log("dentro check", product.futureReservations[i])
                     if( startDate.getTime() >= product.futureReservations[i].start.getTime() && startDate.getTime() <= product.futureReservations[i].end.getTime() )
                     {
                         //comprende tutto
@@ -38,8 +41,8 @@ module.exports = {
                         break;
                     }
                 }
-        }   
-        console.log("arrivo qui", available)
+         
+        console.log("available è ", available)
         return available;
     }
 

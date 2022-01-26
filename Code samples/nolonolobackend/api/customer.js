@@ -17,7 +17,6 @@ router.post('/passw-validation', async (req, res) => {
     const token = authHeader && authHeader.split(' ')[1];
     //anche questo if è un attimo da capire e fare meglio.
     if (token == null) {
-        console.log("401");
         return res.sendStatus(401);//va rifatto
     }
     else {

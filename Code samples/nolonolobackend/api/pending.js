@@ -35,15 +35,14 @@ router.post('/:name', auth.verifyToken, (req, res) => {
         if(checkAvailability.checkAvailability(prod, start, end))
         {
             //aggiungo la prenotazione sul prodotto momentaneamente
-            let newReserve = reservations.createReservation(userMail," ",productName, price, start, end);
+            let newReserve = reservations.createReservation(userMail," ",productName, price, start, end, 0);
             prod.futureReservations.push(newReserve);
             prod.save();
-            console.log(newReserve);
+
             // aggiungo la pending request
             let newPendingReq = new pendingRequest({
                 reserve: newReserve
             })  
-            console.log(newPendingReq);
             newPendingReq.save()
             res.status(200).json({message: "Succesful operation"});
         }else
@@ -55,29 +54,23 @@ router.post('/:name', auth.verifyToken, (req, res) => {
 
 /** Deletes the reservation on the product and also the pending request from database */
 router.delete('/:id', async (req, res) => {
-    console.log("1")
     const userMail = req.body.email;
     const productName = req.body.product;
     let message = req.body.message;
-    console.log(req.query);
     let startDate = new Date(req.query.start);
-    console.log(startDate);
     let endDate = new Date(req.query.end);
-    console.log(endDate);
     let id = req.params.id;
-    console.log("2")
 
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
-    console.log("3")
 
     if(usr && prod)
     {
         if(message === '')
         {  
-              message = `Your rental with start ${startDate.toDateString()} and end ${endDate.toDateString()} has been accepted, thank you for choosing us !`;
+              message = `Your rental of ${productName} with start ${startDate.toDateString()} and end ${endDate.toDateString()} has been accepted, thank you for choosing us !`;
         }    
-        // Inserisco il messaggio nelle comunicazioni dell'utente
+        //Inserisco il messaggio nelle comunicazioni dell'utente
         usr.communications.push(message);
         usr.save();
         console.log(usr);
@@ -85,22 +78,38 @@ router.delete('/:id', async (req, res) => {
         let toChange;
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x,endDate, startDate);
         // elimino la reservation dal product
+        console.log(toChange);
         if(toChange)
         {
+            
             prod.futureReservations.splice(x, 1);
             prod.save();
         }
-        await pendingRequest.deleteOne({_id: id}, function(err)
+        let error = false;
+        // È UNDEFINED PORCODIO
+        console.log(id);
+        
+         await pendingRequest.deleteOne({_id: id}, function(err)
         {
             if(err)
-                res.status(500).json({message: err});
-            else
-                res.status(200).json({message: "Succesful operation"})
+                 {
+                     console.log("QUI");
+                     error= true;
+                   console.log(err) 
+                    }
+            
         }).clone().catch(function(err){
-             res.status(500).json({message: "error while deleting pending req"})
-            });      
+            console.log("QUIIIIIIIIII");
+            console.log(err)
+              return    res.status(500).json({message: "Error, maybe the element has already been changed."})
+            });  
+
+        if(!error)  
+            {           
+                res.status(200).json({message: "Succesful operation"})
+            }
     }else
-        res.status(500).json({message: "Error occurred"});
+        return res.status(500).json({message: "Error occurred"});
 })
 
 module.exports = router;

@@ -59,8 +59,6 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
     let end = new Date(req.query.end);
     end.setDate(end.getDate() + 1);
     let email = req.email;
-    console.log(req.query);
-    console.log(start);
     // pensare di spostare il segno sui prodotti per non dover fare questa call al database
     let collection = await category.findOne({ name: name })
     if (collection) {

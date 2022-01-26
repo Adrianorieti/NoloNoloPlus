@@ -145,8 +145,7 @@ router.delete('/:email', async (req, res) => {
         } else {
             let usr = await user.findOne({ email: email });
             console.log(usr);
-            if (usr.activeReservation === '' || usr.activeReservation === null ||
-                usr.activeReservation === 'null' || usr.futureReservations.length != 0) {
+            if (usr.activeReservations.length != 0 || usr.futureReservations.length != 0) {
                 res.status(500).json({ message: "Impossible, there are future or active reservations" })
             } else {
 

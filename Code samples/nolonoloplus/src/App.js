@@ -118,7 +118,6 @@ function App() {
 
         <Route path="/personalpage" exact>
 
-          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">
@@ -177,7 +176,6 @@ function App() {
         </Route>
 
         <Route path='/about' exact >
-          {/* <Navbar name={data} queryToParent={queryToParent} /> */}
           <section>
             <div className="row">
               <div className="col-md-12">

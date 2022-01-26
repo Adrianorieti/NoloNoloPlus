@@ -42,9 +42,7 @@ router.get('/:name/available', (req, res) => {
     let end = new Date(req.query.end);
     end.setDate(end.getDate() +1);
     let email = req.query.email;
-    console.log(req.query);
-    console.log("nome", name);
-
+   
        product.findOne({name: name})
       .exec()
       .then(async (prod) => {
@@ -64,7 +62,10 @@ router.get('/:name/available', (req, res) => {
     
 })
 /** Add a product */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+
+    let collection = await category.findOne({name: req.body.type});
+    
 
     const newProduct = new product({
         name: req.body.name,
@@ -74,9 +75,12 @@ router.post('/', (req, res) => {
         futureReservations: [],
         activeReservation: '',
         pastReservations: [],
-        numberOfRents: 0
+        totalSales: 0,
+        numberOfRents: 0,
+        image: `${collection.imageName}`
     })
 
+    console.log(newProduct);
     newProduct
         .save()
         .then(() => {
@@ -119,7 +123,7 @@ router.delete('/:name', async (req, res) => {
             console.log(doc);
             let prod = await product.findOne({name: name});
             console.log(prod);
-            if(prod.futureReservations.length != 0)
+            if(prod.futureReservations.length != 0 || prod.activeReservations.length != 0)
             {
                 res.status(500).json({message: "Impossible, there are future reservations on the product"});
             }else

@@ -1,9 +1,159 @@
 let activeRes = [];
 let futureRes = [];
+function calculateFidelityPoints(start, end, expense)
+{
+  let points=0;
+  let period = end.getTime() - start.getTime();
+  period = period / (1000 * 3600 * 24);
+  
+  if(period > 10)
+  {
+      points = 25;
+  }else if(period > 7)
+  {
+      points= 15;
+  }else if(period > 3)
+  {
+      points = 10;
+  }else
+      points = 5;
+  if(expense >= 150)
+  {
+      points += 30;
+  }
+  else if(expense >= 100)
+  {
+      points += 15;
+  }else if(expense >= 70)
+  {
+      points += 10;
+  }else if(expense >= 40)
+  {
+      points += 8;
+  }
+
+  console.log("points to add",points);
+  return points;
+}
+
+function isSameDay(date, today)
+{
+  return(date.getDate() == today.getDate() &&
+  date.getMonth() == today.getMonth() &&
+  date.getFullYear() == today.getFullYear());
+
+}
+function calculateFinalPrice(isLate, start, end, expense)
+{
+  
+  let period = end.getTime() - start.getTime();
+  period = period / (1000 * 3600 * 24);
+  period += 1;
+  //ATTENZIONE CONTA UN GIORNO IN MENO DA 22 A 26 DICE 4 GIORNI MA SONO 5
+  if( isSameDay(end, start)) // se è di un giorno solo la prenotazione
+  {
+    period = 1;
+  }
+  let today = new Date();
+  console.log("period", period);
+  
+  if(isLate)
+  {
+    console.log("IS LATE");
+    let overPeriod =  today.getTime() - end.getTime(); // tempo in +
+    overPeriod = overPeriod / (1000 * 3600 * 24);
+    overPeriod = Math.trunc(overPeriod);
+   
+    let medium = expense / period; // la media giornaliera
+    medium = Math.trunc(medium * overPeriod); 
+    expense = expense + medium ; //aggiungo in +
+    console.log("overPeriod", overPeriod);
+    console.log("medium", medium);
+    console.log("expense", expense);
+
+  }else // in anticipo quindi today < end
+  {
+    console.log("IS NOT LATE");
+    let remaningPeriod =  end.getTime() - today.getTime();
+    remaningPeriod = remaningPeriod / (1000 * 3600 * 24);
+    remaningPeriod += 1;
+    remaningPeriod = Math.trunc(remaningPeriod);
+    console.log("remaningPeriod", remaningPeriod);
+
+    if( isSameDay(end, start)) // se è di un giorno solo la prenotazione
+    {
+      remaningPeriod = 1;
+    }
+    let medium = expense / period; // la media giornaliera
+    medium = Math.trunc(medium * remaningPeriod); // quanto mancava in fatto di soldi
+    expense = Math.abs(expense - medium) ; //vado a levare la media dei giorni rimanenti a quello che deve pagare
+    console.log("medium", medium);
+    console.log("expense", expense);
+  }
+  return expense;
+}
+function confirmEndOfRental(x)
+{
+  console.log("dentro confirm", activeRes);
+
+  let employee = sessionStorage.getItem('email');
+  let product = activeRes[x].product;
+  let user = activeRes[x].usermail;
+  let start = activeRes[x].start;
+  let end = activeRes[x].end;
+  let expense = activeRes[x].expense;
+  console.log("old expense", expense);
+  let today = new Date();
+  start = new Date(start);
+  end = new Date(end);
+  let points = calculateFidelityPoints(start, today, expense); 
+   // SONO SU ACTIVE QUINDI È GIA INIZIATA E POSSONO ACCADERE QUESTI CASI
+   //CONSEGNA PRIMA DELLA FINE DEL TEMPO
+   //CONSEGNA IN TEMPO
+   //CONSEGNA IN RITARDO
+   if(!(isSameDay(end, today)) ) // SE OGGI NON È QUANDO AVREBBE DOVUTO CONSEGNARE
+   {
+
+     if(today.getTime() < end.getTime()) // SONO IN ANTICIPO
+     {
+       expense = calculateFinalPrice(false, start, end, expense);
+
+      }else if(today.getTime() > end.getTime()) // SONO IN RITARDO
+      {
+        console.log("ENTRO QUIIII");
+        expense = calculateFinalPrice(true, start, end, expense);
+      }      
+    }else
+    {
+      console.log("È OGGI NON È NE IN RITARDO NE IN ANTICIPO")
+    }
+
+      console.log("new expense", expense);
+      let obj = `{
+      "user": "${user}", 
+      "expense": "${expense}",
+      "employee": "${employee}",
+      "start": "${start}",
+      "points": "${points}",
+      "end": "${end}"
+    }`;
+
+    $.post({
+      type: 'POST',
+        url: `http://localhost:8001/api/rental/${product}/restitution`,
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        data: obj
+      }, function(data){
+          $('#content').html(`<h3>${data.message}</h3>`);
+          location.reload();
+      }).fail(function(data){
+          $('#content').html(`${data.responseJSON.message}`);
+      })
+}
 
 function confirmLending(x)
 {
-  console.log("entro qui");
   let employee = sessionStorage.getItem('email');
   let product = futureRes[x].product;
   let user = futureRes[x].usermail;
@@ -17,6 +167,7 @@ function confirmLending(x)
     "start": "${start}",
     "end": "${end}"
   }`;
+  console.log(obj);
   $.post({
     type: 'POST',
       url: 'http://localhost:8001/api/rental/active/confirm',
@@ -24,16 +175,17 @@ function confirmLending(x)
       dataType: 'json',
       data: obj
     }, function(data){
-        $('#content').html(data.message);
-        location.reload();
+        $('#content').html(`<h3>${data.message}</h3>`);
+        getMyReservations();
     }).fail(function(data){
-        $('#content').html(data.message);
+        $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
     })
 }
 
 function showMyReservations(emp)
 {
   activeRes = activeRes.concat(emp.activeReservations);
+  console.log(activeRes);
   futureRes = futureRes.concat(emp.futureReservations);
   let active = '';
   let future = '';
@@ -42,20 +194,17 @@ function showMyReservations(emp)
   {
     let start = new Date(emp.activeReservations[x].start);
     let end = new Date(emp.activeReservations[x].end)
+    let today= new Date();
     active += `
     <div class="card">
-        <h5 class="card-header">${x}</h5>
+        <h5 class="card-header">${x} ${(end.getTime() < today.getTime()) ? '<h3><b>LATE</b></h3>' :(isSameDay(end, today ) ? ' <h3><b>TODAY</b></h3>' : '')}</h5>
         <div class="card-body">
         <h5 class="card-title">User: ${emp.activeReservations[x].usermail}</h5>
         <p class="card-text">Product: ${emp.activeReservations[x].product}</p>
         <p class="card-text">From: ${start.toDateString()}</p>
         <p class="card-text">To: ${end.toDateString()} </p>
         <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
-        label class="input-group-text" for="points">Insert points</label>
-        <input type="text" class="form-control" id="points" aria-label="Insert the points to add or subtract">
-        <span id="pointsError></span>
         <a href="#" class="btn btn-primary" onclick="confirmEndOfRental(${x})">Confirm restitution</a>
-
         </div>
         </div>
 
@@ -141,7 +290,6 @@ function getMyReservations()
     type: 'GET',
       url: `http://localhost:8001/api/employee/${email}` 
     }, function(data){
-      console.log(data.emp);
       showMyReservations(data.emp);
     }).fail(function(err)
     {

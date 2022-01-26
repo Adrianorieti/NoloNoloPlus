@@ -20,7 +20,6 @@ router.post('/register', async (req, res) => {
     const mail = req.body.email;
 
     const source = await user.findOne({ email: mail });
-    console.log(source);
 
     if (!(source)) {
         //password arrives in base-64
@@ -89,7 +88,6 @@ router.post('/login/:role', async (req, res) => {
                 const user = { email: `${source.email}` };
                 const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '2h' });
                 console.log("arrivo qui prima di crashare");
-                console.log(accessToken);
                 //Send token back to client 
                 res.status(200).json({ accessToken: accessToken, name: `${source.name}` });
             }
@@ -99,7 +97,6 @@ router.post('/login/:role', async (req, res) => {
                 //const accessToken = jwt.sign(manager, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });//LINEA DA CAMBIARE
 
                 //Send token back to client 
-                console.log("Success");
                 //res.status(200).json({ accessToken: accessToken });
                 res.status(200).send();
             }

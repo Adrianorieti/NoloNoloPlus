@@ -59,10 +59,13 @@ async function changeCascadeProds(prods, newMail, oldMail) {
             }
             if (prod.activeReservation) // se il prod ha una active res
             {
+                for (let x in prod.activeReservations) // per tutte le sue future res
+                {
                     // se la mail è quella vecchia dello usr 
-                    if (prod.activeReservation.usermail === oldMail) {
-                        prod.activeReservation.usermail = newMail;
+                    if (prod.activeReservations[x].usermail === oldMail) {
+                        prod.activeReservations[x].usermail = newMail;
                     }
+                }
             }
             if (prod.pastReservations) // se il dipendente ha delle past res
             {
@@ -113,13 +116,14 @@ module.exports = {
                     }
                 }
             }
-            if (usr.activeReservation) {
-                res = usr.activeReservation;
-                if (res.employee) // potrebbe essere ancora in pending
-                {
-                    pushElements(emps, res.employee);
-                    pushElements(prods, res.product);
-                    res.email = newMail;
+            if (usr.activeReservations) {
+                for (let res of usr.activeReservations) {
+                    if (res.employee) // potrebbe essere ancora in pending
+                    {
+                        pushElements(emps, res.employee);
+                        pushElements(prods, res.product);
+                        res.email = newMail;
+                    }
                 }
             }
             if (usr.pastReservations) {

@@ -17,6 +17,7 @@ export default function newUserPage({ nameToParent }) {
     const [wait, setWait] = useState(0);
 
     useEffect(() => {
+
         async function getEmail() {
             let token = JSON.parse(sessionStorage.getItem("token"));
             const options = {
@@ -48,6 +49,9 @@ export default function newUserPage({ nameToParent }) {
                     setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
+                    document.getElementById('toFocus').scrollIntoView({ behavior: "smooth" })
+
+                    setImage("default.jpeg");
                 })
                 .catch((err) => { console.log(err); setError(err.message); });
         };
@@ -204,19 +208,19 @@ export default function newUserPage({ nameToParent }) {
                 :
                 (error ? <span> {error}</span> :
                     (loading ? <div><Spinner /></div> :
-                        <div className="row">
+                        <div className="row" id="toFocus">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                                     <img className="rounded-image" alt="profile pic" src={image ? `http://localhost:8001/images/users/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
                                     <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
                                         <label htmlFor="file-upload" class="custom-file-upload">
-                                            <i class="fa fa-cloud-upload"></i>
+                                            <i className="fa fa-cloud-upload"></i>
                                         </label>
                                         <input id="file-upload" type="file" name="img" />
 
                                         <button className="btn btn-primary" type="submit">
-                                            <i class="fa fa-check-circle" aria-hidden="true"></i>
+                                            <i className="fa fa-check-circle" aria-hidden="true"></i>
                                         </button>
 
                                     </form>
@@ -286,9 +290,16 @@ export default function newUserPage({ nameToParent }) {
                                     {communications.length === 0 ? <div> No communications</div> :
                                         (() => {
                                             let commDivs = []
+<<<<<<< HEAD
                                             for (let com of communications) {
                                                 if (com !== '') {
                                                     commDivs.push(<div>{com}</div>)
+=======
+                                            for (let x = communications.length; x >= 0; x--) {
+                                                console.log(communications[x])
+                                                if (communications[x] != '') {
+                                                    commDivs.push(<div>{communications[x]}</div>)
+>>>>>>> origin/testing
                                                     commDivs.push(<div><hr /></div>)
 
                                                 }

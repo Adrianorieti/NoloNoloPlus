@@ -1,8 +1,8 @@
-let allCostumers = [];
 let productsNames = [];
 let categoriesNames = [];
 let productsPrices = [];
 let allProducts = [];
+let oldProducts = [];
 let requests= [];
 
 function reset()
@@ -26,8 +26,15 @@ function sendRentalHypothesis(x, event)
     let email = $('#email').val();
     let startDate = $('#startDate').val();
     let endDate = $('#endDate').val();
-    console.log(productsNames[x]);
-    if(startDate && endDate && email)
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+    console.log(endDate.getTime())
+    console.log(startDate.getTime());
+    if(endDate.getTime() < startDate.getTime())
+        { 
+            console.log("EH SI È COSÌ NÈ")
+        }  
+  if((startDate && endDate && email) && (endDate.getTime() >= startDate.getTime()) )
       {
         $.post({
           type: 'GET',
@@ -42,7 +49,7 @@ function sendRentalHypothesis(x, event)
                     <button type="button" class="btn btn-lg btn-primary btn-block" onclick="logout()">Bring me back to login</button>
                     </div>`
             
-                $('#info').html(toInsert);   
+                $('#content').html(toInsert);   
               }).fail(function(data)
               {
                 toInsert = `<div id="unavailable">
@@ -55,7 +62,8 @@ function sendRentalHypothesis(x, event)
             });
       }else
         {
-          $('#hypError').html("please insert all fields correctly");
+          console.log("errore");
+          $('#hyperror').html("Please insert all fields correctly");
         }
 }
 /** Make a rental hypothesis on a product , there is no need to be logged */
@@ -65,7 +73,7 @@ function makeRentalHypothesis(x)
     <p>Name: ${productsNames[x]}</p>
     <p>Price: ${productsPrices[x]}$</p>
     <form>
-  <div class="mb-3">
+  <div class="mb-3 hypothesis">
     <label for="email" class="form-label">User Email address</label>
     <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
   </div>
@@ -77,14 +85,66 @@ function makeRentalHypothesis(x)
   <label class="form-check-label" for="endDate">End Date</label>
     <input type="date" class="form-control" id="endDate">
   </div>
-  <span id="hypError"></span>
   <button type="submit" class="btn btn-primary" onclick="sendRentalHypothesis(${x}, event)">Send</button>
-</form>
+  </form>
+  <div><span id="hyperror"></span></div>
     </div>`;
     $("#content").html("");
     $('#content').html(toInsert);
 }
 
+function renderFilteredProducts(filtered)
+{
+  let toInsert = ``;
+  // oldProducts  = oldProducts.concat(allProducts);
+  allProducts = [];
+  allProducts = allProducts.concat(filtered);
+  for(let x in filtered)
+  {
+    console.log(filtered[x].name)
+    image = filtered[x].image;
+    toInsert += `<div class="card" style="width: 18rem;">
+    <img src="../../images/categories/${image}" class="card-img-top" alt="Product image">
+    <div class="card-body">
+      <h5 class="card-title">${filtered[x].name}</h5>
+      <p class="card-text">${filtered[x].price}$ per day</p>
+      <p class="card-text">Status: ${filtered[x].status}</p>
+      <div class="input-group mb-3">
+    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" onclick="showAddRent(${x}, allProducts)">Add Rent</a></li>
+      <li><a class="dropdown-item" onclick="showChangeProduct(${x}, allProducts)">Change product info</a></li>
+      <li><a class="dropdown-item" onclick="showDeleteProduct(${x}, allProducts)">Delete</a></li>
+      <li><a class="dropdown-item" onclick="showMaintenance(${x}, allProducts)">Mantainance</a></li>
+    </ul>
+  </div>
+    </div>
+  </div>`
+  }
+  console.log("sono qui");
+  $('#content').html('');
+  $('#content').html(toInsert);
+}
+
+function setSearchBar()
+{
+    const searchBar = document.getElementById('searchBar');
+    searchBar.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+    allProducts = [];
+    allProducts = allProducts.concat(oldProducts);
+    let filtered = [];
+    for(let x in allProducts)
+    {
+        if(allProducts[x].name.toLowerCase().includes(searchString) || 
+        allProducts[x].price.toString().includes(searchString))
+            {
+                filtered.push(allProducts[x]);
+            }  
+    }
+   renderFilteredProducts(filtered);
+  })
+}
 /** Renders all products in the content div */ 
 function showProducts(products)
 {
@@ -99,31 +159,15 @@ function showProducts(products)
     for(let x in products)
     {
         allProducts.push(products[x]);
+        oldProducts.push(products[x]);
         productsNames.push(products[x].name);
         productsPrices.push(products[x].price);
         categoriesNames.push(products[x].type);
-        image = '';
-        switch(products[x].type){
-            case 'Electric S_300':
-                image = 'electricBike.jpg';
-                break;
-            case 'Mountain Bike' :
-                image = 'mountainBike.jpg';
-                break;
-            case 'City Bike' :
-                image = 'cityBike.jpg' ;
-                break;
-            case 'Scooter' :
-                image = 'scooter.jpg' ;
-                break;
-            case 'Special Bike' :
-                image = 'specialBike.jpeg' ;
-                break;
-        }
+        image = products[x].image;
         if(token)
         {
             toInsert += `<div class="card" style="width: 18rem;">
-            <img src="../images/${image}" class="card-img-top" alt="Product image">
+            <img src="../../images/categories/${image}" class="card-img-top" alt="Product image">
             <div class="card-body">
               <h5 class="card-title">${products[x].name}</h5>
               <p class="card-text">${products[x].price}$ per day</p>
@@ -154,10 +198,24 @@ function showProducts(products)
         }
        
     }
-    console.log(productsNames);
-    console.log(toInsert);
+ 
     $('#title').html("");
+    let searchBar = `
+    <div>
+    <div id="searchWrapper">
+              <input
+                  type="text"
+                  name="searchBar"
+                  id="searchBar"
+                  placeholder="search for name or price"
+              />
+          </div>
+</div>
+    `
+    $('#title').html(searchBar);
     $('#content').html(toInsert);
+    setSearchBar();
+
 }
 
 /** Get all single products from database */
@@ -172,59 +230,53 @@ function getAllproducts()
             showProducts(data.productList);     
         }).fail(function(data)
         {
-          $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+          if(data.responseJSON.message)
+            $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
 
         })
 }
 
-function showCostumers(costumers)
+function endMantainance(x)
 {
-    allCostumers = [];
-    allCostumers = allCostumers.concat(costumers);
-    let toInsert = '';
-    let image = '../images/user.jpeg';
-    for(let x in costumers)
-    {
-      if(costumers[x].email != 'defaultUser@nolonolo.com')
-      {
+  let id = requests[x]._id;
+  console.log(id);
+  console.log(requests[x].reserve);
+  let start = requests[x].reserve.start;
+  let end = requests[x].reserve.end;
+  let product = requests[x].reserve.product;
+  let email = requests[x].reserve.usermail;
 
-        toInsert += `<div class="card" style="width: 18rem;">
-        <img src="../images/${image}" class="card-img-top" alt="Product image">
-        <div class="card-body">
-        <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
-        <p class="card-text">Email: ${costumers[x].email}</p>
-        <p class="card-text">Phone: ${costumers[x].phone}</p>
-        <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>
-        <p class="card-text">Fidelity point: ${costumers[x].fidelityPoints}</p>
-        <p class="card-text">Amount paid: ${costumers[x].amountPaid}</p>
-        <div class="input-group mb-3">
-        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-        <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
-        <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
-        <li><a class="dropdown-item" href="#" onclick="showDeleteCostumer(${x}, allCostumers)">Delete user</a></li>
-        </ul>
-        </div>
-        </div>
-        </div>`
-      }
-      }
-      $('#title').html("");
-    $('#content').html(toInsert);
-}
-
-function getAllcostumers()
-{
-  $('#reservations').html('');
-    $.get({
-        type: 'GET',
-          url: 'http://localhost:8001/api/user/',
-        }, function(data){
-            showCostumers(data.users);     
-        }).fail(function(err)
-        {
-            alert('error');
-        })
+  const obj =`{
+    "message": "End of mantainance",
+    "email": "${email}",
+    "product": "${product}"
+  }`;
+  console.log(obj);
+  console.log(product);
+  $.post({
+    type: 'DELETE',
+    url: `http://localhost:8001/api/pending/${id}?start=${start}&end=${end}`,
+    contentType: 'application/json; charset=utf-8',
+    dataType: 'json',
+    data: obj
+  }, function(data){
+    $('#content').html(`<h3>${data.message}</h3>`);
+    location.reload();
+  }).fail(function(data){
+    $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+})
+    //   $.post({
+    //     type: 'DELETE',
+    //     url: `http://localhost:8001/api/rental/${product}/mantainance`,
+    //     contentType: 'application/json; charset=utf-8',
+    //     dataType: 'json',
+    //     data: obj
+    //   }, function(data){
+    //     $('#content').html(`<h3>${data.message}</h3>`);
+    //     location.reload();
+    //   }).fail(function(data){
+    //     $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+    // })
 }
 
 function denyPendingRequest(x)
@@ -249,10 +301,10 @@ function denyPendingRequest(x)
           dataType: 'json',
           data: obj
         }, function(data){
-          $('#content').html(data.message);
+          $('#content').html(`<h3>${data.message}</h3>`);
           location.reload();
         }).fail(function(data){
-          $('#content').html(data.message);   
+          $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
       })
 }
   
@@ -322,14 +374,14 @@ function confirmPendingRequest(x)
         dataType: 'json',
         data: obj2
       }, function(data){
-        $('#content').html(data.message);   
+        $('#content').html(`<h3>${data.message}</h3>`);   
         location.reload();
       }).fail(function(data){
-        $('#content').html(data.message);   
+        $('#content').html(`<h3>${data.responseJSON.message}</h3>`);   
     })
     
   }).fail(function(data){
-    $('#content').html(data.message);   
+    $('#content').html(`<h3>${data.responseJSON.message}</h3>`);   
 })
 }
 
@@ -343,21 +395,38 @@ function showPendingRequests(data)
   {
     let start = new Date(requests[x].reserve.start);
     let end = new Date(requests[x].reserve.end)
-    toInsert += `
-    <div class="card" id="card-${x}">
-    <h5 class="card-header">${x}</h5>
-    <div class="card-body">
-    <h5 class="card-title">Product: ${requests[x].reserve.product}</h5>
-    <p class="card-text">User: ${requests[x].reserve.usermail}</p>
-    <p class="card-text">From: ${start.toDateString()} </p>
+    if(requests[x].reserve.usermail === 'defaultUser@nolonolo.com')
+    {
+      toInsert += `
+      <div class="card" id="card-${x}">
+      <h5 class="card-header"><b>MANTAINANCE</b></h5>
+      <div class="card-body">
+      <h5 class="card-title">Product ${requests[x].reserve.product}</h5>
+      <p class="card-text">Set to mantainance</p>
+      <p class="card-text">From: ${start.toDateString()} </p>
+    <p class="card-text">TO: ${end.toDateString()} </p>
+    <p class="card-text">From employee: ${requests[x].reserve.employee} </p>
+    <a href="#" class="btn btn-primary" onclick="endMantainance(${x})">End mantainance</a>
+    </div>
+    </div> 
+    `
+    }else{
+
+      toInsert += `
+      <div class="card" id="card-${x}">
+      <h5 class="card-header">${x} ${(requests[x].reserve.modify === 1) ? '<h4><b>MANTAINANCE</b>' : '' }</h5>
+      <div class="card-body">
+      <h5 class="card-title">Product: ${requests[x].reserve.product}</h5>
+      <p class="card-text">User: ${requests[x].reserve.usermail}</p>
+      <p class="card-text">From: ${start.toDateString()} </p>
     <p class="card-text">TO: ${end.toDateString()} </p>
     <p class="card-text">Price: ${requests[x].reserve.expense} </p>
     <a href="#" class="btn btn-primary" onclick="confirmPendingRequest(${x})">Accept</a>
     <a href="#" class="btn btn-danger" onclick="showDenyPendingRequest(${x})">Deny</a>
     </div>
-    </div>
-    
+    </div> 
     `
+  }
   }
   $('#spinner').html('');
   $('#title').append('<h2>Pending requests</h2>')
@@ -387,43 +456,4 @@ function getPendingRequests()
         $('#content').html("Please refresh the page");
     })
 }
-
-
-function confirmEndOfRental(x)
-{
-  let employee = sessionStorage.getItem('email');
-  let product = activeRes[x].product;
-  let user = activeRes[x].usermail;
-  let start = activeRes[x].start;
-  let end = activeRes[x].end;
-  let expense = activeRes[x].expense;
-  let points = $('#points').val();
-  if(points)
-  { 
-     let obj = `{
-      "user": "${user}", 
-      "expense": "${expense}",
-      "product": "${product}",
-      "employee": "${employee}",
-      "start": "${start}",
-      "end": "${end}"
-    }`;
-    console.log(obj);
-    $.post({
-      type: 'POST',
-        url: 'http://localhost:8001/api/employee/confirmEndOfRental',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        data: obj
-      }, function(){
-          $('#content').html("Successful operation");
-          location.reload();
-      }).fail(function(){
-          $('#content').html("Error, maybe the element doesn't exists");
-      })
-    }else
-      $('#pointsError').html("You must insert points to add");
-}
-
-
 

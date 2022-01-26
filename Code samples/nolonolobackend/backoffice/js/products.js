@@ -40,9 +40,7 @@ function changeProductPattern() {
         $('#descr').show();
         break;
       }
-    }
-
-
+}
     /** Refresh page */
 function reset()
 {
@@ -55,10 +53,10 @@ function sendRent()
 {
   let employee = sessionStorage.getItem('email');
  let email = $('#email').val();
- let start = $('#start').val();
+ let start = new Date($('#start').val());
  console.log(start);
- let end = $('#end').val();
- if(email == '' || !(start)  || !(end))
+ let end = new Date($('#end').val());
+ if(email == '' || start === ''  || end === '' || start.getTime() > end.getTime() )
  {
     $('#rentErr').html("Please check everything it's okay");
 
@@ -80,17 +78,26 @@ function sendRent()
       data: obj
     }, function()
     {
-      $('#content').html("Succesful operation");
+      $('#content').html("<h3>Succesful operation</h3>");
       reset();
     }).fail(function(data)
     {
-      $('#content').html(data.responseJSON.message);
+      if(data)
+      {
+        console.log(data.responseJSON.message);
+        $('#content').html(`<h3>${data.responseJSON.message}</h3`);
+      }
+      else
+        $('#content').html("<h3Something went wrong</h3>");
+
     })
   }
 }
 
 function showAddRent(x, products)
 {
+  console.log(products);
+  console.log(x);
     allProducts = allProducts.concat(products);
     prodName = products[x].name;
     toInsert = `
@@ -106,7 +113,9 @@ function showAddRent(x, products)
   <input type="date" id="end" name="end">
     </div>
     <span id="rentErr"></span>
-    <button class="btn btn-outline-primary " type="button" onclick="sendRent()">Rent</button>
+    <button class="btn btn-primary " type="button" onclick="sendRent()">Rent</button>
+    <button class="btn btn-warning " type="button" onclick="reset()">Back</button>
+
     `
     $('#title').html("");
     $('#content').html(toInsert);
@@ -134,9 +143,9 @@ function sendProduct(event)
               dataType: 'json',
               data: obj
             }, function(data){
-                $('#content').html(data.message);
+                $('#content').html(`<h3>${data.message}</h3>`);
             }).fail(function(data){
-                $('#content').html(data.message);
+                $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
 
             })
     }
@@ -200,9 +209,9 @@ function sendChange(event)
     dataType: 'json',
     data: obj
   }, function(data){
-    $('#content').html(data.message);
+    $('#content').html(`<h3>${data.message}</h3>`);
   }).fail(function(data){
-    $('#content').html(data.message);
+    $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
   })
 }else
 {
@@ -264,7 +273,7 @@ function sendDelete()
       url: `http://localhost:8001/api/products/${toDelete}`,
     }, function(data){
       console.log(data);
-      $('#content').html(data.message);
+      $('#content').html(`<h3>${data.message}</h3>`);
       location.reload();
     }).fail(function(data){
       console.log(data);
@@ -277,7 +286,8 @@ function sendDelete()
 /** Chiediamo al server tutti i prodotti e li mettiamo in un select per il dipendente così può cancellarli */
 function showDeleteProduct(x, products)
 {
-    
+  console.log(products);
+  console.log(x)   
      let toInsert = `
      <input class="form-control" type="text" id="product" value="${products[x].name}" aria-label="readonly input example" readonly>
       `
@@ -290,50 +300,77 @@ function showDeleteProduct(x, products)
 
 function sendMaintenance()
 {
-  let name = $('#name').val();
-  let start = $('#start').val();
-  let end = $('#end').val();
-  if(start != '' && end != '')
+  let employee = sessionStorage.getItem('email');
+  let product = $('#name').val();
+  let start = new Date($('#start').val());
+  let end = new Date($('#end').val());
+  if((start != '' && end != '') && (start.getTime() <= end.getTime()))
   {
 
     const obj =`{
-      "name": "${name}",
+      "employee": "${employee}",
       "start": "${start}",
       "end": "${end}"
     }`;
-    
+  
     $.post({
       type: 'POST',
-      url: 'http://localhost:8001/api/employee/maintenance',
+      url: `http://localhost:8001/api/rental/${product}/mantainance`,
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       data: obj
     }, function(data){
-      if(data.message)
-      $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>${data.message}</div>`);
-      else if(data.list)
-      {
-        let toInsert = '';
-        for(let x in data.list)
+
+      $('#content').html(`<h3>${data.message}</h3>`);
+     
+        for(let x in data.reservations)
         {
-          toInsert += `<p><b>Reservation ${x}</b></p>
-          <p>From: ${data.list[x].start} </p>
-          <p>To: ${data.list[x].end}</p>
-          `
+          if(data.reservations[x].usermail != 'defaultUser@nolonolo.com')
+          {
+            console.log(data.reservations[x])
+                  // le cancello tutte tanto sono già come pending requests
+                  // poi deve fare in modo che anche la maintenance sia cancellabile quindi 
+                  // la aggiungo come pending request
+                  let product = data.reservations[x].product;
+                let obj = `{
+                  "user": "${data.reservations[x].usermail}", 
+                  "employee": "${data.reservations[x].employee}",
+                  "start": "${data.reservations[x].start}",
+                  "end": "${data.reservations[x].end}"
+                }`;
+                console.log(obj);
+            
+                $.ajax({
+                  method: "DELETE",
+                  url:`http://localhost:8001/api/rental/${product}`,
+                  contentType: 'application/json',
+                  dataType: 'json',
+                  data: obj
+                }).done(function(){
+                   location.reload();
+                }).fail(function(data){
+                  if(data)
+                  {     
+                      $('#content').html(`<h3>Something went wrong</h3>`);
+                      // $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+                    }else
+                    {
+                      $('#content').html(`<h3>Something went wrong</h3>`);
+                      
+                    }
+                  })
+            
+          }
         }
-        $('#content').html(`<div style='background-color:lightgreen; text-align:center;color:black;'>${toInsert}</div>`);
-        
-      }
-      
-    }).fail(function(data){
-      $('#content').html("Error occurred ,try again later");
+        }).fail(function(data){
+      $('#content').html(`<h3>${data.message}</h3>`);
     })
   }else
   {
     $('#maintErr').html('Please insert start and end correctly');
   }
   
-  }
+}
   /** Show the mainenance html form */
   function showMaintenance(x , products)
 {

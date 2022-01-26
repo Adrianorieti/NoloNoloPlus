@@ -41,6 +41,10 @@ module.exports = {
             console.log("finalPrice", finalPrice);
             let period = endDate.getTime() - startDate.getTime();
              period = period / (1000 * 3600 * 24);
+             if(period === 0)
+             {
+                 period =1;
+             }
             //così mi prende  anche il giorno finale altrimenti non me lo prende
              period += 1;
             finalPrice = dailyPrice * period;
@@ -86,7 +90,7 @@ module.exports = {
             }
             if (totalDiscount < 0)
                 totalDiscount = 0; // cioè non abbiamo fatto nessuno sconto bensì una maggiorazione
-                finalPrice = parseInt(finalPrice.toFixed(2));
+            finalPrice = Math.trunc(finalPrice);
            console.log("fine compute price", finalPrice);
             return (finalPrice);
         }

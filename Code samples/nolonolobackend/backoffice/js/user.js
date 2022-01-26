@@ -1,4 +1,6 @@
 let email ;
+let allCostumers = [];
+let oldCostumers = [];
 
 function reset()
 {
@@ -48,7 +50,6 @@ function changePattern() {
       }
 }
 
-
 /** Send changed user info */
 function sendInfo()
 {
@@ -94,6 +95,8 @@ function sendInfo()
 /** Shows the html and css elements to change the user info */
 function changeUserInfo(x, event, costumers)
 {
+  $('#title').html("");
+
   costumersArray = [];
   costumersArray.concat(costumers);
   event.preventDefault();
@@ -137,7 +140,6 @@ $( "#changeInfo" ).change(function() {
     });
 }
 
-
 /** Send comunication to user's area comunication */
 function sendComunication()
 {
@@ -163,6 +165,8 @@ function sendComunication()
 /** Show comunication field for insertion */
 function showAddComunication(x, allCostumers)
 {
+  $('#title').html("");
+
   let toInsert = `
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
@@ -197,6 +201,8 @@ function deleteUser(x, allCostumers)
 
 function showDeleteCostumer(x, allCostumers)
 {
+  $('#title').html("");
+
   let toInsert = `
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
@@ -209,4 +215,125 @@ function showDeleteCostumer(x, allCostumers)
 </div>
   `
   $('#content').html(toInsert);
+}
+
+function renderFilteredCostumers(filtered)
+{
+  console.log("DENTRO RENDER FILTERED")
+  let toInsert = ``;
+  console.log(allCostumers);
+  allCostumers = [];
+  allCostumers = allCostumers.concat(filtered);
+
+  for(let x in filtered)
+  {
+    image = filtered[x].image;
+    toInsert += `<div class="card" style="width: 18rem;">
+    <img src="../../images/users/${image}" class="card-img-top" alt="Product image">
+    <div class="card-body">
+    <h5 class="card-title">${filtered[x].name} ${filtered[x].surname} </h5>
+    <p class="card-text">Email: ${filtered[x].email}</p>
+    <p class="card-text">Phone: ${filtered[x].phone}</p>
+    <p class="card-text">Payment method: ${filtered[x].paymentMethod}</p>
+    <p class="card-text">Fidelity point: ${filtered[x].fidelityPoints}</p>
+    <p class="card-text">Amount paid: ${filtered[x].amountPaid}</p>
+    <div class="input-group mb-3">
+    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+    <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
+    <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
+    <li><a class="dropdown-item" href="#" onclick="showDeleteCostumer(${x}, allCostumers)">Delete user</a></li>
+    </ul>
+    </div>
+    </div>
+    </div>`
+  }
+  $('#content').html('');
+  $('#content').html(toInsert);
+}
+
+function setUsersSearchBar()
+{
+    const searchBar = document.getElementById('searchBar');
+    searchBar.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+    allCostumers = [];
+    allCostumers = allCostumers.concat(oldCostumers);
+    let filtered = [];
+    for(let x in allCostumers)
+    {
+        if(allCostumers[x].name.toLowerCase().includes(searchString) )
+            {
+                filtered.push(allCostumers[x]);
+            }  
+    }
+   renderFilteredCostumers(filtered);
+  })
+}
+
+function showCostumers(costumers)
+{
+    allCostumers = [];
+    allCostumers = allCostumers.concat(costumers);
+    oldCostumers = oldCostumers.concat(allCostumers);
+    let toInsert = '';
+    for(let x in costumers)
+    {
+      let image = costumers[x].image;
+      if(costumers[x].email != 'defaultUser@nolonolo.com')
+      {
+
+        toInsert += `<div class="card" style="width: 18rem;">
+        <img src="../../images/users/${image}" class="card-img-top" alt="Product image">
+        <div class="card-body">
+        <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
+        <p class="card-text">Email: ${costumers[x].email}</p>
+        <p class="card-text">Phone: ${costumers[x].phone}</p>
+        <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>
+        <p class="card-text">Fidelity point: ${costumers[x].fidelityPoints}</p>
+        <p class="card-text">Amount paid: ${costumers[x].amountPaid}</p>
+        <div class="input-group mb-3">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+        <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" onclick="changeUserInfo(${x}, event, allCostumers)">Change user info</a></li>
+        <li><a class="dropdown-item" href="#" onclick="showAddComunication(${x}, allCostumers)">Add communication</a></li>
+        <li><a class="dropdown-item" href="#" onclick="showDeleteCostumer(${x}, allCostumers)">Delete user</a></li>
+        </ul>
+        </div>
+        </div>
+        </div>`
+      }
+    }
+      $('#title').html("");
+
+      let searchBar = `
+      <div>
+      <div id="searchWrapper">
+                <input
+                    type="text"
+                    name="searchBar"
+                    id="searchBar"
+                    placeholder="search for name or price"
+                />
+            </div>
+  </div>
+      `
+      $('#title').html(searchBar);
+    $('#content').html(toInsert);
+    setUsersSearchBar();
+
+}
+
+function getAllcostumers()
+{
+  $('#reservations').html('');
+    $.get({
+        type: 'GET',
+          url: 'http://localhost:8001/api/user/',
+        }, function(data){
+            showCostumers(data.users);     
+        }).fail(function(err)
+        {
+            alert('error');
+        })
 }

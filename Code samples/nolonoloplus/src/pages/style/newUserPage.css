@@ -58,7 +58,7 @@ input[type="file"] {
 }
 
 #newValue::after{
-    content: '<i class="fa fa-eye" aria-hidden="true"></i>';
+    content: '<i className="fa fa-eye" aria-hidden="true"></i>';
 }
 
 .rounded-image{
