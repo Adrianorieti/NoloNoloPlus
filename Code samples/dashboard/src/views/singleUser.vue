@@ -1,7 +1,12 @@
 <template>
   <div>
     <div>
-      <HorizontalCard :title="userEmail" :text="text" :key="key" />
+      <HorizontalCard
+        :title="userEmail"
+        :text="text"
+        :imageSrc="'http://localhost:8001/images/users/' + this.user.image"
+        :key="key"
+      />
     </div>
     <div class="chart-wrapper">
       <chart :type="'pie'" :id="'pieChart'" :chartdata="pieData" :key="key" />
@@ -46,7 +51,7 @@ export default {
     chart,
     HorizontalCard,
   },
-  mounted() {
+  created() {
     this.getSingleUser();
   },
   methods: {
@@ -146,7 +151,9 @@ export default {
       let labels = [];
       let chartData = [];
       let colors = [];
+      this.user.pastReservations.reverse();
       for (let res of this.user.pastReservations) {
+        console.log(res);
         let end = new Date(res.end);
         labels.push(
           end.getDate() + "-" + (end.getMonth() + 1) + "-" + end.getFullYear()

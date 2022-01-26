@@ -38,8 +38,9 @@ export default function Register({ stateToParent }) {
             case 'repeatPassword':
                 setrepeatPassword(event.target.value);
                 break;
-            case 'repeatpassError':
+            default:
                 setrepeatpassError(event.target.value);
+                break;
         }
     };
 
@@ -50,7 +51,7 @@ export default function Register({ stateToParent }) {
         const buff = Buffer.from(password, 'utf-8');
         const encodedpass = buff.toString('base64');
 
-        if (repeatPassword != password) {
+        if (repeatPassword !== password) {
             setrepeatpassError(" Passwords don't matches");
         }
         else {

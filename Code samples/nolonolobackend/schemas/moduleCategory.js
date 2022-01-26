@@ -24,6 +24,7 @@ const CategorySchema = new Schema({
         type: String,
         required: true
     }
+
 })
 
 const category = mongoose.model('category', CategorySchema); // crei uno user e sarà in questa collezione, questo sarà il modello e quello sarà lo schema

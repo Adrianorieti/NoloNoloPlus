@@ -87,7 +87,7 @@ router.post('/:email', async (req, res) => {
                 phone: req.body.phone,
                 email: email,
                 password: hash,
-                image: "/images/user/default",
+                image: "default.jpeg",
                 paymentMethod: req.body.paymentMethod,
                 role: 'customer',
                 fidelityPoints: 5,
@@ -107,7 +107,6 @@ router.post('/:email', async (req, res) => {
 });
 
 router.patch('/:email', upload.single('img'), async (req, res) => {
-    console.log("siamo qui");
     let email = req.params.email;
     let newData = {};
     if (!req.file) {
@@ -121,7 +120,7 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
             changeEmail.emailCascadeChange(newData.email, email);
         }
     } else {
-        newData.image = path.join('/images/users', req.file.filename)
+        newData.image = req.file.filename;
     }
     user.findOneAndUpdate(
         { email: email },

@@ -4,8 +4,7 @@ import './style/newUserPage.css';
 import Spinner from '../components/Spinner'
 import Reservations from "../components/Reservations";
 
-export default function newUserPage() {
-
+export default function newUserPage({ nameToParent }) {
     const history = useHistory();
     const [user, setUser] = useState('');
     const [communications, setCommunications] = useState('');
@@ -15,6 +14,7 @@ export default function newUserPage() {
     const [image, setImage] = useState('');
     const [isPaymentMethod, setIsPaymentMethod] = useState(false);
     const [valToChange, setValToChange] = useState('name');
+    const [wait, setWait] = useState(0);
 
     useEffect(() => {
 
@@ -40,15 +40,16 @@ export default function newUserPage() {
             };
             fetch(`http://localhost:8001/api/user/${email}`, options)
                 .then(response => {
-                    if (response.status == 200) {
+                    if (response.status === 200) {
                         return response.json();
                     }
                 }).then((data) => {
                     console.log(data);
                     setUser(data.user);
+                    setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
-                    document.getElementById('toFocus').scrollIntoView({behavior: "smooth"})
+                    document.getElementById('toFocus').scrollIntoView({ behavior: "smooth" })
 
                     setImage("default.jpeg");
                 })
@@ -58,8 +59,16 @@ export default function newUserPage() {
         getEmail();
     }, [])
 
+    useEffect(() => {
+        if (wait !== 0) {
+            //not at the beginning
+            setIsPaymentMethod(false);
+            changeForm();
+        }
+    }, [wait])
+
     function clearCommunications() {
-        let newArray = new Array();
+        let newArray = [];
         const body = `{
             "communications": "${newArray}"
         }`;
@@ -79,59 +88,65 @@ export default function newUserPage() {
 
     function handleImageUpload() {
         let photo = document.getElementById("file-upload").files[0];
-        let formData = new FormData();
-        formData.append("img", photo);
-        let picName;
-        console.log(user.email)
-        for (var x of formData.entries()) {
-            picName = x[1].name;
+        if (photo != null) {
+            let formData = new FormData();
+            formData.append("img", photo);
+            let picName;
+            console.log(user.email)
+            for (var x of formData.entries()) {
+                picName = x[1].name;
+            }
+
+            fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    console.log(data);
+                    console.log(picName);
+
+                    setImage(`${picName}`);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
         }
-
-        fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                console.log(data);
-                console.log(picName);
-
-                setImage(`${picName}`);
-            })
-            .catch(err => {
-                console.log(err);
-            })
     }
 
     function changeForm() {
-        let field = document.getElementById('changeInfo').value;
-        setValToChange(field);
-        let newValue = document.getElementById('newValue');
-        switch (field) {
-            case 'phone':
-                newValue.type = 'tel';
-                newValue.pattern = "[0-9]{10}";
-                newValue.title = "not valid phone number";
-                break;
-            case 'email':
-                newValue.type = 'email';
-                newValue.pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
-                newValue.title = "not valid email format";
-                break;
-            case 'paymentMethod':
-                setValToChange('payment method');
-                setIsPaymentMethod(true);
-                break;
-            case 'password':
-                newValue.type = 'password';
-                newValue.pattern = "(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
-                newValue.title = "Password must contain a number, a capital letter and a length of at least 8 characters";
-                break;
-            default:
-                newValue.type = 'text';
-                newValue.pattern = '';
-                newValue.title = 'empty input not valid'
-                break;
+        if (!isPaymentMethod) {
+            let field = document.getElementById('changeInfo').value;
+            setValToChange(field);
+            let newValue = document.getElementById('newValue');
+            switch (field) {
+                case 'phone':
+                    newValue.type = 'tel';
+                    newValue.pattern = "[0-9]{10}";
+                    newValue.title = "not valid phone number";
+                    break;
+                case 'email':
+                    newValue.type = 'email';
+                    newValue.pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$";
+                    newValue.title = "not valid email format";
+                    break;
+                case 'paymentMethod':
+                    setValToChange('payment method');
+                    setIsPaymentMethod(true);
+                    break;
+                case 'password':
+                    newValue.type = 'password';
+                    newValue.pattern = "(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
+                    newValue.title = "Password must contain a number, a capital letter and a length of at least 8 characters";
+                    break;
+                default:
+                    newValue.type = 'text';
+                    newValue.pattern = "[a-zA-Z]";
+                    newValue.title = 'empty input not valid'
+                    break;
 
+            }
+        } else {
+            setWait(wait + 1);
         }
     }
 
@@ -167,6 +182,10 @@ export default function newUserPage() {
                     sessionStorage.clear();
                     history.push('/login');
                 }
+                else if (field === 'name') {
+                    sessionStorage.setItem('username', JSON.stringify(newValue));
+                    history.go(0);
+                }
                 else {
                     history.go(0);
                 }
@@ -192,7 +211,7 @@ export default function newUserPage() {
                         <div className="row" id="toFocus">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img className="rounded-image" alt="profile image" src={image ? `http://localhost:8001/images/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
+                                    <img className="rounded-image" alt="profile pic" src={image ? `http://localhost:8001/images/users/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
                                     <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
                                         <label htmlFor="file-upload" class="custom-file-upload">

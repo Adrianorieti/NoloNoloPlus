@@ -88,7 +88,12 @@ app.get('/products', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.get('/images/:name', (req, res) => {
+app.get('/images/categories/:type', (req, res) => {
+    const type = req.params.type;
+    res.sendFile(path.join(__dirname, 'images', 'categories', type));
+});
+
+app.get('/images/users/:name', (req, res) => {
     const name = req.params.name;
     res.sendFile(path.join(__dirname, 'images', 'users', name));
 });

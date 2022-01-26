@@ -1,5 +1,5 @@
 import React from 'react';
-import { 
+import {
   useState, useRef, useEffect
 } from 'react';
 import './App.css';
@@ -48,14 +48,13 @@ function App() {
   const aboutToParent = (abt) => {
     setAbout(abt);
   }
- 
+
   useEffect(() => {
-    if(focus)
-    {
+    if (focus) {
       mainRef.current.focus();
     }
 
-    
+
   }, [focus]);
 
 
@@ -87,10 +86,10 @@ function App() {
           <section className="App-content bg-image container-properties" id="rentForm">
             <div className="row">
               <div className="col-md-6 rentform" ref={mainRef} tabIndex='-1'>
-       
+
                 <RentForm focusToParent={focusToParent} location={location} />
               </div>
-           
+
               <div className="col-md-6 banner">
                 <h4>We provide the mean you choose the place</h4>
               </div>
@@ -129,14 +128,14 @@ function App() {
               </div>
             </div>
           </section>
-          <NewUserPage />
+          <NewUserPage nameToParent={nameToParent} />
         </Route>
 
         <Route path="/hypothesis" exact >
-          <Hypothesis aboutToParent={aboutToParent}/>
+          <Hypothesis aboutToParent={aboutToParent} />
         </Route>
         <Route path="/rental" exact >
-          <Rental aboutToParent={aboutToParent}/>
+          <Rental aboutToParent={aboutToParent} />
         </Route>
 
         <Route path="/test" exact >
@@ -156,7 +155,7 @@ function App() {
               </div>
             </div>
           </section>
-          <Products focusToParent={focusToParent} aboutToParent={aboutToParent}/>
+          <Products focusToParent={focusToParent} aboutToParent={aboutToParent} />
           {/* <Products /> */}
         </Route>
 
@@ -186,7 +185,7 @@ function App() {
                 </ul>
               </div>
             </div>
-            <About aboutFocus={about}/>
+            <About aboutFocus={about} />
           </section>
 
         </Route>

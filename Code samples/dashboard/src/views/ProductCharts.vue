@@ -1,9 +1,5 @@
 <template>
   <div>
-    <div class="button-wrapper">
-      <button @click="changeType('bar')">bar</button>
-      <button @click="changeType('line')">line</button>
-    </div>
     <div class="chart-wrapper">
       <chart :type="type" :chartdata="data" :id="'ProductsCharts'" :key="key" />
     </div>
