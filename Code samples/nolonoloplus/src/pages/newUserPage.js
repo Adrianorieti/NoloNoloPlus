@@ -292,8 +292,12 @@ export default function newUserPage({ nameToParent }) {
                                         (() => {
                                             let commDivs = []
                                             for (let x = communications.length; x >= 0; x--) {
-                                                console.log(communications[x])
-                                                if (communications[x] != '') {
+                                                console.log("comm",communications[x])
+                                                if (communications[x] != null) {
+                                                    console.log(communications.length)
+                                                    console.log(x);
+                                                    if(x === communications.length -1)
+                                                        commDivs.push(<p><b>New</b></p>)
                                                     commDivs.push(<div>{communications[x]}</div>)
                                                     commDivs.push(<div><hr /></div>)
 
