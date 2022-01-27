@@ -46,12 +46,12 @@ function About() {
                         <p>But that's not all. If your booking includes days that we have selected as <b> 'cold periods' </b>,
                             the points you will receive per rental day will be <b> doubled </b>. </p>
 
-                        <p>The 'cold periods' are such as High Stagion and so on. Periods could change or even been added during the year but we will 
+                        <p>The 'cold periods' are such as High Stagion and so on. Periods could change or even been added during the year but we will
                             notify you in the home page any changes or additions; and 'cold periods' which are part of a
                             reservation already made will never be modified. </p>
 
                         <br /><hr />
-                        <h1 id="tabellaPunti">Advantages table</h1>
+                        <h1 id="tabellaPunti">Fidelity points rewards</h1>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -64,24 +64,24 @@ function About() {
                             <tbody>
                                 <tr>
                                     <th scope="row">1</th>
-                                    <td>FIRST BAND</td>
+                                    <td>FIRST</td>
                                     <td>{'>'} 50</td>
                                     <td>2%</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">2</th>
-                                    <td>SECOND BAND</td>
+                                    <td>SECOND</td>
                                     <td>{'>'} 90</td>
                                     <td>4%</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">3</th>
-                                    <td>THIRD BAND</td>
+                                    <td>THIRD</td>
                                     <td>{'>'} 200</td>
                                     <td>5%</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">3</th>
+                                    <th scope="row">4</th>
                                     <td>DELUX</td>
                                     <td>{'>'} 300</td>
                                     <td>10%</td>
@@ -90,7 +90,59 @@ function About() {
                         </table>
 
                         <br /><hr />
-                        <h1 id="sconti">Additional discounts settings</h1>
+                        <h1 id="sconti">How to gain your fidelity points</h1>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">BY RENTAL</th>
+                                    <th scope="col">BY BILL</th>
+                                    <th scope="col">POINTS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td> - </td>
+                                    <td>{'>'} or equal to 150 €</td>
+                                    <td>30PT</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>{'>'} 10 days</td>
+                                    <td> - </td>
+                                    <td>25PT</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>{'>'} 7 days</td>
+                                    <td>{'>'} or equal to 100 €</td>
+                                    <td>15PT</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">4</th>
+                                    <td>{'>'} 3 days</td>
+                                    <td>{'>'} or equal to 70 €</td>
+                                    <td>10PT</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">5</th>
+                                    <td> - </td>
+                                    <td>{'>'} or equal to 40 €</td>
+                                    <td>8PT</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">6</th>
+                                    <td>Any case</td>
+                                    <td> - </td>
+                                    <td>5PT</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+
+                        <br /><hr />
+                        <h1 id="sconti">How to enhance your rewards</h1>
                         <table class="table">
                             <tbody>
                                 <tr>
