@@ -183,7 +183,8 @@ router.post('/:product/mantainance', async (req, res) => {
     const emp = await employee.findOne({email: employeeMail});
     const usr = await user.findOne({email: userMail});
     const prod = await product.findOne({name: productName});
-    
+    console.log("sono qui");
+    console.log(usr)
    
     if(usr && emp && prod)
     {
