@@ -35,8 +35,9 @@ function Footer(props) {
                 <div className="col-md-4">
                     <h6>{props.companyName}</h6>
                     <p>
-                        This year, join a multicolor family !
-                        </p>
+                    We are a rental agency specialized in green movement. 
+                    Our history begin in the far 1990 in this amazing territory.
+                    </p>
                 </div>
                 <div className="col-md-4">
                     <h6>

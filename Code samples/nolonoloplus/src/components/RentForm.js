@@ -116,12 +116,12 @@ function RentForm( props ) {
                 </section>
               </fieldset> */}
               <div id="formTitle">
-              <h3>Start a rental</h3>
+              <h1>Start renting</h1>
               <p className="step">Step 1</p>
               </div>
               
                 <div id="selectProduct">
-                  <p><b>Choose a product</b></p>
+                  <p><h5>Pick the Best Bike for You...</h5></p>
               <select id="form-sel" className="form-select" aria-label="Default select example">
               <option  id="City-Bike" name="products" className="form-select" type="radio" value="City Bike">City Bike</option>
               <option id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" >Mountain Bike</option>
@@ -133,7 +133,7 @@ function RentForm( props ) {
             <div className="step">Step 2</div>
               <fieldset aria-required="true">
               <div>
-                <legend>Select a date</legend>
+                <legend><h5>Choose a date</h5></legend>
                 </div>
                 <hr></hr>
                 <section className="mb-3">

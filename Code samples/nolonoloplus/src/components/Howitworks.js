@@ -28,7 +28,7 @@ function Howitworks() {
                                         <span className="stepnumber">1</span>
                                         <img src={img1} />
                                     </div>
-                                    <span className="steptitle">Find the bike</span>
+                                    <span className="steptitle">Find the bike the best for you</span>
                                     <span className="stepdesc">Compare price and types of bikes, all in a few clicks with NoloNolo!</span>
                                 </div>
                             </div>

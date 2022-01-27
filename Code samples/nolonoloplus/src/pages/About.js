@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-// import './style/About.css';
+import './style/About.css';
 
 function About() {
 
@@ -14,7 +14,7 @@ function About() {
                 <div className="row text-center justify-content-center">
                     <div class="col-xl-10 App-about" id="about">
                         <h1>Welcome</h1><br />
-                        <p>Welcome to <b>Nolo Nolo plus</b>big family, the site that allows you to comfortably rent the most suitable bicycle for your
+                        <p>Welcome to <b>Nolo Nolo plus</b> big family, the site that allows you to comfortably rent the most suitable bicycle for your
                             <b>green travels</b>. Our team is here to meet all your needs before, during and after the rental by offering you support,
                             assistance and also a wonderful points collection system that will allow you to take advantage of interesting offers.</p>
 
@@ -25,7 +25,7 @@ function About() {
                             yours <b>green holidays</b>.</p>
 
                         <p> Freely browse the site to have an idea of the services we are offering to you but remember: to use our services you have
-                            to be registered accepting our <a href=""> terms of use </a> which are always available in this page.  </p>
+                            to be registered accepting this terms of use which are always available here.  </p>
 
                         <br /><hr />
                         <h1 id="puntiFedelta">Points collection system</h1><br />
@@ -46,10 +46,8 @@ function About() {
                         <p>But that's not all. If your booking includes days that we have selected as <b> 'cold periods' </b>,
                             the points you will receive per rental day will be <b> doubled </b>. </p>
 
-                        <p>The 'cold periods' can be consulted in your user home. If you are interested in taking advantage of doubling points, we encourage you
-                            in consulting first the table as these periods could change or even been added during the year. </p>
-
-                        <p>In any case, don't worry. We will notifying you in the home page any changes or additions and 'cold periods' which are part of a
+                        <p>The 'cold periods' are such as High Stagion and so on. Periods could change or even been added during the year but we will 
+                            notify you in the home page any changes or additions; and 'cold periods' which are part of a
                             reservation already made will never be modified. </p>
 
                         <br /><hr />
@@ -58,29 +56,50 @@ function About() {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Points</th>
-                                    <th scope="col">Advantage</th>
-                                    <th scope="col">NOTE</th>
+                                    <th scope="col">BAND</th>
+                                    <th scope="col">POINTS</th>
+                                    <th scope="col">DISCOUNT</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <th scope="row">1</th>
-                                    <td>3</td>
-                                    <td>...</td>
-                                    <td>...</td>
+                                    <td>FIRST BAND</td>
+                                    <td>{'>'} 50</td>
+                                    <td>2%</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">2</th>
-                                    <td>3 - 20</td>
-                                    <td>...</td>
-                                    <td>...</td>
+                                    <td>SECOND BAND</td>
+                                    <td>{'>'} 90</td>
+                                    <td>4%</td>
                                 </tr>
                                 <tr>
                                     <th scope="row">3</th>
-                                    <td> {'>'} 20</td>
-                                    <td>...</td>
-                                    <td>...</td>
+                                    <td>THIRD BAND</td>
+                                    <td>{'>'} 200</td>
+                                    <td>5%</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>DELUX</td>
+                                    <td>{'>'} 300</td>
+                                    <td>10%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br /><hr />
+                        <h1 id="sconti">Additional discounts settings</h1>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>If the rental strats on Friday and it is during 3 or more days</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Rental longer than 12 days</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -103,10 +122,26 @@ function About() {
                         <p>Hoterwise, if stuffs are damaged or have to be sent for maintenance, because it will involve inconvenience for those who have
                             made a subsequent booking, the points will be deducted or even not assigned up to leading to a report on the user's site
                             as person unreliable.</p>
-</div>
-</div>
-</div>
-</div>)
+
+                        <p>This can affect the ability of further renting for the user.</p>
+
+                        <p>It will be always possible to have in your home a feedback about the status of the booking (successfully or with notes) and whether
+                            or not the loyalty points have been assigned. </p>
+
+                        <br /><hr />
+                        <p>If you share our way we see it, let's join this big family and discover all the services we can deliver for you.</p>
+
+                        <p> We are looking forward knowing you and being able to make your holiday the most comfortable and green as we can.</p>
+
+                        <h2>This year, join a multicolor family!</h2>
+                    </div>
+
+                    <div class="col-xl-2 score-image">
+
+                    </div>
+                </div>
+            </div>
+        </div>)
 }
 
 
