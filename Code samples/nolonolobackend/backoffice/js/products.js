@@ -101,21 +101,23 @@ function showAddRent(x, products)
     allProducts = allProducts.concat(products);
     prodName = products[x].name;
     toInsert = `
+    <div>
+    <h3>Bike for Rental:</h3>
     <input class="form-control" type="text" value="${prodName}" aria-label="readonly input example" readonly>
     <div class="mb-3">
-    <label for="email" class="form-label">User Email</label>
+    <label for="email" class="form-label">User for Rental - put his/her email as identifier:</label>
     <input type="email" class="form-control" id="email">
   </div>
   <div class="mb-3">
-  <label for="start">Start:</label>
+  <label for="start">Starting date:</label>
   <input type="date" id="start" name="start">
-  <label for="end">End:</label>
+  <label for="end">Ending date:</label>
   <input type="date" id="end" name="end">
     </div>
     <span id="rentErr"></span>
     <button class="btn btn-primary " type="button" onclick="sendRent()">Rent</button>
-    <button class="btn btn-warning " type="button" onclick="reset()">Back</button>
-
+    <button class="btn btn-warning " type="button" onclick="reset()"><i class="fa fa-backward">&nbsp; Back</i></button>
+</div>
     `
     $('#title').html("");
     $('#content').html(toInsert);
@@ -154,12 +156,13 @@ function sendProduct(event)
 function showAddProduct()
 {
   $('#reservations').html('');
-    let toInsert = `
+    let toInsert = `<div>
     <form onsubmit="sendProduct(event)" class="needs-validation">
     <div class="mb-3">
-    <label for="name" class="form-label">Name</label>
+    <label for="name" class="form-label">Bike</label>
     <input type="text" class="form-control" id="name" aria-describedby="nameHelp">
   </div>
+  <h3>Select the type:</h3>
   <div class="input-group mb-3">
   <label class="input-group-text" for="category">Category</label>
   <select class="form-select" id="category">
@@ -170,6 +173,7 @@ function showAddProduct()
     <option value="Electric S_300">Electric S_300</option>
   </select>
 </div>
+<h3>Put the price:</h3>
 <div class="input-group mb-3">
 <label class="input-group-text" for="price">Price</label>
   <span class="input-group-text">€</span>
@@ -177,10 +181,11 @@ function showAddProduct()
   <span class="input-group-text">.00</span>
 </div>
 <span id="error"></span> <br>
-<button type="submit" class="btn btn-lg btn-primary btn-block" ">Add product</button>
+<button type="submit" class="btn btn-lg btn-primary btn-block" ">Add</button>
 </form>
+<br />
 <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
-
+</div>
     `;
     $('#title').html("<h3>Add a new product</h3>");
     $('#content').html("");
@@ -223,9 +228,11 @@ function sendChange(event)
 /** Show the area when the employee can change a product field */
 function showChangeProduct(x, products)
 {
-  toInsert = `
+  toInsert = `<div>
+  <h3>Bike about:</h3>
   <div class="input-group mb-3">
   <input class="form-control" type="text" id='oldname' value="${products[x].name}" aria-label="readonly input example" readonly></div>
+  <h3>Choose the field you want to change:</h3>
   <div class="input-group mb-3">
   <label class="input-group-text" for="changeMenu">Field</label>
   <select class="form-select" id="changeMenu">
@@ -236,6 +243,7 @@ function showChangeProduct(x, products)
     <option value="description">Description</option>
   </select>
 </div>
+
 <form onsubmit="sendChange(event)">
 <div class="mb-3" id="newval">
   <label for="newValue" class="form-label">New value</label>
@@ -249,6 +257,8 @@ function showChangeProduct(x, products)
 <button class="btn btn-primary" type="submit">Confirm</button>
 </form>
 <button class="btn btn-warning btn-block" type="button" onclick="reset()">Close</button>
+
+</div>
   `
   $('#title').html("");
 
@@ -288,12 +298,14 @@ function showDeleteProduct(x, products)
 {
   console.log(products);
   console.log(x)   
-     let toInsert = `
+     let toInsert = `<div>
+     <h3>Bike you whant to delete:</h3>
      <input class="form-control" type="text" id="product" value="${products[x].name}" aria-label="readonly input example" readonly>
-      `
-      toInsert += `</select></div>
-      <button type="button" class="btn btn-lg btn-danger btn-block" onclick="sendDelete()" >Confirm Deletion</button>
-      <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>`;
+      </div>`
+      toInsert += `<div>
+      </select></div>
+      <button type="button" class="btn btn-lg btn-danger btn-block" onclick="sendDelete()" >Confirm</button>
+      <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button> </div>`;
       $('#title').html("");
       $('#content').html(toInsert);
 }
@@ -375,7 +387,8 @@ function sendMaintenance()
   function showMaintenance(x , products)
 {
   
-  let toInsert =`
+  let toInsert =`<div>
+  <h3>The bike you are dealing with:</h3>
   <input class="form-control" type="text" id="name" value="${products[x].name}" aria-label="readonly input example" readonly>
   <label for="start">Start:</label>
   <input type="date" id="start" name="start"> 
@@ -383,8 +396,8 @@ function sendMaintenance()
   <input type="date" id="end" name="end"> 
   <span id="maintErr"></span>
   <button type="button" class="btn btn-dark" onclick="sendMaintenance()">Send product to maintenance</button>
-  <button type="button" class="btn btn-warning" onclick="reset()">Back</button>
-
+  <button type="button" class="btn btn-warning" onclick="reset()"><i class="fa fa-backward">&nbsp; Back</i></button>
+  </div>
   `
   $('#title').html("");
   $('#content').html(toInsert);

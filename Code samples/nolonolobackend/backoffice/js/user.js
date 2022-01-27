@@ -100,7 +100,9 @@ function changeUserInfo(x, event, costumers)
   costumersArray.concat(costumers);
   event.preventDefault();
   email = costumers[x].email;
-  let toInsert = `<div class="input-group mb-3">
+  let toInsert = `<div>
+  <h3>Choose the field you want to change:</h3>
+  <div class="input-group mb-3">
   <label class="input-group-text" for="changeInfo">Field</label>
   <select class="form-select" id="changeInfo">
     <option selected value="name">Name</option>
@@ -127,8 +129,9 @@ function changeUserInfo(x, event, costumers)
 </div>
 <span id="onErr"></span>
 <button class="btn btn-success " type="submit">Confirm</button>
-<button class="btn btn-warning " type="button" onclick="getAllcostumers()" >Back</button>
+<button class="btn btn-warning " type="button" onclick="getAllcostumers()" ><i class="fa fa-backward">&nbsp; Back</i></button>
 </form>
+</div>
 `
 $("#content").html(toInsert);
 $('#payments').hide();
@@ -164,15 +167,18 @@ function showAddComunication(x, allCostumers)
   $('#title').html("");
 
   let toInsert = `
+  <div>
+  <h3>This is the user you are writing to:</h3>
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3 text-center justify-content-center">
 <div class="mb-3 ">
-  <label for="text" class="form-label">Message to send</label>
+  <label for="text" class="form-label">Write the message:</label>
   <textarea class="form-control" id="text" rows="3"></textarea>
-  <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Insert</button>
+  <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Send</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Close</button>
   </div>
+</div>
 </div>
 </div>
   `
@@ -199,14 +205,16 @@ function showDeleteCostumer(x, allCostumers)
 {
   $('#title').html("");
 
-  let toInsert = `
+  let toInsert = `<div>
+  <h3>You are deleting the user:</h3>
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3 text-center justify-content-center">
 <div class="mb-3 ">
   <button type="button" class="btn btn-lg btn-danger btn-block" onclick="deleteUser(${x}, allCostumers)" >Delete</button>
-  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Back</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" ><i class="fa fa-backward">&nbsp; Back</i></button>
   </div>
+</div>
 </div>
 </div>
   `

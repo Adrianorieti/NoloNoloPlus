@@ -273,18 +273,15 @@ function showMyReservations(emp)
   <h3>Active</h3>
   ${active}
   </div>
-  
   <div id="future">
   <h3>Future</h3>
   ${future}
   </div>
-  
   <div id="past">
   <h3>Past</h3>
   ${past}
 
   </div>
- 
   `
   $('#reservations').html(toInsert);
 }
