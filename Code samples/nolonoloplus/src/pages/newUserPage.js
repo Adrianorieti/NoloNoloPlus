@@ -44,14 +44,11 @@ export default function newUserPage({ nameToParent }) {
                         return response.json();
                     }
                 }).then((data) => {
-                    console.log(data);
                     setUser(data.user);
                     setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
                     document.getElementById('toFocus').scrollIntoView({ behavior: "smooth" })
-
-                    setImage("default.jpeg");
                 })
                 .catch((err) => { console.log(err); setError(err.message); });
         };
