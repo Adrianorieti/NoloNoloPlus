@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card-group>
+    <!-- <b-card-group>
       <card
         v-for="user in users"
         :key="user.email"
@@ -10,13 +10,33 @@
         :path="'users/' + user.email"
         :imageSrc="'http://localhost:8001/images/users/' + user.image"
       />
-    </b-card-group>
+    </b-card-group> -->
+    <div class="card-group">
+      <div class="card" v-for="user in users" :key="user.email">
+        <img
+          :src="'http://localhost:8001/images/users/' + user.image"
+          class="card-img-top"
+          alt="user profile pic"
+        />
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="/cazzo" class="stretched-link st_link_dec">
+              {{ user.email }}</a
+            >
+          </h5>
+          <p class="card-text">Payment Method: {{ user.paymentMethod }}</p>
+        </div>
+        <!-- <div slot="footer">
+          <b-button @click="route(user.email)" variant="primary"
+            >Go to Personal Page</b-button
+          >
+        </div> -->
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import card from "../components/imagecard";
-
 export default {
   name: "users",
   data() {
@@ -24,9 +44,7 @@ export default {
       users: [],
     };
   },
-  components: {
-    card,
-  },
+
   mounted() {
     this.getAllUsers();
   },
@@ -50,15 +68,17 @@ export default {
           console.log(error);
         });
     },
+    route(email) {
+      let path = "users/" + email;
+      this.$router.push({ path: path });
+    },
   },
 };
 </script>
 
 <style scoped>
-.deck {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
+.st_link_dec {
+  text-decoration: none;
+  color: black;
 }
 </style>

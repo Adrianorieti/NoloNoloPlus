@@ -44,14 +44,12 @@ export default function newUserPage({ nameToParent }) {
                         return response.json();
                     }
                 }).then((data) => {
-                    console.log(data);
                     setUser(data.user);
                     console.log("user image", data.user.image);
                     setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
                     document.getElementById('toFocus').scrollIntoView({ behavior: "smooth" })
-
                 })
                 .catch((err) => { console.log(err); setError(err.message); });
         };
@@ -211,7 +209,7 @@ export default function newUserPage({ nameToParent }) {
                         <div className="row" id="toFocus">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    {console.log("qui",image)}
+                                    {console.log("qui", image)}
                                     <img className="rounded-image" alt="profile pic" src={image ? `http://localhost:8001/images/users/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
                                     <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
@@ -292,11 +290,11 @@ export default function newUserPage({ nameToParent }) {
                                         (() => {
                                             let commDivs = []
                                             for (let x = communications.length; x >= 0; x--) {
-                                                console.log("comm",communications[x])
+                                                console.log("comm", communications[x])
                                                 if (communications[x] != null) {
                                                     console.log(communications.length)
                                                     console.log(x);
-                                                    if(x === communications.length -1)
+                                                    if (x === communications.length - 1)
                                                         commDivs.push(<p><b>New</b></p>)
                                                     commDivs.push(<div>{communications[x]}</div>)
                                                     commDivs.push(<div><hr /></div>)
