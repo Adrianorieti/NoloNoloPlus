@@ -2,6 +2,14 @@ import React from 'react';
 import './style/reservations.css';
 function Reservations(props) {
 
+  function modify()
+  {
+    // quando clicca modify renderizzo un nuovo componente a cui passo tutta la reservation così
+    // ho tutti i campi per riempire il form
+    // ho bisogno di una get che mi restituisca tutti i prodotti affinchè
+    //il dropdown menu sia dinamico
+    // poi due campi per la data e due pulsanti per mandare o meno
+  }
   return (
     <div id="mainReservations">
       <div id="future"><h3>Future</h3>
