@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
 import './style/RentForm.css';
@@ -6,6 +6,7 @@ import './style/RentForm.css';
 function RentForm(props) {
 
   let history = useHistory();
+  const [cat, setCat] = useState([]);
 
   function checkInput() {
 
@@ -49,48 +50,32 @@ function RentForm(props) {
 
   }
 
-  useEffect(() => {
+  useEffect(async () => {
 
+    let res = [];
     async function getCategories() {
-      let fetch_options = {
-        method: "GET",
-        headers: new Headers({ "Content-type": "application/json" }),
-      };
-      let url = "http://localhost:8001/api/category/";
-      fetch(url, fetch_options)
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          console.log("data: ", data.categories)
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      let url = "http://localhost:8001/api/categories/";
+      try {
+        let response = await fetch(url);
+        res = await response.json();
+        setCat(res);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    getCategories();
+    await getCategories();
+
     props.focusToParent(false);
     let parameter = props.location.state;
-    let index = 0;
+    let index;
     if (parameter != null || parameter != undefined) {
       console.log(parameter);
 
-      switch (parameter.data) {
-        case 'Mountain Bike':
-          index = 1;
+      for (index in res) {
+        if (parameter.data === res[index].name) {
           break;
-        case 'Scooter':
-          index = 2;
-          break;
-        case 'Electric S_300':
-          index = 3;
-          break;
-        case 'Special Bike':
-          index = 4;
-          break;
+        }
       }
 
       document.getElementById('form-sel').selectedIndex = index;
@@ -103,47 +88,24 @@ function RentForm(props) {
         <div classname="row container-properties">
           <div classname="col-md-12">
             <form className="rentForm" >
-              {/* 
-              <fieldset id="Bikes_Types" aria-required="true">
-                <legend>Bikes types</legend>
-                <hr></hr>
-                <section className="mb-3 form-check">
-                  <div>
-                    <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="City Bike" ></input>
-                    <label htmlFor="City-Bike" className="form-label">City Bike</label>
-                  </div>
-                  <div>
-                    <input id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" ></input>
-                    <label htmlFor="Mountain-Bike" className="form-label">Mountain Bike</label>
-                  </div>
-                  <div>
-                    <input id="City-Bike" name="products" className="form-select" type="radio" value="Scooter"></input>
-                    <label htmlFor="Scooter" className="form-label">Scooter</label>
-                  </div>
-                  <div>
-                    <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric S_300" ></input>
-                    <label htmlFor="Electric-Bike" className="form-label">Electric Bike</label>
-                  </div>
-                  <div>
-                    <input id="Electric-Bike" name="products" className="form-select" type="radio" value="Special Bike" ></input>
-                    <label htmlFor="Special-Bike" className="form-label">Special Bike</label>
-                  </div>
-                </section>
-              </fieldset> */}
               <div id="formTitle">
                 <h1>Start renting</h1>
                 <p className="step">Step 1</p>
               </div>
-
               <div id="selectProduct">
                 <p><h5>Pick the Best Bike for You...</h5></p>
-                <select id="form-sel" className="form-select" aria-label="Default select example">
-                  <option id="City-Bike" name="products" className="form-select" type="radio" value="City Bike">City Bike</option>
-                  <option id="Mountain-Bike" name="products" className="form-select" type="radio" value="Mountain Bike" >Mountain Bike</option>
-                  <option id="Scooter" name="products" className="form-select" type="radio" value="Scooter">Scooter</option>
-                  <option id="Electric-Bike" name="products" className="form-select" type="radio" value="Electric S_300">Electric Bike</option>
-                  <option id="Special-Bike" name="products" className="form-select" type="radio" value="Special Bike">Special Bike</option>
-                </select>
+                {(() => {
+                  let options = [];
+                  for (let category of cat) {
+                    let newOption = <option id={category.name} name="products" className="form-select" type="radio" value={category.name} >{category.name}</option>
+                    options.push(newOption);
+                  }
+                  return (
+                    <select id="form-sel" className="form-select" aria-label="Default select example">
+                      {options}
+                    </select>
+                  );
+                })()}
               </div>
               <div className="step">Step 2</div>
               <fieldset aria-required="true">

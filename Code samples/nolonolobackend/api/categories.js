@@ -33,8 +33,7 @@ router.get('/', (req, res) => {
         if (err)
             res.status(500).json({ message: 'Internal error', error: err })
         else {
-            console.log(docs);
-            res.status(200).json({ categories: docs });
+            res.status(200).json(docs);
         }
     })
 })

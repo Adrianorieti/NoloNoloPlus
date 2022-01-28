@@ -38,25 +38,15 @@ export default {
   components: {
     chart,
   },
-  mounted() {
-    let fetch_options = {
-      method: "GET",
-      headers: new Headers({ "Content-type": "application/json" }),
-    };
-    let url = "http://localhost:8001/api/category/";
-    fetch(url, fetch_options)
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        this.categories = data.category;
-        this.takeProducts();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  async mounted() {
+    let url = "http://localhost:8001/api/categories/";
+    try {
+      let response = await fetch(url);
+      this.categories = await response.json();
+      this.takeProducts();
+    } catch (error) {
+      console.log(error);
+    }
   },
   methods: {
     takeProducts() {
