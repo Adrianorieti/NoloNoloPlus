@@ -5,10 +5,10 @@ import img2 from '../images/how-it-works-2.svg';
 import img3 from '../images/how-it-works-3.svg';
 
 function Howitworks() {
-    useEffect(() => {
-        document.getElementById('howitworks').scrollIntoView({behavior: "smooth"})
+    // useEffect(() => {
+    //     document.getElementById('howitworks').scrollIntoView({behavior: "smooth"})
 
-    },[])
+    // },[])
     
     return (
 

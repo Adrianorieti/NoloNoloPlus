@@ -164,3 +164,8 @@ h3
     top: 0.8rem;
     right: 15px;
 }
+
+#futureError
+{
+    color: red;
+}

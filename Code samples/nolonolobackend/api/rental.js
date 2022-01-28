@@ -276,7 +276,9 @@ router.post('/:product/restitution', async (req, res) => {
 
         //PRODOTTO
         toChange = prod.activeReservations[0];
-        toChange.expense = expense;
+        console.log(toChange);
+        if(toChange)
+            toChange.expense = expense;
 
         if (toChange) {
             prod.activeReservations= [];
