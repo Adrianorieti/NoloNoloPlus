@@ -157,28 +157,18 @@ function About() {
                         </table>
 
                         <hr /><br />
-                        <h1>Be careful!</h1><br />
-                        <p> Since we sign togheter a pact of mutual trust, we are committed to making your experience the best
-                            satisfactory and accurate as possible. Likewise, we expect you to take care of the stuffs that are entrusted to you in compliance
-                            of everyone's expectations. </p>
+                        <h1>Fluctuation in prices</h1><br />
+                        <p>Prices can vary depending on many factors.</p>
 
-                        <p> Just as we believe it is correct to reward those who rely on us, in the same way we consider appropriate
-                            evaluating accordingly the allocation of loyalty points. </p>
+                        <p>Especially in formulating a rental hypothesis, take into account that it is delivered an indicative 
+                            price which is represented by an average among possibly fluctuations.
+                            So, it may not correspond to the real price. </p>
 
-                        <p> For this reason, points are virtually automatically assigned at the time of booking, as described in <a href="#puntiFedelta"> Loyalty points </a>,
-                            <b> but they will be subject to verification and a possible revision can be made after the booking was closed</b>.  </p>
+                        <p>In fact, prices are affected by many factors such as the period when you are renting (the season if it is 
+                            high or low, the period in the month e.g. if you are in these that we called 'cold' as well as in the week, e.g. a weekend),
+                            the availability and quality of the bike too.</p>
 
-                        <p>So, points will be added only if the stuffs have been returned in the exact condition in which they was delivered.
-                            <b> Please, report immediately eventually discrepancies found at the time of delivery.</b></p>
-
-                        <p>Hoterwise, if stuffs are damaged or have to be sent for maintenance, because it will involve inconvenience for those who have
-                            made a subsequent booking, the points will be deducted or even not assigned up to leading to a report on the user's site
-                            as person unreliable.</p>
-
-                        <p>This can affect the ability of further renting for the user.</p>
-
-                        <p>It will be always possible to have in your home a feedback about the status of the booking (successfully or with notes) and whether
-                            or not the loyalty points have been assigned. </p>
+                        <p>Also do not forget the fidelity points that allow you to have a discount as explained in the <a href="#Pointstable"> advantages table </a>.</p>
 
                         <br /><hr />
                         <p>If you share our way we see it, let's join this big family and discover all the services we can deliver for you.</p>
