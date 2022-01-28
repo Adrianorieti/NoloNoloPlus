@@ -9,16 +9,23 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
     for await (let emp of employee.find()) {
         // Se trovo un match con quelli che sto cercando
         if (emps.includes(emp.email)) {
+            console.log("future res prima", emp.futureReservations)
             if (emp.futureReservations) // se il dipendente ha delle future res
             {
                 for (let x in emp.futureReservations) // per tutte le sue future res
                 {
+                    console.log("new Mail", newMail);
+                    console.log("current mail", emp.futureReservations[x].usermail );
+                    console.log("old mail", oldMail );
+
                     // se la mail è quella vecchia dello usr 
                     if (emp.futureReservations[x].usermail === oldMail) {
                         emp.futureReservations[x].usermail = newMail;
                     }
                 }
             }
+            console.log("future res dopo", emp.futureReservations)
+
             if (emp.activeReservations) // se il dipendente ha delle acrive res
             {
                 for (let x in emp.activeReservations) // per tutte le sue active res
@@ -108,6 +115,7 @@ module.exports = {
             let prods = [];
             if (usr.futureReservations) {
                 for (let res of usr.futureReservations) {
+                    console.log(res);
                     if (res.employee) // potrebbe essere ancora in pending
                     {
                         pushElements(emps, res.employee);
@@ -117,7 +125,9 @@ module.exports = {
                 }
             }
             if (usr.activeReservations) {
+                
                 for (let res of usr.activeReservations) {
+                    console.log("active",res);
                     if (res.employee) // potrebbe essere ancora in pending
                     {
                         pushElements(emps, res.employee);
@@ -136,9 +146,9 @@ module.exports = {
                     }
                 }
             }
-            if (emps)
+            if (emps.length > 0)
                 await changeCascadeEmps(emps, newMail, oldMail);
-            if (prods)
+            if (prods.length > 0)
                 await changeCascadeProds(prods, newMail, oldMail);
             checkPendingReqs(newMail, oldMail);
         }

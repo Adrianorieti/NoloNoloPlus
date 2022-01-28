@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import './style/Howitworks.css';
-
+import img1 from '../images/how-it-works-1.svg';
+import img2 from '../images/how-it-works-2.svg';
+import img3 from '../images/how-it-works-3.svg';
 
 function Howitworks() {
     useEffect(() => {
@@ -24,9 +26,9 @@ function Howitworks() {
                                 <div className="inner">
                                     <div className="how-it-works-icon">
                                         <span className="stepnumber">1</span>
-                                        <img src="https://cdn.bimbimbikes.com/images/icons/how-it-works-1.svg?v1.1.28" />
+                                        <img src={img1} />
                                     </div>
-                                    <span className="steptitle">Find the bike</span>
+                                    <span className="steptitle">Find the bike the best for you</span>
                                     <span className="stepdesc">Compare price and types of bikes, all in a few clicks with NoloNolo!</span>
                                 </div>
                             </div>
@@ -34,7 +36,7 @@ function Howitworks() {
                                 <div className="inner">
                                     <div className="how-it-works-icon">
                                         <span className="stepnumber">2</span>
-                                        <img src="https://cdn.bimbimbikes.com/images/icons/how-it-works-2.svg?v1.1.28" />
+                                        <img src={img2} />
                                     </div>
                                     <span className="steptitle">Book your bike directly online</span>
                                     <span className="stepdesc">No wasting time finding a rental on site..</span>
@@ -44,18 +46,11 @@ function Howitworks() {
                                 <div className="inner">
                                     <div className="how-it-works-icon">
                                         <span className="stepnumber">3</span>
-                                        <img src="https://cdn.bimbimbikes.com/images/icons/how-it-works-3.svg?v1.1.28" />
+                                        <img src={img3} />
                                     </div>
                                     <span className="steptitle">Retire your bike in the shop!</span>
                                     <span className="stepdesc">Enjoy the holiday. Any problems? Our team is ready to help you! </span>
                                 </div>
-                            </div>
-                            <div class="col-lg-12 text-center">
-                                <span className="subtitle">Rent your bike now?  </span>
-                                <span className="above">
-                                    Give us just some information in order to find the best for you.
-                                </span>
-                                <p>Follow the form above...</p>
                             </div>
                         </div>
                     </div>

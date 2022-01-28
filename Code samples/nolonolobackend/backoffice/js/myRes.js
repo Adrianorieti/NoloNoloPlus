@@ -5,7 +5,7 @@ function calculateFidelityPoints(start, end, expense)
   let points=0;
   let period = end.getTime() - start.getTime();
   period = period / (1000 * 3600 * 24);
-  
+
   if(period > 10)
   {
       points = 25;
@@ -95,7 +95,7 @@ function calculateFinalPrice(isLate, start, end, expense)
 function confirmEndOfRental(x)
 {
   console.log("dentro confirm", activeRes);
-
+  let check = $('check').val();
   let employee = sessionStorage.getItem('email');
   let product = activeRes[x].product;
   let user = activeRes[x].usermail;
@@ -106,21 +106,24 @@ function confirmEndOfRental(x)
   let today = new Date();
   start = new Date(start);
   end = new Date(end);
-  let points = calculateFidelityPoints(start, today, expense); 
-   // SONO SU ACTIVE QUINDI È GIA INIZIATA E POSSONO ACCADERE QUESTI CASI
-   //CONSEGNA PRIMA DELLA FINE DEL TEMPO
-   //CONSEGNA IN TEMPO
-   //CONSEGNA IN RITARDO
-   if(!(isSameDay(end, today)) ) // SE OGGI NON È QUANDO AVREBBE DOVUTO CONSEGNARE
-   {
-
-     if(today.getTime() < end.getTime()) // SONO IN ANTICIPO
-     {
-       expense = calculateFinalPrice(false, start, end, expense);
+  let points = 0;
+  //Se è in ritardo i punti fedeltà sono 0
+  //Se l'oggetto è rotto o danneggiato allora i punti sono 0
+  if(!(isSameDay(end, today)) ) // SE OGGI NON È QUANDO AVREBBE DOVUTO CONSEGNARE
+  {
+   
+    if(today.getTime() < end.getTime()) // SONO IN ANTICIPO
+    {
+      if(check === 'Y')
+        {      
+            points = calculateFidelityPoints(start, today, expense); 
+        }    
+    expense = calculateFinalPrice(false, start, end, expense);
 
       }else if(today.getTime() > end.getTime()) // SONO IN RITARDO
       {
         console.log("ENTRO QUIIII");
+
         expense = calculateFinalPrice(true, start, end, expense);
       }      
     }else
@@ -129,6 +132,10 @@ function confirmEndOfRental(x)
     }
 
       console.log("new expense", expense);
+      
+      if(expense === 0)
+        expense=8;
+
       let obj = `{
       "user": "${user}", 
       "expense": "${expense}",
@@ -204,6 +211,11 @@ function showMyReservations(emp)
         <p class="card-text">From: ${start.toDateString()}</p>
         <p class="card-text">To: ${end.toDateString()} </p>
         <p class="card-text">Expense: ${emp.activeReservations[x].expense} </p>
+        <label for="check"><b>Is the product ok?</b></label>
+        <select class="form-select" id="check">
+          <option selected value="ok">Y</option>
+          <option value="notok">N</option>
+        </select>
         <a href="#" class="btn btn-primary" onclick="confirmEndOfRental(${x})">Confirm restitution</a>
         </div>
         </div>
@@ -261,18 +273,15 @@ function showMyReservations(emp)
   <h3>Active</h3>
   ${active}
   </div>
-  
   <div id="future">
   <h3>Future</h3>
   ${future}
   </div>
-  
   <div id="past">
   <h3>Past</h3>
   ${past}
 
   </div>
- 
   `
   $('#reservations').html(toInsert);
 }

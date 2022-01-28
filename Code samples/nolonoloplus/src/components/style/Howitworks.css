@@ -14,8 +14,8 @@
     position: absolute;
 }
 .howitworks {
-    padding: 60px 0 70px 0;
-    margin-bottom: 60px;
+    /* padding: 60px 0 70px 0; */
+    /* margin-bottom: 60px; */
     /*background:#fff url(../../images/icons/skyline.svg) repeat-x bottom center;*/
     background-size: 1000px;
 }

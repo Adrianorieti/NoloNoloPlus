@@ -1,0 +1,30 @@
+.App-about {
+  /* font-size: 1rem;
+    color: white; */
+  font-size: calc(12px + (26 - 14) * ((100vw - 300px) / (1600 - 300)));
+  padding: 5vh;
+}
+
+.score-image {
+  background-image: url("../../images/texture-of-bicycle.jpg");
+}
+
+a:link {
+  color: #2d4c21;
+}
+
+/* visited link */
+a:visited {
+  color: #395f29;
+}
+
+/* mouse over link */
+a:hover {
+  color: #447231;
+  text-decoration: underline !important;
+}
+
+/* selected link */
+a:active {
+  color: #4f853a;
+}

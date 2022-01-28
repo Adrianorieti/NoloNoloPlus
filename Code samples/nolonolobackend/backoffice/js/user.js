@@ -71,7 +71,6 @@ function sendInfo()
         "${type}": "${newValue}"
       }`;
       
-      console.log(obj);
       $.post({
         type: 'PATCH',
         url: `http://localhost:8001/api/user/${email}`,
@@ -101,8 +100,9 @@ function changeUserInfo(x, event, costumers)
   costumersArray.concat(costumers);
   event.preventDefault();
   email = costumers[x].email;
-  console.log(email);
-  let toInsert = `<div class="input-group mb-3">
+  let toInsert = `<div>
+  <h3>Choose the field you want to change:</h3>
+  <div class="input-group mb-3">
   <label class="input-group-text" for="changeInfo">Field</label>
   <select class="form-select" id="changeInfo">
     <option selected value="name">Name</option>
@@ -129,13 +129,13 @@ function changeUserInfo(x, event, costumers)
 </div>
 <span id="onErr"></span>
 <button class="btn btn-success " type="submit">Confirm</button>
-<button class="btn btn-warning " type="button" onclick="getAllcostumers()" >Back</button>
+<button class="btn btn-warning " type="button" onclick="getAllcostumers()" ><i class="fa fa-backward">&nbsp; Back</i></button>
 </form>
+</div>
 `
 $("#content").html(toInsert);
 $('#payments').hide();
 $( "#changeInfo" ).change(function() {
-  console.log("changed");
       changePattern();
     });
 }
@@ -148,7 +148,6 @@ function sendComunication()
   const obj = `{
     "communications": "${message}"
   }`;
-  console.log(obj);
   $.post({
     type: 'PATCH',
       url: `http://localhost:8001/api/user/${email}`,
@@ -168,15 +167,18 @@ function showAddComunication(x, allCostumers)
   $('#title').html("");
 
   let toInsert = `
+  <div>
+  <h3>This is the user you are writing to:</h3>
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3 text-center justify-content-center">
 <div class="mb-3 ">
-  <label for="text" class="form-label">Message to send</label>
+  <label for="text" class="form-label">Write the message:</label>
   <textarea class="form-control" id="text" rows="3"></textarea>
-  <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Insert</button>
-  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
+  <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Send</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Close</button>
   </div>
+</div>
 </div>
 </div>
   `
@@ -203,14 +205,16 @@ function showDeleteCostumer(x, allCostumers)
 {
   $('#title').html("");
 
-  let toInsert = `
+  let toInsert = `<div>
+  <h3>You are deleting the user:</h3>
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3 text-center justify-content-center">
 <div class="mb-3 ">
   <button type="button" class="btn btn-lg btn-danger btn-block" onclick="deleteUser(${x}, allCostumers)" >Delete</button>
-  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Back</button>
+  <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" ><i class="fa fa-backward">&nbsp; Back</i></button>
   </div>
+</div>
 </div>
 </div>
   `
@@ -219,9 +223,7 @@ function showDeleteCostumer(x, allCostumers)
 
 function renderFilteredCostumers(filtered)
 {
-  console.log("DENTRO RENDER FILTERED")
   let toInsert = ``;
-  console.log(allCostumers);
   allCostumers = [];
   allCostumers = allCostumers.concat(filtered);
 
@@ -273,7 +275,9 @@ function setUsersSearchBar()
 
 function showCostumers(costumers)
 {
+  console.log("costumers",costumers);
     allCostumers = [];
+    oldCostumers = [];
     allCostumers = allCostumers.concat(costumers);
     oldCostumers = oldCostumers.concat(allCostumers);
     let toInsert = '';
