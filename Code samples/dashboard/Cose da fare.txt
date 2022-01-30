@@ -1,3 +1,7 @@
-Cambiare i grafici di user con le carte e personalizzare i grafici di ogni user.
-Fare la stessa cosa anche per gli employee.
-Implementare la parte di aggiunta categoria, prodotto, employee nella Home.
+-aggiungere statistica danni user
+-aggiungere back in tutte le parti
+-creare form per creazione employee
+-aggiungere carta che punta al form di creazione employee
+-aggiungere api per immagazzinare foto employee
+-stylizzare meglio il form di aggiunta di una categoria
+-aggiungere pulsante di aggiunta categoria alle categoria

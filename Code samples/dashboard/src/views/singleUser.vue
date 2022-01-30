@@ -100,6 +100,9 @@ export default {
           if (minDaysOfRent > lengthOfRes) minDaysOfRent = lengthOfRes;
         }
         averageLength = numOfDaysOfRes / numOfRes;
+        //rounding to just two decimals:
+        averagePrice = Math.round(averagePrice * 100) / 100;
+        averageLength = Math.round(averageLength * 100) / 100;
       }
       this.text =
         `Number of reservations ended: ${numOfRes} \n` +

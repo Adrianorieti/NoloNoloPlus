@@ -1,63 +1,118 @@
 <template>
   <div>
-    <div class="card-list">
-      <card
-        v-for="employee in employees"
+    <div class="search-wrapper">
+      <div class="form-floating w-75">
+        <input
+          type="email"
+          class="form-control"
+          id="floatingFilter"
+          v-model="searchQuery"
+          placeholder="username@domain.it"
+        />
+        <label for="floatingFilter">Filter for Email Address</label>
+      </div>
+      <button
+        type="button"
+        class="btn btn-outline-success"
+        @click="route('employees/create')"
+      >
+        CREATE EMPLOYEE
+      </button>
+    </div>
+    <div class="divide">
+      <div
+        class="card margin border border-dark shadow"
+        v-for="employee in resultQuery"
         :key="employee.email"
-        :title="employee.name + ' ' + employee.surname"
-        :email="employee.email"
-        :path="'employees/' + employee.email"
-      />
+      >
+        <div class="card-body">
+          <h5 class="card-title">
+            <a
+              :href="'/employee/' + employee.email"
+              @click.prevent="route('employees/' + employee.email)"
+              class="stretched-link st_link_dec"
+            >
+              {{ employee.email }}</a
+            >
+          </h5>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import card from "../components/imagecard";
-
 export default {
   name: "employees",
   data() {
     return {
       employees: [],
+      searchQuery: "",
     };
   },
-  components: {
-    card,
-  },
   mounted() {
-    this.getAllEmployees();
+    let url = "http://localhost:8001/api/employee/";
+    fetch(url)
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        this.employees = data.emp;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+  computed: {
+    resultQuery() {
+      if (this.searchQuery) {
+        return this.employees.filter((employee) => {
+          return this.searchQuery
+            .toLowerCase()
+            .split(" ")
+            .every((v) => employee.email.toLowerCase().includes(v));
+        });
+      } else {
+        return this.employees;
+      }
+    },
   },
   methods: {
-    getAllEmployees() {
-      let fetch_options = {
-        method: "GET",
-        headers: new Headers({ "Content-type": "application/json" }),
-      };
-      let url = "http://localhost:8001/api/employee/";
-      fetch(url, fetch_options)
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          console.log(data);
-          this.employees = data.emp;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    route(path) {
+      this.$router.push({ path: path });
     },
   },
 };
 </script>
 
 <style scoped>
-.card-list {
-  width: 100%;
+.st_link_dec {
+  text-decoration: none;
+  color: black;
+  font-size: 1.3em;
+}
+
+.divide {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-between;
+  justify-content: space-around;
+}
+
+.margin {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.search-wrapper {
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap;
+}
+
+.btn {
+  margin-left: 1rem;
 }
 </style>

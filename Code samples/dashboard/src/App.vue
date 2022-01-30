@@ -15,14 +15,6 @@
             <b-nav-item v-if="authenticated" to="/employees">
               Employees
             </b-nav-item>
-            <b-nav-item-dropdown v-if="authenticated" text="Users Charts">
-              <b-dropdown-item to="/userCharts/sales"
-                >Sales volume</b-dropdown-item
-              >
-              <b-dropdown-item to="/userCharts/rental"
-                >Number of rentals</b-dropdown-item
-              >
-            </b-nav-item-dropdown>
             <b-nav-item-dropdown v-if="authenticated" text="Category Charts">
               <b-dropdown-item to="/categoryCharts/totalSales"
                 >Sales volume</b-dropdown-item
@@ -31,7 +23,7 @@
                 >Number of rentals</b-dropdown-item
               >
               <b-dropdown-item to="/categoryCharts/numberOfObjects"
-                >Nunber of objects</b-dropdown-item
+                >Number of objects</b-dropdown-item
               >
             </b-nav-item-dropdown>
             <b-nav-item-dropdown v-if="authenticated" text="Products Charts">
@@ -43,14 +35,6 @@
               >
               <b-dropdown-item to="/productCharts/condition"
                 >Conditions</b-dropdown-item
-              >
-            </b-nav-item-dropdown>
-            <b-nav-item-dropdown v-if="authenticated" text="Employees Charts">
-              <b-dropdown-item to="/employeeCharts/sales"
-                >Sales volume</b-dropdown-item
-              >
-              <b-dropdown-item to="/employeeCharts/rental"
-                >Number of rentals</b-dropdown-item
               >
             </b-nav-item-dropdown>
             <b-nav-item v-if="authenticated" to="/reservationCharts">

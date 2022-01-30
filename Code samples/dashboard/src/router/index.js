@@ -16,6 +16,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
+    path: '/home',
+    name: 'home',
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
+  },
+  {
     path: '/users',
     name: 'users',
     // route level code-splitting
@@ -41,23 +46,20 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Employees.vue')
   },
   {
+    path: '/employees/create',
+    name: 'EmployeeForm',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/EmployeeForm.vue')
+  },
+  {
     path: '/employees/:employeeEmail',
     name: 'singleEmployee',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/singleEmployee.vue'),
-    props: true
-  },
-  {
-    path: '/home',
-    name: 'home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
-  },
-  {
-    path: '/userCharts/:chartView',
-    name: 'userCharts',
-    component: () => import(/* webpackChunkName: "userCharts" */ '../views/UserCharts.vue'),
     props: true
   },
   {
@@ -70,12 +72,6 @@ const routes = [
     path: '/productCharts/:chartView',
     name: 'productCharts',
     component: () => import(/* webpackChunkName: "productCharts" */ '../views/ProductCharts.vue'),
-    props: true
-  },
-  {
-    path: '/employeeCharts/:chartView',
-    name: 'employeeCharts',
-    component: () => import(/* webpackChunkName: "employeeCharts" */ '../views/EmployeeCharts.vue'),
     props: true
   },
   {
