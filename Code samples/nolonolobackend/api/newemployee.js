@@ -14,6 +14,26 @@ const bcrypt = require('bcrypt');
 const checkAvailability = require('../functions/checkAvailability');
 const router = express.Router();
 const reservations = require('../functions/reservationsHelper');
+const multer = require('multer');
+
+
+const employeeImagesPath = path.join(
+    global.rootDir,
+    '/images/employees'
+)
+
+// Initialize local storage
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, employeeImagesPath)
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname) //Appending extension
+    },
+})
+
+const upload = multer({ storage: storage })
+
 
 router.get('/', async (req, res) => {
     //trovo tutti gli user del sistema
@@ -38,6 +58,45 @@ router.get('/:email', async (req, res) => {
             console.log(err);
             res.status(500).json({ message: "internal server error" });
         })
+})
+
+router.post('/:email', upload.single('img'), async (req, res) => {
+    const email = req.params.email;
+    const source = await employee.findOne({ email: email });
+    if (!source) {
+        //is null
+        const password = req.body.password;
+        const hash = await bcrypt.hash(password, 10, function (err, hash) {
+
+            const newEmployee = new employee({
+                name: req.body.name,
+                surname: req.body.surname,
+                phone: req.body.phone,
+                email: email,
+                password: hash,
+                paymentMethod: req.body.paymentMethod,
+                image: req.file.filename,
+                role: 'admin',
+                totalReservations: 0,
+                futureReservations: [],
+                activeReservations: [],
+                pastReservations: []
+            });
+            newEmployee
+                .save()
+                .then((result) => {
+                    res.status(200).json({
+                        message: 'Employee created'
+                    })
+                })
+                .catch((err) => {
+                    res.status(400).json({ message: 'Bad input parameter', error: err })
+                })
+
+        })
+    } else {
+        res.status(500).json({ message: 'Mail already exists' });
+    }
 })
 
 module.exports = router;

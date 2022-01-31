@@ -28,10 +28,11 @@ const employeeSchema = new Schema({
         type: String,
         required: true
     },
-    role:{ 
+    role: {
         type: String,
         required: true
     },
+    image: String,
     totalReservations: Number,
     //prenotazioni future modificabili
     futureReservations: [reserveSchema],
@@ -41,5 +42,5 @@ const employeeSchema = new Schema({
     pastReservations: [reserveSchema]
 });
 
-const employee = mongoose.model('employee', employeeSchema); 
+const employee = mongoose.model('employee', employeeSchema);
 module.exports = employee;

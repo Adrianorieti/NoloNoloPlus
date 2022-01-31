@@ -1,44 +1,96 @@
 <template>
   <div>
-    <b-card title="Add a category">
-      <form v-on:submit.prevent="sendData()">
-        <b-form-file v-model="file" class="mt-3" plain></b-form-file>
+    <form aria-describedby="register-category" v-on:submit.prevent="sendData()">
+      <fieldset>
+        <legend id="register-category">Add a new Category</legend>
 
         <div>
-          <label for="newCategoryName">New Category Name:</label>
-          <b-form-input
-            v-model="name"
-            id="newCategoryName"
-            placeholder="enter new category name"
-            type="text"
-          ></b-form-input>
-        </div>
-
-        <div>
-          <label for="newCategoryDescription">New Category Description:</label>
-          <b-form-textarea
-            v-model="description"
-            id="newCategoryDescription"
-            placeholder="enter new category description"
-            rows="3"
-            max-rows="6"
-          ></b-form-textarea>
+          <label for="file" class="form-label">Category Photo</label>
+          <div class="input-group">
+            <input
+              id="file"
+              type="file"
+              class="form-control"
+              required="required"
+            />
+          </div>
         </div>
 
         <div>
-          <label for="newCategoryPrice">New Category Price:</label>
-          <b-form-input
-            v-model="price"
-            id="newCategoryPrice"
-            type="number"
-          ></b-form-input>
+          <label for="newCategoryName" class="form-label"
+            >New Category Name:</label
+          >
+          <div class="input-group">
+            <div class="input-group-text">
+              <i
+                class="bi bi-type"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <input
+              v-model="name"
+              id="newCategoryName"
+              type="text"
+              class="form-control"
+              placeholder="Electric Bike"
+              required="required"
+            />
+          </div>
         </div>
 
-        <div slot="footer">
-          <b-btn variant="primary" type="submit">Add</b-btn>
+        <div>
+          <label for="newCategoryDescription" class="form-label"
+            >New Category Description:</label
+          >
+          <div class="input-group">
+            <div class="input-group-text">
+              <i
+                class="bi bi-type"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <textarea
+              v-model="description"
+              id="newCategoryDescription"
+              class="form-control"
+              placeholder="Some Description"
+              required="required"
+              rows="3"
+              max-rows="6"
+            />
+          </div>
         </div>
-      </form>
-    </b-card>
+
+        <div>
+          <label for="newCategoryPrice" class="form-label"
+            >New Category Price:</label
+          >
+          <div class="input-group">
+            <div class="input-group-text">
+              <i
+                class="bi bi-currency-bitcoin"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <input
+              v-model="price"
+              id="newCategoryPrice"
+              type="number"
+              min="0"
+              class="form-control"
+              required="required"
+            />
+          </div>
+        </div>
+
+        <br />
+        <input type="submit" class="btn btn-primary" value="Create" />
+        <button class="btn btn-warning back" @click="route()">Back</button>
+      </fieldset>
+    </form>
   </div>
 </template>
 
@@ -52,7 +104,6 @@ export default {
   name: "Home",
   data() {
     return {
-      file: null,
       name: "",
       description: "",
       price: 0,
@@ -60,12 +111,15 @@ export default {
   },
   methods: {
     sendData() {
+      let photo = document.getElementById("file").files[0];
       let formData = new FormData();
-      formData.append("img", this.file);
+      formData.append("img", photo);
       formData.append("name", this.name);
       formData.append("description", this.description);
       formData.append("price", this.price);
       formData.append("discountCode", "N");
+
+      console.log(formData);
 
       fetch("http://localhost:8001/api/categories/", {
         method: "POST",
@@ -76,7 +130,6 @@ export default {
         })
         .then((data) => {
           console.log(data.message);
-          this.file = null;
           this.name = "";
           this.description = "";
           this.price = 0;
@@ -86,7 +139,26 @@ export default {
         });
     },
   },
+  route() {
+    this.$router.push({ path: "/employees" });
+  },
 };
 </script>
+
+<style scoped>
+form {
+  display: flex;
+  justify-content: center;
+}
+fieldset {
+  width: 50%;
+  padding: 1rem;
+  border: 1px solid black;
+  border-radius: 2%;
+}
+.back {
+  margin-left: 2rem;
+}
+</style>
 
 

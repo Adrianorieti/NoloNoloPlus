@@ -1,7 +1,7 @@
 -aggiungere statistica danni user
 -aggiungere back in tutte le parti
--creare form per creazione employee
--aggiungere carta che punta al form di creazione employee
--aggiungere api per immagazzinare foto employee
--stylizzare meglio il form di aggiunta di una categoria
+-cambiare la pagina della categoria per uniformare
 -aggiungere pulsante di aggiunta categoria alle categoria
+-cambiare pagina prodotti
+-cambiare pagina delle reservations -> con una select che mi cambia l'anno da mostrare.(serve un modo per ordinare tutto)
+-cambiare il login, abbellirlo e usare jwt

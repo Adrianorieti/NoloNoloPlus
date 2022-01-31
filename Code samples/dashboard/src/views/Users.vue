@@ -14,7 +14,7 @@
     </div>
     <div class="divide">
       <div
-        class="card custom-card border border-dark"
+        class="card custom-card"
         v-for="user in resultQuery"
         :key="user.email"
       >
@@ -49,6 +49,7 @@ export default {
       searchQuery: "",
     };
   },
+
   mounted() {
     let url = "http://localhost:8001/api/user/";
     fetch(url)
@@ -93,7 +94,6 @@ export default {
   color: black;
   font-size: 1.3em;
 }
-
 .divide {
   display: flex;
   flex-wrap: wrap;

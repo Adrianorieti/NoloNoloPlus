@@ -90,7 +90,7 @@ export default function Register({ stateToParent }) {
 
     return (
         <div id="contentRegister">
-            <h3><i className="fa fa-arrow-left" aria-hidden="true" id="arrow" onClick={() => { stateToParent(true); }}></i> Register</h3>
+            <h3><i className="fa fa-arrow-left" role="button" aria-label="Click to go back to login page" tabIndex={0} id="arrow" onClick={() => { stateToParent(true); }}></i> Register</h3>
             <form onSubmit={handleRegister}>
                 <div className="mb-3">
                     <label for="firstName" className="form-label">First Name</label>

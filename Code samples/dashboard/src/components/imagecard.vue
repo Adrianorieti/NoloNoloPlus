@@ -1,38 +1,50 @@
 <template>
   <div>
-    <b-card
-      :title="this.title"
-      :img-src="this.imageSrc"
-      :img-alt="this.title + ' profile pic'"
-      img-top
-      tag="article"
-      style="max-width: 20rem"
-      class="mb-2"
-    >
-      <b-card-text>
-        Email: {{ this.email }}
-        <br />
-        {{ this.text }}
-      </b-card-text>
-
-      <b-button @click="route()" variant="primary"
-        >Go to Personal Page</b-button
-      >
-    </b-card>
+    <div class="card custom-card border border-dark">
+      <img :src="imageSrc" class="card-img-top" alt="profile pic" />
+      <div class="card-body">
+        <h5 class="card-title">
+          <a
+            :href="path"
+            @click.prevent="route(this.path)"
+            class="stretched-link st_link_dec"
+          >
+            {{ this.email }}</a
+          >
+        </h5>
+        <p class="card-text">{{ this.text }}</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "imagecard",
-  props: ["email", "title", "text", "path", "imageSrc"],
+  name: "card",
+  props: ["email", "text", "path", "imageSrc"],
   methods: {
-    route() {
-      this.$router.push({ path: this.path });
+    route(path) {
+      this.$router.push({ path: path });
     },
   },
 };
 </script>
 
 <style scoped>
+.st_link_dec {
+  text-decoration: none;
+  color: black;
+  font-size: 1.3em;
+}
+.custom-card {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-card:hover {
+  box-shadow: 5px 10px 20px 5px rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
+}
 </style>

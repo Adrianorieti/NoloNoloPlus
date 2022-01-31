@@ -1,25 +1,20 @@
 <template>
   <div class="card-wrapper">
-    <b-card no-body class="overflow-hidden wdt">
-      <b-row no-gutters>
-        <b-col md="6">
-          <!-- qui va cambiato qualcosa perchè non prova a prendere subito l'immagine, invece non dovrebbe essere così. -->
-          <b-card-img
-            :src="this.imageSrc"
-            alt="Image"
-            class="rounded-0"
-          ></b-card-img>
-        </b-col>
-        <b-col md="6">
-          <b-card-body :title="this.title">
-            <b-card-text>
-              <pre>{{ this.text }}</pre>
-            </b-card-text>
-          </b-card-body>
-        </b-col>
-      </b-row>
-    </b-card>
+    <div class="card wdt">
+      <div class="row g-0">
+      <div class="col-md-6">
+        <img :src="this.imageSrc" alt="Profile Image" class="img-fluid rounded-start" >
+      </div>
+      <div class="col-md-6">
+        <div class="card-body">
+          <h5 class="card-title">{{this.title}}</h5>
+          <p class="card-text"><pre>{{this.text}}</pre></p>
+        </div>
+      </div>
   </div>
+</div>
+  </div>
+  
 </template>
 
 <script>
@@ -31,7 +26,11 @@ export default {
 
 <style scoped>
 .wdt {
-  width: 67%;
+  width: 80%;
+}
+img {
+  height: 100%;
+  width: 100%;
 }
 .card-wrapper {
   display: flex;

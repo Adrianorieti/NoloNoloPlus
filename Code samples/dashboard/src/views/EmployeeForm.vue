@@ -2,106 +2,191 @@
   <form aria-labelledby="register-employee" v-on:submit.prevent="sendData()">
     <fieldset>
       <legend id="register-employee">Add a new Employee</legend>
-      <div class="form">
-        <span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-person-circle"
-            viewBox="0 0 16 16"
-          >
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-            <path
-              fill-rule="evenodd"
-              d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-            />
-          </svg>
-        </span>
-        <input
-          v-model="name"
-          id="firstName"
-          type="text"
-          class="form-control"
-          placeholder="John"
-          required="required"
-        />
+      <div>
         <label for="firstName" class="form-label">First Name</label>
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-person-circle"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <input
+            v-model="name"
+            id="firstName"
+            type="text"
+            class="form-control"
+            placeholder="John"
+            required="required"
+          />
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="secondName" class="form-label">Second name</label>
-        <input
-          v-model="surname"
-          id="secondName"
-          type="text"
-          class="form-control"
-          placeholder="Doe"
-          required="required"
-        />
+      <div>
+        <label for="secondName" class="form-label">Second Name</label>
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-person-circle"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <input
+            v-model="surname"
+            id="secondName"
+            type="text"
+            class="form-control"
+            placeholder="Doe"
+            required="required"
+          />
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input
-          v-model="email"
-          id="email"
-          type="email"
-          class="form-control"
-          placeholder="username@studio.unibo.it"
-          required="required"
-          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-          title="not valid email"
-        />
-        <label id="registermail-error" for="email" class="error"
-          >{this.emailError}</label
-        >
-      </div>
-
-      <div class="mb-3">
+      <div>
         <label for="phone" class="form-label">Phone Number</label>
-        <input
-          v-model="phone"
-          id="phone"
-          type="tel"
-          class="form-control"
-          required="required"
-          pattern="[0-9]{10}"
-          title="not a valid phone number"
-        />
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-telephone-fill"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <input
+            v-model="phone"
+            id="phone"
+            type="tel"
+            class="form-control"
+            required="required"
+            placeholder="0123456789"
+            pattern="[0-9]{10}"
+            title="not a valid phone number"
+          />
+        </div>
       </div>
 
-      <div class="mb-3">
+      <div>
+        <label for="file" class="form-label">Employee Photo</label>
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-paperclip"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <input
+            id="file"
+            type="file"
+            class="form-control"
+            required="required"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for="email" class="form-label">Email</label>
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-envelope"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <input
+            v-model="email"
+            id="email"
+            type="email"
+            class="form-control"
+            placeholder="username@studio.unibo.it"
+            required="required"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            title="not valid email"
+          />
+        </div>
+        <label id="registermail-error" for="email" class="error">{{
+          this.emailError
+        }}</label>
+      </div>
+
+      <div>
         <label for="password" class="form-label">Password</label>
-        <input
-          v-model="password"
-          id="password"
-          type="password"
-          class="form-control"
-          required="required"
-          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-          title="Password must contain a number, a capital letter and a length of at least 8 characters"
-        />
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-lock-fill"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <input
+            v-model="password"
+            id="password"
+            type="password"
+            class="form-control"
+            required="required"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+            title="Password must contain a number, a capital letter and a length of at least 8 characters"
+          />
+          <div class="input-group-text show-password">
+            <i
+              :class="{
+                'bi bi-eye-slash-fill': !showPassword,
+                'bi bi-eye-fill': showPassword,
+              }"
+              role="button"
+              aria-label="show password"
+              tabindex="0"
+              @click="changePassVisibility()"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+        </div>
       </div>
 
-      <div class="mb-3">
+      <div>
         <label for="repeatPassword" class="form-label">Repeat Password</label>
-        <input
-          v-model="repeatPassw"
-          id="repeatPassword"
-          type="password"
-          class="form-control"
-          required="required"
-          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-          title="Password must contain a number, a capital letter and a length of at least 8 characters"
-        />
-        <label for="repeatPassword" class="error"
-          >{this.repeatPasswError}</label
-        >
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-lock-fill"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <input
+            v-model="repeatPassw"
+            id="repeatPassword"
+            type="password"
+            class="form-control"
+            required="required"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+            title="Password must contain a number, a capital letter and a length of at least 8 characters"
+          />
+          <div class="input-group-text show-password">
+            <i
+              :class="{
+                'bi bi-eye-slash-fill': !showRepPassw,
+                'bi bi-eye-fill': showRepPassw,
+              }"
+              role="button"
+              aria-label="show password"
+              tabindex="0"
+              @click="changeRepPassVisibility()"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+        </div>
+        <label for="repeatPassword" class="error">{{
+          this.repeatPasswError
+        }}</label>
       </div>
 
       <input type="submit" class="btn btn-primary" value="Create" />
+      <button class="btn btn-warning back" @click="route()">Back</button>
     </fieldset>
   </form>
 </template> 
@@ -119,28 +204,36 @@ export default {
       repeatPassw: "",
       repeatPasswError: "",
       emailError: "",
+      showRepPassw: false,
+      showPassword: false,
     };
   },
   methods: {
     sendData() {
-      if (this.check) {
-        alert("stiamo mandando dati");
-        //   fetch("http://localhost:8001/api/categories/", {
-        //     method: "POST",
-        //     body: formData,
-        //   })
-        //     .then((response) => {
-        //       return response.json();
-        //     })
-        //     .then((data) => {
-        //       console.log(data.message);
-        //       this.name = "";
-        //       this.description = "";
-        //       this.price = 0;
-        //     })
-        //     .catch((err) => {
-        //       console.log(err);
-        //     });
+      if (this.check()) {
+        let photo = document.getElementById("file").files[0];
+        let formData = new FormData();
+        formData.append("img", photo);
+        formData.append("name", this.name);
+        formData.append("surname", this.surname);
+        formData.append("phone", this.phone);
+        formData.append("email", this.email);
+        formData.append("password", this.password);
+        console.log("formdata supremo", formData);
+        fetch("http://localhost:8001/api/employee/" + this.email, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            console.log(data.message);
+            this.route();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
     check() {
@@ -150,6 +243,31 @@ export default {
       } else {
         return true;
       }
+    },
+    changePassVisibility() {
+      let input = document.getElementById("password");
+      if (this.showPassword) {
+        //if it's true, i'm showing the passw
+        input.type = "password";
+        this.showPassword = !this.showPassword;
+      } else {
+        input.type = "text";
+        this.showPassword = !this.showPassword;
+      }
+    },
+    changeRepPassVisibility() {
+      let input = document.getElementById("repeatPassword");
+      if (this.showRepPassw) {
+        //if it's true, i'm showing the passw
+        input.type = "password";
+        this.showRepPassw = !this.showRepPassw;
+      } else {
+        input.type = "text";
+        this.showRepPassw = !this.showRepPassw;
+      }
+    },
+    route() {
+      this.$router.push({ path: "/employees" });
     },
   },
 };
@@ -170,5 +288,13 @@ fieldset {
   padding: 1rem;
   border: 1px solid black;
   border-radius: 5%;
+}
+
+.show-password {
+  background-color: transparent !important;
+}
+
+.back {
+  margin-left: 2rem;
 }
 </style>

@@ -1,7 +1,29 @@
 <template>
   <div>
-    <div>
-      <HorizontalCard :title="employeeEmail" :text="text" :key="key" />
+    <div class="card-wrapper">
+      <div class="card ">
+        <img :src="'http://localhost:8001/images/employees/'+this.employee.image" class="card-img-top  " alt="employee profile pic">
+        <div class="card-body">
+          <h3 class="card-title">{{this.employeeEmail}}</h3>
+          <p class="card-text">
+            Name: {{this.employee.name}}
+            <br />
+            Surname: {{this.employee.surname}}
+            <br />
+            Phone: {{this.employee.phone}}
+            <br />
+            Role: {{this.employee.role}}
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h1>Statistics</h1>
+          <p class="card-stat">
+            <pre>{{this.text}}</pre>
+          </p>
+        </div>
+      </div>
     </div>
     <div class="chart-wrapper">
       <chart :type="'pie'" :id="'pieChart'" :chartdata="pieData" :key="key" />
@@ -19,7 +41,6 @@
 
 <script>
 import chart from "../components/chart";
-import HorizontalCard from "../components/horizontalImageCard";
 
 export default {
   name: "singleEmployee",
@@ -40,7 +61,6 @@ export default {
   },
   components: {
     chart,
-    HorizontalCard,
   },
   mounted() {
     this.getSingleEmployee();
@@ -165,5 +185,26 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.card-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+h3 {
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: 900;
+}
+
+.card-text {
+  font-size: 1.5rem;
+}
+
+.card-stat {
+  font-size: 2rem;
+}
 </style>

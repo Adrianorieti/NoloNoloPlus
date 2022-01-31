@@ -94,6 +94,7 @@ router.post('/:email', async (req, res) => {
                 amountPaid: 0,
                 communications: [],
                 futureReservations: [],
+                activeReservations: [],
                 pastReservations: []
             });
             //user is saved in mongodb

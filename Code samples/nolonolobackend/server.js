@@ -98,6 +98,11 @@ app.get('/images/users/:name', (req, res) => {
     res.sendFile(path.join(__dirname, 'images', 'users', name));
 });
 
+app.get('/images/employee/:name', (req, res) => {
+    const name = req.params.name;
+    res.sendFile(path.join(__dirname, 'images', 'employees', name));
+});
+
 // bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
 
 //     let usr = new user({

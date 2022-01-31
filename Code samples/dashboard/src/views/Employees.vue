@@ -21,10 +21,15 @@
     </div>
     <div class="divide">
       <div
-        class="card margin border border-dark shadow"
+        class="card custom-card"
         v-for="employee in resultQuery"
         :key="employee.email"
       >
+        <img
+          :src="'http://localhost:8001/images/employees/' + employee.image"
+          class="card-img-top"
+          alt="employee profile pic"
+        />
         <div class="card-body">
           <h5 class="card-title">
             <a
@@ -102,9 +107,16 @@ export default {
   justify-content: space-around;
 }
 
-.margin {
+.custom-card {
   margin-top: 2rem;
   margin-bottom: 3rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-card:hover {
+  box-shadow: 5px 10px 20px 5px rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
 }
 
 .search-wrapper {
