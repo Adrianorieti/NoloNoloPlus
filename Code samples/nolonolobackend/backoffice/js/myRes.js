@@ -164,33 +164,40 @@ function confirmLending(x)
   let employee = sessionStorage.getItem('email');
   let product = futureRes[x].product;
   let user = futureRes[x].usermail;
-  let start = futureRes[x].start;
+  let start = new Date(futureRes[x].start);
   let end = futureRes[x].end;
+  let today = new Date();
+  if(today.getTime() >= start.getTime())
+  {
 
-  let obj = `{
-    "user": "${user}", 
-    "product": "${product}",
-    "employee": "${employee}",
-    "start": "${start}",
-    "end": "${end}"
-  }`;
-  console.log(obj);
-  $.post({
-    type: 'POST',
+    let obj = `{
+      "user": "${user}", 
+      "product": "${product}",
+      "employee": "${employee}",
+      "start": "${start}",
+      "end": "${end}"
+    }`;
+    console.log(obj);
+    $.post({
+      type: 'POST',
       url: 'http://localhost:8001/api/rental/active/confirm',
       contentType: 'application/json; charset=utf-8',
       dataType: 'json',
       data: obj
     }, function(data){
-        $('#content').html(`<h3>${data.message}</h3>`);
-        getMyReservations();
+      $('#content').html(`<h3>${data.message}</h3>`);
+      getMyReservations();
     }).fail(function(data){
-        $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
+      $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
     })
-}
-
-function showMyReservations(emp)
-{
+  }else
+  {
+    $('#futureError').html("Can't confirm a lending before the start of the reservation");
+  }
+  }
+  
+  function showMyReservations(emp)
+  {
   activeRes = activeRes.concat(emp.activeReservations);
   console.log(activeRes);
   futureRes = futureRes.concat(emp.futureReservations);
@@ -244,6 +251,7 @@ function showMyReservations(emp)
         <p class="card-text">From: ${start.toDateString()}</p>
         <p class="card-text">To: ${end.toDateString()} </p>
         <p class="card-text">Expense: ${emp.futureReservations[x].expense} </p>
+        <span id="futureError"></span><br>
         <a href="#" class="btn btn-primary" onclick="confirmLending(${x})">Confirm lending</a>
 
         </div>
