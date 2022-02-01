@@ -8,26 +8,25 @@ const router = express.Router();
 
 /** Get all products in database */
 router.get('/', (req, res) => {
-   
-     product.find({})
+
+    product.find({})
         .exec()
         .then((products) => {
-            res.status(200).json({productList: products});
+            res.status(200).json({ productList: products });
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).json({ message: 'Internal error'})
+            res.status(500).json({ message: 'Internal error' })
         })
 })
 
 /** Get a single product by name */
 router.get('/:name', (req, res) => {
-   let name = req.query.name;
-   console.log(name);
-    product.find({name: name})
+    let name = req.params.name;
+    product.find({ name: name })
         .exec()
         .then((doc) => {
-            res.status(200).json(doc);
+            res.status(200).json({ product: doc });
         })
         .catch((err) => {
             res.status(500).json({ message: 'Internal error', error: err })
@@ -36,36 +35,35 @@ router.get('/:name', (req, res) => {
 
 /** Verify if the product is available on a given period */
 router.get('/:name/available', (req, res) => {
-    let name = req.params.name; 
+    let name = req.params.name;
     let start = new Date(req.query.start);
-    start.setDate(start.getDate() +1);
+    start.setDate(start.getDate() + 1);
     let end = new Date(req.query.end);
-    end.setDate(end.getDate() +1);
+    end.setDate(end.getDate() + 1);
     let email = req.query.email;
-   
-       product.findOne({name: name})
-      .exec()
-      .then(async (prod) => {
-          console.log("sono dentro");
-            let collection = await category.findOne({name: prod.type})
-                if(checkAvailability.checkAvailability(prod, start, end)) {
-                  let price = await computePrice.computePrice(collection, prod, email,'', start, end);
-                  res.status(200).json({price: price, product: prod});
-                }else
-                {
-                    res.status(400).json({ message: 'Not available', product: prod })
-                }
+
+    product.findOne({ name: name })
+        .exec()
+        .then(async (prod) => {
+            console.log("sono dentro");
+            let collection = await category.findOne({ name: prod.type })
+            if (checkAvailability.checkAvailability(prod, start, end)) {
+                let price = await computePrice.computePrice(collection, prod, email, '', start, end);
+                res.status(200).json({ price: price, product: prod });
+            } else {
+                res.status(400).json({ message: 'Not available', product: prod })
+            }
         }).catch((err) => {
-            console.log(err);       
+            console.log(err);
             res.status(400).json({ message: 'Bad input parameter', error: err })
         })
-    
+
 })
 /** Add a product */
 router.post('/', async (req, res) => {
 
-    let collection = await category.findOne({name: req.body.type});
-    
+    let collection = await category.findOne({ name: req.body.type });
+
 
     const newProduct = new product({
         name: req.body.name,
@@ -102,41 +100,39 @@ router.post('/:name', (req, res) => {
         { $set: newData },
         { runValidators: true, new: false, useFindAndModify: false }
     ).exec()
-    .then((result) => {
-        console.log(result);
-        res.status(200).json({message: "Succesfuly changed"});
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(400).json({ message: 'Bad input parameter'})
-    })
+        .then((result) => {
+            console.log(result);
+            res.status(200).json({ message: "Succesfuly changed" });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({ message: 'Bad input parameter' })
+        })
 })
 
- /** Deletes a product if exists and if there are no future reservations */
+/** Deletes a product if exists and if there are no future reservations */
 router.delete('/:name', async (req, res) => {
     let name = req.params.name;
     console.log(name);
-    product.exists({name: name}, async function (err, doc) {
-        if (err){
-            res.status(404).json({message: "Product not found", error: err})
-        }else{
+    product.exists({ name: name }, async function (err, doc) {
+        if (err) {
+            res.status(404).json({ message: "Product not found", error: err })
+        } else {
             console.log(doc);
-            let prod = await product.findOne({name: name});
+            let prod = await product.findOne({ name: name });
             console.log(prod);
-            if(prod.futureReservations.length != 0 || prod.activeReservations.length != 0)
-            {
-                res.status(500).json({message: "Impossible, there are future reservations on the product"});
-            }else
-            {
+            if (prod.futureReservations.length != 0 || prod.activeReservations.length != 0) {
+                res.status(500).json({ message: "Impossible, there are future reservations on the product" });
+            } else {
 
                 product.findOneAndDelete({ name: name })
-                .exec()
-                .then((result) => {
-                    res.status(200).json({ message: 'Product deleted'})
-                })
-                
+                    .exec()
+                    .then((result) => {
+                        res.status(200).json({ message: 'Product deleted' })
+                    })
+
             }
-            }
+        }
     });
 })
 

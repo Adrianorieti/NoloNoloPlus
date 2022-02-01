@@ -63,9 +63,19 @@ const routes = [
     props: true
   },
   {
-    path: '/categoryCharts/:chartView',
-    name: 'categoryCharts',
-    component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/CategoryCharts.vue'),
+    path: '/categories',
+    name: 'categories',
+    component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/Categories.vue')
+  },
+  {
+    path: '/products',
+    name: 'products',
+    component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/Products.vue')
+  },
+  {
+    path: '/products/:productName',
+    name: 'singleProduct',
+    component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/SingleProduct.vue'),
     props: true
   },
   {

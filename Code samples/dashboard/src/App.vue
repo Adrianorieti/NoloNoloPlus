@@ -15,17 +15,12 @@
             <b-nav-item v-if="authenticated" to="/employees">
               Employees
             </b-nav-item>
-            <b-nav-item-dropdown v-if="authenticated" text="Category Charts">
-              <b-dropdown-item to="/categoryCharts/totalSales"
-                >Sales volume</b-dropdown-item
-              >
-              <b-dropdown-item to="/categoryCharts/numberOfRents"
-                >Number of rentals</b-dropdown-item
-              >
-              <b-dropdown-item to="/categoryCharts/numberOfObjects"
-                >Number of objects</b-dropdown-item
-              >
-            </b-nav-item-dropdown>
+            <b-nav-item v-if="authenticated" to="/categories">
+              Categories
+            </b-nav-item>
+            <b-nav-item v-if="authenticated" to="/products">
+              Products
+            </b-nav-item>
             <b-nav-item-dropdown v-if="authenticated" text="Products Charts">
               <b-dropdown-item to="/productCharts/sales"
                 >Sales volume</b-dropdown-item

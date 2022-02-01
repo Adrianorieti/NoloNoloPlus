@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div>
+    <div v-if="loading">
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div v-else>
       <HorizontalCard
         :title="userEmail"
         :text="text"
@@ -9,7 +14,13 @@
       />
     </div>
     <div class="chart-wrapper">
-      <chart :type="'pie'" :id="'pieChart'" :chartdata="pieData" :key="key" />
+      <chart
+        :type="'pie'"
+        :id="'pieChart'"
+        :class="'pie'"
+        :chartdata="pieData"
+        :key="key"
+      />
     </div>
     <div class="chart-wrapper">
       <chart
@@ -39,6 +50,7 @@ export default {
       barData: {},
       lineData: {},
       text: "",
+      loading: true,
     };
   },
   props: ["userEmail"],
@@ -56,12 +68,9 @@ export default {
   },
   methods: {
     getSingleUser() {
-      let fetch_options = {
-        method: "GET",
-        headers: new Headers({ "Content-type": "application/json" }),
-      };
+      this.loading = true;
       let url = "http://localhost:8001/api/user/" + this.userEmail;
-      fetch(url, fetch_options)
+      fetch(url)
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -69,6 +78,7 @@ export default {
         })
         .then((data) => {
           this.user = data.user;
+          this.loading = false;
           this.gatherStatistics();
         })
         .catch((error) => {
@@ -178,12 +188,8 @@ export default {
     },
     createBarNumOfResPerCat() {
       //Bisogna fare richiesta per avere i prodotti, da cui mi ricavo tutte le categorie e poi paragono prodotto al tipo di categoria. Devo creare una specie di dizionario.
-      let fetch_options = {
-        method: "GET",
-        headers: new Headers({ "Content-type": "application/json" }),
-      };
       let url = "http://localhost:8001/api/products/";
-      fetch(url, fetch_options)
+      fetch(url)
         .then((response) => {
           if (response.status === 200) {
             return response.json();

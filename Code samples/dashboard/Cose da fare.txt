@@ -1,7 +1,8 @@
+-AGGIUNGERE SPINNER PER CARICAMENTO
 -aggiungere statistica danni user
 -aggiungere back in tutte le parti
--cambiare la pagina della categoria per uniformare
--aggiungere pulsante di aggiunta categoria alle categoria
+-invece di confrontare le categorie, potrei fare delle statistiche specifiche sugli anni, magari una spending over time per le categorie.
 -cambiare pagina prodotti
+-nella pagine home magari creare la pagina del manager. -> da pensare ancora però.
 -cambiare pagina delle reservations -> con una select che mi cambia l'anno da mostrare.(serve un modo per ordinare tutto)
 -cambiare il login, abbellirlo e usare jwt

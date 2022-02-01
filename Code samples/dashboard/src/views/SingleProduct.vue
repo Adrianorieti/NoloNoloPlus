@@ -6,18 +6,20 @@
       </div>
     </div>
     <div class="card-wrapper" v-else>
-      <div class="card ">
-        <img :src="'http://localhost:8001/images/employees/'+this.employee.image" class="card-img-top  " alt="employee profile pic">
+      <div class="card">
+        <img
+          :src="'http://localhost:8001/images/categories/' + this.product.image"
+          class="card-img-top"
+          alt="product pic"
+        />
         <div class="card-body">
-          <h3 class="card-title">{{this.employeeEmail}}</h3>
+          <h3 class="card-title">{{ this.productName }}</h3>
           <p class="card-text">
-            Name: {{this.employee.name}}
+            Category: {{ this.product.type }}
             <br />
-            Surname: {{this.employee.surname}}
+            Price: {{ this.product.price }}
             <br />
-            Phone: {{this.employee.phone}}
-            <br />
-            Role: {{this.employee.role}}
+            Status: {{ this.product.status }}
           </p>
         </div>
       </div>
@@ -30,51 +32,36 @@
         </div>
       </div>
     </div>
-    <div class="chart-wrapper">
-      <chart :type="'pie'" :id="'pieChart'" :chartdata="pieData" :key="key" />
-    </div>
-    <div class="chart-wrapper">
-      <chart
-        :type="'line'"
-        :id="'lineChart'"
-        :chartdata="lineData"
-        :key="key"
-      />
-    </div>
   </div>
-</template>
+</template> 
 
 <script>
-import chart from "../components/chart";
-
 export default {
-  name: "singleEmployee",
+  name: "SingleProduct",
   data() {
     return {
       key: 0,
-      employee: {},
+      product: {},
       pieData: {},
       lineData: {},
       text: "",
       loading: true,
     };
   },
-  props: ["employeeEmail"],
+  props: ["productName"],
   watch: {
-    employeeEmail() {
-      this.getSingleEmployee();
+    productName() {
+      this.getSingleProduct();
     },
   },
-  components: {
-    chart,
-  },
+  components: {},
   mounted() {
-    this.getSingleEmployee();
+    this.getSingleProduct();
   },
   methods: {
-    getSingleEmployee() {
+    getSingleProduct() {
       this.loading = true;
-      let url = "http://localhost:8001/api/employee/" + this.employeeEmail;
+      let url = "http://localhost:8001/api/products/" + this.productName;
       fetch(url)
         .then((response) => {
           if (response.status === 200) {
@@ -82,7 +69,7 @@ export default {
           }
         })
         .then((data) => {
-          this.employee = data.emp;
+          this.product = data.product[0];
           this.loading = false;
           this.gatherStatistics();
         })
@@ -91,7 +78,7 @@ export default {
         });
     },
     gatherStatistics() {
-      let numOfRes = this.employee.pastReservations.length;
+      let numOfRes = this.product.pastReservations.length;
       let earnings = 0;
       let averageEarnings = 0,
         averageLength = 0;
@@ -101,9 +88,9 @@ export default {
       let maxDaysOfRents = 0,
         minDaysOfRent = 0;
       if (numOfRes > 0) {
-        maxEarnings = this.employee.pastReservations[0].expense;
-        minEarnings = this.employee.pastReservations[0].expense;
-        for (let res of this.employee.pastReservations) {
+        maxEarnings = this.product.pastReservations[0].expense;
+        minEarnings = this.product.pastReservations[0].expense;
+        for (let res of this.product.pastReservations) {
           //expense part
           earnings += res.expense;
           if (maxEarnings < res.expense) maxEarnings = res.expense;
@@ -126,54 +113,6 @@ export default {
         `Average length for reservation: ${averageLength} days \n` +
         `Max length for reservation: ${maxDaysOfRents} days \n ` +
         `Min length for reservation: ${minDaysOfRent} days \n `;
-      this.createPieResChart();
-      this.createLineEarningTimeChart();
-      this.key += 1;
-    },
-    createPieResChart() {
-      //reservations pie chart!
-      let labels = ["Completed", "Incomplete"];
-      let chartData = [
-        this.employee.pastReservations.length,
-        this.employee.futureReservations.length +
-          this.employee.activeReservations.length,
-      ];
-      let colors = [this.getRandomColor(), this.getRandomColor()];
-      this.pieData = {
-        labels: labels,
-        datasets: [
-          {
-            label: "Type of reservations",
-            backgroundColor: colors,
-            borderColor: colors,
-            data: chartData,
-          },
-        ],
-      };
-    },
-    createLineEarningTimeChart() {
-      let labels = [];
-      let chartData = [];
-      let colors = [];
-      for (let res of this.employee.pastReservations) {
-        let end = new Date(res.end);
-        labels.push(
-          end.getDate() + "-" + (end.getMonth() + 1) + "-" + end.getFullYear()
-        );
-        chartData.push(res.expense);
-        colors.push(this.getRandomColor());
-      }
-      this.lineData = {
-        labels: labels,
-        datasets: [
-          {
-            label: "Earning over time",
-            backgroundColor: colors,
-            borderColor: colors,
-            data: chartData,
-          },
-        ],
-      };
     },
     getRandomColor() {
       return "#" + (Math.random().toString(16) + "0000000").slice(2, 8);

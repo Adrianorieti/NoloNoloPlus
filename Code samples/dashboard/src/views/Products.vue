@@ -3,46 +3,37 @@
     <div class="search-wrapper">
       <div class="form-floating w-75">
         <input
-          type="email"
+          type="text"
           class="form-control"
           id="floatingFilter"
           v-model="searchQuery"
-          placeholder="username@domain.it"
+          placeholder="Product Name"
         />
-        <label for="floatingFilter">Filter for Email Address</label>
+        <label for="floatingFilter">Filter for Product Name</label>
       </div>
-      <button
-        type="button"
-        class="btn btn-outline-success"
-        @click="route('employees/create')"
-      >
-        CREATE EMPLOYEE
-      </button>
     </div>
     <div class="divide">
       <div
         class="card custom-card"
-        v-for="employee in resultQuery"
-        :key="employee.email"
+        v-for="product in resultQuery"
+        :key="product.name"
       >
         <img
-          :src="'http://localhost:8001/images/employees/' + employee.image"
+          :src="'http://localhost:8001/images/categories/' + product.image"
           class="card-img-top"
-          alt="employee profile pic"
+          alt="product pic"
         />
         <div class="card-body">
           <h5 class="card-title">
             <a
-              :href="'/employee/' + employee.email"
-              @click.prevent="route('employees/' + employee.email)"
+              :href="'/products/' + product.name"
+              @click.prevent="route('products/' + product.name)"
               class="stretched-link st_link_dec"
             >
-              {{ employee.email }}</a
+              {{ product.name }}</a
             >
           </h5>
-          <p class="card-text">
-            Full Name: {{ employee.name + " " + employee.surname }}
-          </p>
+          <p class="card-text">Category: {{ product.type }}</p>
         </div>
       </div>
     </div>
@@ -51,15 +42,15 @@
 
 <script>
 export default {
-  name: "employees",
+  name: "Products",
   data() {
     return {
-      employees: [],
+      products: [],
       searchQuery: "",
     };
   },
   mounted() {
-    let url = "http://localhost:8001/api/employee/";
+    let url = "http://localhost:8001/api/products/";
     fetch(url)
       .then((response) => {
         if (response.status === 200) {
@@ -67,7 +58,7 @@ export default {
         }
       })
       .then((data) => {
-        this.employees = data.emp;
+        this.products = data.productList;
       })
       .catch((error) => {
         console.log(error);
@@ -76,14 +67,14 @@ export default {
   computed: {
     resultQuery() {
       if (this.searchQuery) {
-        return this.employees.filter((employee) => {
+        return this.products.filter((product) => {
           return this.searchQuery
             .toLowerCase()
             .split(" ")
-            .every((v) => employee.email.toLowerCase().includes(v));
+            .every((v) => product.name.toLowerCase().includes(v));
         });
       } else {
-        return this.employees;
+        return this.products;
       }
     },
   },
@@ -123,10 +114,6 @@ export default {
 
 .search-wrapper {
   display: flex;
-  justify-content: space-around;
-}
-
-.btn {
-  margin-left: 1rem;
+  justify-content: center;
 }
 </style>
