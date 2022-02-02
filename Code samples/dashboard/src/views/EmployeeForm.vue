@@ -45,6 +45,24 @@
       </div>
 
       <div>
+        <label for="role" class="form-label">Role</label>
+        <div class="input-group">
+          <div class="input-group-text">
+            <i
+              class="bi bi-person-circle"
+              aria-hidden="true"
+              style="font-size: 1rem"
+            ></i>
+          </div>
+          <select class="form-select" required v-model="role" id="role">
+            <option value="" selected disabled>Please select one</option>
+            <option value="employee">Admin</option>
+            <option value="manager">Manager</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
         <label for="phone" class="form-label">Phone Number</label>
         <div class="input-group">
           <div class="input-group-text">
@@ -198,6 +216,7 @@ export default {
     return {
       name: "",
       surname: "",
+      role: "",
       phone: "",
       email: "",
       password: "",
@@ -219,8 +238,10 @@ export default {
         formData.append("phone", this.phone);
         formData.append("email", this.email);
         formData.append("password", this.password);
-        console.log("formdata supremo", formData);
-        fetch("http://localhost:8001/api/employee/" + this.email, {
+        if (!this.role) {
+          this.role = "employee";
+        }
+        fetch("http://localhost:8001/api/" + this.role + "/" + this.email, {
           method: "POST",
           body: formData,
         })

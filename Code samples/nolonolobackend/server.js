@@ -15,6 +15,7 @@ const customer = require('./api/customer');
 const auth = require('./api/auth');
 const employeeRoutes = require('./routes/empRoutes');
 const emp = require('./api/newemployee');
+const manager = require('./api/manager');
 const categories = require('./api/categories');
 const products = require('./api/products');
 const userApi = require('./api/user');
@@ -53,6 +54,7 @@ app.use('/api/employee/', emp);
 app.use('/api/categories', categories);
 app.use('/api/products', products);
 app.use('/api/user', userApi);
+app.use('/api/manager/', manager);
 
 /* Alternative routes for static files */
 app.use('/employee/', employeeRoutes);

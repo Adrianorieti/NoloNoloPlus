@@ -5,13 +5,13 @@
       type="text"
       required
       name="email"
-      v-model="input.email"
+      v-model="email"
       placeholder="Email"
     />
     <input
       type="password"
       name="password"
-      v-model="input.password"
+      v-model="password"
       required
       placeholder="Password"
     />
@@ -24,18 +24,16 @@ export default {
   name: "Login",
   data() {
     return {
-      input: {
-        email: "",
-        password: "",
-      },
+      email: "",
+      password: "",
     };
   },
   methods: {
     login() {
-      const buff = Buffer.from(this.input.password, "utf-8");
+      const buff = Buffer.from(this.password, "utf-8");
       const encodedpass = buff.toString("base64");
       let payload = {
-        email: this.input.email,
+        email: this.email,
         password: encodedpass,
       };
       let options = {
@@ -47,12 +45,17 @@ export default {
       let url = "http://localhost:8001/api/account/login/manager";
       fetch(url, options)
         .then((response) => {
-          if (response.status == 200) {
-            this.$emit("authenticated", true);
-            this.$router.replace({ name: "home" });
+          if (response.status === 200) {
+            return response.json();
           } else {
             console.log("The username and / or password is incorrect");
           }
+        })
+        .then((data) => {
+          sessionStorage.setItem("token", data.accessToken);
+          sessionStorage.setItem("email", this.email);
+          this.$emit("authenticated", true);
+          this.$router.replace({ name: "home" });
         })
         .catch((error) => {
           console.log(error);

@@ -166,10 +166,13 @@ export default {
       let colors = [];
       this.user.pastReservations.reverse();
       for (let res of this.user.pastReservations) {
-        console.log(res);
-        let end = new Date(res.end);
+        let start = new Date(res.start);
         labels.push(
-          end.getDate() + "-" + (end.getMonth() + 1) + "-" + end.getFullYear()
+          start.getDate() +
+            "-" +
+            (start.getMonth() + 1) +
+            "-" +
+            start.getFullYear()
         );
         chartData.push(res.expense);
         colors.push(this.getRandomColor());

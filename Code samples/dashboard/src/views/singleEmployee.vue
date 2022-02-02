@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="chart-wrapper">
-      <chart :type="'pie'" :id="'pieChart'" :chartdata="pieData" :key="key" />
+      <chart :type="'pie'" :id="'pieChart'" :class="'pie'" :chartdata="pieData" :key="key" />
     </div>
     <div class="chart-wrapper">
       <chart
@@ -156,9 +156,13 @@ export default {
       let chartData = [];
       let colors = [];
       for (let res of this.employee.pastReservations) {
-        let end = new Date(res.end);
+        let start = new Date(res.start);
         labels.push(
-          end.getDate() + "-" + (end.getMonth() + 1) + "-" + end.getFullYear()
+          start.getDate() +
+            "-" +
+            (start.getMonth() + 1) +
+            "-" +
+            start.getFullYear()
         );
         chartData.push(res.expense);
         colors.push(this.getRandomColor());

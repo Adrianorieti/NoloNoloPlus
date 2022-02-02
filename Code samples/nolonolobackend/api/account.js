@@ -83,23 +83,11 @@ router.post('/login/:role', async (req, res) => {
         const decodedpass = buff.toString('utf-8');
         // We compare the passwords
         if (await bcrypt.compare(decodedpass, source.password)) {
-            if (role != 'manager') {
-                //CREATE  JWT
-                const user = { email: `${source.email}` };
-                const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '2h' });
-                console.log("arrivo qui prima di crashare");
-                //Send token back to client 
-                res.status(200).json({ accessToken: accessToken, name: `${source.name}` });
-            }
-            else {
-                // Create the json web token
-                //const manager = { email: `${source.email}` };
-                //const accessToken = jwt.sign(manager, process.env.TOKEN_EMPLOYEE_KEY, { expiresIn: '9h' });//LINEA DA CAMBIARE
-
-                //Send token back to client 
-                //res.status(200).json({ accessToken: accessToken });
-                res.status(200).send();
-            }
+            //CREATE  JWT
+            const user = { email: `${source.email}` };
+            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_KEY, { expiresIn: '2h' });
+            //Send token back to client 
+            res.status(200).json({ accessToken: accessToken, name: `${source.name}` });
 
         } else {
             res.status(500).json({ message: 'The requested account may not exists or your credentials are not correct' });

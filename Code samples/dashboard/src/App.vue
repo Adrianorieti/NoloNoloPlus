@@ -35,7 +35,7 @@
             <b-nav-item v-if="authenticated" to="/reservationCharts">
               Reservations Charts
             </b-nav-item>
-            <b-nav-item href="http://localhost:8001/employee/login"
+            <b-nav-item href="http://localhost:8001/employee/panel"
               >BackOffice</b-nav-item
             >
           </b-navbar-nav>
@@ -74,6 +74,7 @@ export default {
       this.authenticated = status;
     },
     logout() {
+      sessionStorage.clear();
       this.authenticated = false;
     },
   },

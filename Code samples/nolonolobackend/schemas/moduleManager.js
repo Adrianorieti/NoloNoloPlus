@@ -29,6 +29,9 @@ const managerSchema = new Schema({
     role: {
         type: String,
         required: true
+    },
+    image: {
+        type: String,
     }
 });
 

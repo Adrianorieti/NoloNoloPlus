@@ -32,10 +32,23 @@
         </div>
       </div>
     </div>
+        <div class="chart-wrapper">
+      <chart :type="'pie'" :id="'pieChart'" :class="'pie'" :chartdata="pieData" :key="key" />
+    </div>
+    <div class="chart-wrapper">
+      <chart
+        :type="'line'"
+        :id="'lineChart'"
+        :chartdata="lineData"
+        :key="key"
+      />
+    </div>
   </div>
 </template> 
 
 <script>
+import chart from "../components/chart";
+
 export default {
   name: "SingleProduct",
   data() {
@@ -54,7 +67,9 @@ export default {
       this.getSingleProduct();
     },
   },
-  components: {},
+  components: {
+    chart,
+  },
   mounted() {
     this.getSingleProduct();
   },
@@ -113,6 +128,58 @@ export default {
         `Average length for reservation: ${averageLength} days \n` +
         `Max length for reservation: ${maxDaysOfRents} days \n ` +
         `Min length for reservation: ${minDaysOfRent} days \n `;
+      this.createPieResChart();
+      this.createLineEarningTimeChart();
+      this.key += 1;
+    },
+    createPieResChart() {
+      //reservations pie chart!
+      let labels = ["Completed", "Incomplete"];
+      let chartData = [
+        this.product.pastReservations.length,
+        this.product.futureReservations.length +
+          this.product.activeReservations.length,
+      ];
+      let colors = [this.getRandomColor(), this.getRandomColor()];
+      this.pieData = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Type of reservations",
+            backgroundColor: colors,
+            borderColor: colors,
+            data: chartData,
+          },
+        ],
+      };
+    },
+    createLineEarningTimeChart() {
+      let labels = [];
+      let chartData = [];
+      let colors = [];
+      for (let res of this.product.pastReservations) {
+        let start = new Date(res.start);
+        labels.push(
+          start.getDate() +
+            "-" +
+            (start.getMonth() + 1) +
+            "-" +
+            start.getFullYear()
+        );
+        chartData.push(res.expense);
+        colors.push(this.getRandomColor());
+      }
+      this.lineData = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Earning over time",
+            backgroundColor: colors,
+            borderColor: colors,
+            data: chartData,
+          },
+        ],
+      };
     },
     getRandomColor() {
       return "#" + (Math.random().toString(16) + "0000000").slice(2, 8);
