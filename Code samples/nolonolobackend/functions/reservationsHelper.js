@@ -22,10 +22,11 @@ module.exports = {
          x = 0;
         for(x in reservations)
         { 
-            console.log(start);
-            console.log(end);
-            console.log(reservations[x].start)
-            console.log(reservations[x].end)
+            console.log("st",start);
+            console.log("end",end);
+            console.log("res st",reservations[x].start)
+            console.log("res end",reservations[x].end)
+            console.log("newgironewcorsa");
             if(reservations[x].end.getTime() === end.getTime() && reservations[x].start.getTime() === start.getTime())
                { 
                    toChange = reservations[x];
