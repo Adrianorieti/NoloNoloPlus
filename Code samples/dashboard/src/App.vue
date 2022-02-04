@@ -65,8 +65,17 @@ export default {
     };
   },
   mounted() {
-    if (!this.authenticated) {
-      this.$router.replace({ name: "login" });
+    let token = sessionStorage.getItem("token");
+    if (token) {
+      fetch(`http://localhost:8001/api/auth/manager/${token}`)
+        .then((response) => {
+          if (response.status === 200) {
+            this.authenticated = true;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   },
   methods: {

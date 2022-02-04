@@ -3,4 +3,4 @@
 -invece di confrontare le categorie, potrei fare delle statistiche specifiche sugli anni, magari una spending over time per le categorie.
 -nella pagine home magari creare la pagina del manager. -> da pensare ancora però.
 -cambiare pagina delle reservations -> con una select che mi cambia l'anno da mostrare.(serve un modo per ordinare tutto)
--cambiare il login, abbellirlo e usare jwt
+-aggiungere dei font personalizzati.

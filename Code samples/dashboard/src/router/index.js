@@ -3,6 +3,25 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+function guardMyroute(to, from, next) {
+  let token = sessionStorage.getItem('token');
+  if (token) {
+    let url = `http://localhost:8001/api/auth/manager/${token}`;
+    fetch(url)
+      .then(response => {
+        if (response.status === 200)
+          next();
+      })
+      .catch(err => {
+        console.log(err);
+        next('/login');
+      })
+  }
+  else {
+    next('/login');
+  }
+}
+
 const routes = [
   {
     path: '/',
@@ -18,11 +37,13 @@ const routes = [
   {
     path: '/home',
     name: 'home',
+    beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
   },
   {
     path: '/users',
     name: 'users',
+    beforeEnter: guardMyroute,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -31,6 +52,7 @@ const routes = [
   {
     path: '/users/:userEmail',
     name: 'singleUser',
+    beforeEnter: guardMyroute,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -40,6 +62,7 @@ const routes = [
   {
     path: '/employees',
     name: 'employees',
+    beforeEnter: guardMyroute,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -48,6 +71,7 @@ const routes = [
   {
     path: '/employees/create',
     name: 'EmployeeForm',
+    beforeEnter: guardMyroute,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -56,6 +80,7 @@ const routes = [
   {
     path: '/employees/:employeeEmail',
     name: 'singleEmployee',
+    beforeEnter: guardMyroute,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -65,28 +90,33 @@ const routes = [
   {
     path: '/categories',
     name: 'categories',
+    beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/Categories.vue')
   },
   {
     path: '/products',
     name: 'products',
+    beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/Products.vue')
   },
   {
     path: '/products/:productName',
     name: 'singleProduct',
+    beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/SingleProduct.vue'),
     props: true
   },
   {
     path: '/productCharts/:chartView',
     name: 'productCharts',
+    beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "productCharts" */ '../views/ProductCharts.vue'),
     props: true
   },
   {
     path: '/reservationCharts',
     name: 'reservationCharts',
+    beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/provaReservations.vue')
   }
 ]
