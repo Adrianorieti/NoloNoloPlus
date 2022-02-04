@@ -6,23 +6,21 @@ function Header() {
     return (
         <header classname="App-header container-properties center-block mt-0">
 
-            <div class="row">
-                <div className="col-lg-5">
-                    <img className="logo img-fluid" src={NoloNoloLogo} alt="Prenotazioni NoloNolo" title="Prenotazioni NoloNolo" />
-                </div>
-                <div className="col-lg-5">
+                <div className="row d-flex align-items-center">
+                    <div className="col-lg-4  ">
+                        <span><img className="img-fluid" src={NoloNoloLogo} alt="Prenotazioni NoloNolo" title="Prenotazioni NoloNolo" /></span>
+                    </div>
 
-                    <span><h4>Welcome to NoloNoloPlus!</h4></span>
+                    <div className="col-lg-4">
+                        <span><h4>Welcome to NoloNoloPlus!</h4></span>
+                    </div>
 
-                    <p>
-                        <span>
-                            <strong>
-                                The easy and safe way to rent a byke for your green travels.
-                            </strong>
-                        </span>
-                    </p>
+                    <div className="col-lg-4">
+                        <strong>The easy and safe way to rent a byke for your green travels</strong>
+                    </div>
+
                 </div>
-            </div>
+            
 
         </header>
 
