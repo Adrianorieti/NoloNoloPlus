@@ -384,7 +384,7 @@ router.patch('/:product/modify', async(req, res) => {
                 usr.save();
             }else
             {
-                res.status(500).json({message: "not found in employee"});
+                return res.status(500).json({message: "not found in employee"});
             }
     
             // Cambio nel dipendente
