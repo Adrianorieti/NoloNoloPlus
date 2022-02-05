@@ -4,3 +4,4 @@
 -nella pagine home magari creare la pagina del manager. -> da pensare ancora però.
 -cambiare pagina delle reservations -> con una select che mi cambia l'anno da mostrare.(serve un modo per ordinare tutto)
 -aggiungere dei font personalizzati.
+-modifica categoria
