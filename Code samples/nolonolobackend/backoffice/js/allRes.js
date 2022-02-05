@@ -20,19 +20,20 @@ function sendModifyRental(x)
   // devo comunque mandare i vecchi dati
 
  
-  if((start != '' && end != '') && (start.getTime() <= end.getTime()) )
+  if((start != "" && end != "") && (start.getTime() <= end.getTime()) )
   {
-      console.log("entro qui comunque");
-
-      let obj = `{
-        "user": "${email}", 
-        "employee": "${employee}",
+    
+    let obj = `{
+      "user": "${email}", 
+      "employee": "${employee}",
         "product": "${product}",
         "oldStart": "${oldStart}",
         "oldEnd": "${oldEnd}",
         "start": "${start}",
         "end": "${end}"
       }`;
+      
+      console.log(obj);
 
       $.ajax({
         method: 'PATCH',
@@ -48,13 +49,6 @@ function sendModifyRental(x)
             $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
         })
 
-  }else if (!isNaN(start) || isNaN(end) )
-  {
-    console.log("entro qui");
-    if(start.getTime() > end.getTime())
-    {
-      $('#error').html("Please insert date correctly");
-    }
   }
 }
 

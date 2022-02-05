@@ -322,12 +322,30 @@ router.patch('/:product/modify', async(req, res) => {
         let emp = await employee.findOne({email: employeeMail});
         if(prod && usr && emp)
         {
-            let newProd = await product.findOne({name: productName});
+            console.log(prod.name)
+            
             let newExpense;
             let newReserve;
 
-            if(newProd)
-                {
+            
+                    // Cambio dentro il prodotto originale (cancello la vecchia prenotazione)
+                    let toChange;
+                    let x;
+                    // cerco la vecchia prenotazione nel vecchio prodotto
+                    [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, oldEnd,  oldStart,)
+                    console.log("TO CHAAAANGE", toChange);
+                    if(toChange)
+                    {  
+                        // ... se la trovo la cancello
+                        console.log("PRIMA",prod.futureReservations);
+                        prod.futureReservations.splice(x, 1);
+                        console.log("DOPO",prod.futureReservations);
+                        prod.save();
+                    
+                    } 
+                    
+                    let newProd = await product.findOne({name: productName});
+
                     // Creo la nuova reservation col  prezzo computato
                      let collection = await category.findOne({name: newProd.type})
                      newExpense = await computePrice.computePrice(collection, newProd, userMail, usr, startDate, endDate)
@@ -346,7 +364,9 @@ router.patch('/:product/modify', async(req, res) => {
 
     
                         }else
-                        {
+                        {//se non c'è rimetto a posto quella vecchia ........ voglio morire
+                            prod.futureReservations.push(toChange);
+                            prod.save();
                             return res.status(500).json({message: "Product not available"});
                         }
                     }else
@@ -354,27 +374,12 @@ router.patch('/:product/modify', async(req, res) => {
                         newProd.futureReservations.push(newReserve);
                         newProd.save();
                     }
-                }else{
-                   return res.status(500).json({message: "Incorrect or non existent product inserted"});         
-                   
-                }
+                
 
-            // Cambio dentro il prodotto originale (cancello la vecchia prenotazione)
-            let toChange;
-            let x;
-            // cerco la vecchia prenotazione nel vecchio prodotto
-            [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, oldStart, oldEnd)
-
-            if(toChange)
-            {  
-                // ... se la trovo la cancello
-                prod.futureReservations.splice(x, 1);
-                prod.save();
-
-            } 
+            
          
             // Vado a cancellarla nello user ed ad aggiungere quella nuova
-                   [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x, oldStart, oldEnd);
+                   [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x,  oldEnd,  oldStart,);
 
              if(toChange)
             {
@@ -384,18 +389,18 @@ router.patch('/:product/modify', async(req, res) => {
                 usr.save();
             }else
             {
-                res.status(500).json({message: "not found in employee"});
+                return res.status(500).json({message: "not found in employee"});
             }
     
             // Cambio nel dipendente
-             [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x , oldStart, oldEnd);         
+             [toChange, x] = reservations.searchReservation(emp.futureReservations, toChange, x , oldEnd,  oldStart,);         
     
              if(toChange)
                 emp.futureReservations.splice(x,  1);
              
              emp.futureReservations.push(newReserve);
              emp.save();
-            
+                console.log("finalmente")
              return res.status(200).json({message: "Succesfuly changed"});
         }else
         {
