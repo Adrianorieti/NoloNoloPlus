@@ -168,8 +168,12 @@ function showProducts(products)
         {
             toInsert += `<div class="card" style="width: 18rem;">
             <img src="../../images/categories/${image}" class="card-img-top" alt="Product image">
-            <div class="card-body">
-              <h5 class="card-title">${products[x].name}</h5>
+            <div class="card-body">`
+            if(products[x].activeReservations.length >0)
+            {
+              toInsert += `<h5 class="card-title">Actually in use</h5>`
+            }
+              toInsert += `<h4 class="card-title"><b>${products[x].name}</b></h4>
               <p class="card-text">${products[x].price}$ per day</p>
               <p class="card-text">Status: ${products[x].status}</p>
               <div class="input-group mb-3">

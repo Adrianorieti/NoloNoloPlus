@@ -4,6 +4,7 @@ import './style/reservations.css';
 function Reservations(props) {
 
   const [modify, setModify] = useState(false);
+  const [target , setTarget] = useState('');
 
   function modifyReservation()
   {
@@ -18,7 +19,7 @@ function Reservations(props) {
 
   return (
     <div>
-    {modify ? <Modify future={props.user.futureReservations}/> : (
+    {modify ? <Modify target={target}/> : (
     <div id="mainReservations">
       <div id="future"><h3>Future</h3>
         {props.user.futureReservations.map((res, index) => {
@@ -33,7 +34,7 @@ function Reservations(props) {
               <p className="card-text"><b>And end on date</b>: {end.toDateString()}</p>
               <p className="card-text"><b>Total expense</b>: {res.expense}</p>
 
-              <button className='btn btn-primary' type='button' onClick={modifyReservation}>Modify</button>
+              <button className='btn btn-primary' type='button' onClick={(() => {setTarget(res); modifyReservation()})}>Modify</button>
               <button className='btn btn-danger' type='button'>Remove</button>
             </div>
           </div>)

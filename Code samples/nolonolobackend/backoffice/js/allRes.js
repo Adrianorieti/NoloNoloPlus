@@ -43,17 +43,19 @@ function sendModifyRental(x)
           data: obj
         }).done(function(data){
           $('#content').html(`<h3>${data.message}</h3>`);
+          allReservations[x].start = start;
+          allReservations[x].end = end;
           getAllReservations();
         }).fail(function(data)
         {
             $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
         })
-
   }
 }
 
 function showModify(x)
 {
+
   let start = new Date(allReservations[x].start); // faccio concat in showRes
     let today = new Date();
     if(start.getDate() == today.getDate() &&

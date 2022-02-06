@@ -332,31 +332,43 @@ router.patch('/:product/modify', async(req, res) => {
                     let toChange;
                     let x;
                     // cerco la vecchia prenotazione nel vecchio prodotto
+                    console.log("vecchio prodotto", prod);
                     [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, oldEnd,  oldStart,)
-                    console.log("TO CHAAAANGE", toChange);
+                    console.log("Vecchia prenotazione nel prodotto", toChange);
                     if(toChange)
                     {  
                         // ... se la trovo la cancello
-                        console.log("PRIMA",prod.futureReservations);
+                        console.log("PRIMA di cancellare",prod.futureReservations);
                         prod.futureReservations.splice(x, 1);
                         console.log("DOPO",prod.futureReservations);
                         prod.save();
                     
                     } 
-                    
-                    let newProd = await product.findOne({name: productName});
+                    let newProd;
+                    if(prod.name === productName)
+                    {
+                        newProd = prod;
+                        console.log("Sono lo stesso oggetto", newProd)
+                    }else
+                    {
+                        newProd = await product.findOne({name: productName});
+                        console.log("Sono oggetti diversi", newProd)
+
+                    }
 
                     // Creo la nuova reservation col  prezzo computato
                      let collection = await category.findOne({name: newProd.type})
                      newExpense = await computePrice.computePrice(collection, newProd, userMail, usr, startDate, endDate)
     
                      newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate, 0);
-                
+                    console.log("nuova reservation", newReserve);
                     // CONTROLLO SE SUL NUOVO PRODOTTO C'È DISPONIBILITÀ
                     // ALTRIMENTI NON SI FA NULLA
 
                     if(newProd.futureReservations.length > 0)
                     {
+                        console.log("ci sono delle prenotazioni pregresse");
+                        console.log(newProd.futureReservations);
                         if( checkAvailability.checkAvailability(newProd, startDate, endDate))
                         {  
                             newProd.futureReservations.push(newReserve);
@@ -371,6 +383,7 @@ router.patch('/:product/modify', async(req, res) => {
                         }
                     }else
                     {
+                        console.log(" non ci sono delle prenotazioni pregresse");
                         newProd.futureReservations.push(newReserve);
                         newProd.save();
                     }
@@ -380,16 +393,18 @@ router.patch('/:product/modify', async(req, res) => {
          
             // Vado a cancellarla nello user ed ad aggiungere quella nuova
                    [toChange, x] = reservations.searchReservation(usr.futureReservations, toChange, x,  oldEnd,  oldStart,);
+                   console.log("dentro lo user è", toChange);
 
              if(toChange)
             {
+                console.log("dentro lo user è", toChange);
                 //cancello quella vecchia
                 usr.futureReservations.splice(x, 1);
                 usr.futureReservations.push(newReserve);
                 usr.save();
             }else
             {
-                return res.status(500).json({message: "not found in employee"});
+                return res.status(500).json({message: "Reservation not found in user"});
             }
     
             // Cambio nel dipendente

@@ -290,7 +290,7 @@ function showCostumers(costumers)
         toInsert += `<div class="card" style="width: 18rem;">
         <img src="../../images/users/${image}" class="card-img-top" alt="Product image">
         <div class="card-body">
-        <h5 class="card-title">${costumers[x].name} ${costumers[x].surname} </h5>
+        <h5 class="card-title"><b>${costumers[x].name} ${costumers[x].surname} </b></h5>
         <p class="card-text">Email: ${costumers[x].email}</p>
         <p class="card-text">Phone: ${costumers[x].phone}</p>
         <p class="card-text">Payment method: ${costumers[x].paymentMethod}</p>

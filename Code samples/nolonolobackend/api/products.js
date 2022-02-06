@@ -79,6 +79,8 @@ router.post('/', async (req, res) => {
     })
 
     console.log(newProduct);
+    product.exists({ name: req.body.name }, function (err, doc) {
+        if (err) {
     newProduct
         .save()
         .then(() => {
@@ -90,6 +92,10 @@ router.post('/', async (req, res) => {
         .catch((err) => {
             res.status(400).json({ message: 'Bad input parameter', error: err })
         })
+    } else {
+        res.status(500).json({ message: 'Product name already in use', error: err })
+    }
+    })
 })
 /** Modify a product with the given name */
 router.post('/:name', (req, res) => {

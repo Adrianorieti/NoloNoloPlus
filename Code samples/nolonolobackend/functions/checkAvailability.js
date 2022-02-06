@@ -11,8 +11,6 @@ module.exports = {
             if(product.activeReservations.length > 0)
             {     
                 product.futureReservations.push(product.activeReservations[0]); // altrimenti c'è la possibilità che il sistema dia disponibile per il giorno dopo mentre non lo è
-            }else
-            {
             }
             if(product.futureReservations.length > 1)
                 sortBy.sortByTime(product.futureReservations, 'start');
@@ -20,19 +18,20 @@ module.exports = {
                 {
                     if( startDate.getTime() >= product.futureReservations[i].start.getTime() && startDate.getTime() <= product.futureReservations[i].end.getTime() )
                     {
-                        //comprende tutto
+                        console.log("comprende tutto");
                         available = false;
                         break; 
 
                     }else if( endDate.getTime() >= product.futureReservations[i].start.getTime() && endDate.getTime() <= product.futureReservations[i].end.getTime())
                     {
-                        //la fine è compresa
+                        console.log("la fine è compresa");
+
                         available = false;
                         break;
 
                     }else if( startDate.getTime() <= product.futureReservations[i].start.getTime()  &&  endDate.getTime() >=  product.futureReservations[i].end.getTime())
                     {
-                        //comprende tuttp
+                        console.log("comprende tutto due");
                         available = false;
                         break;
                     }else

@@ -1,0 +1,19 @@
+.cat{
+    width: 40%;
+    margin-bottom: 2rem;
+}
+
+.catCont{
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons{
+    gap: 1rem;
+}
+
+#error
+{
+    padding: 0;
+    color: red;
+}
