@@ -34,7 +34,7 @@ function Modify(props)
         "end": "${end}"
       }`;
       
-      console.log(obj);
+     // fare chiamata api e messaggio di successfuly
     }else
     {
       document.getElementById('error').innerHTML = "Please insert field correctly";
