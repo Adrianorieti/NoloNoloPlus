@@ -124,6 +124,12 @@ const routes = [
     name: 'reservationCharts',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/provaReservations.vue')
+  },
+  {
+    path: '/modify',
+    name: 'modify',
+    beforeEnter: guardMyroute,
+    component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/ChangePersonalInfo.vue')
   }
 ]
 

@@ -1,5 +1,3 @@
 -aggiungere back in tutte le parti
--nella pagine home magari creare la pagina del manager(anche per modifica)
--aggiungere dei font personalizzati.
 -modifica categoria(manca solo il discount code)
 ricordarsi di mettere isManager nello schema degli employee, così i manager non cambiano i dati degli altri manager.Anche se forse può aver senso. 
