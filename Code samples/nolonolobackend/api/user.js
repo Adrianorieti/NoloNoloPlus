@@ -24,7 +24,7 @@ var storage = multer.diskStorage({
 })
 
 function deleteImg(img) {
-    if (img) {
+    if (img !== 'default.jpeg') {
         try {// controllare se non c'è default dentro il nome dell'immagine
             fs.unlinkSync(path.join(userImagesPath, path.basename(img)))
         } catch (err) {

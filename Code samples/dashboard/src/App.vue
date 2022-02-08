@@ -10,7 +10,6 @@
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
-            <b-nav-item v-if="authenticated" to="/home">Home</b-nav-item>
             <b-nav-item v-if="authenticated" to="/users">Users</b-nav-item>
             <b-nav-item v-if="authenticated" to="/employees">
               Employees

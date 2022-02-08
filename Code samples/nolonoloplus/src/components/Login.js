@@ -59,7 +59,7 @@ export default function Login({ stateToParent, nameToParent }) {
             })
     }
 
- 
+
     return (
         <div id="contentLogin" ><h3>Login</h3>
             <form onSubmit={handleLogin}>

@@ -1,12 +1,21 @@
 <template>
   <div>
+    <div class="button-wrapper">
     <button
       type="button"
       class="btn btn-outline-success"
-      @click="route('/home')"
+      @click="route('/categories/create')"
     >
       CREATE NEW CATEGORY
     </button>
+    <button
+      type="button"
+      class="btn btn-outline-success"
+      @click="route('/categories/change')"
+    >
+      CHANGE CATEGORY
+    </button>
+    </div>
     <div class="chart-wrapper">
       <chart
         :type="'bar'"
@@ -182,6 +191,11 @@ export default {
 </script>
 
 <style scoped>
+.button-wrapper{
+  display: flex;
+  justify-content: space-around;
+}
+
 .chart-wrapper {
   display: flex;
   justify-content: center;

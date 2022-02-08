@@ -1,0 +1,188 @@
+<template>
+  <div>
+    <form aria-describedby="change-category" v-on:submit.prevent="sendData()">
+      <fieldset>
+        <legend id="change-category">Change a Category</legend>
+
+        <div>
+        <label for="selectedCategory" class="form-label">Category to change</label>
+        <div class="input-group">
+            <div class="input-group-text">
+            <i class="bi bi-bicycle"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <select class="form-select" required v-model="cat" v-on:change="fillData" id="selectedCategory">
+              <option value="" selected disabled>Please select one</option>
+              <option v-for="category in categories" :key="category.name" :value="category">{{category.name}}</option>
+            </select>
+          </div>
+      </div>
+
+        <div>
+          <label for="file" class="form-label">Category Photo</label>
+          <div class="input-group">
+            <input
+              id="file"
+              type="file"
+              class="form-control"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="newCategoryName" class="form-label"
+            >Category Name:</label
+          >
+          <div class="input-group">
+            <div class="input-group-text">
+              <i
+                class="bi bi-type"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <input
+              v-model="name"
+              id="newCategoryName"
+              type="text"
+              class="form-control"
+              placeholder="Electric Bike"
+              required="required"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="newCategoryDescription" class="form-label"
+            >Category Description:</label
+          >
+          <div class="input-group">
+            <div class="input-group-text">
+              <i
+                class="bi bi-type"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <textarea
+              v-model="description"
+              id="newCategoryDescription"
+              class="form-control"
+              placeholder="Some Description"
+              required="required"
+              rows="3"
+              max-rows="6"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="newCategoryPrice" class="form-label"
+            >Category Price:</label
+          >
+          <div class="input-group">
+            <div class="input-group-text">
+              <i
+                class="bi bi-currency-bitcoin"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <input
+              v-model="price"
+              id="newCategoryPrice"
+              type="number"
+              min="0"
+              class="form-control"
+              required="required"
+            />
+          </div>
+        </div>
+
+        <br />
+        <input type="submit" class="btn btn-primary" value="Change" />
+      </fieldset>
+    </form>
+  </div>
+</template>
+
+<script>
+//quello che voglio fare qui è:
+// o avere varie carte con varie funzionalità (aggiunta categoria e employee.)
+//o essere un wrapper di funzionalità per mandare ad altre pagine.
+//il discount lo mettiamo sempre medio, poi il resto vediamo, il price lo facciamo inserire
+
+export default {
+  name: "CategoryForm",
+  data() {
+    return {
+        categories: [],
+        cat: "",
+        name: "Category",
+        description: "",
+        price: 0,
+    };
+  },
+    async mounted() {
+    let url = "http://localhost:8001/api/categories/";
+    try {
+      let response = await fetch(url);
+      this.categories = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  methods: {
+    sendData() {
+      let photo = document.getElementById("file").files[0];
+      let formData= new FormData();
+        formData.append("name", this.name);
+        formData.append("description", this.description);
+        formData.append("price", this.price);
+        formData.append("discountCode", "N");
+      if(photo){
+        formData.append("img", photo);
+        formData.append("oldImg", this.cat.imageName);
+      }
+
+      fetch("http://localhost:8001/api/categories/"+this.cat.name, {
+        method: "PATCH",
+        body: formData,
+      })
+      .then((response) => {
+        console.log(response.status);
+        if(response.status === 200){
+          this.$router.push({path: "/categories"});
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
+    },
+    fillData(){
+      this.name = this.cat.name;
+      this.description = this.cat.description;
+      this.price = this.cat.price;
+    }
+  },
+};
+</script>
+
+<style scoped>
+form {
+  display: flex;
+  justify-content: center;
+}
+fieldset {
+  width: 50%;
+  padding: 1rem;
+  border: 1px solid black;
+  border-radius: 2%;
+}
+.back {
+  margin-left: 2rem;
+}
+</style>

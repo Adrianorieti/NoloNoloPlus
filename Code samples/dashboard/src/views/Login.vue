@@ -1,22 +1,4 @@
 <template>
-  <!-- <div id="login">
-    <h1>Login</h1>
-    <input
-      type="text"
-      required
-      name="email"
-      v-model="email"
-      placeholder="Email"
-    />
-    <input
-      type="password"
-      name="password"
-      v-model="password"
-      required
-      placeholder="Password"
-    />
-    <button type="button" v-on:click="login()">Login</button>
-  </div> -->
   <div class="container">
     <form aria-labelledby="login" class="box" v-on:submit.prevent="login()">
       <fieldset>
@@ -81,7 +63,7 @@ export default {
           sessionStorage.setItem("token", data.accessToken);
           sessionStorage.setItem("email", this.email);
           this.$emit("authenticated", true);
-          this.$router.push({ path: "/home" });
+          this.$router.push({ path: "/users" });
         })
         .catch((error) => {
           console.log(error);

@@ -88,7 +88,6 @@
 
         <br />
         <input type="submit" class="btn btn-primary" value="Create" />
-        <button class="btn btn-warning back" @click="route()">Back</button>
       </fieldset>
     </form>
   </div>
@@ -101,7 +100,7 @@
 //il discount lo mettiamo sempre medio, poi il resto vediamo, il price lo facciamo inserire
 
 export default {
-  name: "Home",
+  name: "CategoryForm",
   data() {
     return {
       name: "",
@@ -126,21 +125,15 @@ export default {
         body: formData,
       })
         .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data.message);
-          this.name = "";
-          this.description = "";
-          this.price = 0;
+          if(response.status === 200){
+            console.log("creation successfull!");
+            this.$router.push({path: "/categories"});
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
-  },
-  route() {
-    this.$router.push({ path: "/employees" });
   },
 };
 </script>
