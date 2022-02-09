@@ -104,7 +104,7 @@ router.post('/:product/mantainance', async (req, res) => {
             console.log("sorted", prod.futureReservations);
             // Se la data di inizio della prenotazione è <= della data di fine della nostra
             // prenotazione speciale allora và eliminata, e va ritornata 
-            for (let i in prod.futureReservations) {
+            for (let i in prod.futureReservations){
                 if (startDate.getTime() >= prod.futureReservations[i].start.getTime() && startDate.getTime() <= prod.futureReservations[i].end.getTime()) {
                     reservationsToChange.push(prod.futureReservations[i]);
 
@@ -139,10 +139,6 @@ router.post('/:product/mantainance', async (req, res) => {
             })
             newPendingReq.save()
 
-            let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
-
-
-
             for (let x in reservationsToChange) {
                 let newPend = reservations.createReservation(reservationsToChange[x].usermail, " ", reservationsToChange[x].product, reservationsToChange[x].expense, reservationsToChange[x].start, reservationsToChange[x].end, 1);
                 newPending = new pending({
@@ -154,9 +150,24 @@ router.post('/:product/mantainance', async (req, res) => {
             res.status(200).json({ message: "Succesful operation", reservations: reservationsToChange });
 
         } else {
-            res.status(500).json({ message: "Error, please try again later" });
+            console.log("entro qui");
+            let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
+            prod.futureReservations.push(newReserve);
+            console.log(newReserve);
+            let newPendingReq = new pending({
+                reserve: newReserve
+            })
+            newPendingReq.save()
+
+            prod.save();
+            res.status(200).json({message: "Succesful operation"});
         }
-    })
+    }else
+    {
+        res.status(500).json({message: "Inernal server error"});
+        
+    }
+})
 
 /** Whit this function we actually confirm that the rent started, so 
  * the future res gets cancelled and is moved to the active, in the user and in the employee
@@ -421,6 +432,7 @@ router.delete('/:product', async (req, res) => {
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
 
         if (toChange) {
+            console.log("QUELLE DEL PRODOTTO DENTRO DELETE");
             prod.futureReservations.splice(x, 1);
             prod.save();
         }

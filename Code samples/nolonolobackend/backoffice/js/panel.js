@@ -332,7 +332,7 @@ function showDenyPendingRequest(x)
   <div class="input-group mb-3">
 <div class="mb-3 text-center justify-content-center" >
   <label for="text" class="form-label">Message to send</label>
-  <textarea class="form-control" id="text" pattern="[a-z]"rows="3"></textarea>
+  <textarea class="form-control" id="text" pattern="[A-Za-z]"rows="3"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="denyPendingRequest(${x})" >Insert</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
   </div>
