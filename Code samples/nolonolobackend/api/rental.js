@@ -313,7 +313,9 @@ router.patch('/:product/modify', async(req, res) => {
             startDate = new Date(req.body.start);
             endDate = new Date(req.body.end);
         }
-        
+        console.log(req.body)
+        console.log(req.params)
+       
         //vecchio prodotto per andargli a cambiare le cose
         let prod = await product.findOne({name: oldProduct});
         //user in questione
@@ -474,44 +476,4 @@ router.delete('/:product', async (req, res) => {
 })
 
 
-
-// // ATTENZIONE ESISTE GIÀ NELLE PENDING REQUEST UNA COSA SIMILE QUESTA FUNZIONE È INUTILE
-// /** Free a product from mantainance and make it available again */
-// router.delete('/:product/mantainance', async (req, res) => {
-//     console.log("dentro")
-//     let oldProduct = req.params.product;
-//     let startDate = new Date(req.body.start);
-//     let endDate = new Date(req.body.end);
-
-//     //vecchio prodotto per andargli a cambiare le cose
-//     let prod = await product.findOne({name: oldProduct});
-
-//     if(prod)
-//     {
-//         let x;
-//         let toChange;
-//         // cerco la prenotazione nel prodotto
-//         console.log(prod.futureReservations);
-
-//         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
-//         console.log("DENTRO prod FUTURE", toChange);
-
-//         if(toChange)
-//         {
-//             console.log("prima",prod.futureReservations);
-//             prod.futureReservations.splice(x, 1);
-//             console.log("dopo",prod.futureReservations);
-
-//             prod.save();
-//             // lo cancello anche dalle pending requests però
-//             return res.status(200).json({message: "Succesful operation, product is now available"})
-//         }else
-//         {
-//             return res.status(500).json({message: "Error, maybe the product has been already changed"})
-//         }
-//     }else
-//     {
-//         return res.status(500).json({message: "Error, maybe the product has been already changed"})
-//     }
-// })
 module.exports = router;

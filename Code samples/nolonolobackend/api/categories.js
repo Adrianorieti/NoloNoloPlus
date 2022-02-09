@@ -53,6 +53,8 @@ router.get('/:name', (req, res) => {
 
 /** Verify if a category has at least an available product and return the less expensive */
 router.get('/:name/available', auth.verifyToken, async (req, res) => {
+    console.log(req.params);
+    console.log(req.query);
     let name = req.params.name;
     let start = new Date(req.query.start);
     start.setDate(start.getDate() + 1);
@@ -62,7 +64,6 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
     // pensare di spostare il segno sui prodotti per non dover fare questa call al database
     let collection = await category.findOne({ name: name })
     if (collection) {
-        console.log(name);
         product.find({ type: name })
             .exec()
             .then(async (products) => {
@@ -82,6 +83,7 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
                     prices.push(x);
                 }
                 price = Math.min(...prices); // calcolo comunque il prezzo minore
+                console.log("prodotti disponibili",availableProducts);
                 if (availableProducts.length > 0) { // abbiamo prodotti disponibili
                     availPrice = Math.min(...availPrices);
                     available = true;

@@ -1,39 +1,142 @@
 import React, { useEffect, useState } from 'react';
-import './style/Modify.css';
+import { useHistory } from "react-router";
 
+import './style/Modify.css';
 function Modify(props)
 {
-
+    const [oldProd, setOldProd] = useState('');
+    const [newProd, setNewProd] = useState('');
     const [products, setProducts] = useState([]);
-    const[select, setSelect] = useState('');
+    const[succesful, setSuccesful] = useState(false);
+    const[error, setError]= useState(false);
+    let history = useHistory();
+    
+   
 
+  // mi salvo il vecchio prodotto
+    async function getOldProduct(old){
+      let res;
+      let url = `http://localhost:8001/api/products/${old}`;
+      try {
+        let response = await fetch(url);
+        res = await response.json();
+        console.log("res", res.product[0]);
+        setOldProd(res.product[0]);
+      } catch (error) {
+        console.log(error);
+        setError(true);
+      }
+    }
 
     function sendModify()
     {
       let oldStart = new Date(props.target.start);
       let oldEnd = new Date(props.target.end);
-      let oldProduct = props.target.product;
       let email = props.target.usermail // la mail giusta dovrebbe essere questa, ma non nel caso di maintenace
       let employee = props.target.employee;
-      let product = document.getElementById('form-sel').value; // nome del prodotto
+      let category = document.getElementById('form-sel').value; // nome del prodotto
       let start = new Date(document.getElementById('start').value);
       let end = new Date(document.getElementById('end').value);
+      let today = new Date();
       // devo comunque mandare i vecchi dati
 
- 
-  if((start != "" && end != "") && (start.getTime() <= end.getTime()) )
-  {
+     
     
-    let obj = `{
-      "user": "${email}", 
-      "employee": "${employee}",
-        "product": "${product}",
-        "oldStart": "${oldStart}",
-        "oldEnd": "${oldEnd}",
-        "start": "${start}",
-        "end": "${end}"
-      }`;
-      
+  if((start != "" && end != "") && (start.getTime() <= end.getTime()) && (start.getTime() >= today.getTime()) )
+  {
+      //CASO 1, il cliente non vuole cambiare categoria
+    if(category === oldProd.type)
+    {
+      let obj = `{
+        "user": "${email}", 
+        "employee": "${employee}",
+          "product": "${oldProd.name}",
+          "oldStart": "${oldStart}",
+          "oldEnd": "${oldEnd}",
+          "start": "${start}",
+          "end": "${end}"
+        }`;
+
+        const options = {
+          method: 'PATCH',
+          headers: new Headers({ 'Content-type': 'application/json' }),
+          body: obj
+      };
+       
+        let url = `http://localhost:8001/api/rental/${oldProd.name}/modify`;
+        fetch(url, options)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            }
+            }).then((data) =>{
+                console.log("Tutto ok ???");
+                setSuccesful(true);
+                history.push('/personalpage');
+        }).catch(error => {
+            console.log(error.message);
+            setError(true);
+
+          });
+          
+    }else{
+
+      // CASO 2: il cliente vuole cambiare categoria
+      let tokn = JSON.parse(sessionStorage.getItem('token'));
+            const options = {
+                method: 'GET',
+                headers: new Headers({'Authorization': `Bearer ${tokn}` })
+              };
+            const url = `http://localhost:8001/api/categories/${category}/available/?start=${start}&end=${end}`;
+            fetch(url, options)
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                }
+                }).then((data) =>{
+             
+              // Dopo aver controllato che ci siano prodotti disponibili dentro la categoria
+              // procediamo al cambio della prenotazione
+               let obj = `{
+                "user": "${email}", 
+                "employee": "${employee}",
+                  "product": "${data.product.name}",
+                  "oldStart": "${oldStart}",
+                  "oldEnd": "${oldEnd}",
+                  "start": "${start}",
+                  "end": "${end}"
+                }`;
+           
+                const options2 = {
+                  method: 'PATCH',
+                  headers: new Headers({ 'Content-type': 'application/json' }),
+                  body: obj
+              };
+
+                let url = `http://localhost:8001/api/rental/${oldProd.name}/modify`;
+              fetch(url, options2)
+              .then(response => {
+                  if (response.status === 200) {
+                      return response.json();
+                  }
+                  }).then((data) =>{
+                      console.log("Tutto ok ???");
+                      setSuccesful(true);
+                      history.push('/');
+              }).catch(error => {
+                  console.log(error.message);
+                  setError(true);
+
+                });
+                
+
+            }).catch(error => {
+                console.log(error.message);
+                setError(true);
+                return null;
+              });
+    }
+    
      // fare chiamata api e messaggio di successfuly
     }else
     {
@@ -43,7 +146,6 @@ function Modify(props)
 
 
     useEffect(() => {
-        console.log(props);
         async function getProducts() {
             let url = "http://localhost:8001/api/categories/";
             try {
@@ -55,12 +157,16 @@ function Modify(props)
             }
           }
           getProducts();
+          let oldProduct = props.target.product;
+          getOldProduct(oldProduct);
+
         },[])
 
    
 
 
-    return(
+    return(<div>
+      { error ?  <div id="response"><b><h3>Service temporarily unavailable</h3><p>Please try again later</p></b></div> : ( succesful ? <div id="response"><b><h3>Succesful operation</h3></b></div> : (
         <div>
        <p>{(() => {
             let options = [];
@@ -92,6 +198,7 @@ function Modify(props)
             </div>
           );
        })()}</p>
+        </div> ))}
         </div>
     )
 }

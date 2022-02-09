@@ -17,10 +17,13 @@ function verifyToken(req, res, next) {
                 return res.status(403).send(` ${err.name} `);
             }
             req.email = decoded.email;
+            console.log(req.email);
+
             next();
         })
     } else {
         req.email = 'defaultUser@nolonolo.com';
+
         next();
     }
 }
