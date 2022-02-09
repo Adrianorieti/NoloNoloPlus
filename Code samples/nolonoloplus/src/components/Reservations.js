@@ -23,7 +23,7 @@ function Reservations(props) {
     <div id="mainReservations">
       <div id="future"><h3>Future</h3>
         {props.user.futureReservations.map((res, index) => {
-           console.log("active", res);
+         
            let start = new Date(res.start)
            let end = new Date(res.end)
 
