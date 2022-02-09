@@ -4,7 +4,7 @@
       <fieldset>
         <legend id="change-category">Change a Category</legend>
 
-        <div>
+      <div>
         <label for="selectedCategory" class="form-label">Category to change</label>
         <div class="input-group">
             <div class="input-group-text">
@@ -79,6 +79,25 @@
         </div>
 
         <div>
+        <label for="discount" class="form-label">Discount Code</label>
+        <div class="input-group">
+            <div class="input-group-text">
+              <i class="bi bi-tag"
+                aria-hidden="true"
+                style="font-size: 1rem"
+              ></i>
+            </div>
+            <select class="form-select" required v-model="discountCode"  id="discount">
+              <option value="" selected disabled>Please select one</option>
+              <option value="N">Normal</option>
+              <option value="F">Festivity</option>
+              <option value="AS">High Season</option>
+              <option value="BS">Low Season</option>
+            </select>
+          </div>
+      </div>
+
+        <div>
           <label for="newCategoryPrice" class="form-label"
             >Category Price:</label
           >
@@ -122,6 +141,7 @@ export default {
         cat: "",
         name: "Category",
         description: "",
+        discountCode: "",
         price: 0,
     };
   },
@@ -141,7 +161,7 @@ export default {
         formData.append("name", this.name);
         formData.append("description", this.description);
         formData.append("price", this.price);
-        formData.append("discountCode", "N");
+        formData.append("discountCode", this.discountCode);
       if(photo){
         formData.append("img", photo);
         formData.append("oldImg", this.cat.imageName);
@@ -166,6 +186,7 @@ export default {
       this.name = this.cat.name;
       this.description = this.cat.description;
       this.price = this.cat.price;
+      this.discountCode = this.cat.discountCode;
     }
   },
 };
