@@ -192,23 +192,28 @@ export default function newUserPage({ nameToParent }) {
                 console.log(err.message);
             })
     }
- 
-    function deleteAccount()
-    {
+
+    function deleteAccount() {
         const options = {
             method: 'DELETE'
         };
 
         fetch(`http://localhost:8001/api/user/${user.email}`, options)
-        .then(response => {
-            return response.json();
-        }).then(data => {
-           sessionStorage.clear();
-           history.push('/login');
-        })
-        .catch(err => {
-            document.getElementById('deleteError').innerHTML ="Deletion impossible, there are still actives or future reservations";
-        })
+            .then(async response => {
+                if (response.status === 200) {
+                    return response.json();
+                }
+                else {
+                    let data = await response.json();
+                    throw new Error(data.message);
+                }
+            }).then(data => {
+                sessionStorage.clear();
+                history.push('/login');
+            })
+            .catch(err => {
+                document.getElementById('deleteError').innerHTML = "Deletion impossible, there are still actives or future reservations";
+            })
     }
 
     return (
