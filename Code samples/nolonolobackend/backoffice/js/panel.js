@@ -425,7 +425,7 @@ function showPendingRequests(data)
 
       toInsert += `
       <div class="card" id="card-${x}">
-      <h5 class="card-header">${x} ${(requests[x].reserve.modify === 1) ? '<h4><b>MANTAINANCE</b>' : '' }</h5>
+      <h5 class="card-header">${x} ${(requests[x].reserve.modify === 1) ? '<h4><b>To change urgently  </b>' : '' }</h5>
       <div class="card-body">
       <h5 class="card-title">Product: ${requests[x].reserve.product}</h5>
       <p class="card-text">User: ${requests[x].reserve.usermail}</p>
@@ -464,7 +464,7 @@ function getPendingRequests()
     }).fail(function(err)
     {
       $('#title').html('');
-        $('#content').html("Please refresh the page");
+        $('#content').html("<h4><b>Please refresh the page</b></h3>");
     })
 }
 

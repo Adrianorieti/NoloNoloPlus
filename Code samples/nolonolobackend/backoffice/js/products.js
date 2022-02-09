@@ -26,7 +26,7 @@ function changeSel() {
 
 function changeProductPattern() {
   let field = document.getElementById('changeMenu').value;
-  let newValue = document.getElementById('newValue');
+  let newValue = $('#newValue').val();
   switch (field) {
     case 'name':
       $('#descr').hide();

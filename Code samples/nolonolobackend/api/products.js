@@ -1,7 +1,7 @@
 const category = require('../schemas/moduleCategory');
 const product = require('../schemas/moduleProduct');
 const computePrice = require('../functions/computePrice');
-const auth = require('./auth');
+const cascade = require('../functions/nameCascade');
 const express = require('express');
 const checkAvailability = require('../functions/checkAvailability');
 const router = express.Router();
@@ -101,6 +101,10 @@ router.post('/', async (req, res) => {
 router.post('/:name', (req, res) => {
     let name = req.params.name;
     let newData = req.body; // deve essere un json {key: value}
+    if(newData.name)
+    {
+        cascade.nameCascadeChange(newData.name, name);
+    }
     product.findOneAndUpdate(
         { name: name },
         { $set: newData },
