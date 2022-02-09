@@ -28,3 +28,14 @@
 
  
 
+#logo
+{
+  color: white;
+  text-decoration: none;
+}
+
+#logo:hover
+{
+  color: white;
+  text-decoration: none;
+}

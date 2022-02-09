@@ -120,37 +120,43 @@ router.post('/:product/mantainance', async (req, res) => {
                     break;
                 }
             }
-        }
 
-        // Creo la nuova reservation da aggiungere al prodotto
+            // Creo la nuova reservation da aggiungere al prodotto
 
-        let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
+            let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
+            console.log("arrivo fin qui", prod);
 
-        prod.futureReservations.unshift(newReserve);
-        // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
+            prod.futureReservations.unshift(newReserve);
+            // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
+            console.log("arrivo fin qui2", prod);
 
-        prod.save();
-        // aggiungo anche la maintenance come pening così è visibile da tutti gli
-        // employee
-        let newPendingReq = new pending({
-            reserve: newReserve
-        })
-        newPendingReq.save()
-
-        for (let x in reservationsToChange) {
-            let newPend = reservations.createReservation(reservationsToChange[x].usermail, " ", reservationsToChange[x].product, reservationsToChange[x].expense, reservationsToChange[x].start, reservationsToChange[x].end, 1);
-            newPending = new pending({
-                reserve: newPend
+            prod.save();
+            console.log("arrivo fin qui3", prod);
+            // aggiungo anche la maintenance come pening così è visibile da tutti gli
+            // employee
+            let newPendingReq = new pending({
+                reserve: newReserve
             })
-            newPending.save()
+            newPendingReq.save()
+
+            let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
+
+
+
+            for (let x in reservationsToChange) {
+                let newPend = reservations.createReservation(reservationsToChange[x].usermail, " ", reservationsToChange[x].product, reservationsToChange[x].expense, reservationsToChange[x].start, reservationsToChange[x].end, 1);
+                newPending = new pending({
+                    reserve: newPend
+                })
+                newPending.save()
+            }
+
+            res.status(200).json({ message: "Succesful operation", reservations: reservationsToChange });
+
+        } else {
+            res.status(500).json({ message: "Error, please try again later" });
         }
-
-        res.status(200).json({ message: "Succesful operation", reservations: reservationsToChange });
-
-    } else {
-        res.status(500).json({ message: "Error, please try again later" });
-    }
-})
+    })
 
 /** Whit this function we actually confirm that the rent started, so 
  * the future res gets cancelled and is moved to the active, in the user and in the employee

@@ -347,10 +347,9 @@ function sendMaintenance() {
     }, function (data) {
 
       $('#content').html(`<h3>${data.message}</h3>`);
-
+      console.log(data.reservations);
       for (let x in data.reservations) {
         if (data.reservations[x].usermail != 'defaultUser@nolonolo.com') {
-          console.log(data.reservations[x])
           // le cancello tutte tanto sono già come pending requests
           // poi deve fare in modo che anche la maintenance sia cancellabile quindi 
           // la aggiungo come pending request
@@ -370,7 +369,7 @@ function sendMaintenance() {
             dataType: 'json',
             data: obj
           }).done(function () {
-            location.reload();
+            //  location.reload();
           }).fail(function (data) {
             if (data) {
               $('#content').html(`<h3>Something went wrong</h3>`);
@@ -383,6 +382,7 @@ function sendMaintenance() {
 
         }
       }
+      // location.reload();
     }).fail(function (data) {
       $('#content').html(`<h3>${data.message}</h3>`);
     })

@@ -293,6 +293,7 @@ function denyPendingRequest(x)
   let end = requests[x].reserve.end;
   let product = requests[x].reserve.product;
   let id = requests[x]._id;
+  console.log(id);
     if(message)
     {
         const obj =`{
@@ -300,6 +301,8 @@ function denyPendingRequest(x)
           "product": "${product}",
           "message": "${message}"
         }`;
+
+        console.log(obj);
         $.post({
           type: 'DELETE',
           url: `http://localhost:8001/api/pending/${id}/?start=${start}&end=${end}`,
@@ -308,7 +311,7 @@ function denyPendingRequest(x)
           data: obj
         }, function(data){
           $('#content').html(`<h3>${data.message}</h3>`);
-          location.reload();
+          // location.reload();
         }).fail(function(data){
           $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
       })
@@ -329,7 +332,7 @@ function showDenyPendingRequest(x)
   <div class="input-group mb-3">
 <div class="mb-3 text-center justify-content-center" >
   <label for="text" class="form-label">Message to send</label>
-  <textarea class="form-control" id="text" rows="3"></textarea>
+  <textarea class="form-control" id="text" pattern="[a-z]"rows="3"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="denyPendingRequest(${x})" >Insert</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
   </div>

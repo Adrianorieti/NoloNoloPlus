@@ -174,7 +174,7 @@ function showAddComunication(x, allCostumers)
   <div class="input-group mb-3 text-center justify-content-center">
 <div class="mb-3 ">
   <label for="text" class="form-label">Write the message:</label>
-  <textarea class="form-control" id="text" rows="3"></textarea>
+  <textarea class="form-control" id="text" rows="3" pattern="[a-z]"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Send</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Close</button>
   </div>
