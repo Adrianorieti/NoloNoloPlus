@@ -140,11 +140,14 @@ router.post('/:product/mantainance', async (req, res) => {
             // Creo la nuova reservation da aggiungere al prodotto
             
             let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
+            console.log("arrivo fin qui", prod);
 
             prod.futureReservations.unshift(newReserve);
             // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
-            
+            console.log("arrivo fin qui2", prod);
+
             prod.save();
+            console.log("arrivo fin qui3", prod);
             // aggiungo anche la maintenance come pening così è visibile da tutti gli
             // employee
             let newPendingReq = new pending({

@@ -359,7 +359,7 @@ function sendMaintenance()
                   dataType: 'json',
                   data: obj
                 }).done(function(){
-                   location.reload();
+                  //  location.reload();
                 }).fail(function(data){
                   if(data)
                   {     
@@ -374,7 +374,8 @@ function sendMaintenance()
             
           }
         }
-        }).fail(function(data){
+        // location.reload();
+      }).fail(function(data){
       $('#content').html(`<h3>${data.message}</h3>`);
     })
   }else
