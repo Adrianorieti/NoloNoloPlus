@@ -176,6 +176,8 @@ function showProducts(products)
               toInsert += `<h4 class="card-title"><b>${products[x].name}</b></h4>
               <p class="card-text">${products[x].price}$ per day</p>
               <p class="card-text">Status: ${products[x].status}</p>
+              <p class="card-text">Category: ${products[x].type}</p>
+
               <div class="input-group mb-3">
             <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
             <ul class="dropdown-menu">
