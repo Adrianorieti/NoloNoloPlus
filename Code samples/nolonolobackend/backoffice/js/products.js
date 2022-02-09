@@ -334,12 +334,11 @@ function sendMaintenance()
     }, function(data){
 
       $('#content').html(`<h3>${data.message}</h3>`);
-     
+      console.log(data.reservations);
         for(let x in data.reservations)
         {
           if(data.reservations[x].usermail != 'defaultUser@nolonolo.com')
           {
-            console.log(data.reservations[x])
                   // le cancello tutte tanto sono già come pending requests
                   // poi deve fare in modo che anche la maintenance sia cancellabile quindi 
                   // la aggiungo come pending request
