@@ -65,3 +65,8 @@ input[type="file"] {
     border-radius: 50%;
     max-width: 60%;
 }
+
+#deleteError
+{
+    color: red;
+}

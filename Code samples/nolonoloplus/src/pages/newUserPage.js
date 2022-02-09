@@ -192,7 +192,24 @@ export default function newUserPage({ nameToParent }) {
                 console.log(err.message);
             })
     }
+ 
+    function deleteAccount()
+    {
+        const options = {
+            method: 'DELETE'
+        };
 
+        fetch(`http://localhost:8001/api/user/${user.email}`, options)
+        .then(response => {
+            return response.json();
+        }).then(data => {
+           sessionStorage.clear();
+           history.push('/login');
+        })
+        .catch(err => {
+            document.getElementById('deleteError').innerHTML ="Deletion impossible, there are still actives or future reservations";
+        })
+    }
 
     return (
         <div id="wrapper" >
@@ -225,9 +242,11 @@ export default function newUserPage({ nameToParent }) {
                                     </form>
                                     <span className="font-weight-bold">{user.name + ' ' + user.surname}</span>
                                     <span className="text-black-50">{user.email}</span>
-                                    <span className="text-black-50">{'phone number: ' + user.phone}</span>
-                                    <span className="text-black-50">{'fidelity points: ' + user.fidelityPoints}</span>
+                                    <span className="text-black-50">{'Phone number: ' + user.phone}</span>
+                                    <span className="text-black-50">{'Fidelity points: ' + user.fidelityPoints}</span>
                                     <span className="text-black-50">{'Payment method: ' + user.paymentMethod}</span>
+                                    <span id="deleteError"></span>
+                                    <button className="btn btn-danger  m-2" type="button" onClick={deleteAccount}>Delete account</button>
                                 </div>
                             </div>
                             <div className="col-md-5 border-right">
