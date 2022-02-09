@@ -35,12 +35,6 @@ const routes = [
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
-    path: '/home',
-    name: 'home',
-    beforeEnter: guardMyroute,
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
-  },
-  {
     path: '/users',
     name: 'users',
     beforeEnter: guardMyroute,
@@ -94,6 +88,18 @@ const routes = [
     component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/Categories.vue')
   },
   {
+    path: '/categories/create',
+    name: 'createcategory',
+    beforeEnter: guardMyroute,
+    component: () => import(/* webpackChunkName: "home" */ '../views/CreateCategory.vue')
+  },
+  {
+    path: '/categories/change',
+    name: 'changeCategory',
+    beforeEnter: guardMyroute,
+    component: () => import(/* webpackChunkName: "home" */ '../views/ChangeCategory.vue')
+  },
+  {
     path: '/products',
     name: 'products',
     beforeEnter: guardMyroute,
@@ -118,6 +124,12 @@ const routes = [
     name: 'reservationCharts',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/provaReservations.vue')
+  },
+  {
+    path: '/modify',
+    name: 'modify',
+    beforeEnter: guardMyroute,
+    component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/ChangePersonalInfo.vue')
   }
 ]
 

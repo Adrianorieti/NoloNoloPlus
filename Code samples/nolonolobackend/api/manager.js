@@ -10,6 +10,7 @@ const auth = require('./auth');
 const path = require('path');
 const express = require('express');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 const multer = require('multer');
 
 const router = express.Router();
@@ -29,7 +30,61 @@ var storage = multer.diskStorage({
     },
 })
 
+function deleteImg(img) {
+    if (img) {
+        try {// controllare se non c'è default dentro il nome dell'immagine
+            fs.unlinkSync(path.join(employeeImagesPath, path.basename(img)))
+        } catch (err) {
+            console.log('Error while removing image')
+            console.log({ error: err })
+        }
+    }
+}
+
 const upload = multer({ storage: storage })
+
+/** Get all managers in database */
+router.get('/', (req, res) => {
+
+    manager.find({}, function (err, docs) {
+        if (err)
+            res.status(500).json({ message: 'Internal error', error: err })
+        else {
+            res.status(200).json(docs);
+        }
+    })
+})
+
+router.patch('/:email', upload.single('img'), async (req, res) => {
+    let email = req.params.email;
+    let newData = {};
+    newData.name = req.body.name;
+    newData.surname = req.body.surname;
+    newData.phone = req.body.phone;
+    if (req.body.password) {
+        await bcrypt.hash(req.body.password, 10, function (err, hash) {
+            newData.password = hash;
+        });
+    }
+    if (req.file) {
+        newData.image = req.file.filename;
+        if (req.body.oldImg) {
+            deleteImg(req.body.oldImg);
+        }
+    }
+    manager.findOneAndUpdate(
+        { email: email },
+        { $set: newData },
+        { runValidators: true, new: false, useFindAndModify: false }
+    ).exec()
+        .then((result) => {
+            res.status(200).json({ message: "Comunication Succesfuly added" });
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(400).json({ message: 'Bad input parameter', error: err })
+        })
+})
 
 router.post('/:email', upload.single('img'), async (req, res) => {
     const email = req.params.email;

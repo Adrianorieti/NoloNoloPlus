@@ -10,7 +10,6 @@
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
-            <b-nav-item v-if="authenticated" to="/home">Home</b-nav-item>
             <b-nav-item v-if="authenticated" to="/users">Users</b-nav-item>
             <b-nav-item v-if="authenticated" to="/employees">
               Employees
@@ -21,19 +20,11 @@
             <b-nav-item v-if="authenticated" to="/products">
               Products
             </b-nav-item>
-            <b-nav-item-dropdown v-if="authenticated" text="Products Charts">
-              <b-dropdown-item to="/productCharts/sales"
-                >Sales volume</b-dropdown-item
-              >
-              <b-dropdown-item to="/productCharts/rental"
-                >Number of rentals</b-dropdown-item
-              >
-              <b-dropdown-item to="/productCharts/condition"
-                >Conditions</b-dropdown-item
-              >
-            </b-nav-item-dropdown>
             <b-nav-item v-if="authenticated" to="/reservationCharts">
               Reservations Charts
+            </b-nav-item>
+            <b-nav-item v-if="authenticated" to="/modify">
+              Personal Page
             </b-nav-item>
             <b-nav-item href="http://localhost:8001/employee/panel"
               >BackOffice</b-nav-item
@@ -91,8 +82,10 @@ export default {
 </script>
 
 <style>
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
+  font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

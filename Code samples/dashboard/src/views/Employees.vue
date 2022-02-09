@@ -109,7 +109,12 @@ export default {
   justify-content: space-around;
 }
 
+img{
+  max-height: 25rem;
+}
+
 .custom-card {
+  max-width: 20rem;
   margin-top: 2rem;
   margin-bottom: 3rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);

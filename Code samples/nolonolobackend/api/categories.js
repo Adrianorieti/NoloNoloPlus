@@ -4,6 +4,7 @@ const computePrice = require('../functions/computePrice');
 const auth = require('./auth');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const checkAvailability = require('../functions/checkAvailability');
 
@@ -22,6 +23,17 @@ var storage = multer.diskStorage({
         cb(null, file.originalname) //Appending extension
     },
 })
+
+function deleteImg(img) {
+    if (img) {
+        try {// controllare se non c'è default dentro il nome dell'immagine
+            fs.unlinkSync(path.join(categoriesImagesPath, path.basename(img)))
+        } catch (err) {
+            console.log('Error while removing image')
+            console.log({ error: err })
+        }
+    }
+}
 
 const upload = multer({ storage: storage })
 const router = express.Router();
@@ -131,11 +143,13 @@ router.post('/', upload.single('img'), (req, res) => {
 router.patch('/:name', upload.single('img'), (req, res) => {
     let name = req.params.name;
     let newData = {};
-    if (!req.file) {
-        newData = req.body.newData;
-    }
-    else {
+    newData.name = req.body.name;
+    newData.description = req.body.description;
+    newData.price = req.body.price;
+    newData.discountCode = req.body.discountCode;
+    if (req.file) {
         newData.imageName = req.file.filename;
+        deleteImg(req.body.oldImg);
     }
     category.findOneAndUpdate(
         { name: name },
