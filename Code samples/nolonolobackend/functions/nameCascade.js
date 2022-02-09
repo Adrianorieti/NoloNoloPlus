@@ -3,7 +3,7 @@ const user = require('../schemas/moduleUser');
 const product = require('../schemas/moduleProduct');
 const pendingRequest = require('../schemas/modulePendingRequest');
 
-/* Change the old usr product with the new usr product in all the corrisponding reservations **/
+/* Change the old prod product with the new prod product in all the corrisponding reservations **/
 async function changeCascadeEmps(emps, newName, oldName) {
     //per tutti gli impiegati del database
     for await (let emp of employee.find()) {
@@ -18,7 +18,7 @@ async function changeCascadeEmps(emps, newName, oldName) {
                     console.log("current product", emp.futureReservations[x].product );
                     console.log("old product", oldName );
 
-                    // se la product è quella vecchia dello usr 
+                    // se la product è quella vecchia dello prod 
                     if (emp.futureReservations[x].product === oldName) {
                         emp.futureReservations[x].product = newName;
                     }
@@ -30,7 +30,7 @@ async function changeCascadeEmps(emps, newName, oldName) {
             {
                 for (let x in emp.activeReservations) // per tutte le sue active res
                 {
-                    // se la product è quella vecchia dello usr 
+                    // se la product è quella vecchia dello prod 
                     if (emp.activeReservations[x].product === oldName) {
                         emp.activeReservations[x].product = newName;
                     }
@@ -40,7 +40,7 @@ async function changeCascadeEmps(emps, newName, oldName) {
             {
                 for (let x in emp.pastReservations) // per tutte le sue past res
                 {
-                    // se la product è quella vecchia dello usr 
+                    // se la product è quella vecchia dello prod 
                     if (emp.pastReservations[x].product === oldName) {
                         emp.pastReservations[x].product = newName;
                     }
@@ -50,41 +50,41 @@ async function changeCascadeEmps(emps, newName, oldName) {
         }
     }
 }
-async function changeCascadeProds(prods, newName, oldName) {
-    for await (let prod of product.find()) { // per tutti i prodotti del database
-        if (prods.includes(prod.name)) // se c'è match con quelli che cerco
+async function changeCascadeUsers(users, newName, oldName) {
+    for await (let usr of user.find()) { // per tutti gli users del database
+        if (users.includes(usr.email)) // se c'è match con quelli che cerco
         {
-            if (prod.futureReservations) // se il dipendente ha delle future res
+            if (usr.futureReservations) // se il dipendente ha delle future res
             {
-                for (let x in prod.futureReservations) // per tutte le sue future res
+                for (let x in usr.futureReservations) // per tutte le sue future res
                 {
-                    // se la product è quella vecchia dello usr 
-                    if (prod.futureReservations[x].product === oldName) {
-                        prod.futureReservations[x].product = newName;
+                    // se la product è quella vecchia dello prod 
+                    if (usr.futureReservations[x].product === oldName) {
+                        usr.futureReservations[x].product = newName;
                     }
                 }
             }
-            if (prod.activeReservation) // se il prod ha una active res
+            if (usr.activeReservations) // se il prod ha una active res
             {
-                for (let x in prod.activeReservations) // per tutte le sue future res
+                for (let x in usr.activeReservations) // per tutte le sue future res
                 {
-                    // se la product è quella vecchia dello usr 
-                    if (prod.activeReservations[x].product === oldName) {
-                        prod.activeReservations[x].product = newName;
+                    // se la product è quella vecchia dello prod 
+                    if (usr.activeReservations[x].product === oldName) {
+                        usr.activeReservations[x].product = newName;
                     }
                 }
             }
-            if (prod.pastReservations) // se il dipendente ha delle past res
+            if (usr.pastReservations) // se il dipendente ha delle past res
             {
-                for (let x in prod.pastReservations) // per tutte le sue past res
+                for (let x in usr.pastReservations) // per tutte le sue past res
                 {
-                    // se la product è quella vecchia dello usr 
-                    if (prod.pastReservations[x].product === oldName) {
-                        prod.pastReservations[x].product = newName;
+                    // se la product è quella vecchia dello prod 
+                    if (usr.pastReservations[x].product === oldName) {
+                        usr.pastReservations[x].product = newName;
                     }
                 }
             }
-            prod.save();
+            usr.save();
         }
 
     }
@@ -108,48 +108,48 @@ module.exports = {
     // prodotti che lui ha prenotato, e in quelle del dipendente, ma anche nelle pending request
     nameCascadeChange: async function (newName, oldName) {
         console.log('sono dentro cascade name');
-        let usr = await user.findOne({ name: oldName });
-        if (usr) {
+        let prod = await product.findOne({ name: oldName });
+        if (prod) {
             // Dalle prenotazioni dell'utente in question prendo prodotti e dipendenti
             let emps = [];
-            let prods = [];
-            if (usr.futureReservations) {
-                for (let res of usr.futureReservations) {
+            let users = [];
+            if (prod.futureReservations) {
+                for (let res of prod.futureReservations) {
                     console.log(res);
                     if (res.employee) // potrebbe essere ancora in pending
                     {
                         pushElements(emps, res.employee);
-                        pushElements(prods, res.product);
+                        pushElements(users, res.usermail);
                         res.product = newName;
                     }
                 }
             }
-            if (usr.activeReservations) {
+            if (prod.activeReservations) {
                 
-                for (let res of usr.activeReservations) {
+                for (let res of prod.activeReservations) {
                     console.log("active",res);
                     if (res.employee) // potrebbe essere ancora in pending
                     {
                         pushElements(emps, res.employee);
-                        pushElements(prods, res.product);
+                        pushElements(users, res.usermail);
                         res.product = newName;
                     }
                 }
             }
-            if (usr.pastReservations) {
-                for (let res of usr.pastReservations) {
+            if (prod.pastReservations) {
+                for (let res of prod.pastReservations) {
                     if (res.employee) // potrebbe essere ancora in pending
                     {
                         pushElements(emps, res.employee);
-                        pushElements(prods, res.product);
+                        pushElements(users, res.usermail);
                         res.product = newName;
                     }
                 }
             }
             if (emps.length > 0)
                 await changeCascadeEmps(emps, newName, oldName);
-            if (prods.length > 0)
-                await changeCascadeProds(prods, newName, oldName);
+            if (users.length > 0)
+                await changeCascadeUsers(users, newName, oldName);
             checkPendingReqs(newName, oldName);
         }
     }

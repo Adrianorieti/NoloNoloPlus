@@ -101,6 +101,8 @@ router.post('/', async (req, res) => {
 router.post('/:name', (req, res) => {
     let name = req.params.name;
     let newData = req.body; // deve essere un json {key: value}
+    console.log(newData);
+    console.log(name);
     if(newData.name)
     {
         cascade.nameCascadeChange(newData.name, name);

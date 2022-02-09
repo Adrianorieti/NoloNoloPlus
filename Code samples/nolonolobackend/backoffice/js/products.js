@@ -73,10 +73,12 @@ function reset() {
 function sendRent() {
   let employee = sessionStorage.getItem('email');
   let email = $('#email').val();
-  let start = new Date($('#start').val());
+  let start = $('#start').val();
+  let start2 = new Date(start);
   console.log(start);
-  let end = new Date($('#end').val());
-  if (email == '' || start === '' || end === '' || start.getTime() > end.getTime()) {
+  let end = $('#end').val();
+  let end2 = new Date(end);
+  if (email == '' || start === '' || end === '' || start2.getTime() > end2.getTime()) {
     $('#rentErr').html("Please check everything it's okay");
 
   } else {
