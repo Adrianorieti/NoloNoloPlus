@@ -9,6 +9,9 @@ export default function Register({ stateToParent }) {
     const [secondName, setsecondName] = useState('');
     const [phone, setphone] = useState('');
     const [paymentMethod, setPaymentMethod] = useState('Paypal');
+    const [address, setaddress] = useState('');
+    const [city, setCity] = useState('');
+    const [cap, setCap] = useState('');
     const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
     const [repeatPassword, setrepeatPassword] = useState('');
@@ -28,6 +31,15 @@ export default function Register({ stateToParent }) {
                 break;
             case 'paymentMethod':
                 setPaymentMethod(event.target.value);
+                break;
+            case 'address':
+                setaddress(event.target.value);
+                break;
+            case 'city':
+                setCity(event.target.value);
+                break;
+            case 'cap':
+                setCap(event.target.value);
                 break;
             case 'email':
                 setemail(event.target.value);
@@ -59,6 +71,9 @@ export default function Register({ stateToParent }) {
             "name": "${firstName}" ,
             "surname": "${secondName}",
             "phone": "${phone}",
+            "address": "${address}",
+            "city": "${city}",
+            "cap": "${cap}",
             "paymentMethod" : "${paymentMethod}",
             "email": "${email}",
             "password": "${encodedpass}"
@@ -95,13 +110,13 @@ export default function Register({ stateToParent }) {
                 <div className="mb-3">
                     <label for="firstName" className="form-label">First Name</label>
                     <input onChange={handleChange} id="firstName" type="text" className="form-control" name="firstName"
-                        aria-describedby="emailHelp" placeholder="John" required="required" />
+                        placeholder="John" required="required" />
                 </div>
 
                 <div className="mb-3">
                     <label for="secondName" className="form-label">Second name</label>
                     <input onChange={handleChange} id="secondName" type="text" className="form-control" name="secondName"
-                        aria-describedby="emailHelp" placeholder="Doe" required="required" />
+                        placeholder="Doe" required="required" />
                 </div>
 
                 <div className="mb-3">
@@ -117,6 +132,24 @@ export default function Register({ stateToParent }) {
                     <label for="phone" className="form-label">Phone Number</label>
                     <input onChange={handleChange} id="phone" type="tel" className="form-control" name="phone" required="required"
                         pattern="[0-9]{10}" title="not a valid phone number" />
+                </div>
+
+                <div className="mb-3">
+                    <label for="address" className="form-label">Address</label>
+                    <input onChange={handleChange} id="address" type="text" className="form-control" name="address"
+                        placeholder="Via caprotti 11" required="required" />
+                </div>
+
+                <div className="mb-3">
+                    <label for="city" className="form-label">City</label>
+                    <input onChange={handleChange} id="city" type="text" className="form-control" name="city"
+                        placeholder="Torino" required="required" />
+                </div>
+
+                <div className="mb-3">
+                    <label for="cap" className="form-label">Cap</label>
+                    <input onChange={handleChange} id="cap" type="text" pattern="[0-9]{5}" title="insert a valid cap" className="form-control" name="cap"
+                        placeholder="40141" required="required" />
                 </div>
 
                 <div className="mb-3">

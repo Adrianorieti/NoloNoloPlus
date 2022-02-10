@@ -26,22 +26,8 @@ function changeSel() {
 
 function changeProductPattern() {
   let field = document.getElementById('changeMenu').value;
-  let newValue = $('#newValue').val();
+  let newValue = $('#newValue').get(0);
   switch (field) {
-    case 'type':
-      $('#descr').hide();
-      $('#newval').show();
-      newValue.type = 'text';
-      newValue.pattern = "[a-z0-9._%+-]";
-      newValue.title = "Not valid text format";
-      break;
-    case 'status':
-      $('#descr').hide();
-      $('#newval').show();
-      newValue.type = 'text';
-      newValue.pattern = "[a-z0-9._%+-]";
-      newValue.title = "Not valid text format";
-      break;
     case 'price':
       $('#descr').hide();
       $('#newval').show();
@@ -49,10 +35,12 @@ function changeProductPattern() {
       newValue.pattern = "[0-9]{10}";
       newValue.title = "Not valid price number";
       break;
-    case 'description':
-      console.log("Qui");
-      $('#newval').hide();
-      $('#descr').show();
+    default:
+      $('#descr').hide();
+      $('#newval').show();
+      newValue.type = 'text';
+      newValue.pattern = "[A-Za-z0-9\\s]{1,}";
+      newValue.title = "Not valid text format";
       break;
   }
 }
@@ -214,6 +202,7 @@ function sendChange(event) {
   let name = $('#oldname').val();
   let field = $('#changeMenu').val();
   let newValue = $('#newValue').val();
+  let descr = $('#descr').val();
   console.log(newValue);
   if (newValue != null && newValue != 'undefined' && newValue != undefined && newValue != '') {
 
@@ -232,7 +221,8 @@ function sendChange(event) {
     }).fail(function (data) {
       $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
     })
-  } else {
+  }
+  else {
     $('#changeErr').html("Please fill the value field");
   }
 
@@ -251,7 +241,6 @@ function showChangeProduct(x, products) {
     <option selected value="type">Type</option>
     <option value="status">Status</option>
     <option value="price">Price</option>
-    <option value="description">Description</option>
   </select>
 </div>
 
@@ -259,10 +248,6 @@ function showChangeProduct(x, products) {
 <div class="mb-3" id="newval">
   <label for="newValue" class="form-label">New value</label>
   <input type="text" class="form-control" id="newValue">
-</div>
-<div id="descr">
-<label for="text" class="form-label">New description</label>
-<textarea class="form-control"  rows="3"></textarea>
 </div>
 <span id="changeErr"></span>
 <button class="btn btn-primary" type="submit">Confirm</button>

@@ -138,7 +138,7 @@ export default function newUserPage({ nameToParent }) {
                     break;
                 default:
                     newValue.type = 'text';
-                    newValue.pattern = "[a-zA-Z]";
+                    newValue.pattern = "[A-Za-z\\s]{1,}";
                     newValue.title = 'empty input not valid'
                     break;
 

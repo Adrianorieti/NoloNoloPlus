@@ -97,7 +97,7 @@ function Navbar(props) {
               <i className="fa fa-info-circle fa-3x" aria-hidden="true"></i><Link className="nav-link" to={'/about'} >About and Rules</Link>
             </li>
             <li className="nav-item" id="logout" >
-              <i className="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+              <i className="fa fa-sign-out fa-3x" aria-hidden="true"></i>
               <Link className="nav-link" onClick={logout}>Logout</Link>
             </li>
           </ul>

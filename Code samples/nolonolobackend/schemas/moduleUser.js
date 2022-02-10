@@ -3,32 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const reserveSchema = require('./moduleReservation').schema;
 
-/* Sub Schema for product map */
-// const reserveSchema = new Schema({
-
-//     usermail: {
-//         type: String
-//     },
-//     start: {
-//         type: Date,
-//         required: true
-//     },
-//     end: {
-//         type: Date,
-//         required: true
-//     },
-//     product: { //nome del prodotto singolo
-//         type: String,
-//         required: true
-//     },
-//     employee: {
-//         type: String
-//     },
-//     expense: { // costo del noleggio
-//         type: Number
-//     }
-// })
-
 const UserSchema = new Schema({
     name: {
         type: String,
@@ -42,6 +16,18 @@ const UserSchema = new Schema({
     phone:
     {
         type: Number,
+        required: true
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    cap: {
+        type: String,
         required: true
     },
     email:
