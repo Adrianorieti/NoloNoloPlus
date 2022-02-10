@@ -116,6 +116,9 @@ function confirmEndOfRental(x) {
     }
   } else {
     console.log("È OGGI NON È NE IN RITARDO NE IN ANTICIPO")
+    if (check === 'Y') {
+      points = calculateFidelityPoints(start, today, expense);
+    }
   }
 
   console.log("new expense", expense);
@@ -195,7 +198,7 @@ function showMyReservations(emp) {
     let today = new Date();
     active += `
     <div class="card">
-        <h5 class="card-header">${x} ${(end.getTime() < today.getTime()) ? '<h3><b>LATE</b></h3>' : (isSameDay(end, today) ? ' <h3><b>TODAY</b></h3>' : '')}</h5>
+        <h5 class="card-header">${x} ${(isSameDay(end, today) ? ' <h3><b>TODAY</b></h3>' : (end.getTime() < today.getTime()) ? '<h3><b>LATE</b></h3>' : '')}</h5>
         <div class="card-body">
         <h5 class="card-title">User: ${emp.activeReservations[x].usermail}</h5>
         <p class="card-text">Product: ${emp.activeReservations[x].product}</p>

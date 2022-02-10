@@ -95,7 +95,7 @@ router.get('/:name/available', auth.verifyToken, async (req, res) => {
                     prices.push(x);
                 }
                 price = Math.min(...prices); // calcolo comunque il prezzo minore
-                console.log("prodotti disponibili",availableProducts);
+                console.log("prodotti disponibili", availableProducts);
                 if (availableProducts.length > 0) { // abbiamo prodotti disponibili
                     availPrice = Math.min(...availPrices);
                     available = true;
@@ -143,7 +143,6 @@ router.post('/', upload.single('img'), (req, res) => {
 router.patch('/:name', upload.single('img'), (req, res) => {
     let name = req.params.name;
     let newData = {};
-    newData.name = req.body.name;
     newData.description = req.body.description;
     newData.price = req.body.price;
     newData.discountCode = req.body.discountCode;

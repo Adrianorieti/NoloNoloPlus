@@ -1,4 +1,3 @@
 -aggiungere back in tutte le parti
 -aggiungere background image nel login 
 -mettere titoli più grandi grafici
--controllare se ho la destta data nei grafici e aggiungere il prezzo nel caso.

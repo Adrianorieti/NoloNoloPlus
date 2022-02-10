@@ -32,29 +32,6 @@
         </div>
 
         <div>
-          <label for="newCategoryName" class="form-label"
-            >Category Name:</label
-          >
-          <div class="input-group">
-            <div class="input-group-text">
-              <i
-                class="bi bi-type"
-                aria-hidden="true"
-                style="font-size: 1rem"
-              ></i>
-            </div>
-            <input
-              v-model="name"
-              id="newCategoryName"
-              type="text"
-              class="form-control"
-              placeholder="Electric Bike"
-              required="required"
-            />
-          </div>
-        </div>
-
-        <div>
           <label for="newCategoryDescription" class="form-label"
             >Category Description:</label
           >
@@ -139,7 +116,6 @@ export default {
     return {
         categories: [],
         cat: "",
-        name: "Category",
         description: "",
         discountCode: "",
         price: 0,
@@ -158,7 +134,6 @@ export default {
     sendData() {
       let photo = document.getElementById("file").files[0];
       let formData= new FormData();
-        formData.append("name", this.name);
         formData.append("description", this.description);
         formData.append("price", this.price);
         formData.append("discountCode", this.discountCode);
@@ -183,7 +158,6 @@ export default {
     
     },
     fillData(){
-      this.name = this.cat.name;
       this.description = this.cat.description;
       this.price = this.cat.price;
       this.discountCode = this.cat.discountCode;

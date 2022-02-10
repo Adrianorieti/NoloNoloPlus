@@ -33,7 +33,11 @@
               {{ user.email }}</a
             >
           </h5>
-          <p class="card-text">Payment Method: {{ user.paymentMethod }}</p>
+          <p class="card-text">
+            Payment Method: {{ user.paymentMethod }}
+            <br/>
+            Fidelity Points: {{user.fidelityPoints}}
+            </p>
         </div>
       </div>
     </div>
