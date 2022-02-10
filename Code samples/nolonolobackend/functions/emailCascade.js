@@ -9,11 +9,11 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
     for await (let emp of employee.find()) {
         // Se trovo un match con quelli che sto cercando
         if (emps.includes(emp.email)) {
-            if (emp.futureReservations.length>0) // se il dipendente ha delle future res
+            if (emp.futureReservations.length > 0) // se il dipendente ha delle future res
             {
                 for (let x in emp.futureReservations) // per tutte le sue future res
                 {
-                    
+
                     // se la mail è quella vecchia dello usr 
                     if (emp.futureReservations[x].usermail === oldMail) {
                         emp.futureReservations[x].usermail = newMail;
@@ -23,7 +23,7 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
 
             if (emp.activeReservations) // se il dipendente ha delle acrive res
             {
-                for (let x in emp.activeReservations.length >0) // per tutte le sue active res
+                for (let x in emp.activeReservations.length > 0) // per tutte le sue active res
                 {
                     // se la mail è quella vecchia dello usr 
                     if (emp.activeReservations[x].usermail === oldMail) {
@@ -51,7 +51,7 @@ async function changeCascadeProds(prods, newMail, oldMail) {
         if (prods.includes(prod.name)) // se c'è match con quelli che cerco
         {
             console.log("STA DENTRO QUESTO PRODOTTO", prod)
-            if (prod.futureReservations.length >0) // se il dipendente ha delle future res
+            if (prod.futureReservations.length > 0) // se il dipendente ha delle future res
             {
                 for (let x in prod.futureReservations) // per tutte le sue future res
                 {
@@ -107,9 +107,9 @@ module.exports = {
         console.log('sono dentro cascade email');
         console.log("vecchia mail", oldMail);
         console.log("nuova mail", newMail);
-        
-        let usr = await user.findOne({email: oldMail});
-        console.log("user",usr);
+
+        let usr = await user.findOne({ email: oldMail });
+        console.log("user", usr);
         if (usr) {
             // Dalle prenotazioni dell'utente in question prendo prodotti e dipendenti
             let emps = [];
@@ -120,18 +120,18 @@ module.exports = {
                     {
                         pushElements(emps, res.employee);
                         pushElements(prods, res.product);
-                        res.email = newMail;
+                        res.usermail = newMail;
                     }
                 }
             }
             if (usr.activeReservations) {
-                
+
                 for (let res of usr.activeReservations) {
                     if (res.employee) // potrebbe essere ancora in pending
                     {
                         pushElements(emps, res.employee);
                         pushElements(prods, res.product);
-                        res.email = newMail;
+                        res.usermail = newMail;
                     }
                 }
             }
@@ -141,10 +141,11 @@ module.exports = {
                     {
                         pushElements(emps, res.employee);
                         pushElements(prods, res.product);
-                        res.email = newMail;
+                        res.usermail = newMail;
                     }
                 }
             }
+            usr.save();
             console.log("prods", prods);
             if (emps.length > 0)
                 await changeCascadeEmps(emps, newMail, oldMail);

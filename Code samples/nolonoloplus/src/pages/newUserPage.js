@@ -265,9 +265,9 @@ export default function newUserPage({ nameToParent }) {
                                             <option selected value="name">Name</option>
                                             <option value="surname">Surname</option>
                                             <option value="phone">Phone</option>
+                                            <option value="paymentMethod">Payment Method</option>
                                             <option value="email">Email</option>
                                             <option value="password">Password</option>
-                                            <option value="paymentMethod">Payment Method</option>
                                         </select>
                                     </div>
                                     {isPaymentMethod

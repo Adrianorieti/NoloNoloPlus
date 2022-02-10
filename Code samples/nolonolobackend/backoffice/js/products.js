@@ -28,13 +28,6 @@ function changeProductPattern() {
   let field = document.getElementById('changeMenu').value;
   let newValue = $('#newValue').val();
   switch (field) {
-    case 'name':
-      $('#descr').hide();
-      $('#newval').show();
-      newValue.type = 'text';
-      newValue.pattern = "[a-z0-9._%+-]";
-      newValue.title = "Not valid text format";
-      break;
     case 'type':
       $('#descr').hide();
       $('#newval').show();
@@ -255,8 +248,7 @@ function showChangeProduct(x, products) {
   <div class="input-group mb-3">
   <label class="input-group-text" for="changeMenu">Field</label>
   <select class="form-select" id="changeMenu">
-    <option selected value="name">Name</option>
-    <option value="type">Type</option>
+    <option selected value="type">Type</option>
     <option value="status">Status</option>
     <option value="price">Price</option>
     <option value="description">Description</option>
