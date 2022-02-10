@@ -74,12 +74,12 @@ function App() {
             <Howitworks />
 
           <div className="App-content container-fluid bg-image container-properties" id="rentForm">
-            <div className="row">
+            <div className="row align-items-center">
               <div className="col-md-6 rentform d-flex" ref={mainRef} tabIndex='-1'>
                 <RentForm focusToParent={focusToParent} location={location} />
               </div>
               <div className="col-md-2"></div>
-              <div className="col-md-4 banner d-flex align-items-middle">
+              <div className="col-md-4 banner d-flex align-content-middle">
                 <h4>We provide the mean you choose the place</h4>
               </div>
             </div>

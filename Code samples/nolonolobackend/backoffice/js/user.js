@@ -9,24 +9,24 @@ function reset()
 
 function changePattern() {
   let field = document.getElementById('changeInfo').value;
-  let newValue = document.getElementById('newValue');
+  let newValue =$('#newValue').val();
+  console.log("field",field);
+  console.log("new val",newValue);
   switch (field) {
     case 'name':
       $('#payments').hide();
       $('#newVal').show();
-
       newValue.type = 'text';
-      newValue.pattern = "[a-z0-9._%+-]";
+      newValue.pattern = "[A-Za-z]";
       newValue.title = "Not valid text format";
       break;
       case 'surname':
         $('#payments').hide();
         $('#newVal').show();
-
         newValue.type = 'text';
-        newValue.pattern = "[a-z0-9._%+-]";
+        newValue.pattern = "[A-Za-z]";
         newValue.title = "Not valid text format";
-          break;
+      break;
       case 'phone':
         $('#payments').hide();
         $('#newVal').show();
@@ -42,6 +42,7 @@ function changePattern() {
         newValue.type = 'email';
         newValue.pattern = "[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
         newValue.title = "Not valid email format";
+
         break;
       case 'paymentMethod':
           $('#payments').show();
@@ -79,7 +80,7 @@ function sendInfo()
         data: obj
       }, function(data)
       {
-        $('#content').html("Succesful operation");
+        $('#content').html("<h3><b>Succesful operation</b></h3>");
         reset();
       }).fail(function()
       {
@@ -115,11 +116,11 @@ function changeUserInfo(x, event, costumers)
 <div id="payments">
 <select class="form-select" id="paymentsMenu">
 <option selected value="visa">Visa</option>
-<option value="surname">Satispay</option>
-<option value="phone">Mastercard</option>
-<option value="email">PayPal</option>
-<option value="payment">Poste Pay</option>
-<option value="payment">Mooney</option>
+<option value="satispay">Satispay</option>
+<option value="Mastercard">Mastercard</option>
+<option value="Paypal">PayPal</option>
+<option value="PostePay">Poste Pay</option>
+<option value="Mooney">Mooney</option>
 </select>
 </div>
 <form onsubmit="sendInfo()">
@@ -167,14 +168,14 @@ function showAddComunication(x, allCostumers)
   $('#title').html("");
 
   let toInsert = `
-  <div>
+  <div style="background-color:lightgrey; padding: 10%">
   <h3>This is the user you are writing to:</h3>
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
   <div class="input-group mb-3 text-center justify-content-center">
 <div class="mb-3 ">
   <label for="text" class="form-label">Write the message:</label>
-  <textarea class="form-control" id="text" rows="3"></textarea>
+  <textarea class="form-control" id="text" rows="3" pattern="[A-za-z]"></textarea>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="sendComunication()" >Send</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="getAllcostumers()" >Close</button>
   </div>

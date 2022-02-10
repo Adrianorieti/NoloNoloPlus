@@ -79,10 +79,8 @@ a:active {
   /*  padding: 10px;*/
   /*  border: 6px solid #bbe0ac; */
   color: white;
-  /*padding: 20vh 20vh;
-  text-align: center;*/
-  display: flex;
-  align-items: center;
+  /* padding: 20vh 20vh; */
+  text-align: center;
 }
 
 @media only screen and (max-width: 600px) {

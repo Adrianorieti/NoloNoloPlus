@@ -109,6 +109,7 @@ router.post('/:email', async (req, res) => {
 
 router.patch('/:email', upload.single('img'), async (req, res) => {
     let email = req.params.email;
+    console.log("vecchia mail", email);
     let newData = {};
     if (!req.file) {
         newData = req.body;
@@ -118,6 +119,7 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
             });
         }
         else if (newData.email) {
+            console.log("nuova mail", newData.email);
             changeEmail.emailCascadeChange(newData.email, email);
         }
     } else {

@@ -1,7 +1,7 @@
 const category = require('../schemas/moduleCategory');
 const product = require('../schemas/moduleProduct');
 const computePrice = require('../functions/computePrice');
-const auth = require('./auth');
+const cascade = require('../functions/nameCascade');
 const express = require('express');
 const checkAvailability = require('../functions/checkAvailability');
 const router = express.Router();
@@ -80,27 +80,33 @@ router.post('/', async (req, res) => {
 
     console.log(newProduct);
     product.exists({ name: req.body.name }, function (err, doc) {
-        if (err) {
-    newProduct
-        .save()
-        .then(() => {
-            console.log("ok");
-            res.status(200).json({
-                message: 'Item created'
-            })
-        })
-        .catch((err) => {
-            res.status(400).json({ message: 'Bad input parameter', error: err })
-        })
-    } else {
-        res.status(500).json({ message: 'Product name already in use', error: err })
-    }
+        if (!doc) {
+            newProduct
+                .save()
+                .then(() => {
+                    console.log("ok");
+                    res.status(200).json({
+                        message: 'Item created'
+                    })
+                })
+                .catch((err) => {
+                    res.status(400).json({ message: 'Bad input parameter', error: err })
+                })
+        } else {
+            res.status(500).json({ message: 'Product name already in use', error: err })
+        }
     })
 })
 /** Modify a product with the given name */
 router.post('/:name', (req, res) => {
     let name = req.params.name;
     let newData = req.body; // deve essere un json {key: value}
+    console.log(newData);
+    console.log(name);
+    if(newData.name)
+    {
+        cascade.nameCascadeChange(newData.name, name);
+    }
     product.findOneAndUpdate(
         { name: name },
         { $set: newData },
