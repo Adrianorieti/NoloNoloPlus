@@ -10,9 +10,9 @@ function About() {
     }, [])
     return (
         <div id="main">
-            <div className="container">
+            <div className="container-fluid">
                 <div className="row text-center justify-content-center">
-                    <div class="col-xl-10 App-about" id="about">
+                    <div className="col-md-10 App-about" id="about">
                         <h1>Welcome</h1><br />
                         <p>Welcome to <b>Nolo Nolo plus</b> big family, the site that allows you to comfortably rent the most suitable bicycle for your
                             <b>green travels</b>. Our team is here to meet all your needs before, during and after the rental by offering you support,
@@ -170,6 +170,11 @@ function About() {
 
                         <p>Also do not forget the fidelity points that allow you to have a discount as explained in the <a href="#Pointstable"> advantages table </a>.</p>
 
+                        <hr /><br />
+                        <h1>Be careful about prices</h1><br />
+                        <p>Prices are not indicative because of the system which looks for the cheapest but it depends
+                            on availability. In the wrost case my be that only the most expensive bike is available.</p>
+                        
                         <br /><hr />
                         <p>If you share our way we see it, let's join this big family and discover all the services we can deliver for you.</p>
 
@@ -178,7 +183,7 @@ function About() {
                         <h2>This year, join a multicolor family!</h2>
                     </div>
 
-                    <div class="col-xl-2 score-image">
+                    <div class="col-md-2 score-image">
 
                     </div>
                 </div>

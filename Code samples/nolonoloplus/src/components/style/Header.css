@@ -1,10 +1,12 @@
 .App-header {
   margin-top: 0;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
   background-color: white;
   min-height: 5vh;
   color: black;
-  border: 3px solid white;
-}  
+  /*border: 3px solid black;*/
+}
 
 .logo {
   max-height: 10vh;
@@ -30,6 +32,7 @@ strong {
   /*font-size: 120%;*/
   font-size: calc(1px + 2vmin);
   /*vertical-align: middle;*/
+  padding:5%;
 }
 
 @media only screen and (max-width: 992px) {

@@ -84,9 +84,9 @@ function RentForm(props) {
 
   return (
     <main className="App-rent ">
-      <div className="container App-rent">
-        <div classname="row container-properties">
-          <div classname="col-md-12">
+      <div className="container-fluid">
+        <div className="row ">
+          <div className="col-md-12 d-flex">
             <form className="rentForm" >
               <div id="formTitle">
                 <h1>Start renting</h1>
@@ -118,7 +118,7 @@ function RentForm(props) {
                 </section>
               </fieldset>
               <span id="date-err"></span>
-              <button id="rentFormButton" type="button" className="btn btn-success" onClick={checkInput}>Click to submit</button>
+              <button id="rentFormButton" type="button" className="btn btn-success btn-lg" onClick={checkInput}>Click to submit</button>
             </form>
           </div>
         </div>

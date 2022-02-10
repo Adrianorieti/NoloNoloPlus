@@ -38,35 +38,40 @@ export default class Example extends React.Component {
         const { from, to } = this.state;
         const modifiers = { start: from, end: to };
         return (
-            <div className="RangeExample container-properties">
-                <p>
-                    {!from && !to && 'Please select the STARTING day.'}
-                    {from && !to && 'Please select the ENDING day.'}
-                    {from &&
-                        to &&
-                        `Selected from ${from.toLocaleDateString()} to
+            <div className="container-fluid container-properties">
+                <div className="row">
+                    <div className="col-md-12">
+                        <p>
+                            {!from && !to && 'Please select the STARTING day.'}
+                            {from && !to && 'Please select the ENDING day.'}
+                            {from &&
+                                to &&
+                                `Selected from ${from.toLocaleDateString()} to
                     ${to.toLocaleDateString()}`}{' '}
-                    {from && to && (
-                        <button className="link" onClick={this.handleResetClick}>
-                            Reset
-                        </button>
-                    )}
-                    <p id="fromDate" hidden="true">
-                        {!from && `${from}`}
-                        {from && `${from.toLocaleDateString()}`}
-                    </p>
-                    <p id="toDate" hidden="true">
-                        {!to && `${to}`}
-                        {to && `${to.toLocaleDateString()}`}
-                    </p>
-                </p>
-                <DayPicker
-                    className="Selectable"
-                    numberOfMonths={this.props.numberOfMonths}
-                    selectedDays={[from, { from, to }]}
-                    modifiers={modifiers}
-                    onDayClick={this.handleDayClick}
-                />
+                            {from && to && (
+                                <button className="link" onClick={this.handleResetClick}>
+                                    Reset
+                                </button>
+                            )}
+                            <p id="fromDate" hidden="true">
+                                {!from && `${from}`}
+                                {from && `${from.toLocaleDateString()}`}
+                            </p>
+                            <p id="toDate" hidden="true">
+                                {!to && `${to}`}
+                                {to && `${to.toLocaleDateString()}`}
+                            </p>
+                        </p>
+
+                        <DayPicker
+                            className="Selectable"
+                            numberOfMonths={this.props.numberOfMonths}
+                            selectedDays={[from, { from, to }]}
+                            modifiers={modifiers}
+                            onDayClick={this.handleDayClick}
+                        />
+                    </div>
+                </div>
             </div>
         );
     }

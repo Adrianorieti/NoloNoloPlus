@@ -79,16 +79,18 @@ a:active {
   /*  padding: 10px;*/
   /*  border: 6px solid #bbe0ac; */
   color: white;
-  padding: 20vh 20vh;
-  text-align: center;
+  /*padding: 20vh 20vh;
+  text-align: center;*/
+  display: flex;
+  align-items: center;
 }
-/*
-@media only screen and (max-width: 768px) {
+
+@media only screen and (max-width: 600px) {
   .banner {
     adding: auto 20vh;
     display: none;
   }
-}*/
+}
 
 /*.banner h4 {
   color: #297c29;
@@ -162,6 +164,15 @@ label {
   justify-content: space-between;
 }
 
+
+.rentform {
+  color: black;
+  border: 6px solid #black;
+  height: auto;
+  justify-content: center;
+  display: inline-block;
+}
+
 #check {
   background-color: rgb(177, 75, 75);
   color: black;
@@ -171,7 +182,6 @@ label {
   background-image: url("./images/bikes.jpg");
   height: auto;
   background-size: cover;
-  background-attachment: fixed;
   min-height: 100vh;
 }
 @media only screen and (max-width: 768px) {
@@ -197,6 +207,8 @@ ul.breadcrumb {
 ul.breadcrumb li {
   display: inline;
   font-size: 18px;
+  font-size: calc(1vh + 1vmin);
+
   /*margin-left: 80px;
   color: #787878;*/
 }

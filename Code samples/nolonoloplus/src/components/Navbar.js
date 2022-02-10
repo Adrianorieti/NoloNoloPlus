@@ -78,26 +78,26 @@ function Navbar(props) {
 
     <nav className="App-navbar navbar navbar-expand-lg navbar-success bg-success justify-content-end" >
       <div className="container-fluid">
-        <h3><i class="fa fa-renren">&nbsp; <Link aria-current="page" to="/">NoloNoloPlus</Link></i></h3>
+        <h3><i className="fa fa-renren fa-2x">&nbsp; <Link aria-current="page" to="/">NoloNoloPlus</Link></i></h3>
         <button id="burger" onClick={checkAriaBurger} className="navbar-toggler custom-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon "></span>
         </button>
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav" >
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <i className="fa fa-fw fa-home fa-2x"></i><Link className="nav-link active" aria-current="page" to="/">Home</Link>
+            <li className="nav-item nav-spacing-2">
+              <i className="fa fa-fw fa-home fa-3x"></i><Link className="nav-link active" aria-current="page" to="/">Home</Link>
+            </li>
+            <li className="nav-item nav-spacing">
+              <i className="fa fa-bicycle fa-3x"></i><Link className="nav-link" to={'/products'} >Products</Link>
             </li>
             <li className="nav-item">
-              <i class="fa fa-bicycle fa-2x"></i><Link className="nav-link" to={'/products'} >Products</Link>
+              <i className="fa fa-fw fa-user fa-3x"></i><Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
             </li>
             <li className="nav-item">
-              <i className="fa fa-fw fa-user fa-2x"></i><Link className="nav-link" id="navLoginReg" to={loggato ? '/personalpage' : '/login'}>{loggato ? props.name : "Login/Register"}</Link>
-            </li>
-            <li className="nav-item">
-              <i class="fa fa-info-circle fa-2x" aria-hidden="true"></i><Link className="nav-link" to={'/about'} >About and Rules</Link>
+              <i className="fa fa-info-circle fa-3x" aria-hidden="true"></i><Link className="nav-link" to={'/about'} >About and Rules</Link>
             </li>
             <li className="nav-item" id="logout" >
-              <i class="fa fa-sign-out fa-2x" aria-hidden="true"></i>
+              <i className="fa fa-sign-out fa-2x" aria-hidden="true"></i>
               <Link className="nav-link" onClick={logout}>Logout</Link>
             </li>
           </ul>

@@ -60,41 +60,30 @@ function App() {
 
   return (
     <div className="App" >
+
       <Header />
       <Navbar name={data} queryToParent={queryToParent} />
+
       <Switch>
 
         <Route path="/" exact >
-          <section>
-            <div className="row">
-              <div className="col-md-12">
-                <ul class="breadcrumb">
-                  <li>Home</li>
-                </ul>
-              </div>
-            </div>
-          </section>
+            <ul className="breadcrumb">
+              <li>Home</li>
+            </ul>
 
-          <section>
-            <div className="row">
-              <div className="col-md-12 rentform">
-                <Howitworks />
-              </div>
-            </div>
-          </section>
+            <Howitworks />
 
-          <section className="App-content bg-image container-properties" id="rentForm">
+          <div className="App-content container-fluid bg-image container-properties" id="rentForm">
             <div className="row">
-              <div className="col-md-6 rentform" ref={mainRef} tabIndex='-1'>
-
+              <div className="col-md-6 rentform d-flex" ref={mainRef} tabIndex='-1'>
                 <RentForm focusToParent={focusToParent} location={location} />
               </div>
-
-              <div className="col-md-6 banner">
+              <div className="col-md-2"></div>
+              <div className="col-md-4 banner d-flex align-items-middle">
                 <h4>We provide the mean you choose the place</h4>
               </div>
             </div>
-          </section>
+          </div>
 
           {<div> <CarouselContainer /> </div>}
 
@@ -105,7 +94,7 @@ function App() {
           <section>
             <div className="row">
               <div className="col-md-12">
-                <ul class="breadcrumb">
+                <ul className="breadcrumb">
                   <li><Link aria-current="page" to="/">Home</Link></li>
                   <li>Login</li>
                 </ul>
@@ -121,7 +110,7 @@ function App() {
           <section>
             <div className="row">
               <div className="col-md-12">
-                <ul class="breadcrumb">
+                <ul className="breadcrumb">
                   <li><Link aria-current="page" to="/">Home</Link></li>
                   <li>Personal page</li>
                 </ul>
@@ -165,7 +154,7 @@ function App() {
           <section>
             <div className="row">
               <div className="col-md-12">
-                <ul class="breadcrumb">
+                <ul className="breadcrumb">
                   <li><Link aria-current="page" to="/">Home</Link></li>
                   <li>Contacts</li>
                 </ul>
@@ -179,7 +168,7 @@ function App() {
           <section>
             <div className="row">
               <div className="col-md-12">
-                <ul class="breadcrumb">
+                <ul className="breadcrumb">
                   <li><Link aria-current="page" to="/">Home</Link></li>
                   <li>About</li>
                 </ul>

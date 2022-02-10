@@ -67,21 +67,22 @@ function Products(props) {
   }, []);
 
   return (<div id="main">
-    <div>
-      <div id="searchWrapper">
-        <input
-          type="text"
-          name="searchBar"
-          id="searchBar"
-          placeholder="search for name or price"
-        />
-      </div>
-    </div>
-    <div className="content" id="content">
-      {loading ? rendering() : <p>No products available</p>}
-    </div>
+        <div>
+          <div id="searchWrapper">
+            <input
+              type="text"
+              name="searchBar"
+              id="searchBar"
+              placeholder="search for name or price"
+            />
+          </div>
+        </div>
 
-  </div>
+        <div className="content" id="content">
+          {loading ? rendering() : <p>No products available</p>}
+        </div>
+
+      </div>
   )
 }
 
