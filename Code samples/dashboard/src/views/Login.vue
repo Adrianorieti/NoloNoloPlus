@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form aria-labelledby="login" class="box" v-on:submit.prevent="login()">
+    <form aria-labelledby="login" class="box bg-light" v-on:submit.prevent="login()">
       <fieldset>
         <legend id="login">Please enter your Login and Password</legend>
         <div>
@@ -82,13 +82,13 @@ export default {
   margin-top: 200px;
   padding: 20px;
 } */
+
 .container {
   display: flex;
   justify-content: center;
 }
 .box {
   border: 1px solid black;
-  background-color: azure;
   border-radius: 5%;
   width: 50%;
   text-align: center;

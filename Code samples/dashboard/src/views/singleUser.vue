@@ -167,14 +167,15 @@ export default {
       this.user.pastReservations.reverse();
       for (let res of this.user.pastReservations) {
         let start = new Date(res.start);
-        labels.push(
-          start.getDate() +
-            "-" +
-            (start.getMonth() + 1) +
-            "-" +
-            start.getFullYear()
-        );
-        chartData.push(res.expense);
+        let newDate = start.getDate() +"-" +(start.getMonth() + 1) +"-" +start.getFullYear();
+        if(labels.includes(newDate)){
+          let index = labels.indexOf(newDate);
+          chartData[index] += res.expense;
+        }
+        else{
+          labels.push(newDate);
+          chartData.push(res.expense);
+        }
         colors.push(this.getRandomColor());
       }
       this.lineData = {
@@ -247,3 +248,5 @@ export default {
 };
 </script>
 
+<style>
+</style>
