@@ -98,7 +98,7 @@ function showAddRent(x, products) {
   allProducts = allProducts.concat(products);
   prodName = products[x].name;
   toInsert = `
-    <div style="background-color:lightgrey; padding: 10%">
+    <div>
     <h3>Bike for Rental:</h3>
     <input class="form-control" type="text" value="${prodName}" aria-label="readonly input example" readonly>
     <div class="mb-3">
@@ -156,7 +156,7 @@ function showAddProduct() {
     categories = [];
     categories = data;
     $('#reservations').html('');
-    let toInsert = `<div style="background-color:lightgrey; padding: 10%">
+    let toInsert = `<div>
     <form onsubmit="sendProduct(event)" class="needs-validation">
     <div class="mb-3">
     <label for="name" class="form-label">Bike</label>
@@ -230,7 +230,7 @@ function sendChange(event) {
 
 /** Show the area when the employee can change a product field */
 function showChangeProduct(x, products) {
-  toInsert = `<div style="background-color:lightgrey; padding: 10%">
+  toInsert = `<div>
   <h3>Bike about:</h3>
   <div class="input-group mb-3">
   <input class="form-control" type="text" id='oldname' value="${products[x].name}" aria-label="readonly input example" readonly></div>
@@ -292,7 +292,7 @@ function sendDelete() {
 function showDeleteProduct(x, products) {
   console.log(products);
   console.log(x)
-  let toInsert = `<div style="background-color:lightgrey; padding: 10%">
+  let toInsert = `<div>
      <h3>Bike you whant to delete:</h3>
      <input class="form-control" type="text" id="product" value="${products[x].name}" aria-label="readonly input example" readonly>
       </div>`
@@ -373,7 +373,7 @@ function sendMaintenance() {
 /** Show the mainenance html form */
 function showMaintenance(x, products) {
 
-  let toInsert = `<div style="background-color:lightgrey; padding: 10%">
+  let toInsert = `<div>
   <h3>The bike you are dealing with:</h3>
   <input class="form-control" type="text" id="name" value="${products[x].name}" aria-label="readonly input example" readonly>
   <label for="start">Start:</label>

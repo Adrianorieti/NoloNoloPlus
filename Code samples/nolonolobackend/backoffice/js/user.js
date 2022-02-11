@@ -168,7 +168,7 @@ function showAddComunication(x, allCostumers)
   $('#title').html("");
 
   let toInsert = `
-  <div style="background-color:lightgrey; padding: 10%">
+  <div>
   <h3>This is the user you are writing to:</h3>
   <div class="input-group mb-3 text-center">
   <input class="form-control" type="text" id='email' value="${allCostumers[x].email}" aria-label="readonly input example" readonly></div>
