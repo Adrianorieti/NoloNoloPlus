@@ -20,7 +20,6 @@ const categories = require('./api/categories');
 const products = require('./api/products');
 const userApi = require('./api/user');
 const app = express();
-const bcrypt = require('bcrypt');
 
 
 require('dotenv').config();
@@ -70,19 +69,11 @@ app.get('/login', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-app.get("/dashboard", function (req, res) {
+app.get('/about', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.get("/personalpage", function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.get("/updatepage", function (req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-app.get("/futurereservations", function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
@@ -105,33 +96,6 @@ app.get('/images/employee/:name', (req, res) => {
     res.sendFile(path.join(__dirname, 'images', 'employees', name));
 });
 
-// bcrypt.hash("123Ciaociao$!$@", 10, function (err, hash) {
-
-//     let usr = new user({
-//         name: "paletto",
-//         surname: "forte",
-//         phone: 123445678,
-//         email: "palo.forte@nolonolo.com",
-//         password: hash,
-//         paymentMethod: 'Paypal',
-//         role: 'user',
-//         amountPaid: 125
-//     });
-
-//     usr.save();
-// })
-
-// ATTENZIONE NON VA BENE BISOGNA CREARE L'OGGETTO DI RESERVATION E POI METTERGLIELO
-// let newPending = new pending({
-//     usermail: "lorenzotozzi98@gmail.com",
-//     product: "stocastico",
-//     employee: 'magalli.crudista123@nolonolo.com',
-//     start: "2021-12-15",
-//     end: "2021-12-17",
-//     expense: 33
-// })
-
-// newPending.save();
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001');
