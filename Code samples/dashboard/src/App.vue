@@ -10,20 +10,20 @@
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
-            <b-nav-item v-if="authenticated" to="/users">Users</b-nav-item>
-            <b-nav-item v-if="authenticated" to="/employees">
+            <b-nav-item v-if="authenticated" to="/dashboard/users">Users</b-nav-item>
+            <b-nav-item v-if="authenticated" to="/dashboard/employees">
               Employees
             </b-nav-item>
-            <b-nav-item v-if="authenticated" to="/categories">
+            <b-nav-item v-if="authenticated" to="/dashboard/categories">
               Categories
             </b-nav-item>
-            <b-nav-item v-if="authenticated" to="/products">
+            <b-nav-item v-if="authenticated" to="/dashboard/products">
               Products
             </b-nav-item>
-            <b-nav-item v-if="authenticated" to="/reservationCharts">
+            <b-nav-item v-if="authenticated" to="/dashboard/reservationCharts">
               Reservations Charts
             </b-nav-item>
-            <b-nav-item v-if="authenticated" to="/modify">
+            <b-nav-item v-if="authenticated" to="/dashboard/modify">
               Personal Page
             </b-nav-item>
             <b-nav-item href="http://localhost:8001/employee/panel"
@@ -34,7 +34,7 @@
           <b-navbar-nav class="ml-auto">
             <b-nav-item
               v-if="authenticated"
-              to="/login"
+              to="/dashboard/login"
               @click="logout()"
               replace
               >Logout</b-nav-item

@@ -11,7 +11,7 @@
     <button
       type="button"
       class="btn btn-outline-success"
-      @click="route('/categories/change')"
+      @click="route('/dashboard/categories/change')"
     >
       CHANGE CATEGORY
     </button>

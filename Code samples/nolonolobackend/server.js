@@ -40,6 +40,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(express.static(path.join(__dirname, 'backoffice')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
@@ -96,6 +97,9 @@ app.get('/images/employee/:name', (req, res) => {
     res.sendFile(path.join(__dirname, 'images', 'employees', name));
 });
 
+app.get('/dashboard/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+})
 
 app.listen(8001, function () {
     console.log('Server is running on port 8001');

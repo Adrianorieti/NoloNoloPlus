@@ -14,11 +14,11 @@ function guardMyroute(to, from, next) {
       })
       .catch(err => {
         console.log(err);
-        next('/login');
+        next('/dashboard/login');
       })
   }
   else {
-    next('/login');
+    next('/dashboard/login');
   }
 }
 
