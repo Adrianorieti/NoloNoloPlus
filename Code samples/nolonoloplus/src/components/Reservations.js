@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import Modify from './Modify';
 import { useHistory } from "react-router";
+import Invoice from './Invoice';
 import './style/reservations.css';
 function Reservations(props) {
 
   const history = useHistory();
   const [modify, setModify] = useState(false);
   const [remove, setRemove] = useState(false);
+  const [isInvoice, setIsInvoice] = useState(false);
+  const [invoice, setInvoice] = useState('');
   const [resToRemove, setResToRemove] = useState('');
   const [target, setTarget] = useState('');
 
@@ -55,29 +58,47 @@ function Reservations(props) {
               <button className="btn btn-danger" onClick={(() => { removeReservation(resToRemove) })}>Delete</button>
             </div>
           </div> :
-          (
-            <div id="mainReservations">
-              <div id="future"><h3>Future</h3>
-                {props.user.futureReservations.map((res, index) => {
+          isInvoice ? <Invoice res={invoice} user={props.user} /> :
+            (
+              <div id="mainReservations">
+                <div id="future"><h3>Future</h3>
+                  {props.user.futureReservations.map((res, index) => {
 
-                  let start = new Date(res.start)
-                  let end = new Date(res.end)
+                    let start = new Date(res.start)
+                    let end = new Date(res.end)
 
-                  return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
-                    <div className="card-body">
-                      <h5 className="card-title">Product: {res.product}</h5>
-                      <p className="card-text"><b>Your rental is going to start on</b>: {start.toDateString()}</p>
-                      <p className="card-text"><b>And end on date</b>: {end.toDateString()}</p>
-                      <p className="card-text"><b>Total expense</b>: {res.expense}</p>
+                    return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
+                      <div className="card-body">
+                        <h5 className="card-title">Product: {res.product}</h5>
+                        <p className="card-text"><b>Your rental is going to start on</b>: {start.toDateString()}</p>
+                        <p className="card-text"><b>And end on date</b>: {end.toDateString()}</p>
+                        <p className="card-text"><b>Total expense</b>: {res.expense}</p>
 
-                      <button className='btn btn-primary' type='button' onClick={(() => { setTarget(res); modifyReservation() })}>Modify</button>
-                      <button className='btn btn-danger' type='button' onClick={(() => { setRemove(true); setResToRemove(res); })}>Remove</button>
-                    </div>
-                  </div>)
-                })}</div>
-              <div id="active"><h3>Active </h3>
-                {
-                  props.user.activeReservations.map((res, index) => {
+                        <button className='btn btn-primary' type='button' onClick={(() => { setTarget(res); modifyReservation() })}>Modify</button>
+                        <button className='btn btn-danger' type='button' onClick={(() => { setRemove(true); setResToRemove(res); })}>Remove</button>
+                      </div>
+                    </div>)
+                  })}</div>
+                <div id="active"><h3>Active </h3>
+                  {
+                    props.user.activeReservations.map((res, index) => {
+                      let start = new Date(res.start)
+                      let end = new Date(res.end)
+                      return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
+                        <div className="card-body">
+                          <h5 className="card-title">Product: {res.product}</h5>
+                          <h6 className="card-subtitle mb-2 text-muted">Referent: {res.employee}</h6>
+                          <p className="card-text"><b>Rent started</b>: {start.toDateString()}</p>
+                          <p className="card-text"><b>Will end</b>: {end.toDateString()}</p>
+                          <p className="card-text"><b>Total expense</b>: {res.expense}</p>
+                        </div>
+                      </div>)
+                    })
+                  }
+                </div>
+                <div id="past">
+                  <h3>Past</h3>
+                  {props.user.pastReservations.map((res, index) => {
                     let start = new Date(res.start)
                     let end = new Date(res.end)
                     return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
@@ -85,32 +106,15 @@ function Reservations(props) {
                         <h5 className="card-title">Product: {res.product}</h5>
                         <h6 className="card-subtitle mb-2 text-muted">Referent: {res.employee}</h6>
                         <p className="card-text"><b>Rent started</b>: {start.toDateString()}</p>
-                        <p className="card-text"><b>Will end</b>: {end.toDateString()}</p>
+                        <p className="card-text"><b>Ended</b>: {end.toDateString()}</p>
                         <p className="card-text"><b>Total expense</b>: {res.expense}</p>
+                        <button className='btn btn-primary' type='button' onClick={(() => { setInvoice(res); setIsInvoice(true); })}>Fattura</button>
                       </div>
                     </div>)
-                  })
-                }
+                  })}
+                </div>
               </div>
-              <div id="past">
-                <h3>Past</h3>
-                {props.user.pastReservations.map((res, index) => {
-                  let start = new Date(res.start)
-                  let end = new Date(res.end)
-                  return (<div className="card" style={{ width: '18rem', margin: '1rem' }}>
-                    <div className="card-body">
-                      <h5 className="card-title">Product: {res.product}</h5>
-                      <h6 className="card-subtitle mb-2 text-muted">Referent: {res.employee}</h6>
-                      <p className="card-text"><b>Rent started</b>: {start.toDateString()}</p>
-                      <p className="card-text"><b>Ended</b>: {end.toDateString()}</p>
-                      <p className="card-text"><b>Total expense</b>: {res.expense}</p>
-                      <button className='btn btn-primary' type='button'>Fattura</button>
-                    </div>
-                  </div>)
-                })}
-              </div>
-            </div>
-          )}</div>)
+            )}</div>)
 }
 
 

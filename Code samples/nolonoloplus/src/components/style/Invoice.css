@@ -1,0 +1,15 @@
+#invoice{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+.table-cst{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.dentro{
+    margin: 3px solid black;
+}
