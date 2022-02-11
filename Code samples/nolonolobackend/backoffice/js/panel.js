@@ -290,6 +290,7 @@ function denyPendingRequest(x) {
       $('#content').html(`<h3>${data.message}</h3>`);
       // location.reload();
     }).fail(function (data) {
+      $('#text_area_error').html('please format your message');
       $('#content').html(`<h3>${data.responseJSON.message}</h3>`);
     })
   }
@@ -309,8 +310,11 @@ function showDenyPendingRequest(x) {
 <div class="mb-3 text-center justify-content-center" >
   <label for="text" class="form-label">Message to send</label>
   <textarea class="form-control" id="text" pattern="[A-Za-z]"rows="3"></textarea>
+  <label for="text" class="form-label text-danger" id="text_area_error"></label>
+  <div>
   <button type="button" class="btn btn-lg btn-primary btn-block" onclick="denyPendingRequest(${x})" >Insert</button>
   <button type="button" class="btn btn-lg btn-warning btn-block" onclick="reset()" >Close</button>
+  </div>
   </div>
   </div>
 </div>
