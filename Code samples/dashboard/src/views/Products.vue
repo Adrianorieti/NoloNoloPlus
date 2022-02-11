@@ -27,7 +27,7 @@
           <h5 class="card-title">
             <a
               :href="'/products/' + product.name"
-              @click.prevent="route('products/' + product.name)"
+              @click.prevent="route('/dashboard/products/' + product.name)"
               class="stretched-link st_link_dec"
             >
               {{ product.name }}</a

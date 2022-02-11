@@ -24,18 +24,18 @@ function guardMyroute(to, from, next) {
 
 const routes = [
   {
-    path: '/',
+    path: '/dashboard',
     redirect: {
       name: "login"
     }
   },
   {
-    path: '/login',
+    path: '/dashboard/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
-    path: '/users',
+    path: '/dashboard/users',
     name: 'users',
     beforeEnter: guardMyroute,
     // route level code-splitting
@@ -44,7 +44,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Users.vue')
   },
   {
-    path: '/users/:userEmail',
+    path: '/dashboard/users/:userEmail',
     name: 'singleUser',
     beforeEnter: guardMyroute,
     // route level code-splitting
@@ -54,7 +54,7 @@ const routes = [
     props: true
   },
   {
-    path: '/employees',
+    path: '/dashboard/employees',
     name: 'employees',
     beforeEnter: guardMyroute,
     // route level code-splitting
@@ -63,7 +63,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Employees.vue')
   },
   {
-    path: '/employees/create',
+    path: '/dashboard/employees/create',
     name: 'EmployeeForm',
     beforeEnter: guardMyroute,
     // route level code-splitting
@@ -72,7 +72,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/EmployeeForm.vue')
   },
   {
-    path: '/employees/:employeeEmail',
+    path: '/dashboard/employees/:employeeEmail',
     name: 'singleEmployee',
     beforeEnter: guardMyroute,
     // route level code-splitting
@@ -82,51 +82,51 @@ const routes = [
     props: true
   },
   {
-    path: '/categories',
+    path: '/dashboard/categories',
     name: 'categories',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/Categories.vue')
   },
   {
-    path: '/categories/create',
+    path: '/dashboard/categories/create',
     name: 'createcategory',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "home" */ '../views/CreateCategory.vue')
   },
   {
-    path: '/categories/change',
+    path: '/dashboard/categories/change',
     name: 'changeCategory',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "home" */ '../views/ChangeCategory.vue')
   },
   {
-    path: '/products',
+    path: '/dashboard/products',
     name: 'products',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/Products.vue')
   },
   {
-    path: '/products/:productName',
+    path: '/dashboard/products/:productName',
     name: 'singleProduct',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "categoryCharts" */ '../views/SingleProduct.vue'),
     props: true
   },
   {
-    path: '/productCharts/:chartView',
+    path: '/dashboard/productCharts/:chartView',
     name: 'productCharts',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "productCharts" */ '../views/ProductCharts.vue'),
     props: true
   },
   {
-    path: '/reservationCharts',
+    path: '/dashboard/reservationCharts',
     name: 'reservationCharts',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/provaReservations.vue')
   },
   {
-    path: '/modify',
+    path: '/dashboard/modify',
     name: 'modify',
     beforeEnter: guardMyroute,
     component: () => import(/* webpackChunkName: "rentalCharts" */ '../views/ChangePersonalInfo.vue')

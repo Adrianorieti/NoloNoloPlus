@@ -27,7 +27,7 @@
           <h5 class="card-title">
             <a
               :href="'/users/' + user.email"
-              @click.prevent="route(user.email)"
+              @click.prevent="route('/dashboard'+user.email)"
               class="stretched-link st_link_dec"
             >
               {{ user.email }}</a

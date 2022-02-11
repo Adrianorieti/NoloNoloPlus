@@ -34,7 +34,7 @@
           <h5 class="card-title">
             <a
               :href="'/employee/' + employee.email"
-              @click.prevent="route('employees/' + employee.email)"
+              @click.prevent="route('/dashboard/employees/' + employee.email)"
               class="stretched-link st_link_dec"
             >
               {{ employee.email }}</a

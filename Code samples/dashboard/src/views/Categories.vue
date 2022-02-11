@@ -4,7 +4,7 @@
     <button
       type="button"
       class="btn btn-outline-success"
-      @click="route('/categories/create')"
+      @click="route('/dashboard/categories/create')"
     >
       CREATE NEW CATEGORY
     </button>

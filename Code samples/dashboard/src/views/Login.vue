@@ -63,7 +63,7 @@ export default {
           sessionStorage.setItem("token", data.accessToken);
           sessionStorage.setItem("email", this.email);
           this.$emit("authenticated", true);
-          this.$router.push({ path: "/users" });
+          this.$router.push({ path: "/dashboard/users" });
         })
         .catch((error) => {
           console.log(error);

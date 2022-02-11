@@ -127,7 +127,7 @@ export default {
         .then((response) => {
           if(response.status === 200){
             console.log("creation successfull!");
-            this.$router.push({path: "/categories"});
+            this.$router.push({path: "/dashboard/categories"});
           }
         })
         .catch((err) => {

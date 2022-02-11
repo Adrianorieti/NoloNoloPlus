@@ -288,7 +288,7 @@ export default {
       }
     },
     route() {
-      this.$router.push({ path: "/employees" });
+      this.$router.push({ path: "/dashboard/employees" });
     },
   },
 };

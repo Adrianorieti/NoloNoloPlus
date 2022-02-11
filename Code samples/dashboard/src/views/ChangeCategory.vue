@@ -149,7 +149,7 @@ export default {
       .then((response) => {
         console.log(response.status);
         if(response.status === 200){
-          this.$router.push({path: "/categories"});
+          this.$router.push({path: "/dashboard/categories"});
         }
       })
       .catch((err) => {
