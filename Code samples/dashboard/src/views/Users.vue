@@ -19,7 +19,7 @@
         :key="user.email"
       >
         <img
-          :src="'http://localhost:8001/images/users/' + user.image"
+          :src="'http://site202145.tw.cs.unibo.it/images/users/' + user.image"
           class="card-img-top"
           alt="user profile pic"
         />

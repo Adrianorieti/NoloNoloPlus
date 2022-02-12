@@ -7,7 +7,7 @@
     </div>
     <div class="card-wrapper" v-else>
       <div class="card ">
-        <img :src="'http://localhost:8001/images/employees/'+this.employee.image" class="card-img-top  " alt="employee profile pic">
+        <img :src="'http://site202145.tw.cs.unibo.it/images/employees/'+this.employee.image" class="card-img-top  " alt="employee profile pic">
         <div class="card-body">
           <h3 class="card-title">{{this.employeeEmail}}</h3>
           <p class="card-text">
