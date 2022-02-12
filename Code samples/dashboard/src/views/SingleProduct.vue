@@ -76,7 +76,7 @@ export default {
   methods: {
     getSingleProduct() {
       this.loading = true;
-      let url = "http://localhost:8001/api/products/" + this.productName;
+      let url = "http://site202145.tw.cs.unibo.it/api/products/" + this.productName;
       fetch(url)
         .then((response) => {
           if (response.status === 200) {

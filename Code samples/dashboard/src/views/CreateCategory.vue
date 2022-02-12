@@ -120,7 +120,7 @@ export default {
 
       console.log(formData);
 
-      fetch("http://localhost:8001/api/categories/", {
+      fetch("http://site202145.tw.cs.unibo.it/api/categories/", {
         method: "POST",
         body: formData,
       })

@@ -26,7 +26,7 @@
             <b-nav-item v-if="authenticated" to="/dashboard/modify">
               Personal Page
             </b-nav-item>
-            <b-nav-item href="http://localhost:8001/employee/panel"
+            <b-nav-item href="http://site202145.tw.cs.unibo.it/employee/panel"
               >BackOffice</b-nav-item
             >
           </b-navbar-nav>
@@ -58,7 +58,7 @@ export default {
   mounted() {
     let token = sessionStorage.getItem("token");
     if (token) {
-      fetch(`http://localhost:8001/api/auth/manager/${token}`)
+      fetch(`http://site202145.tw.cs.unibo.it/api/auth/manager/${token}`)
         .then((response) => {
           if (response.status === 200) {
             this.authenticated = true;

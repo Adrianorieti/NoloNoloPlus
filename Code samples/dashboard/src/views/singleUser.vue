@@ -69,7 +69,7 @@ export default {
   methods: {
     getSingleUser() {
       this.loading = true;
-      let url = "http://localhost:8001/api/user/" + this.userEmail;
+      let url = "http://site202145.tw.cs.unibo.it/api/user/" + this.userEmail;
       fetch(url)
         .then((response) => {
           if (response.status === 200) {
@@ -192,7 +192,7 @@ export default {
     },
     createBarNumOfResPerCat() {
       //Bisogna fare richiesta per avere i prodotti, da cui mi ricavo tutte le categorie e poi paragono prodotto al tipo di categoria. Devo creare una specie di dizionario.
-      let url = "http://localhost:8001/api/products/";
+      let url = "http://site202145.tw.cs.unibo.it/api/products/";
       fetch(url)
         .then((response) => {
           if (response.status === 200) {

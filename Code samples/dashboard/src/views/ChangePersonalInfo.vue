@@ -188,7 +188,7 @@ export default {
     };
   },
     async mounted() {
-    let url = "http://localhost:8001/api/manager/";
+    let url = "http://site202145.tw.cs.unibo.it/api/manager/";
     try {
       let response = await fetch(url);
       let man = await response.json();
@@ -221,7 +221,7 @@ export default {
             else if(this.password !== ""){
                 formData.append("password", this.password);
             }
-            fetch("http://localhost:8001/api/manager/"+this.manager.email, {
+            fetch("http://site202145.tw.cs.unibo.it/api/manager/"+this.manager.email, {
                 method: "PATCH",
                 body: formData,
             })

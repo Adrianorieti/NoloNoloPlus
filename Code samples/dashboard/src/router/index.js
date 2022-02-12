@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 function guardMyroute(to, from, next) {
   let token = sessionStorage.getItem('token');
   if (token) {
-    let url = `http://localhost:8001/api/auth/manager/${token}`;
+    let url = `http://site202145.tw.cs.unibo.it/api/auth/manager/${token}`;
     fetch(url)
       .then(response => {
         if (response.status === 200)

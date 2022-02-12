@@ -60,7 +60,7 @@ export default {
     chart,
   },
   async mounted() {
-    let url = "http://localhost:8001/api/categories/";
+    let url = "http://site202145.tw.cs.unibo.it/api/categories/";
     try {
       let response = await fetch(url);
       this.categories = await response.json();
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     takeProducts() {
-      let url = "http://localhost:8001/api/products/";
+      let url = "http://site202145.tw.cs.unibo.it/api/products/";
       fetch(url)
         .then((response) => {
           if (response.status === 200) {

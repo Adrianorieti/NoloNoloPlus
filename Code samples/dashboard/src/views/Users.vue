@@ -55,7 +55,7 @@ export default {
   },
 
   mounted() {
-    let url = "http://localhost:8001/api/user/";
+    let url = "http://site202145.tw.cs.unibo.it/api/user/";
     fetch(url)
       .then((response) => {
         if (response.status === 200) {

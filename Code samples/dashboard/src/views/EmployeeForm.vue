@@ -241,7 +241,7 @@ export default {
         if (!this.role) {
           this.role = "employee";
         }
-        fetch("http://localhost:8001/api/" + this.role + "/" + this.email, {
+        fetch("http://site202145.tw.cs.unibo.it/api/" + this.role + "/" + this.email, {
           method: "POST",
           body: formData,
         })

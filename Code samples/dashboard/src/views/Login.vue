@@ -50,7 +50,7 @@ export default {
         headers: new Headers({ "Content-type": "application/json" }),
         body: JSON.stringify(payload),
       };
-      let url = "http://localhost:8001/api/account/login/manager";
+      let url = "http://site202145.tw.cs.unibo.it/api/account/login/manager";
       fetch(url, options)
         .then((response) => {
           if (response.status === 200) {

@@ -122,7 +122,7 @@ export default {
     };
   },
     async mounted() {
-    let url = "http://localhost:8001/api/categories/";
+    let url = "http://site202145.tw.cs.unibo.it/api/categories/";
     try {
       let response = await fetch(url);
       this.categories = await response.json();
@@ -142,7 +142,7 @@ export default {
         formData.append("oldImg", this.cat.imageName);
       }
 
-      fetch("http://localhost:8001/api/categories/"+this.cat.name, {
+      fetch("http://site202145.tw.cs.unibo.it/api/categories/"+this.cat.name, {
         method: "PATCH",
         body: formData,
       })
