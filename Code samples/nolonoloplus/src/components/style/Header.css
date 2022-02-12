@@ -8,11 +8,22 @@
   /*border: 3px solid black;*/
 }
 
-.logo {
+img {
+  max-width: 100%;
+  /*height:auto;
+  float:left;
   max-height: 10vh;
   max-width: 45vh;
   margin-top: 2%;
-  margin-bottom: 3rem;
+  margin-bottom: 3rem;*/
+}
+
+img[width] {
+  width: auto; /* Defer to max-width */
+}
+
+img[width][height] {
+  height: auto; /* Preserve aspect ratio */
 }
 
 @media only screen and (max-width: 992px) {
@@ -44,3 +55,5 @@ strong {
 /*span {
   padding:5%;
 }*/
+
+
