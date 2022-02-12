@@ -53,7 +53,7 @@ function RentModal(props) {
             "startingDate": "${startingDate}",
             "endingDate": "${endingDate}"
            }`;
-        let url = 'http://localhost:8001/api/rentalHypothesis';
+        let url = 'http://site202145.tw.cs.unibo.it/api/rentalHypothesis';
         // Creiamo il payload da mandare al server
         const options = {
               method: 'POST',

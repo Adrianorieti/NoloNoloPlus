@@ -54,7 +54,7 @@ function RentForm(props) {
 
     let res = [];
     async function getCategories() {
-      let url = "http://localhost:8001/api/categories/";
+      let url = "http://site202145.tw.cs.unibo.it/api/categories/";
       try {
         let response = await fetch(url);
         res = await response.json();

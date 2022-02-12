@@ -36,7 +36,7 @@ function Reservations(props) {
       headers: new Headers({ 'Content-type': 'application/json' }),
       body: obj
     };
-    fetch(`http://localhost:8001/api/rental/${res.product}`, options)
+    fetch(`http://site202145.tw.cs.unibo.it/api/rental/${res.product}`, options)
       .then((response) => {
         if (response.status === 200) {
           history.go(0);

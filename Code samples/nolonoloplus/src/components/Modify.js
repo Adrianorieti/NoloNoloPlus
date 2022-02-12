@@ -16,7 +16,7 @@ function Modify(props)
   // mi salvo il vecchio prodotto
     async function getOldProduct(old){
       let res;
-      let url = `http://localhost:8001/api/products/${old}`;
+      let url = `http://site202145.tw.cs.unibo.it/api/products/${old}`;
       try {
         let response = await fetch(url);
         res = await response.json();
@@ -63,7 +63,7 @@ function Modify(props)
           body: obj
       };
        
-        let url = `http://localhost:8001/api/rental/${oldProd.name}/modify`;
+        let url = `http://site202145.tw.cs.unibo.it/api/rental/${oldProd.name}/modify`;
         fetch(url, options)
         .then(response => {
             if (response.status === 200) {
@@ -87,7 +87,7 @@ function Modify(props)
                 method: 'GET',
                 headers: new Headers({'Authorization': `Bearer ${tokn}` })
               };
-            const url = `http://localhost:8001/api/categories/${category}/available/?start=${start}&end=${end}`;
+            const url = `http://site202145.tw.cs.unibo.it/api/categories/${category}/available/?start=${start}&end=${end}`;
             fetch(url, options)
             .then(response => {
                 if (response.status === 200) {
@@ -113,7 +113,7 @@ function Modify(props)
                   body: obj
               };
 
-                let url = `http://localhost:8001/api/rental/${oldProd.name}/modify`;
+                let url = `http://site202145.tw.cs.unibo.it/api/rental/${oldProd.name}/modify`;
               fetch(url, options2)
               .then(response => {
                   if (response.status === 200) {
@@ -147,7 +147,7 @@ function Modify(props)
 
     useEffect(() => {
         async function getProducts() {
-            let url = "http://localhost:8001/api/categories/";
+            let url = "http://site202145.tw.cs.unibo.it/api/categories/";
             try {
               let response = await fetch(url);
               let res = await response.json();

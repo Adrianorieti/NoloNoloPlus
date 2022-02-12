@@ -83,7 +83,7 @@ export default function Register({ stateToParent }) {
                 headers: new Headers({ 'Content-type': 'application/json' }),
                 body: obj
             };
-            fetch(`http://localhost:8001/api/user/${email}`, options)
+            fetch(`http://site202145.tw.cs.unibo.it/api/user/${email}`, options)
                 .then(async response => {
                     if (response.status === 200) {
                         return response.json();

@@ -15,7 +15,7 @@ function Navbar(props) {
 
 
   function checkLog(token) {
-    fetch('http://localhost:8001/api/auth/', {
+    fetch('http://site202145.tw.cs.unibo.it/api/auth/', {
       headers: {
         "Authorization": `Bearer ${token}`
       }

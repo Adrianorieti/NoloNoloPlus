@@ -17,7 +17,7 @@ function Product(props) {
             props.products.map((product) => {
                 return (
                         <div className="card m-3" style={{ width: "18rem", border: 'none' }}>
-                            <img src={`http://localhost:8001/images/categories/${product.imageName}`} className="card-img-top" alt="Foto del prodotto" />
+                            <img src={`http://site202145.tw.cs.unibo.it/images/categories/${product.imageName}`} className="card-img-top" alt="Foto del prodotto" />
                             <div className="card-body" style={{ backgroundColor: '#e5f5c6' }}>
                                 <h5 className="card-title">{product.name}</h5>
                                 <p className="card-text">{product.description}</p>
@@ -47,7 +47,7 @@ function Product(props) {
                         { // per renderizzarlo in due modi, così copro l'ipotesi e il noleggio vero e proprio, i due pulsanti dovranno
         return ( // rimandare al sommario del rental vero e proprio che è un'altra pagina oppure indietro se non si vuole + fare
                         <div className="card m-3" style={{ width: "18rem" }}>
-                            <img src={`http://localhost:8001/images/categories/${props.products.imageName}`} className="card-img-top" alt="Foto del prodotto" />
+                            <img src={`http://site202145.tw.cs.unibo.it/images/categories/${props.products.imageName}`} className="card-img-top" alt="Foto del prodotto" />
                             <div className="card-body">
                                 <h5 className="card-title">{props.products.name}</h5>
                                 <p className="card-text">{props.products.description}</p>

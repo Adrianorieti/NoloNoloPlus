@@ -23,7 +23,7 @@ export default function newUserPage({ nameToParent }) {
             const options = {
                 method: 'GET'
             };
-            fetch(`http://localhost:8001/api/auth/${token}`, options)
+            fetch(`http://site202145.tw.cs.unibo.it/api/auth/${token}`, options)
                 .then(response => {
                     if (response.status === 200) {
                         return response.json();
@@ -38,7 +38,7 @@ export default function newUserPage({ nameToParent }) {
             const options = {
                 method: 'GET'
             };
-            fetch(`http://localhost:8001/api/user/${email}`, options)
+            fetch(`http://site202145.tw.cs.unibo.it/api/user/${email}`, options)
                 .then(response => {
                     if (response.status === 200) {
                         return response.json();
@@ -75,7 +75,7 @@ export default function newUserPage({ nameToParent }) {
             headers: new Headers({ 'Content-type': 'application/json' }),
             body: body
         };
-        fetch(`http://localhost:8001/api/user/${user.email}`, options)
+        fetch(`http://site202145.tw.cs.unibo.it/api/user/${user.email}`, options)
             .then(response => {
                 setCommunications([]);
             })
@@ -95,7 +95,7 @@ export default function newUserPage({ nameToParent }) {
                 picName = x[1].name;
             }
 
-            fetch(`http://localhost:8001/api/user/${user.email}`, { method: "PATCH", body: formData })
+            fetch(`http://site202145.tw.cs.unibo.it/api/user/${user.email}`, { method: "PATCH", body: formData })
                 .then(response => {
                     return response.json()
                 })
@@ -172,7 +172,7 @@ export default function newUserPage({ nameToParent }) {
             headers: new Headers({ 'Content-type': 'application/json' }),
             body: obj
         };
-        fetch(`http://localhost:8001/api/user/${user.email}`, options)
+        fetch(`http://site202145.tw.cs.unibo.it/api/user/${user.email}`, options)
             .then(response => {
                 return response.json();
             }).then(data => {
@@ -198,7 +198,7 @@ export default function newUserPage({ nameToParent }) {
             method: 'DELETE'
         };
 
-        fetch(`http://localhost:8001/api/user/${user.email}`, options)
+        fetch(`http://site202145.tw.cs.unibo.it/api/user/${user.email}`, options)
             .then(async response => {
                 if (response.status === 200) {
                     return response.json();
@@ -232,7 +232,7 @@ export default function newUserPage({ nameToParent }) {
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
                                     {console.log("qui", image)}
-                                    <img className="rounded-image" alt="profile pic" src={image ? `http://localhost:8001/images/users/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
+                                    <img className="rounded-image" alt="profile pic" src={image ? `http://site202145.tw.cs.unibo.it/images/users/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
                                     <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
                                         <label htmlFor="file-upload" class="custom-file-upload">

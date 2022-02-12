@@ -22,7 +22,7 @@ function Hypothesis(props)
               let name = query.name;
               let start = query.startingDate;
               let end = query.endingDate;
-            const url = `http://localhost:8001/api/categories/${name}/available/?start=${start}&end=${end}`;
+            const url = `http://site202145.tw.cs.unibo.it/api/categories/${name}/available/?start=${start}&end=${end}`;
             console.log("sono qui");
             fetch(url, options)
             .then(response => {

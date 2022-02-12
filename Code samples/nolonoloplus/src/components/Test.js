@@ -18,7 +18,7 @@ function Test(){
         const options = {
             method: 'GET',
           };
-            const url = `http://localhost:8001/api/categories/${name}/available/?start=${start}&end=${end}`;
+            const url = `http://site202145.tw.cs.unibo.it/api/categories/${name}/available/?start=${start}&end=${end}`;
             fetch(url, options)
         .then(response => {
             if (response.status === 200) {

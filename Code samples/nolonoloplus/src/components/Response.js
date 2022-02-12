@@ -28,7 +28,7 @@ function Response(props){
                 body: toSend
             };
             let name = props.product.name;
-            const url = `http://localhost:8001/api/pending/${name}`;
+            const url = `http://site202145.tw.cs.unibo.it/api/pending/${name}`;
            
             fetch(url, options)
             .then(response => {
@@ -59,7 +59,7 @@ function Response(props){
         (confirmed ? <div id="avail">
             <h4>Thank you for your reservation !</h4>
             <p>An employee will as soon as possible check for your rental.</p>
-            <p>When accepted, the rental is goint to be visible on your <a id="personalpage" href="http://localhost:3000/personalpage"> personal page</a></p>
+            <p>When accepted, the rental is goint to be visible on your <a id="personalpage" href="http://site202145.tw.cs.unibo.it/personalpage"> personal page</a></p>
         </div> 
         :
          <div id="notavail">
