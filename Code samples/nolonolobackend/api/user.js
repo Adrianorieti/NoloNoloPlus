@@ -64,7 +64,6 @@ router.get('/:email', (req, res) => {
         })
 })
 
-
 router.post('/:email', async (req, res) => {
     const email = req.params.email;
     const source = await user.findOne({ email: email });
