@@ -8,7 +8,7 @@
     <div class="card-wrapper" v-else>
       <div class="card">
         <img
-          :src="'http://localhost:8001/images/categories/' + this.product.image"
+          :src="'http://site202145.tw.cs.unibo.it/images/categories/' + this.product.image"
           class="card-img-top"
           alt="product pic"
         />

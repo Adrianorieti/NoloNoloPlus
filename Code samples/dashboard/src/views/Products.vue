@@ -19,7 +19,7 @@
         :key="product.name"
       >
         <img
-          :src="'http://localhost:8001/images/categories/' + product.image"
+          :src="'http://site202145.tw.cs.unibo.it/images/categories/' + product.image"
           class="card-img-top"
           alt="product pic"
         />

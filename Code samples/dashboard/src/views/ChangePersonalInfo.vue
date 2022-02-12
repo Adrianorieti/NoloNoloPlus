@@ -5,7 +5,7 @@
         <legend id="change-manager">Change Your's Informations</legend>
         <div class="image-wrapper" v-if="manager.image">
             <img
-                :src="'http://localhost:8001/images/employees/' + manager.image"
+                :src="'http://site202145.tw.cs.unibo.it/images/employees/' + manager.image"
                 alt="employee profile pic"
             />
         </div>

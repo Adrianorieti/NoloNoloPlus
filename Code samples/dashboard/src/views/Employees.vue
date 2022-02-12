@@ -26,7 +26,7 @@
         :key="employee.email"
       >
         <img
-          :src="'http://localhost:8001/images/employees/' + employee.image"
+          :src="'http://site202145.tw.cs.unibo.it/images/employees/' + employee.image"
           class="card-img-top"
           alt="employee profile pic"
         />

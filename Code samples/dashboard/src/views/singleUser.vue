@@ -9,7 +9,7 @@
       <HorizontalCard
         :title="userEmail"
         :text="text"
-        :imageSrc="'http://localhost:8001/images/users/' + this.user.image"
+        :imageSrc="'http://site202145.tw.cs.unibo.it/images/users/' + this.user.image"
         :key="key"
       />
     </div>

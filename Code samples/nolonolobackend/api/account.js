@@ -79,7 +79,6 @@ router.post('/login/:role', async (req, res) => {
     {
         const password = req.body.password;
         const buff = Buffer.from(password, 'base64');
-
         const decodedpass = buff.toString('utf-8');
         // We compare the passwords
         if (await bcrypt.compare(decodedpass, source.password)) {
@@ -90,7 +89,7 @@ router.post('/login/:role', async (req, res) => {
             res.status(200).json({ accessToken: accessToken, name: `${source.name}` });
 
         } else {
-            res.status(500).json({ message: 'The requested account may not exists or your credentials are not correct' });
+            res.status(500).json({ message: 'The requested account may not exists or your credentials are not correct'});
             console.log("Password doesn't match");
         }
     } else {
