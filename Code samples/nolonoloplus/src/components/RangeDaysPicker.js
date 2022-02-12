@@ -39,7 +39,7 @@ export default class Example extends React.Component {
         const modifiers = { start: from, end: to };
         return (
             <div className="container-fluid container-properties">
-                <div className="row">
+                <div className="row d-flex">
                     <div className="col-md-12">
                         <p>
                             {!from && !to && 'Please select the STARTING day.'}

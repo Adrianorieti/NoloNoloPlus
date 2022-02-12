@@ -12,22 +12,22 @@ function Footer(props) {
         <div className="App-footer container-fluid">
             <div className="row cards">
                 <div className="col-md-2">
-                    <img id="card" src={mastercard} alt="You can pay with Mastercard" />
+                    <img src={mastercard} alt="You can pay with Mastercard" />
                 </div>
                 <div className="col-md-2">
-                    <img src={paypal} alt="You can pay with Paypal" />
+                    <img className="img-fluid" src={paypal} alt="You can pay with Paypal" />
                 </div>
                 <div className="col-md-2">
-                    <img src={postepay} alt="You can pay with Postepay" />
+                    <img className="img-fluid" src={postepay} alt="You can pay with Postepay" />
                 </div>
                 <div className="col-md-2">
-                    <img src={satispay} alt="You can pay with Satispay" />
+                    <img className="img-fluid" src={satispay} alt="You can pay with Satispay" />
                 </div>
                 <div className="col-md-2">
-                    <img src={sisalpay} alt="You can pay with Sisalplay" />
+                    <img className="img-fluid" src={sisalpay} alt="You can pay with Sisalplay" />
                 </div>
                 <div className="col-md-2">
-                    <img src={visa} alt="You can pay with Visa credit card" />
+                    <img className="img-fluid" src={visa} alt="You can pay with Visa credit card" />
                 </div>
             </div>
 

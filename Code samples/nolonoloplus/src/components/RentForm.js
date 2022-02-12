@@ -83,46 +83,45 @@ function RentForm(props) {
   }, [])
 
   return (
-    <main className="App-rent ">
-      <div className="container-fluid">
-        <div className="row ">
-          <div className="col-md-12 d-flex">
-            <form className="rentForm" >
-              <div id="formTitle">
-                <h1>Start renting</h1>
-                <p className="step">Step 1</p>
-              </div>
-              <div id="selectProduct">
-                <p><h5>Pick the Best Bike for You...</h5></p>
-                {(() => {
-                  let options = [];
-                  for (let category of cat) {
-                    let newOption = <option id={category.name} name="products" className="form-select" type="radio" value={category.name} >{category.name}</option>
-                    options.push(newOption);
-                  }
-                  return (
-                    <select id="form-sel" className="form-select" aria-label="Default select example">
-                      {options}
-                    </select>
-                  );
-                })()}
-              </div>
-              <div className="step">Step 2</div>
-              <fieldset aria-required="true">
-                <div>
-                  <legend><h5>Choose a date</h5></legend>
-                </div>
-                <hr></hr>
-                <section className="mb-3">
-                  <RangeDaysPicker />
-                </section>
-              </fieldset>
-              <span id="date-err"></span>
-              <button id="rentFormButton" type="button" className="btn btn-success btn-lg" onClick={checkInput}>Click to submit</button>
-            </form>
-          </div>
+    <main className="App-rent rentform">
+      <form>
+        <div id="formTitle">
+          <h1>Start renting</h1>
+          <p className="step">Step 1</p>
         </div>
-      </div>
+
+        <div id="selectProduct">
+          <p><h5>Pick the Best Bike for You...</h5></p>
+          {(() => {
+            let options = [];
+            for (let category of cat) {
+              let newOption = <option id={category.name} name="products" className="form-select" type="radio" value={category.name} >{category.name}</option>
+              options.push(newOption);
+            }
+            return (
+              <select id="form-sel" className="form-select" aria-label="Default select example">
+                {options}
+              </select>
+            );
+          })()}
+        </div>
+
+        <div className="step">Step 2</div>
+
+        <fieldset aria-required="true">
+          <div>
+            <legend><h5>Choose a date</h5></legend>
+          </div>
+
+          <hr></hr>
+          <section className="mb-3">
+            <RangeDaysPicker />
+          </section>
+
+        </fieldset>
+        <span id="date-err"></span>
+        <button id="rentFormButton" type="button" className="btn btn-success btn-lg" onClick={checkInput}>Click to submit</button>
+      </form>
     </main>
 
   );
