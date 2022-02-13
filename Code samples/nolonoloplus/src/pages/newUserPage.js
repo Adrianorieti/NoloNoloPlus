@@ -320,12 +320,12 @@ export default function newUserPage({ nameToParent }) {
                                     <div className="d-flex justify-content-between align-items-center mb-3">
                                         <h4 className="text-right">Communications from agency</h4>
                                     </div>
-                                    {communications.length === 0 ? <div> No communications</div> :
+                                    {(communications.length === 0 || (communications.length === 1 && communications[0] === "")) ? <div> No communications</div> :
                                         (() => {
                                             let commDivs = []
                                             for (let x = communications.length; x >= 0; x--) {
                                                 console.log("comm", communications[x])
-                                                if (communications[x] != null) {
+                                                if (communications[x] != null && communications[x] !== "") {
                                                     console.log(communications.length)
                                                     console.log(x);
                                                     if (x === communications.length - 1)
