@@ -8,9 +8,13 @@ function guardMyroute(to, from, next) {
   if (token) {
     let url = `http://site202145.tw.cs.unibo.it/api/auth/manager/${token}`;
     fetch(url)
-      .then(response => {
+      .then(async response => {
         if (response.status === 200)
           next();
+        else {
+          let data = await response.json();
+          throw new Error(data.message)
+        }
       })
       .catch(err => {
         console.log(err);
