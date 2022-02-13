@@ -15,7 +15,7 @@ function Header() {
                 </div>
 
                 <div className="col-md-4">
-                    <strong>The easy and safe way to rent a byke for your green travels</strong>
+                    <strong>The easy and safe way to rent a bike for your green travels</strong>
                 </div>
             </div>
         </div>

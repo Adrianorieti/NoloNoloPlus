@@ -174,7 +174,12 @@ export default function newUserPage({ nameToParent }) {
         };
         fetch(`http://site202145.tw.cs.unibo.it/api/user/${user.email}`, options)
             .then(response => {
-                return response.json();
+                if (response.status === 200)
+                    return response.json();
+                else {
+                    let data = await response.json();
+                    throw new Error(data.message)
+                }
             }).then(data => {
                 if (field === 'email') {
                     sessionStorage.clear();
@@ -189,7 +194,8 @@ export default function newUserPage({ nameToParent }) {
                 }
             })
             .catch(err => {
-                console.log(err.message);
+                document.getElementById('onErr').innerHTML = err;
+                console.log(err);
             })
     }
 
