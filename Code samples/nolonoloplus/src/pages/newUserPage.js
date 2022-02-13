@@ -172,15 +172,18 @@ export default function newUserPage({ nameToParent }) {
             headers: new Headers({ 'Content-type': 'application/json' }),
             body: obj
         };
+        console.log("newval", newValue);
         fetch(`http://site202145.tw.cs.unibo.it/api/user/${user.email}`, options)
-            .then(response => {
+            .then(async response => {
                 if (response.status === 200)
                     return response.json();
                 else {
+                    console.log("siamo nell'else");
                     let data = await response.json();
                     throw new Error(data.message)
                 }
             }).then(data => {
+                console.log("siamo nel then");
                 if (field === 'email') {
                     sessionStorage.clear();
                     history.push('/login');
@@ -194,6 +197,7 @@ export default function newUserPage({ nameToParent }) {
                 }
             })
             .catch(err => {
+                console.log("siamo nell'errore");
                 document.getElementById('onErr').innerHTML = err;
                 console.log(err);
             })
