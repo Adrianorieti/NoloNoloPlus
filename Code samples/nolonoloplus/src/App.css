@@ -88,6 +88,8 @@ a:active {
   .banner {
     adding: auto 20vh;
     display: none;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
   }
 }
 
@@ -181,7 +183,7 @@ label {
   background-image: url("./images/bikes.jpg");
   height: auto;
   background-size: cover;
-  min-height: 100vh;
+  min-height: 70vh;
 }
 @media only screen and (max-width: 768px) {
   .bg-image {

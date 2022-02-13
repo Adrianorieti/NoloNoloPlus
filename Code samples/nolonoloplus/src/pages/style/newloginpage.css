@@ -6,6 +6,12 @@
  
 }
 
+@media only screen and (max-width: 600px) {
+  #mainLogin {
+    padding: 0rem;
+  }
+}
+
 #LogRegContainer
 {
   display: flex;

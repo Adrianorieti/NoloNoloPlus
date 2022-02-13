@@ -24,6 +24,7 @@ function Rental(props) {
     }
 
     useEffect(() => {
+        // document.getElementById('info').scrollIntoView({ behavior: "smooth" })
         function getAvailability(tokn, query) {
             const options = {
                 method: 'GET',
@@ -66,13 +67,13 @@ function Rental(props) {
                         {chooseImage(category.imageName)}
                     </div>
                     <div id="right">
-                        <div id="title"><h4>Your rental summary</h4></div>
+                        <div id="title"><h1>Your rental summary</h1></div>
                         <div id="info">
-                            <p>Name: {category.name}</p>
-                            <p>Description: {category.description}</p>
-                            <p>Start: {start}</p>
-                            <p>End: {end}</p>
-                            <p>Total Price: ${price}<span><a className="fa fa-info-circle" onClick={goToAbout}></a></span></p>
+                            <p><b>Name</b>: {category.name}</p>
+                            <p><b>Description</b>: {category.description}</p>
+                            <p><b>Start</b>: {(()=> {let today = new Date(); let yyyy = today.getFullYear(); return(start.slice(0,start.search(yyyy)+4))})()}</p>
+                            <p><b>End</b>: {(()=> {let today = new Date(); let yyyy = today.getFullYear(); return(end.slice(0,end.search(yyyy)+4))})()}</p>
+                            <p><b>Total Price</b>: ${price}<span>&nbsp;<a className="fa fa-info-circle" onClick={goToAbout}></a></span></p>
                         </div>
                         <div id="control">
                             <button className="btn btn-success" onClick={() => { setResponse(true) }}>Confirm</button>

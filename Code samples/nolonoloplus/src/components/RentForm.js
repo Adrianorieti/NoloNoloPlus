@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import RangeDaysPicker from "./RangeDaysPicker"
 import { useHistory } from "react-router";
 import './style/RentForm.css';
 
@@ -8,46 +7,57 @@ function RentForm(props) {
   let history = useHistory();
   const [cat, setCat] = useState([]);
 
-  function checkInput() {
+  useEffect(() => {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
 
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById("end").setAttribute("min", today);
+    document.getElementById("start").setAttribute("min", today);
+  })
+
+  function checkInput(event) {
+    event.preventDefault();
     let form_obj = ``;
     const select = document.getElementById('form-sel');
     let bikeType;
     bikeType = select.value;
-    let start = document.querySelector("#fromDate").innerHTML;
-    let end = document.querySelector("#toDate").innerHTML;
-    console.log(start);
-    if (start == null || end == null || start == 'undefined' || end == 'undefined') {
-      document.getElementById('date-err').innerHTML = "Please insert a valid date";
-      return;
-    }
+    let start = new Date(document.querySelector("#start").value);
+    let end = new Date(document.querySelector("#end").value);
+    // console.log("start", start);
+
     let today = new Date();
-    let toCompare = new Date(start);
-    console.log(toCompare.getTime());
-    console.log(today.getTime());
-    if ((toCompare.getDate() == today.getDate() &&
-      toCompare.getMonth() == today.getMonth() &&
-      toCompare.getFullYear() == today.getFullYear()) || toCompare.getTime() > today.getTime()) {
-      form_obj += `{
+    // console.log(today.getTime());
+    // console.log("toDay", today);
+    // console.log("start", start);
+    if (start.getTime() > end.getTime()) {
+      let temp = new Date(start);
+      start = new Date(end);
+      end = new Date(temp);
+    }
+    form_obj += `{
         "name": "${bikeType}",
         "startingDate": "${start}",
         "endingDate": "${end}"
        }`;
-      sessionStorage.setItem('form_obj', form_obj);
-      let token = sessionStorage.getItem('token');
-      if (token) {
-        history.push('/rental');
-      }
-      else {
-        history.push('/hypothesis');
-      }
+    sessionStorage.setItem('form_obj', form_obj);
+    let token = sessionStorage.getItem('token');
+    if (token) {
+      history.push('/rental');
     }
-    else if (toCompare.getTime() < today.getTime()) {
-
-      document.getElementById('date-err').innerHTML = "Please insert a valid date";
-      return;
+    else {
+      history.push('/hypothesis');
     }
-
   }
 
   useEffect(async () => {
@@ -84,7 +94,7 @@ function RentForm(props) {
 
   return (
     <main className="App-rent rentform">
-      <form>
+      <form onSubmit={checkInput}>
         <div id="formTitle">
           <h1>Start renting</h1>
           <p className="step">Step 1</p>
@@ -110,19 +120,29 @@ function RentForm(props) {
 
         <fieldset aria-required="true">
           <div>
-            <legend><h5>Choose a date</h5></legend>
+            <legend><h5>Choose a period</h5></legend>
           </div>
 
           <hr></hr>
           <section className="mb-3">
-            <RangeDaysPicker />
+            {/* <RangeDaysPicker /> */}
+            <div containerName="row">
+              <div>
+                <label for="start">Start:</label>
+                <input type="date" id="start" name="start" required></input>
+              </div>
+              <div>
+                <label for="end">End:</label>
+                <input type="date" id="end" name="end" required></input>
+              </div>
+            </div>
           </section>
 
         </fieldset>
         <span id="date-err"></span>
-        <button id="rentFormButton" type="button" className="btn btn-success btn-lg" onClick={checkInput}>Click to submit</button>
-      </form>
-    </main>
+        <button id="rentFormButton" type="submit" className="btn btn-success btn-lg">Click to submit</button>
+      </form >
+    </main >
 
   );
 }
