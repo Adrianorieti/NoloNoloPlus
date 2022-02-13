@@ -303,7 +303,7 @@ export default function newUserPage({ nameToParent }) {
                                             <label htmlFor="newValue" className="form-label">New {valToChange}</label>
                                             <input type="text" className="form-control" id="newValue" required />
                                             <input type="checkbox" onClick={showPassw} />Show Password
-                                            <span id="onErr"></span>
+                                            <span id="onErr" className="text-danger m-2"></span>
                                             <div className="d-flex justify-content-between">
                                                 <button className="btn btn-success " type="submit">Confirm</button>
                                                 <button className="btn btn-warning " type="button" onClick={() => { document.getElementById("newValue").value = ' '; }} >clear</button>
