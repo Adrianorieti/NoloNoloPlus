@@ -10,8 +10,8 @@ function reset()
 function changePattern() {
   let field = document.getElementById('changeInfo').value;
   let newValue =$('#newValue').val();
-  console.log("field",field);
-  console.log("new val",newValue);
+  // console.log("field",field);
+  // console.log("new val",newValue);
   switch (field) {
     case 'name':
       $('#payments').hide();
@@ -276,7 +276,7 @@ function setUsersSearchBar()
 
 function showCostumers(costumers)
 {
-  console.log("costumers",costumers);
+  // console.log("costumers",costumers);
     allCostumers = [];
     oldCostumers = [];
     allCostumers = allCostumers.concat(costumers);

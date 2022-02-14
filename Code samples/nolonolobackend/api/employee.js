@@ -15,7 +15,7 @@ const checkAvailability = require('../functions/checkAvailability');
 const router = express.Router();
 const reservations = require('../functions/reservationsHelper');
 
-//và cambiato ma se lascio senza /emp non mi funzionano le altre porchiddio
+//và cambiato ma se lascio senza /emp non mi funzionano le altre
 router.post('/singleEmp', async (req, res) => {
     let email = req.body.email;
     let emp = await employee.findOne({ email: email });

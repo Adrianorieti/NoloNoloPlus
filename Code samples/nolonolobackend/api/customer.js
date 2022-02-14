@@ -73,13 +73,13 @@ router.post('/update', async (req, res) => {
         jwt.verify(token, process.env.TOKEN_ACCESS_KEY, async function (err, decoded) {
             //devo handlare il fatto se c'è un errore.
             const email = decoded.email;
-            console.log(email);
+            // console.log(email);
             //diamo per scontato che lo user esista??
             //in questo caso si perchè prendiamo dal token, ma se uno lo modifica?
             // https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a
 
             let source = await user.findOne({ email: email });
-            console.log(source);
+            // console.log(source);
 
             //adesso dobbiamo in un qualche modo leggere quello che vogliamo cambiare, e cambiarlo
             const data = req.body;
@@ -233,19 +233,19 @@ router.post("/modifypreparation", async (req, res) => {
                     //devo togliere da array la reservation
                     let index = -1;
                     let start = new Date(req.body.start);
-                    console.log("siamo nella remove" + start);
+                    // console.log("siamo nella remove" + start);
                     for (let i in prod.reservations) {
-                        console.log("siamo nella remove" + prod.reservations[i].start);
+                        // console.log("siamo nella remove" + prod.reservations[i].start);
                         //faccio req.body.start perchè è già una data vera e propria
                         if (prod.reservations[i].start.getTime() === start.getTime()) {
                             index = i;
                             break;
                         }
                     }
-                    console.log('siamo nella remove temporanea con index:' + index);
+                    // console.log('siamo nella remove temporanea con index:' + index);
                     prod.reservations.splice(index, 1);
                     prod.save();
-                    console.log("rimosso");
+                    // console.log("rimosso");
                 }
                 else if (req.body.operation === 'create') {
                     let reservation = {
@@ -256,7 +256,7 @@ router.post("/modifypreparation", async (req, res) => {
                     //devo pushare nell'array la reservation.
                     prod.reservations.push(reservation);
                     prod.save();
-                    console.log("creato");
+                    // console.log("creato");
                 }
                 res.status(200).send();
             }
@@ -274,7 +274,7 @@ router.post("/modifypreparation", async (req, res) => {
  * @returns {200, 401}
  */
 router.post("/removeReservation", async (req, res) => {
-    console.log("siamo qua");
+    // console.log("siamo qua");
     //devo avere la starting date, ending date, name product e anche il token.
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -299,7 +299,7 @@ router.post("/removeReservation", async (req, res) => {
                 }
             }
             //elimino elemento in determinato indice.
-            console.log("indice dei user è: " + index);
+            // console.log("indice dei user è: " + index);
             source.futureReservations.splice(index, 1);
             source.save();
             //adesso eliminiamo la prenotazione vecchia dal prodotto.
@@ -312,7 +312,7 @@ router.post("/removeReservation", async (req, res) => {
                     break;
                 }
             }
-            console.log("indice dei prodotti è: " + index);
+            // console.log("indice dei prodotti è: " + index);
             //elimino elemento in determinato indice.
             prod.reservations.splice(index, 1);
             prod.save();

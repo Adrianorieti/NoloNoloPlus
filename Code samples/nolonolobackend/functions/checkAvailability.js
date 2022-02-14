@@ -18,20 +18,20 @@ module.exports = {
                 {
                     if( startDate.getTime() >= product.futureReservations[i].start.getTime() && startDate.getTime() <= product.futureReservations[i].end.getTime() )
                     {
-                        console.log("comprende tutto");
+                        // console.log("comprende tutto");
                         available = false;
                         break; 
 
                     }else if( endDate.getTime() >= product.futureReservations[i].start.getTime() && endDate.getTime() <= product.futureReservations[i].end.getTime())
                     {
-                        console.log("la fine è compresa");
+                        // console.log("la fine è compresa");
 
                         available = false;
                         break;
 
                     }else if( startDate.getTime() <= product.futureReservations[i].start.getTime()  &&  endDate.getTime() >=  product.futureReservations[i].end.getTime())
                     {
-                        console.log("comprende tutto due");
+                        // console.log("comprende tutto due");
                         available = false;
                         break;
                     }else
@@ -41,7 +41,7 @@ module.exports = {
                     }
                 }
          
-        console.log("available è ", available)
+        // console.log("available è ", available)
         return available;
     }
 

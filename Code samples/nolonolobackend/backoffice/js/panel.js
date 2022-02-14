@@ -25,17 +25,17 @@ function sendRentalHypothesis(x, event) {
   let endDate = $('#endDate').val();
   startDate = new Date(startDate);
   endDate = new Date(endDate);
-  console.log(endDate.getTime())
-  console.log(startDate.getTime());
+  // console.log(endDate.getTime())
+  // console.log(startDate.getTime());
   if (endDate.getTime() < startDate.getTime()) {
-    console.log("EH SI È COSÌ NÈ")
+    // console.log("EH SI È COSÌ NÈ")
   }
   if ((startDate && endDate && email) && (endDate.getTime() >= startDate.getTime())) {
     $.post({
       type: 'GET',
       url: `http://localhost:8001/api/products/${productsNames[x]}/available/?start=${startDate}&end=${endDate}&email=${email}`
     }, function (data) {
-      console.log(data.status);
+      // console.log(data.status);
       let toInsert = '';
       toInsert = `<div id="available">
                     <h5>The product is available !</h5>
@@ -91,7 +91,7 @@ function renderFilteredProducts(filtered) {
   allProducts = [];
   allProducts = allProducts.concat(filtered);
   for (let x in filtered) {
-    console.log(filtered[x].name)
+    // console.log(filtered[x].name)
     image = filtered[x].image;
     toInsert += `<div class="card" style="width: 18rem;">
     <img src="../../images/categories/${image}" class="card-img-top" alt="Product image">
@@ -111,7 +111,7 @@ function renderFilteredProducts(filtered) {
     </div>
   </div>`
   }
-  console.log("sono qui");
+  // console.log("sono qui");
   $('#content').html('');
   $('#content').html(toInsert);
 }
@@ -134,7 +134,7 @@ function setSearchBar() {
 }
 /** Renders all products in the content div */
 function showProducts(products) {
-  console.log(products);
+  // console.log(products);
   productsNames = [];
   productsPrices = [];
   categoriesNames = [];
@@ -224,8 +224,8 @@ function getAllproducts() {
 
 function endMantainance(x) {
   let id = requests[x]._id;
-  console.log(id);
-  console.log(requests[x].reserve);
+  // console.log(id);
+  // console.log(requests[x].reserve);
   let start = requests[x].reserve.start;
   let end = requests[x].reserve.end;
   let product = requests[x].reserve.product;
@@ -236,8 +236,8 @@ function endMantainance(x) {
     "email": "${email}",
     "product": "${product}"
   }`;
-  console.log(obj);
-  console.log(product);
+  // console.log(obj);
+  // console.log(product);
   $.post({
     type: 'DELETE',
     url: `http://localhost:8001/api/pending/${id}?start=${start}&end=${end}`,
@@ -271,7 +271,7 @@ function denyPendingRequest(x) {
   let end = requests[x].reserve.end;
   let product = requests[x].reserve.product;
   let id = requests[x]._id;
-  console.log(id);
+  // console.log(id);
   if (message) {
     const obj = `{
           "email": "${email}",
@@ -279,7 +279,7 @@ function denyPendingRequest(x) {
           "message": "${message}"
         }`;
 
-    console.log(obj);
+    // console.log(obj);
     $.post({
       type: 'DELETE',
       url: `http://localhost:8001/api/pending/${id}/?start=${start}&end=${end}`,
@@ -344,7 +344,7 @@ function confirmPendingRequest(x) {
     "end": "${end}",
     "expense": "${expense}"
   }`;
-  console.log(obj2);
+  // console.log(obj2);
   // VADO A CHIAMARE LA DELETE PER LE PENDING E QUANDO LO FÀ CHIAMO QUELLA CHE AGGIUNGE
   //LA PRENOTAZIONE OVUNQUE
   $.post({

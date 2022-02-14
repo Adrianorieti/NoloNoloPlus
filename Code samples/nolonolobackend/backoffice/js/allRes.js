@@ -33,7 +33,7 @@ function sendModifyRental(x)
         "end": "${end}"
       }`;
       
-      console.log(obj);
+      // console.log(obj);
 
       $.ajax({
         method: 'PATCH',
@@ -77,7 +77,7 @@ function showModify(x)
             <select class="form-select" id="products"> `;
             for(let x in allProducts)
             {
-          console.log(allProducts[x]);
+          // console.log(allProducts[x]);
           productsMenu += `<option value="${allProducts[x].name}">${allProducts[x].name}</option>`;
         }
         productsMenu += '</select>'
@@ -122,7 +122,7 @@ function rentDeletion(x)
     "start": "${start}",
     "end": "${end}"
   }`;
-  console.log(obj);
+  // console.log(obj);
   
   $.ajax({
     method: "DELETE",
@@ -240,8 +240,8 @@ function getAllReservations()
     type: 'GET',
       url: 'http://localhost:8001/api/rental/',
     }, function(data){
-      console.log("data.actives", data.actives);
-      console.log("futures", data.future);
+      // console.log("data.actives", data.actives);
+      // console.log("futures", data.future);
       showReservations(data.actives, data.future);
     }).fail(function(err)
     {

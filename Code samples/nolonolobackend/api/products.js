@@ -44,7 +44,7 @@ router.get('/:name/available', (req, res) => {
     product.findOne({ name: name })
         .exec()
         .then(async (prod) => {
-            console.log("sono dentro");
+            // console.log("sono dentro");
             let collection = await category.findOne({ name: prod.type })
             if (checkAvailability.checkAvailability(prod, start, end)) {
                 let price = await computePrice.computePrice(collection, prod, email, '', start, end);
@@ -100,8 +100,8 @@ router.post('/', async (req, res) => {
 router.post('/:name', (req, res) => {
     let name = req.params.name;
     let newData = req.body; // deve essere un json {key: value}
-    console.log(newData);
-    console.log(name);
+    // console.log(newData);
+    // console.log(name);
     product.findOneAndUpdate(
         { name: name },
         { $set: newData },
@@ -120,14 +120,14 @@ router.post('/:name', (req, res) => {
 /** Deletes a product if exists and if there are no future reservations */
 router.delete('/:name', async (req, res) => {
     let name = req.params.name;
-    console.log(name);
+    // console.log(name);
     product.exists({ name: name }, async function (err, doc) {
         if (err) {
             res.status(404).json({ message: "Product not found", error: err })
         } else {
-            console.log(doc);
+            // console.log(doc);
             let prod = await product.findOne({ name: name });
-            console.log(prod);
+            // console.log(prod);
             if (prod.futureReservations.length != 0 || prod.activeReservations.length != 0) {
                 res.status(500).json({ message: "Impossible, there are future reservations on the product" });
             } else {

@@ -65,8 +65,8 @@ router.get('/:name', (req, res) => {
 
 /** Verify if a category has at least an available product and return the less expensive */
 router.get('/:name/available', auth.verifyToken, async (req, res) => {
-    console.log(req.params);
-    console.log(req.query);
+    // console.log(req.params);
+    // console.log(req.query);
     let name = req.params.name;
     let start = new Date(req.query.start);
     start.setDate(start.getDate() + 1);

@@ -21,7 +21,7 @@ function Response(props){
                 "start": "${props.start}",
                 "end": "${props.end}"
             }`;
-            console.log(toSend);
+            // console.log(toSend);
             const options = {
                 method: 'POST',
                 headers: new Headers({'Content-Type': 'application/json','Authorization': `Bearer ${token}` }),
@@ -36,13 +36,13 @@ function Response(props){
                     return response.json();
                 }
             }).then((data) =>{
-                console.log(data);
+                // console.log(data);
                 setConfirmed(true);
                 setLoading(false);
 
             }).catch(error => {
                 setLoading(false);
-                console.log(error.message);
+                // console.log(error.message);
             });
         }
         let token = JSON.parse(sessionStorage.getItem('token'));

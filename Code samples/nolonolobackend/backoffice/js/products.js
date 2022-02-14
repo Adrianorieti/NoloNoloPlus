@@ -46,7 +46,7 @@ function changeProductPattern() {
 }
 /** Refresh page */
 function reset() {
-  console.log("qui dentro");
+  // console.log("qui dentro");
   history.go(0);
   location.reload();
 }
@@ -56,7 +56,7 @@ function sendRent() {
   let email = $('#email').val();
   let start = $('#start').val();
   let start2 = new Date(start);
-  console.log(start);
+  // console.log(start);
   let end = $('#end').val();
   let end2 = new Date(end);
   if (email == '' || start === '' || end === '' || start2.getTime() > end2.getTime()) {
@@ -82,7 +82,7 @@ function sendRent() {
       reset();
     }).fail(function (data) {
       if (data) {
-        console.log(data.responseJSON.message);
+        // console.log(data.responseJSON.message);
         $('#content').html(`<h3>${data.responseJSON.message}</h3`);
       }
       else
@@ -93,8 +93,8 @@ function sendRent() {
 }
 
 function showAddRent(x, products) {
-  console.log(products);
-  console.log(x);
+  // console.log(products);
+  // console.log(x);
   allProducts = allProducts.concat(products);
   prodName = products[x].name;
   toInsert = `
@@ -203,7 +203,7 @@ function sendChange(event) {
   let field = $('#changeMenu').val();
   let newValue = $('#newValue').val();
   let descr = $('#descr').val();
-  console.log(newValue);
+  // console.log(newValue);
   if (newValue != null && newValue != 'undefined' && newValue != undefined && newValue != '') {
 
     const obj = `{
@@ -263,7 +263,7 @@ function showChangeProduct(x, products) {
 
 
   $("#changeMenu").change(function () {
-    console.log("changed");
+    // console.log("changed");
     changeProductPattern();
   });
 }
@@ -277,11 +277,11 @@ function sendDelete() {
     type: 'DELETE',
     url: `http://localhost:8001/api/products/${toDelete}`,
   }, function (data) {
-    console.log(data);
+    // console.log(data);
     $('#content').html(`<h3>${data.message}</h3>`);
     location.reload();
   }).fail(function (data) {
-    console.log(data);
+    // console.log(data);
     $('#content').html(`<h3>${data.responseJSON.message}</h3> `);
 
 
@@ -290,8 +290,8 @@ function sendDelete() {
 
 /** Chiediamo al server tutti i prodotti e li mettiamo in un select per il dipendente così può cancellarli */
 function showDeleteProduct(x, products) {
-  console.log(products);
-  console.log(x)
+  // console.log(products);
+  // console.log(x)
   let toInsert = `<div>
      <h3>Bike you whant to delete:</h3>
      <input class="form-control" type="text" id="product" value="${products[x].name}" aria-label="readonly input example" readonly>
@@ -326,7 +326,7 @@ function sendMaintenance() {
     }, function (data) {
 
       $('#content').html(`<h3>${data.message}</h3>`);
-      console.log(data.reservations);
+      // console.log(data.reservations);
       for (let x in data.reservations) {
         if (data.reservations[x].usermail != 'defaultUser@nolonolo.com') {
           // le cancello tutte tanto sono già come pending requests
@@ -339,7 +339,7 @@ function sendMaintenance() {
                   "start": "${data.reservations[x].start}",
                   "end": "${data.reservations[x].end}"
                 }`;
-          console.log(obj);
+          // console.log(obj);
 
           $.ajax({
             method: "DELETE",

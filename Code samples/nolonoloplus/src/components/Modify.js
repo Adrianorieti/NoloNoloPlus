@@ -20,10 +20,10 @@ function Modify(props)
       try {
         let response = await fetch(url);
         res = await response.json();
-        console.log("res", res.product[0]);
+        // console.log("res", res.product[0]);
         setOldProd(res.product[0]);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setError(true);
       }
     }
@@ -70,7 +70,7 @@ function Modify(props)
                 return response.json();
             }
             }).then((data) =>{
-                console.log("Tutto ok ???");
+                // console.log("Tutto ok ???");
                 setSuccesful(true);
                 history.push('/personalpage');
         }).catch(error => {
@@ -120,7 +120,7 @@ function Modify(props)
                       return response.json();
                   }
                   }).then((data) =>{
-                      console.log("Tutto ok ???");
+                      // console.log("Tutto ok ???");
                       setSuccesful(true);
                       history.push('/');
               }).catch(error => {

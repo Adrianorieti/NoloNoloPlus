@@ -5,7 +5,7 @@ function login(event)
           let pass = $('#inputPassword').val();
          
           const encodedpass = btoa(pass);
-          console.log(pass);
+          // console.log(pass);
           let data = `{
             "email": "${mail}",
             "password": "${encodedpass}"

@@ -24,7 +24,7 @@ function calculateFidelityPoints(start, end, expense) {
     points += 8;
   }
 
-  console.log("points to add", points);
+  // console.log("points to add", points);
   return points;
 }
 
@@ -45,10 +45,10 @@ function calculateFinalPrice(isLate, start, end, expense) {
     period = 1;
   }
   let today = new Date();
-  console.log("period", period);
+  // console.log("period", period);
 
   if (isLate) {
-    console.log("IS LATE");
+    // console.log("IS LATE");
     let overPeriod = today.getTime() - end.getTime(); // tempo in +
     overPeriod = overPeriod / (1000 * 3600 * 24);
     overPeriod = Math.trunc(overPeriod);
@@ -56,18 +56,18 @@ function calculateFinalPrice(isLate, start, end, expense) {
     let medium = expense / period; // la media giornaliera
     medium = Math.trunc(medium * overPeriod);
     expense = expense + medium; //aggiungo in +
-    console.log("overPeriod", overPeriod);
-    console.log("medium", medium);
-    console.log("expense", expense);
+    // console.log("overPeriod", overPeriod);
+    // console.log("medium", medium);
+    // console.log("expense", expense);
 
   } else // in anticipo quindi today < end
   {
-    console.log("IS NOT LATE");
+    // console.log("IS NOT LATE");
     let remaningPeriod = end.getTime() - today.getTime();
     remaningPeriod = remaningPeriod / (1000 * 3600 * 24);
     remaningPeriod += 1;
     remaningPeriod = Math.trunc(remaningPeriod);
-    console.log("remaningPeriod", remaningPeriod);
+    // console.log("remaningPeriod", remaningPeriod);
 
     if (isSameDay(end, start)) // se è di un giorno solo la prenotazione
     {
@@ -76,22 +76,22 @@ function calculateFinalPrice(isLate, start, end, expense) {
     let medium = expense / period; // la media giornaliera
     medium = Math.trunc(medium * remaningPeriod); // quanto mancava in fatto di soldi
     expense = Math.abs(expense - medium); //vado a levare la media dei giorni rimanenti a quello che deve pagare
-    console.log("medium", medium);
-    console.log("expense", expense);
+    // console.log("medium", medium);
+    // console.log("expense", expense);
   }
   return expense;
 }
 function confirmEndOfRental(x) {
-  console.log("dentro confirm", activeRes);
+  // console.log("dentro confirm", activeRes);
   let check = $('#check').val();
-  console.log("check :", check);
+  // console.log("check :", check);
   let employee = sessionStorage.getItem('email');
   let product = activeRes[x].product;
   let user = activeRes[x].usermail;
   let start = activeRes[x].start;
   let end = activeRes[x].end;
   let expense = activeRes[x].expense;
-  console.log("old expense", expense);
+  // console.log("old expense", expense);
   let today = new Date();
   start = new Date(start);
   end = new Date(end);
@@ -110,18 +110,18 @@ function confirmEndOfRental(x) {
 
     } else if (today.getTime() > end.getTime()) // SONO IN RITARDO
     {
-      console.log("ENTRO QUIIII");
+      // console.log("ENTRO QUIIII");
 
       expense = calculateFinalPrice(true, start, end, expense);
     }
   } else {
-    console.log("È OGGI NON È NE IN RITARDO NE IN ANTICIPO")
+    // console.log("È OGGI NON È NE IN RITARDO NE IN ANTICIPO")
     if (check === 'Y') {
       points = calculateFidelityPoints(start, today, expense);
     }
   }
 
-  console.log("new expense", expense);
+  // console.log("new expense", expense);
 
   if (expense === 0)
     expense = 8;
@@ -134,7 +134,7 @@ function confirmEndOfRental(x) {
       "points": "${points}",
       "end": "${end}"
     }`;
-  console.log(obj);
+  // console.log(obj);
   $.post({
     type: 'POST',
     url: `http://localhost:8001/api/rental/${product}/restitution`,
@@ -167,7 +167,7 @@ function confirmLending(x) {
       "start": "${start}",
       "end": "${end}"
     }`;
-    console.log(obj);
+    // console.log(obj);
     $.post({
       type: 'POST',
       url: 'http://localhost:8001/api/rental/active/confirm',
@@ -187,7 +187,7 @@ function confirmLending(x) {
 
 function showMyReservations(emp) {
   activeRes = activeRes.concat(emp.activeReservations);
-  console.log(activeRes);
+  // console.log(activeRes);
   futureRes = futureRes.concat(emp.futureReservations);
   let active = '';
   let future = '';

@@ -80,7 +80,7 @@ function RentForm(props) {
     let parameter = props.location.state;
     let index;
     if (parameter != null || parameter != undefined) {
-      console.log(parameter);
+      // console.log(parameter);
 
       for (index in res) {
         if (parameter.data === res[index].name) {

@@ -46,11 +46,11 @@ async function changeCascadeEmps(emps, newMail, oldMail) {
     }
 }
 async function changeCascadeProds(prods, newMail, oldMail) {
-    console.log("QUI DENTRO");
+    // console.log("QUI DENTRO");
     for await (let prod of product.find()) { // per tutti i prodotti del database
         if (prods.includes(prod.name)) // se c'è match con quelli che cerco
         {
-            console.log("STA DENTRO QUESTO PRODOTTO", prod)
+            // console.log("STA DENTRO QUESTO PRODOTTO", prod)
             if (prod.futureReservations.length > 0) // se il dipendente ha delle future res
             {
                 for (let x in prod.futureReservations) // per tutte le sue future res
@@ -104,12 +104,12 @@ function pushElements(array, element) {
 module.exports = {
     // prodotti che lui ha prenotato, e in quelle del dipendente, ma anche nelle pending request
     emailCascadeChange: async function (newMail, oldMail) {
-        console.log('sono dentro cascade email');
-        console.log("vecchia mail", oldMail);
-        console.log("nuova mail", newMail);
+        // console.log('sono dentro cascade email');
+        // console.log("vecchia mail", oldMail);
+        // console.log("nuova mail", newMail);
 
         let usr = await user.findOne({ email: oldMail });
-        console.log("user", usr);
+        // console.log("user", usr);
         if (usr) {
             // Dalle prenotazioni dell'utente in question prendo prodotti e dipendenti
             let emps = [];
@@ -146,7 +146,7 @@ module.exports = {
                 }
             }
             usr.save();
-            console.log("prods", prods);
+            // console.log("prods", prods);
             if (emps.length > 0)
                 await changeCascadeEmps(emps, newMail, oldMail);
             if (prods.length > 0)

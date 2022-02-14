@@ -73,7 +73,7 @@ router.delete('/:id', async (req, res) => {
         //Inserisco il messaggio nelle comunicazioni dell'utente
         usr.communications.push(message);
         usr.save();
-        console.log(usr);
+        // console.log(usr);
         let x;
         let toChange;
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x,endDate, startDate);
@@ -86,20 +86,19 @@ router.delete('/:id', async (req, res) => {
             prod.save();
         }
         let error = false;
-        // È UNDEFINED PORCODIO
-        console.log(id);
+        // console.log(id);
         
          await pendingRequest.deleteOne({_id: id}, function(err)
         {
             if(err)
                  {
-                     console.log("QUI");
+                    //  console.log("QUI");
                      error= true;
                    console.log(err) 
                     }
             
         }).clone().catch(function(err){
-            console.log("QUIIIIIIIIII");
+            // console.log("QUIIIIIIIIII");
             console.log(err)
               return    res.status(500).json({message: "Error, maybe the element has already been changed."})
             });  

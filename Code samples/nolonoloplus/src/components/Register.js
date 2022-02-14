@@ -58,7 +58,7 @@ export default function Register({ stateToParent }) {
 
     function handleRegister(event) {
         event.preventDefault();
-        console.log(paymentMethod);
+        // console.log(paymentMethod);
 
         const buff = Buffer.from(password, 'utf-8');
         const encodedpass = buff.toString('base64');
@@ -93,7 +93,7 @@ export default function Register({ stateToParent }) {
                         throw new Error(data.message);
                     }
                 }).then(data => {
-                    console.log(data.message);
+                    // console.log(data.message);
                     history.go(0);
                 })
                 .catch(err => {

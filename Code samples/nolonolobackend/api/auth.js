@@ -17,7 +17,7 @@ function verifyToken(req, res, next) {
                 return res.status(403).send(` ${err.name} `);
             }
             req.email = decoded.email;
-            console.log(req.email);
+            // console.log(req.email);
 
             next();
         })

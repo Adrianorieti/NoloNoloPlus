@@ -50,7 +50,7 @@ router.post('/register', async (req, res) => {
 
         })
     } else {
-        console.log(' Errore esiste già la mail');
+        console.log(' Error, email already exists');
         res.status(500).send({ error: 'Mail already exists' });
     }
 });

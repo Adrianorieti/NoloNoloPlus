@@ -19,7 +19,7 @@ function Reservations(props) {
     // ho bisogno di una get che mi restituisca tutti i prodotti affinchè
     //il dropdown menu sia dinamico
     // poi due campi per la data e due pulsanti per mandare o meno
-    console.log("entro qui");
+    // console.log("entro qui");
     setModify(true);
   }
 

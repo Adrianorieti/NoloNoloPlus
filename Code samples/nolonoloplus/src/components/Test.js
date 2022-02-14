@@ -10,7 +10,7 @@ function Test(){
     function test()
     {
         
-        console.log("parto");
+        // console.log("parto");
         let name = 'Electric S_300';
         let start= "2021-12-15";
         let end = "2021-12-17";
@@ -25,14 +25,14 @@ function Test(){
                 return response.json();
             }
             }).then((data) =>{
-            console.log(data);
+            // console.log(data);
         }).catch(error => {
             console.log(error);
           });
     }
 
     useEffect(() => {
-        console.log('ciaooo');
+        // console.log('ciaooo');
        test();
    
 }, []);

@@ -101,7 +101,7 @@ router.post('/:product/mantainance', async (req, res) => {
         if (prod.futureReservations.length > 0) {
             // Ordino le prenotazioni per data di inizio
             sortBy.sortByTime(prod.futureReservations, 'start');
-            console.log("sorted", prod.futureReservations);
+            // console.log("sorted", prod.futureReservations);
             // Se la data di inizio della prenotazione è <= della data di fine della nostra
             // prenotazione speciale allora và eliminata, e va ritornata 
             for (let i in prod.futureReservations){
@@ -124,14 +124,14 @@ router.post('/:product/mantainance', async (req, res) => {
             // Creo la nuova reservation da aggiungere al prodotto
 
             let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
-            console.log("arrivo fin qui", prod);
+            // console.log("arrivo fin qui", prod);
 
             prod.futureReservations.unshift(newReserve);
             // Aggiungo nuovamente il prodotto che sarà virtualmente in manutenzione
-            console.log("arrivo fin qui2", prod);
+            // console.log("arrivo fin qui2", prod);
 
             prod.save();
-            console.log("arrivo fin qui3", prod);
+            // console.log("arrivo fin qui3", prod);
             // aggiungo anche la maintenance come pening così è visibile da tutti gli
             // employee
             let newPendingReq = new pending({
@@ -150,7 +150,7 @@ router.post('/:product/mantainance', async (req, res) => {
             res.status(200).json({ message: "Succesful operation", reservations: reservationsToChange });
 
         } else {
-            console.log("entro qui");
+            // console.log("entro qui");
             let newReserve = reservations.createReservation('defaultUser@nolonolo.com', employeeMail, productName, 0, startDate, endDate, 0);
             prod.futureReservations.push(newReserve);
             console.log(newReserve);
@@ -184,8 +184,8 @@ router.post('/active/confirm', async (req, res) => {
     const emp = await employee.findOne({ email: employeeMail });
     const usr = await user.findOne({ email: userMail });
     const prod = await product.findOne({ name: productName });
-    console.log("sono qui");
-    console.log(usr)
+    // console.log("sono qui");
+    // console.log(usr)
 
     if (usr && emp && prod) {
         // Sposto la prenotazione da future ad active in modo che lo user non possa
@@ -238,14 +238,14 @@ router.post('/:product/restitution', async (req, res) => {
     const emp = await employee.findOne({ email: employeeMail });
     const usr = await user.findOne({ email: userMail });
     const prod = await product.findOne({ name: productName });
-    console.log(req.body);
+    // console.log(req.body);
     if (usr && emp && prod) {
         let toChange;
         let x;
         // USER
         [toChange, x] = reservations.searchReservation(usr.activeReservations, toChange, x, end, start)
         toChange.expense = expense;
-        console.log("tochange", toChange);
+        // console.log("tochange", toChange);
         if (toChange) {
             //sposto da active a past
             usr.pastReservations.push(toChange);
@@ -254,7 +254,7 @@ router.post('/:product/restitution', async (req, res) => {
 
             usr.fidelityPoints += parseInt(points);
             usr.amountPaid += parseInt(expense);
-            console.log(usr);
+            // console.log(usr);
             usr.save();
         }
         // DIPENDENTE
@@ -273,7 +273,7 @@ router.post('/:product/restitution', async (req, res) => {
 
         //PRODOTTO
         toChange = prod.activeReservations[0];
-        console.log(toChange);
+        // console.log(toChange);
         if (toChange)
             toChange.expense = expense;
 
@@ -295,7 +295,7 @@ router.post('/:product/restitution', async (req, res) => {
 
 /** Modify a rental on the product, the employee and the user */
 router.patch('/:product/modify', async (req, res) => {
-    console.log("dentro modify");
+    // console.log("dentro modify");
 
     const productName = req.body.product; // il nuovo prodotto !
     const userMail = req.body.user;
@@ -309,8 +309,8 @@ router.patch('/:product/modify', async (req, res) => {
         startDate = new Date(req.body.start);
         endDate = new Date(req.body.end);
     }
-    console.log(req.body)
-    console.log(req.params)
+    // console.log(req.body)
+    // console.log(req.params)
 
     //vecchio prodotto per andargli a cambiare le cose
     let prod = await product.findOne({ name: oldProduct });
@@ -319,7 +319,7 @@ router.patch('/:product/modify', async (req, res) => {
     // employee in questione
     let emp = await employee.findOne({ email: employeeMail });
     if (prod && usr && emp) {
-        console.log(prod.name)
+        // console.log(prod.name)
 
         let newExpense;
         let newReserve;
@@ -329,24 +329,24 @@ router.patch('/:product/modify', async (req, res) => {
         let toChange;
         let x;
         // cerco la vecchia prenotazione nel vecchio prodotto
-        console.log("vecchio prodotto", prod);
+        // console.log("vecchio prodotto", prod);
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, oldEnd, oldStart,)
         console.log("Vecchia prenotazione nel prodotto", toChange);
         if (toChange) {
             // ... se la trovo la cancello
-            console.log("PRIMA di cancellare", prod.futureReservations);
+            // console.log("PRIMA di cancellare", prod.futureReservations);
             prod.futureReservations.splice(x, 1);
-            console.log("DOPO", prod.futureReservations);
+            // console.log("DOPO", prod.futureReservations);
             prod.save();
 
         }
         let newProd;
         if (prod.name === productName) {
             newProd = prod;
-            console.log("Sono lo stesso oggetto", newProd)
+            // console.log("Sono lo stesso oggetto", newProd)
         } else {
             newProd = await product.findOne({ name: productName });
-            console.log("Sono oggetti diversi", newProd)
+            // console.log("Sono oggetti diversi", newProd)
 
         }
 
@@ -355,13 +355,13 @@ router.patch('/:product/modify', async (req, res) => {
         newExpense = await computePrice.computePrice(collection, newProd, userMail, usr, startDate, endDate)
 
         newReserve = reservations.createReservation(userMail, employeeMail, productName, newExpense, startDate, endDate, 0);
-        console.log("nuova reservation", newReserve);
+        // console.log("nuova reservation", newReserve);
         // CONTROLLO SE SUL NUOVO PRODOTTO C'È DISPONIBILITÀ
         // ALTRIMENTI NON SI FA NULLA
 
         if (newProd.futureReservations.length > 0) {
-            console.log("ci sono delle prenotazioni pregresse");
-            console.log(newProd.futureReservations);
+            // console.log("ci sono delle prenotazioni pregresse");
+            // console.log(newProd.futureReservations);
             if (checkAvailability.checkAvailability(newProd, startDate, endDate)) {
                 newProd.futureReservations.push(newReserve);
                 newProd.save();
@@ -373,7 +373,7 @@ router.patch('/:product/modify', async (req, res) => {
                 return res.status(500).json({ message: "Product not available" });
             }
         } else {
-            console.log(" non ci sono delle prenotazioni pregresse");
+            // console.log(" non ci sono delle prenotazioni pregresse");
             newProd.futureReservations.push(newReserve);
             newProd.save();
         }
@@ -386,7 +386,7 @@ router.patch('/:product/modify', async (req, res) => {
         console.log("dentro lo user è", toChange);
 
         if (toChange) {
-            console.log("dentro lo user è", toChange);
+            // console.log("dentro lo user è", toChange);
             //cancello quella vecchia
             usr.futureReservations.splice(x, 1);
             usr.futureReservations.push(newReserve);
@@ -403,7 +403,7 @@ router.patch('/:product/modify', async (req, res) => {
 
         emp.futureReservations.push(newReserve);
         emp.save();
-        console.log("finalmente")
+        // console.log("finalmente")
         return res.status(200).json({ message: "Succesfuly changed" });
     } else {
         return res.status(500).json({ message: "Product or employee or user non existent" });
@@ -432,7 +432,7 @@ router.delete('/:product', async (req, res) => {
         [toChange, x] = reservations.searchReservation(prod.futureReservations, toChange, x, endDate, startDate);
 
         if (toChange) {
-            console.log("QUELLE DEL PRODOTTO DENTRO DELETE");
+            // console.log("QUELLE DEL PRODOTTO DENTRO DELETE");
             prod.futureReservations.splice(x, 1);
             prod.save();
         }

@@ -23,7 +23,7 @@ function Hypothesis(props)
               let start = query.startingDate;
               let end = query.endingDate;
             const url = `http://site202145.tw.cs.unibo.it/api/categories/${name}/available/?start=${start}&end=${end}`;
-            console.log("sono qui");
+            // console.log("sono qui");
             fetch(url, options)
             .then(response => {
                 if (response.status === 200) {
@@ -31,7 +31,7 @@ function Hypothesis(props)
                     return response.json();
                 }
                 }).then((data) =>{
-                    console.log("dentro data");
+                    // console.log("dentro data");
                     setLoading(false);
                     setCategory(data.category);
                     setPrice(data.hypothesisPrice);

@@ -31,7 +31,7 @@ export default function newUserPage({ nameToParent }) {
                 }).then(data => {
                     getUser(data.email);
                 })
-                .catch(data => { console.log('abbiamo un errore', data.message); setError(data.message); });
+                .catch(data => { console.log('Error with data', data.message); setError(data.message); });
         };
 
         function getUser(email) {
@@ -45,7 +45,7 @@ export default function newUserPage({ nameToParent }) {
                     }
                 }).then((data) => {
                     setUser(data.user);
-                    console.log("user image", data.user.image);
+                    // console.log("user image", data.user.image);
                     setImage(data.user.image);
                     setCommunications(data.user.communications);
                     setLoading(false);
@@ -90,7 +90,7 @@ export default function newUserPage({ nameToParent }) {
             let formData = new FormData();
             formData.append("img", photo);
             let picName;
-            console.log(user.email)
+            // console.log(user.email)
             for (var x of formData.entries()) {
                 picName = x[1].name;
             }
@@ -100,8 +100,8 @@ export default function newUserPage({ nameToParent }) {
                     return response.json()
                 })
                 .then(data => {
-                    console.log(data);
-                    console.log(picName);
+                    // console.log(data);
+                    // console.log(picName);
 
                     setImage(`${picName}`);
                 })
@@ -172,18 +172,18 @@ export default function newUserPage({ nameToParent }) {
             headers: new Headers({ 'Content-type': 'application/json' }),
             body: obj
         };
-        console.log("newval", newValue);
+        // console.log("newval", newValue);
         fetch(`http://site202145.tw.cs.unibo.it/api/user/${user.email}`, options)
             .then(async response => {
                 if (response.status === 200)
                     return response.json();
                 else {
-                    console.log("siamo nell'else");
+                    // console.log("siamo nell'else");
                     let data = await response.json();
                     throw new Error(data.message)
                 }
             }).then(data => {
-                console.log("siamo nel then");
+                // console.log("siamo nel then");
                 if (field === 'email') {
                     sessionStorage.clear();
                     history.push('/login');
@@ -197,7 +197,7 @@ export default function newUserPage({ nameToParent }) {
                 }
             })
             .catch(err => {
-                console.log("siamo nell'errore");
+                // console.log("siamo nell'errore");
                 document.getElementById('onErr').innerHTML = err;
                 console.log(err);
             })
@@ -241,7 +241,7 @@ export default function newUserPage({ nameToParent }) {
                         <div className="row" id="toFocus">
                             <div className="col-md-3 border-right">
                                 <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    {console.log("qui", image)}
+                                    {/* {console.log("qui", image)} */}
                                     <img className="rounded-image" alt="profile pic" src={image ? `http://site202145.tw.cs.unibo.it/images/users/${image}` : "https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"} />
 
                                     <form onSubmit={(event) => { event.preventDefault(); handleImageUpload(); }}>
@@ -324,10 +324,10 @@ export default function newUserPage({ nameToParent }) {
                                         (() => {
                                             let commDivs = []
                                             for (let x = communications.length; x >= 0; x--) {
-                                                console.log("comm", communications[x])
+                                                // console.log("comm", communications[x])
                                                 if (communications[x] != null && communications[x] !== "") {
-                                                    console.log(communications.length)
-                                                    console.log(x);
+                                                    // console.log(communications.length)
+                                                    // console.log(x);
                                                     if (x === communications.length - 1)
                                                         commDivs.push(<p><b>New</b></p>)
                                                     commDivs.push(<div>{communications[x]}</div>)

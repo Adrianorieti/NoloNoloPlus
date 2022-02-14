@@ -111,7 +111,7 @@ router.post('/:email', async (req, res) => {
 
 router.patch('/:email', upload.single('img'), async (req, res) => {
     let email = req.params.email;
-    console.log("vecchia mail", email);
+    // console.log("vecchia mail", email);
     let newData = {};
     if (!req.file) {
         newData = req.body;
@@ -121,7 +121,7 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
             });
         }
         else if (newData.email) {
-            console.log("nuova mail", newData.email);
+            // console.log("nuova mail", newData.email);
             changeEmail.emailCascadeChange(newData.email, email);
         }
     } else {
@@ -143,13 +143,13 @@ router.patch('/:email', upload.single('img'), async (req, res) => {
 
 router.delete('/:email', async (req, res) => {
     let email = req.params.email;
-    console.log(email);
+    // console.log(email);
     user.exists({ email: email }, async function (err, doc) {
         if (err) {
             res.status(404).json({ message: "User not found", error: err })
         } else {
             let usr = await user.findOne({ email: email });
-            console.log(usr);
+            // console.log(usr);
             if (usr.activeReservations.length != 0 || usr.futureReservations.length != 0) {
                 res.status(500).json({ message: "Impossible, there are future or active reservations" })
             } else {
@@ -157,7 +157,7 @@ router.delete('/:email', async (req, res) => {
                 user.findOneAndDelete({ email: email })
                     .exec()
                     .then((result) => {
-                        console.log(result)
+                        // console.log(result)
                         res.status(200).json({ message: 'User deleted' })
                     })
             }

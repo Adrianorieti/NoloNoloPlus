@@ -35,20 +35,20 @@ export default function Login({ stateToParent, nameToParent }) {
             headers: new Headers({ 'Content-type': 'application/json' }),
             body: obj
         };
-        console.log(obj);
+        // console.log(obj);
         fetch(`http://site202145.tw.cs.unibo.it/api/account/login/user`, options)
             .then(async response => {
                 if (response.status === 200) {
-                    console.log("entro qua dentro");
+                    // console.log("entro qua dentro");
                     return response.json();
                 }
                 else {
-                    console.log("entro qui");
+                    // console.log("entro qui");
                     let data = await response.json();
                     throw new Error(data.message);
                 }
             }).then(data => {
-                console.log(data);
+                // console.log(data);
                 const username = data.name;
                 const token = data.accessToken;
                 sessionStorage.setItem("token", JSON.stringify(token));
