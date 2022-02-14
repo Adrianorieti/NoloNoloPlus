@@ -147,7 +147,6 @@ export default {
         body: formData,
       })
       .then((response) => {
-        console.log(response.status);
         if(response.status === 200){
           this.$router.push({path: "/dashboard/categories"});
         }

@@ -58,7 +58,6 @@ export default {
           if (response.status === 200) {
             return response.json();
           } else {
-            console.log("The username and / or password is incorrect");
             this.error = "The username and / or password is incorrect"
             document.querySelector("#passw-error").hidden=false;
           }

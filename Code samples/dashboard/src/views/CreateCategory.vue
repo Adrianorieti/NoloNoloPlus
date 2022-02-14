@@ -118,8 +118,6 @@ export default {
       formData.append("price", this.price);
       formData.append("discountCode", "N");
 
-      console.log(formData);
-
       fetch("http://site202145.tw.cs.unibo.it/api/categories/", {
         method: "POST",
         body: formData,
