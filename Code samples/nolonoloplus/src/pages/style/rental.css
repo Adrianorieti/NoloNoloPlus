@@ -9,10 +9,16 @@
 
 @media only screen and (max-width: 768px) {
     #summary {
-      flex-direction: column;
+        flex-direction: column;
     }
   }
- 
+
+   #left{
+        display: flex;
+        max-width: 40vw;
+        align-items: center;
+    } 
+
   #right {
       padding-top: 5vh;
       /*display: flex;
