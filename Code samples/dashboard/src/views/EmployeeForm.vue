@@ -156,8 +156,7 @@
                 'bi bi-eye-fill': showPassword,
               }"
               role="button"
-              aria-label="show password"
-              tabindex="0"
+              aria-hidden="true"
               @click="changePassVisibility()"
               style="font-size: 1rem"
             ></i>
@@ -191,8 +190,7 @@
                 'bi bi-eye-fill': showRepPassw,
               }"
               role="button"
-              aria-label="show password"
-              tabindex="0"
+              aria-hidden="true"
               @click="changeRepPassVisibility()"
               style="font-size: 1rem"
             ></i>
