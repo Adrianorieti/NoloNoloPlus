@@ -31,6 +31,8 @@ export default {
 img {
   height: 100%;
   width: 100%;
+  max-height: 35rem;
+  max-width: 35rem;
 }
 .card-wrapper {
   display: flex;

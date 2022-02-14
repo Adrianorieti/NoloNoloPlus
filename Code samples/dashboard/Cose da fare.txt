@@ -1,3 +1,0 @@
--aggiungere back in tutte le parti
--aggiungere background image nel login 
--mettere titoli più grandi grafici

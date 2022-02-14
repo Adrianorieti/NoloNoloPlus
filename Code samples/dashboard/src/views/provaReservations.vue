@@ -26,7 +26,7 @@ export default {
   name: "ReservationsCharts",
   data() {
     return {
-      foundationYear: 2017,
+      foundationYear: 2021,
       reservations: {},
       labels: [],
       barData: {},

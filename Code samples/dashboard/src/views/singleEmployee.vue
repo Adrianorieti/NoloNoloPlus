@@ -46,6 +46,7 @@
 
 <script>
 import chart from "../components/chart";
+import sort from '../components/sort';
 
 export default {
   name: "singleEmployee",
@@ -82,6 +83,10 @@ export default {
           }
         })
         .then((data) => {
+          if(data.emp.pastReservations){
+            let past = sort.sortByTime(data.emp.pastReservations,'start');
+            data.emp.pastReservations = past;
+          }
           this.employee = data.emp;
           this.loading = false;
           this.gatherStatistics();
@@ -207,6 +212,11 @@ h3 {
 h1 {
   font-size: 4rem;
   font-weight: 900;
+}
+
+img{
+  max-width: 30rem;
+  max-height: 30rem;
 }
 
 .card-text {

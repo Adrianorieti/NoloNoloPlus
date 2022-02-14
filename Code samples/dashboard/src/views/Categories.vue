@@ -144,7 +144,7 @@ export default {
         labels: labels,
         datasets: [
           {
-            label: "Numbers of Rentals per Category",
+            label: "Numbers of completed Rentals per Category",
             backgroundColor: colors,
             borderColor: colors,
             data: chartData,

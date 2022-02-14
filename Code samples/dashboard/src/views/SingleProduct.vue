@@ -48,6 +48,7 @@
 
 <script>
 import chart from "../components/chart";
+import sort from '../components/sort';
 
 export default {
   name: "SingleProduct",
@@ -85,6 +86,10 @@ export default {
         })
         .then((data) => {
           this.product = data.product[0];
+          if(this.product.pastReservations){
+            let past = sort.sortByTime(this.product.pastReservations,'start');
+            this.product.pastReservations = past;
+          }
           this.loading = false;
           this.gatherStatistics();
         })
@@ -200,6 +205,11 @@ export default {
 .card-wrapper {
   display: flex;
   justify-content: space-around;
+}
+
+img{
+  max-width: 30rem;
+  max-height: 30rem;
 }
 
 h3 {

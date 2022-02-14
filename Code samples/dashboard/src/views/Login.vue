@@ -20,6 +20,7 @@
             class="form-control"
             required="required"
           />
+          <label for="password" id="passw-error" hidden class="error">{{this.error}}</label>
         </div>
         <input type="submit" class="btn" value="Login" />
       </fieldset>
@@ -34,6 +35,7 @@ export default {
     return {
       email: "",
       password: "",
+      error: "",
     };
   },
   methods: {
@@ -57,6 +59,8 @@ export default {
             return response.json();
           } else {
             console.log("The username and / or password is incorrect");
+            this.error = "The username and / or password is incorrect"
+            document.querySelector("#passw-error").hidden=false;
           }
         })
         .then((data) => {
@@ -140,5 +144,9 @@ export default {
 
 .box input[type="submit"]:hover {
   background: #2ecc71;
+}
+
+#passw-error{
+  color: red;
 }
 </style>

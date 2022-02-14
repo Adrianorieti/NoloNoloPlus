@@ -39,6 +39,7 @@
 <script>
 import chart from "../components/chart";
 import HorizontalCard from "../components/horizontalImageCard";
+import sort from '../components/sort';
 
 export default {
   name: "singleUser",
@@ -77,6 +78,10 @@ export default {
           }
         })
         .then((data) => {
+          if(data.user.pastReservations){
+            let past = sort.sortByTime(data.user.pastReservations,'start');
+            data.user.pastReservations = past;
+          }
           this.user = data.user;
           this.loading = false;
           this.gatherStatistics();
